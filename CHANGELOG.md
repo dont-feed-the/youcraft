@@ -2,6 +2,15 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.9
+
+### Changed
+
+- YouCraft has a new logo: an amber rocket with a coral flame, flying forward as a play button
+  points. It replaces the folded teal triangle in the masthead and the browser tab.
+- The accent colour is amber: links and the sign-in button read in a deep amber on light pages and
+  a bright amber on dark ones, and buttons filled with the accent carry dark text.
+
 ## 0.1.8
 
 ### Added

@@ -21,14 +21,15 @@ h1, h2, h3, p { margin: 0; }
 .pill { display: inline-flex; align-items: center; gap: var(--space-2); block-size: 36px; padding-inline: var(--space-4); border: 0; border-radius: var(--radius-pill); background: var(--bg-raised); font-weight: 500; cursor: pointer; white-space: nowrap; }
 .pill:hover { background: var(--bg-hover); }
 
-.avatar { display: inline-grid; place-items: center; flex: none; inline-size: var(--avatar); block-size: var(--avatar); border-radius: 50%; background: var(--accent-dark); color: var(--badge-text); font-weight: 600; text-transform: uppercase; }
+.avatar { display: inline-grid; place-items: center; flex: none; inline-size: var(--avatar); block-size: var(--avatar); border-radius: 50%; background: var(--avatar-bg); color: var(--badge-text); font-weight: 600; text-transform: uppercase; }
 
 .empty, .trouble { display: grid; justify-items: center; gap: var(--space-4); padding: var(--space-6); color: var(--text-2); text-align: center; }
 
 .mark { inline-size: 32px; block-size: 24px; }
-.mark .facet-light { fill: var(--accent-light); }
-.mark .facet-dark { fill: var(--accent); }
-.mark .fold { stroke: var(--accent-dark); stroke-width: 0.8; }
+.mark .body { fill: var(--mark-body); }
+.mark .fins { fill: var(--mark-fins); }
+.mark .flame { fill: var(--mark-flame); }
+.mark .window { fill: var(--mark-window); }
 
 /* A form's text box or menu; a `.labelled` label puts its caption above the one it holds. */
 .field { min-block-size: 40px; padding: var(--space-2) var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg); color: var(--text); font: inherit; font-size: var(--text-sm); }

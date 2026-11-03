@@ -6,7 +6,7 @@
 .studio-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
 
 .pill.accent { background: var(--accent); color: var(--text-on-accent); }
-.pill.accent:hover { background: var(--accent-dark); }
+.pill.accent:hover { background: var(--accent-hover); }
 .pill.danger { background: transparent; color: var(--danger); }
 .pill:disabled { opacity: 0.5; cursor: default; }
 
@@ -16,7 +16,7 @@
 .studio-video { display: flex; gap: var(--space-3); min-inline-size: 0; }
 .studio-thumb { flex: none; inline-size: 120px; border-radius: var(--radius-md); }
 .studio-video .title { font-size: var(--text-sm); line-height: var(--line-title-sm); }
-.studio-state { color: var(--accent-dark); }
+.studio-state { color: var(--accent-text); }
 
 .text-button { justify-self: start; padding: 0; border: 0; background: none; color: var(--text-2); cursor: pointer; }
 .text-button:hover { color: var(--text); }
@@ -26,8 +26,8 @@
 .editor-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
 
 .drop { position: relative; display: grid; justify-items: center; gap: var(--space-4); padding: var(--space-10) var(--space-6); border: 2px dashed var(--border); border-radius: var(--radius-card); color: var(--text-2); text-align: center; cursor: pointer; }
-.drop .glyph { inline-size: 64px; block-size: 64px; color: var(--accent); }
-.drop:hover { border-color: var(--accent); }
+.drop .glyph { inline-size: 64px; block-size: 64px; color: var(--accent-text); }
+.drop:hover { border-color: var(--accent-text); }
 .file { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
 .upload-progress { display: grid; gap: var(--space-2); }

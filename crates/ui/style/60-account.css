@@ -9,7 +9,7 @@
 .menu-account-names { display: flex; flex-direction: column; gap: var(--space-1); min-inline-size: 0; }
 .menu-account-name { font-size: var(--text-md); }
 .menu-account-handle { color: var(--text); }
-.menu-link { color: var(--accent); }
+.menu-link { color: var(--accent-text); }
 .menu-link:hover { text-decoration: underline; }
 
 .menu-rule { inline-size: 100%; margin-block: var(--space-2); border: 0; border-block-start: 1px solid var(--border); }
@@ -48,7 +48,7 @@
 .choices { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .choice { block-size: 36px; padding-inline: var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-pill); background: transparent; cursor: pointer; }
 .choice:hover { background: var(--bg-hover); }
-.choice.chosen { border-color: var(--accent); background: var(--accent); color: var(--badge-text); }
+.choice.chosen { border-color: var(--accent); background: var(--accent); color: var(--text-on-accent); }
 
 @media (max-width: 656px) {
   .menu { position: fixed; inset: 0; inline-size: auto; max-block-size: none; border-radius: 0; box-shadow: none; }

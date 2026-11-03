@@ -199,14 +199,15 @@ pub fn Glyph(icon: Icon) -> impl IntoView {
     }
 }
 
-/// YouCraft's mark: a folded paper triangle, its two facets in the accent colour.
+/// YouCraft's mark: a rocket flying forward as a play button points, in the mark's own colours.
 #[component]
 pub fn Mark() -> impl IntoView {
     view! {
         <svg class="mark" viewBox="0 0 32 24" aria-hidden="true" focusable="false">
-            <path class="facet-light" d="M6 2L28 12L6 12z"/>
-            <path class="facet-dark" d="M6 12L28 12L6 22z"/>
-            <path class="fold" d="M6 12L28 12"/>
+            <path class="flame" d="M11.5 9.4C8 9.4 6.5 11 3.5 12C6.5 13 8 14.6 11.5 14.6z"/>
+            <path class="fins" d="M16.5 8.2L11 4.5L9 4.5L11.5 8.2zM16.5 15.8L11 19.5L9 19.5L11.5 15.8z"/>
+            <path class="body" d="M28.5 12C25.5 15.2 21 16 17 16L11 16L11 8L17 8C21 8 25.5 8.8 28.5 12z"/>
+            <circle class="window" cx="19" cy="12" r="2.3"/>
         </svg>
     }
 }

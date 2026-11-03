@@ -1,9 +1,15 @@
 /* Design tokens: every colour, size and radius the components use, for each theme. */
 :root {
   color-scheme: light;
-  --accent: #0b8f8c;
-  --accent-light: #3fc1bd;
-  --accent-dark: #076866;
+  --accent: #d98e04;
+  --accent-hover: #c27c00;
+  --accent-text: #8f5400;
+  --text-on-accent: #0f0f0f;
+  --avatar-bg: #8f5400;
+  --mark-body: #d98e04;
+  --mark-fins: #9a5b00;
+  --mark-flame: #ff6b3d;
+  --mark-window: #ffffff;
   --bg: #ffffff;
   --bg-raised: #f2f2f2;
   --bg-hover: #e5e5e5;
@@ -19,7 +25,6 @@
   --bg-menu: #ffffff;
   --shadow-menu: 0 4px 32px rgba(0, 0, 0, 0.1);
   --scrim: rgba(0, 0, 0, 0);
-  --text-on-accent: #ffffff;
   --danger: #c5221f;
   --player-text: #ffffff;
   --player-pill: rgba(0, 0, 0, 0.35);
@@ -36,7 +41,7 @@
   --player-big: 64px;
   --player-menu-width: 260px;
   --theatre-height: min(56.25vw, calc(100vh - 169px));
-  --panel-start: #076866;
+  --panel-start: #8f5400;
   --panel-end: #0f0f0f;
 
   --font: system-ui, -apple-system, "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
@@ -112,6 +117,8 @@
     --bg-menu: #282828;
     --shadow-menu: 0 4px 32px rgba(0, 0, 0, 0.4);
     --danger: #f28b82;
+    --accent-hover: #f5a524;
+    --accent-text: #ffc23d;
   }
 }
 
@@ -128,4 +135,6 @@
   --bg-menu: #282828;
   --shadow-menu: 0 4px 32px rgba(0, 0, 0, 0.4);
   --danger: #f28b82;
+  --accent-hover: #f5a524;
+  --accent-text: #ffc23d;
 }

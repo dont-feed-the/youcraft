@@ -11,7 +11,7 @@
 .pill.quiet { background: transparent; }
 .pill.quiet:hover { background: var(--bg-hover); }
 .pill.primary { background: var(--accent); color: var(--text-on-accent); }
-.pill.primary:hover { background: var(--accent-dark); }
+.pill.primary:hover { background: var(--accent-hover); }
 .pill.primary:disabled { background: var(--bg-raised); color: var(--text-2); cursor: default; }
 .pill.small { block-size: 32px; padding-inline: var(--space-3); font-size: var(--text-xs); }
 .icon-button.small { inline-size: 32px; block-size: 32px; }
@@ -65,7 +65,7 @@
 .comment-body { white-space: pre-wrap; overflow-wrap: anywhere; }
 .comment-toolbar { display: flex; align-items: center; gap: var(--space-1); margin-inline-start: calc(-1 * var(--space-2)); }
 .comment-likes { min-inline-size: var(--space-4); color: var(--text-2); font-size: var(--text-xs); }
-.replies-toggle { display: inline-flex; align-items: center; justify-self: start; gap: var(--space-2); block-size: 36px; padding-inline: var(--space-3); border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--accent); font-weight: 500; cursor: pointer; }
+.replies-toggle { display: inline-flex; align-items: center; justify-self: start; gap: var(--space-2); block-size: 36px; padding-inline: var(--space-3); border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--accent-text); font-weight: 500; cursor: pointer; }
 .replies-toggle:hover { background: var(--bg-hover); }
 .replies-toggle.open .glyph { transform: rotate(180deg); }
 .replies { display: grid; gap: var(--space-4); }
