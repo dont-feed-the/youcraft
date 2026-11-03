@@ -105,6 +105,16 @@ impl Store {
         }))
     }
 
+    /// The bytes that uploads started at or after `since` have yet to receive.
+    pub fn promised(&self, since: i64) -> Result<u64, StoreError> {
+        let owed: i64 = self.connection().query_row(
+            "SELECT COALESCE(SUM(MAX(size - received, 0)), 0) FROM uploads WHERE created_at >= ?1",
+            [since],
+            |row| row.get(0),
+        )?;
+        Ok(count(owed))
+    }
+
     /// Record that the upload of `video` has received `received` bytes.
     pub fn set_received(&self, video: VideoId, received: u64) -> Result<(), StoreError> {
         self.connection().execute(

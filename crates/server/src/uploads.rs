@@ -141,7 +141,9 @@ pub mod tests {
             address: "127.0.0.1:0".parse().unwrap(),
             origin: "https://youcraft.test".to_owned(),
             google: None,
+            signed_in_role: Role::Viewer,
             upload_bytes: 1 << 20,
+            storage_bytes: 1 << 21,
             transcode: TranscodeLimits {
                 memory_bytes: 1 << 30,
                 wall: std::time::Duration::from_secs(60),
@@ -240,6 +242,29 @@ pub mod tests {
         assert_eq!(original, b"0123456789");
         let job = site.store().claim_job(0).unwrap().unwrap();
         assert_eq!(job.video, video);
+        let _ = std::fs::remove_dir_all(dir);
+    }
+
+    #[tokio::test]
+    async fn uploads_share_the_sites_room_and_claim_it_from_their_start() {
+        let (site, dir) = site("room");
+        let (owner, video) = creator(&site).await;
+        std::fs::write(site.config().media().join("filled"), vec![0u8; 1 << 19]).unwrap();
+        let claimed = 10 + (1 << 19);
+        let input = serde_json::json!({ "title": "Half", "size": 1 << 20 });
+        let first = crate::dispatch::run(&site, owner, "upload.create", input.clone()).await;
+        assert!(first.is_ok(), "{first:?}");
+        let refused = crate::dispatch::run(&site, owner, "upload.create", input).await;
+        let room = (2 << 20) - claimed - (1 << 20);
+        assert_eq!(refused, Err(ApiError::TooLarge { limit: room }));
+        let name = video.to_string();
+        receive(&site, owner, &name, &at(0), Bytes::from_static(b"0123")).await;
+        let again = serde_json::json!({ "title": "Rest", "size": room });
+        let fits = crate::dispatch::run(&site, owner, "upload.create", again).await;
+        assert!(
+            fits.is_ok(),
+            "received bytes move from claimed to filled: {fits:?}"
+        );
         let _ = std::fs::remove_dir_all(dir);
     }
 

@@ -287,8 +287,13 @@ pub mod tests {
     /// The origin of the test site.
     pub const ORIGIN: &str = "https://youcraft.test";
 
-    /// A test site and its routes.
+    /// A test site and its routes, where only those invited publish.
     pub fn site() -> (Arc<Site>, Router) {
+        site_where(youcraft_api::Role::Viewer)
+    }
+
+    /// A test site and its routes, where every account has at least `signed_in_role`.
+    pub fn site_where(signed_in_role: youcraft_api::Role) -> (Arc<Site>, Router) {
         let keys = std::env::temp_dir().join(format!(
             "youcraft-test-keys-{}.json",
             crate::secrets::random_bits()
@@ -303,7 +308,9 @@ pub mod tests {
                 client_id: CLIENT.to_owned(),
                 keys,
             }),
+            signed_in_role,
             upload_bytes: 1 << 20,
+            storage_bytes: u64::MAX,
             transcode: crate::config::TranscodeLimits {
                 memory_bytes: 1 << 30,
                 wall: std::time::Duration::from_secs(60),
@@ -519,6 +526,38 @@ pub mod tests {
             StatusCode::FORBIDDEN,
             "blocked people may look, not act"
         );
+    }
+
+    #[tokio::test]
+    async fn an_open_site_lets_every_account_publish_but_the_blocked() {
+        use serde_json::json;
+
+        let (site, routes) = site_where(youcraft_api::Role::Creator);
+        site.store()
+            .invite("ada@example.com", youcraft_api::Role::Admin, 1)
+            .unwrap();
+        let ada = sign_in(&routes, "ada").await;
+        let bob = sign_in(&routes, "bob").await;
+        let (_, ada_me) = answer(&routes, "account.me", json!({}), &ada).await;
+        assert_eq!(ada_me["role"], "admin", "the floor lowers nobody");
+        let (_, bob_me) = answer(&routes, "account.me", json!({}), &bob).await;
+        assert_eq!(bob_me["role"], "creator", "{bob_me}");
+        let upload = json!({ "title": "Mine", "size": 5 });
+        let (status, _) = answer(&routes, "upload.create", upload.clone(), &bob).await;
+        assert_eq!(status, StatusCode::OK);
+        let handle = bob_me["channel"]["handle"].clone();
+        let block = json!({ "handle": handle, "blocked": true });
+        assert_eq!(
+            answer(&routes, "admin.block", block, &ada).await.0,
+            StatusCode::OK
+        );
+        let (_, bob_me) = answer(&routes, "account.me", json!({}), &bob).await;
+        assert_eq!(
+            bob_me["role"], "viewer",
+            "a blocked account keeps its own role"
+        );
+        let (status, _) = answer(&routes, "upload.create", upload, &bob).await;
+        assert_eq!(status, StatusCode::FORBIDDEN);
     }
 
     /// The JSON answer of `id` on `input`, sent with `cookie`, and its status.

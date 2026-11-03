@@ -10,7 +10,15 @@ use crate::site::{Caller, Credential, Site};
 impl Handle<Get> for Site {
     async fn handle(&self, caller: Caller, _: Nothing) -> Result<Option<Me>, ApiError> {
         match caller.account {
-            Some(account) => self.db(move |store| store.me(account)).await,
+            Some(account) => {
+                let me = self.db(move |store| store.me(account)).await?;
+                // The role the caller acts with, which the site's floor may raise above the
+                // account's own.
+                Ok(me.map(|me| Me {
+                    role: if me.blocked { me.role } else { caller.role },
+                    ..me
+                }))
+            }
             None => Ok(None),
         }
     }

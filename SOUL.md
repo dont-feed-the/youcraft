@@ -10,7 +10,8 @@ YouCraft is an open-source video site written from scratch in Rust. It
 behaves like YouTube, with the same pages, layout, gestures, shortcuts and
 addresses, on computers and on phones, in dozens of languages, right-to-left
 ones included. Its name, logo, colour and code are its own. It runs
-youcraft.tube from one server at home. Invited creators publish, everyone
+youcraft.tube from one server at home. Creators publish (those invited, or,
+while the site is small, anyone signed in, within the site's storage), everyone
 watches, and anyone signed in with Google likes, subscribes, comments and
 keeps playlists. Codecs written in Rust, FilmCraft's, turn every upload into
 renditions up to 1080p, and the original is kept. Everything a person can do

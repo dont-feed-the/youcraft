@@ -56,4 +56,8 @@ youcraft block @handle                   # or unblock
 youcraft run <command id> '<json>'       # any command, as the operator
 ```
 
+To let every account publish without an invitation, set `YOUCRAFT_SIGNED_IN_ROLE=creator`, and
+bound what all videos together may fill with `YOUCRAFT_STORAGE_BYTES`; the role of an account,
+when higher, and blocking still apply.
+
 Licensed under either of [Apache-2.0](LICENSE-APACHE) or [MIT](LICENSE-MIT), at your option.

@@ -2,6 +2,15 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.6
+
+### Added
+
+- A site may let every signed-in account publish without an invitation
+  (`YOUCRAFT_SIGNED_IN_ROLE=creator`), and bound what all its videos together fill
+  (`YOUCRAFT_STORAGE_BYTES`): an upload is refused when the room left is smaller than its file,
+  and claims that room from its start for a day.
+
 ## 0.1.5
 
 ### Added

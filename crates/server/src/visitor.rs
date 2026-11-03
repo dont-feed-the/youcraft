@@ -15,8 +15,8 @@ use axum::http::header::{AUTHORIZATION, SET_COOKIE, USER_AGENT};
 use axum::middleware::Next;
 use axum::response::Response;
 use sha2::{Digest, Sha256};
-use youcraft_api::AccountId;
 use youcraft_api::commands::account::{Preferences, Theme};
+use youcraft_api::{AccountId, Role};
 use youcraft_store::accounts::Standing;
 
 use crate::cookies;
@@ -61,7 +61,7 @@ pub async fn of(site: &Site, headers: &HeaderMap) -> Visitor {
     match found {
         Some((standing, credential)) => {
             let viewer = viewer_key(site, Some(standing.account), headers);
-            signed_in(&standing, credential, viewer)
+            signed_in(&standing, site.config().signed_in_role, credential, viewer)
         }
         None => Visitor {
             caller: Caller {
@@ -80,9 +80,14 @@ pub async fn of(site: &Site, headers: &HeaderMap) -> Visitor {
     }
 }
 
-fn signed_in(standing: &Standing, credential: Credential, viewer: ViewerKey) -> Visitor {
+fn signed_in(
+    standing: &Standing,
+    floor: Role,
+    credential: Credential,
+    viewer: ViewerKey,
+) -> Visitor {
     Visitor {
-        caller: Caller::of(standing, credential, viewer),
+        caller: Caller::of(standing, floor, credential, viewer),
         preferences: standing.preferences.clone(),
         stale_session: false,
     }

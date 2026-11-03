@@ -26,7 +26,8 @@ pub struct Site {
 pub struct Caller {
     /// Their account; `None` when signed out, and for the operator.
     pub account: Option<AccountId>,
-    /// What they may do: their account's role, or [`Role::Anyone`] while it is blocked.
+    /// What they may do: their account's role, raised to the site's floor, or
+    /// [`Role::Anyone`] while it is blocked.
     pub role: Role,
     /// How they proved who they are.
     pub credential: Credential,
@@ -75,14 +76,20 @@ impl Caller {
         viewer: ViewerKey::NOBODY,
     };
 
-    /// The caller whose credential shows `standing`, known to the view counter as `viewer`.
-    pub fn of(standing: &Standing, credential: Credential, viewer: ViewerKey) -> Caller {
+    /// The caller whose credential shows `standing`, known to the view counter as `viewer`, on
+    /// a site where every account that is not blocked has at least the role `floor`.
+    pub fn of(
+        standing: &Standing,
+        floor: Role,
+        credential: Credential,
+        viewer: ViewerKey,
+    ) -> Caller {
         Caller {
             account: Some(standing.account),
             role: if standing.blocked {
                 Role::Anyone
             } else {
-                standing.role
+                standing.role.max(floor)
             },
             credential,
             viewer,

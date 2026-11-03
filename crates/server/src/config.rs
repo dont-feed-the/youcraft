@@ -11,13 +11,19 @@
 //!   `https://www.googleapis.com/oauth2/v3/certs` serves it), kept fresh by someone else, since
 //!   the site never reaches the network; needed with the client ID.
 //! - `YOUCRAFT_LOG`: what to log, as `tracing`'s filters write it; `info` by default.
+//! - `YOUCRAFT_SIGNED_IN_ROLE`: the least role of every account that is not blocked, `viewer`
+//!   or `creator`; `viewer` by default, so that only those invited publish.
 //! - `YOUCRAFT_UPLOAD_BYTES`: the largest file one may upload; 16 GiB by default.
+//! - `YOUCRAFT_STORAGE_BYTES`: the most bytes the site's videos may fill, originals, renditions
+//!   and uploads in progress together; no limit by default.
 //! - `YOUCRAFT_TRANSCODE_MEMORY_BYTES`: the address space a transcode may use; 8 GiB by default.
 //! - `YOUCRAFT_TRANSCODE_HOURS`: the longest a transcode may run; 12 by default.
 
 use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::time::Duration;
+
+use youcraft_api::Role;
 
 /// The configuration of one run.
 #[derive(Clone, Debug)]
@@ -32,8 +38,12 @@ pub struct Config {
     pub origin: String,
     /// Signing in with Google, if it is set up.
     pub google: Option<Google>,
+    /// The least role of every account that is not blocked.
+    pub signed_in_role: Role,
     /// The largest file one may upload, in bytes.
     pub upload_bytes: u64,
+    /// The most bytes the site's videos may fill.
+    pub storage_bytes: u64,
     /// What one transcode may use.
     pub transcode: TranscodeLimits,
 }
@@ -92,6 +102,15 @@ impl Config {
             }
             _ => None,
         };
+        let signed_in_role = match std::env::var("YOUCRAFT_SIGNED_IN_ROLE").as_deref() {
+            Err(_) | Ok("viewer") => Role::Viewer,
+            Ok("creator") => Role::Creator,
+            Ok(other) => {
+                return Err(format!(
+                    "YOUCRAFT_SIGNED_IN_ROLE={other}: viewer or creator expected"
+                ));
+            }
+        };
         Ok(Config {
             data: path("YOUCRAFT_DATA", "data"),
             site: path("YOUCRAFT_SITE", "target/site"),
@@ -100,7 +119,9 @@ impl Config {
                 .map_err(|e| format!("YOUCRAFT_ADDRESS={address}: {e}"))?,
             origin,
             google,
+            signed_in_role,
             upload_bytes: number("YOUCRAFT_UPLOAD_BYTES", 16 << 30)?,
+            storage_bytes: number("YOUCRAFT_STORAGE_BYTES", u64::MAX)?,
             transcode: TranscodeLimits {
                 memory_bytes: number("YOUCRAFT_TRANSCODE_MEMORY_BYTES", 8 << 30)?,
                 wall: Duration::from_secs(

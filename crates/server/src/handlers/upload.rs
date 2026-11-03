@@ -10,6 +10,7 @@ use youcraft_store::uploads::NewUpload as NewRow;
 use crate::dispatch::Handle;
 use crate::handlers::studio::{description, may_manage, title};
 use crate::site::{Caller, Site, now};
+use crate::storage;
 
 /// The most bytes one `PATCH` of an upload may carry.
 pub const PIECE: u64 = 16 << 20;
@@ -18,17 +19,20 @@ impl Handle<Create> for Site {
     async fn handle(&self, caller: Caller, input: NewUpload) -> Result<Upload, ApiError> {
         let account = caller.account.ok_or(ApiError::SignInRequired)?;
         let (title, description) = (title(&input.title)?, description(&input.description)?);
-        let limit = self.config().upload_bytes;
         if input.size == 0 {
             return Err(ApiError::invalid("size", "a file with bytes"));
-        }
-        if input.size > limit {
-            return Err(ApiError::TooLarge { limit });
         }
         let channel = self
             .db(move |store| store.channel_of(account))
             .await?
             .ok_or(ApiError::Forbidden)?;
+        // Measuring the room and claiming it happen under one lock, so that two uploads
+        // cannot both take the same room.
+        let _writing = self.writing.lock().await;
+        let limit = self.config().upload_bytes.min(storage::room(self).await?);
+        if input.size > limit {
+            return Err(ApiError::TooLarge { limit });
+        }
         let video = VideoId::from_bits(crate::secrets::random_bits());
         let visibility = input.visibility;
         let size = input.size;

@@ -4201,7 +4201,7 @@ dependencies = [
 
 [[package]]
 name = "xtask"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "wasm-bindgen-cli-support",
 ]
@@ -4237,7 +4237,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-api"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "schemars",
  "serde",
@@ -4247,14 +4247,14 @@ dependencies = [
 
 [[package]]
 name = "youcraft-i18n"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "craft-i18n",
 ]
 
 [[package]]
 name = "youcraft-player"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "js-sys",
  "leptos",
@@ -4268,7 +4268,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-recommend"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "serde",
  "serde_json",
@@ -4276,7 +4276,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-server"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "axum",
  "base64 0.22.1",
@@ -4307,7 +4307,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-store"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "rusqlite",
  "thiserror 2.0.21",
@@ -4316,7 +4316,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-transcode"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "filmcraft-aac",
  "filmcraft-codecs",
@@ -4334,7 +4334,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-ui"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "console_error_panic_hook",
  "http",

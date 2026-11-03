@@ -23,6 +23,7 @@ mod media;
 mod secrets;
 mod signin;
 mod site;
+mod storage;
 mod transcode;
 mod uploads;
 mod visitor;
