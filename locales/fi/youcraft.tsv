@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} viikko sitten|{n} viikkoa sitten
 @plural	{n} month ago|{n} months ago	{n} kuukausi sitten|{n} kuukautta sitten
 @plural	{n} year ago|{n} years ago	{n} vuosi sitten|{n} vuotta sitten
+	Play	Toista
+	Pause	Tauko
+	Mute	Mykistä
+	Unmute	Poista mykistys
+	Volume	Äänenvoimakkuus
+	Seek	Kelaa
+	Theatre mode	Teatteritila
+	Default view	Oletusnäkymä
+	Full screen	Koko näyttö
+	Exit full screen	Poistu koko näytöstä
+	Playback speed	Toistonopeus
+	Normal	Normaali
+	Quality	Laatu
+	Auto	Automaattinen
+	Auto ({quality})	Automaattinen ({quality})
+	This video can't be played in this browser.	Tätä videota ei voi toistaa tässä selaimessa.
+@plural	{n} second|{n} seconds	{n} sekunti|{n} sekuntia

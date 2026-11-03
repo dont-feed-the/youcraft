@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n}주 전
 @plural	{n} month ago|{n} months ago	{n}개월 전
 @plural	{n} year ago|{n} years ago	{n}년 전
+	Play	재생
+	Pause	일시중지
+	Mute	음소거
+	Unmute	음소거 해제
+	Volume	볼륨
+	Seek	탐색
+	Theatre mode	극장 모드
+	Default view	기본 보기
+	Full screen	전체 화면
+	Exit full screen	전체 화면 종료
+	Playback speed	재생 속도
+	Normal	보통
+	Quality	화질
+	Auto	자동
+	Auto ({quality})	자동 ({quality})
+	This video can't be played in this browser.	이 브라우저에서는 이 동영상을 재생할 수 없습니다.
+@plural	{n} second|{n} seconds	{n}초

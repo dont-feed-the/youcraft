@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	πριν από {n} εβδομάδα|πριν από {n} εβδομάδες
 @plural	{n} month ago|{n} months ago	πριν από {n} μήνα|πριν από {n} μήνες
 @plural	{n} year ago|{n} years ago	πριν από {n} έτος|πριν από {n} έτη
+	Play	Αναπαραγωγή
+	Pause	Παύση
+	Mute	Σίγαση
+	Unmute	Κατάργηση σίγασης
+	Volume	Ένταση
+	Seek	Μετάβαση
+	Theatre mode	Λειτουργία κινηματογράφου
+	Default view	Προεπιλεγμένη προβολή
+	Full screen	Πλήρης οθόνη
+	Exit full screen	Έξοδος από πλήρη οθόνη
+	Playback speed	Ταχύτητα αναπαραγωγής
+	Normal	Κανονική
+	Quality	Ποιότητα
+	Auto	Αυτόματη
+	Auto ({quality})	Αυτόματη ({quality})
+	This video can't be played in this browser.	Αυτό το βίντεο δεν μπορεί να αναπαραχθεί σε αυτό το πρόγραμμα περιήγησης.
+@plural	{n} second|{n} seconds	{n} δευτερόλεπτο|{n} δευτερόλεπτα

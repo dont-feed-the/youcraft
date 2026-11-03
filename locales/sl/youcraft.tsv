@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	pred {n} tednom|pred {n} tednoma|pred {n} tedni|pred {n} tedni
 @plural	{n} month ago|{n} months ago	pred {n} mesecem|pred {n} mesecema|pred {n} meseci|pred {n} meseci
 @plural	{n} year ago|{n} years ago	pred {n} letom|pred {n} letoma|pred {n} leti|pred {n} leti
+	Play	Predvajaj
+	Pause	Začasno ustavi
+	Mute	Izklopi zvok
+	Unmute	Vklopi zvok
+	Volume	Glasnost
+	Seek	Previjanje
+	Theatre mode	Kino način
+	Default view	Privzeti pogled
+	Full screen	Celozaslonski način
+	Exit full screen	Zapri celozaslonski način
+	Playback speed	Hitrost predvajanja
+	Normal	Običajna
+	Quality	Kakovost
+	Auto	Samodejno
+	Auto ({quality})	Samodejno ({quality})
+	This video can't be played in this browser.	Tega videoposnetka v tem brskalniku ni mogoče predvajati.
+@plural	{n} second|{n} seconds	{n} sekunda|{n} sekundi|{n} sekunde|{n} sekund

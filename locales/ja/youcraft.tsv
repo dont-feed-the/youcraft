@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} 週間前
 @plural	{n} month ago|{n} months ago	{n} か月前
 @plural	{n} year ago|{n} years ago	{n} 年前
+	Play	再生
+	Pause	一時停止
+	Mute	ミュート
+	Unmute	ミュート解除
+	Volume	音量
+	Seek	シーク
+	Theatre mode	シアターモード
+	Default view	デフォルト表示
+	Full screen	全画面
+	Exit full screen	全画面を終了
+	Playback speed	再生速度
+	Normal	標準
+	Quality	画質
+	Auto	自動
+	Auto ({quality})	自動 ({quality})
+	This video can't be played in this browser.	このブラウザではこの動画を再生できません。
+@plural	{n} second|{n} seconds	{n} 秒

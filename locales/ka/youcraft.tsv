@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} კვირის წინ|{n} კვირის წინ
 @plural	{n} month ago|{n} months ago	{n} თვის წინ|{n} თვის წინ
 @plural	{n} year ago|{n} years ago	{n} წლის წინ|{n} წლის წინ
+	Play	დაკვრა
+	Pause	პაუზა
+	Mute	ხმის დადუმება
+	Unmute	ხმის ჩართვა
+	Volume	ხმის სიმაღლე
+	Seek	გადახვევა
+	Theatre mode	კინოთეატრის რეჟიმი
+	Default view	ნაგულისხმევი ხედი
+	Full screen	სრული ეკრანი
+	Exit full screen	სრული ეკრანიდან გასვლა
+	Playback speed	დაკვრის სიჩქარე
+	Normal	ჩვეულებრივი
+	Quality	ხარისხი
+	Auto	ავტომატური
+	Auto ({quality})	ავტომატური ({quality})
+	This video can't be played in this browser.	ამ ბრაუზერში ამ ვიდეოს დაკვრა შეუძლებელია.
+@plural	{n} second|{n} seconds	{n} წამი|{n} წამი

@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} тиждень тому|{n} тижні тому|{n} тижнів тому
 @plural	{n} month ago|{n} months ago	{n} місяць тому|{n} місяці тому|{n} місяців тому
 @plural	{n} year ago|{n} years ago	{n} рік тому|{n} роки тому|{n} років тому
+	Play	Відтворити
+	Pause	Пауза
+	Mute	Вимкнути звук
+	Unmute	Увімкнути звук
+	Volume	Гучність
+	Seek	Перемотування
+	Theatre mode	Режим кінотеатру
+	Default view	Звичайний вигляд
+	Full screen	На весь екран
+	Exit full screen	Вийти з повноекранного режиму
+	Playback speed	Швидкість відтворення
+	Normal	Звичайна
+	Quality	Якість
+	Auto	Автоматично
+	Auto ({quality})	Автоматично ({quality})
+	This video can't be played in this browser.	Це відео не можна відтворити в цьому браузері.
+@plural	{n} second|{n} seconds	{n} секунда|{n} секунди|{n} секунд

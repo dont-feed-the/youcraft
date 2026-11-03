@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	prieš {n} savaitę|prieš {n} savaites|prieš {n} savaičių
 @plural	{n} month ago|{n} months ago	prieš {n} mėnesį|prieš {n} mėnesius|prieš {n} mėnesių
 @plural	{n} year ago|{n} years ago	prieš {n} metus|prieš {n} metus|prieš {n} metų
+	Play	Leisti
+	Pause	Pristabdyti
+	Mute	Išjungti garsą
+	Unmute	Įjungti garsą
+	Volume	Garsumas
+	Seek	Persukti
+	Theatre mode	Kino režimas
+	Default view	Numatytasis vaizdas
+	Full screen	Visas ekranas
+	Exit full screen	Išeiti iš viso ekrano
+	Playback speed	Atkūrimo greitis
+	Normal	Įprastas
+	Quality	Kokybė
+	Auto	Automatinė
+	Auto ({quality})	Automatinė ({quality})
+	This video can't be played in this browser.	Šio vaizdo įrašo negalima paleisti šioje naršyklėje.
+@plural	{n} second|{n} seconds	{n} sekundė|{n} sekundės|{n} sekundžių

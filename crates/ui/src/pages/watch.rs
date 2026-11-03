@@ -1,5 +1,6 @@
 //! The watch page: the video, its title, channel, actions and description, and what to watch
-//! next beside it (below it on narrow screens).
+//! next beside it (below it on narrow screens). In theatre mode the video spans the page's width
+//! and the rest moves under it, as on youtube.com.
 
 use leptos::prelude::*;
 use leptos_meta::Title;
@@ -7,11 +8,12 @@ use leptos_router::hooks::use_query_map;
 use youcraft_api::commands::video;
 use youcraft_api::records::VideoPage;
 use youcraft_api::{ApiError, VideoId, routes};
+use youcraft_player::VideoPlayer;
 
 use crate::call::call;
 use crate::components::card::CompactCard;
 use crate::icons::{Glyph, Icon};
-use crate::lang::{count, tr};
+use crate::lang::{Language, count, tr};
 use crate::pages::not_found::Trouble;
 
 /// The video the address names, `/watch?v=…`.
@@ -44,12 +46,13 @@ pub fn Watch() -> impl IntoView {
             }
         },
     );
+    let theatre = RwSignal::new(false);
     view! {
-        <div class="watch">
-            <Suspense fallback=|| view! { <div class="primary"><div class="player"></div></div> }>
+        <div class="watch" class:theatre=move || theatre.get()>
+            <Suspense fallback=|| view! { <div class="stage"><div class="player"></div></div> }>
                 {move || Suspend::new(async move {
                     match page.await {
-                        Ok(page) => view! { <Primary page/> }.into_any(),
+                        Ok(page) => view! { <Stage page=page.clone() theatre/><Primary page/> }.into_any(),
                         Err(error) => view! { <div class="primary"><Trouble error/></div> }.into_any(),
                     }
                 })}
@@ -65,11 +68,34 @@ pub fn Watch() -> impl IntoView {
     }
 }
 
-/// The video and everything under it.
+/// The video, in its player once it can be played.
+#[component]
+fn Stage(page: VideoPage, theatre: RwSignal<bool>) -> impl IntoView {
+    let card = page.card;
+    view! {
+        <div class="stage">
+            {if page.playable {
+                view! {
+                    <VideoPlayer
+                        video=card.id
+                        duration=card.duration
+                        poster=routes::thumbnail(card.id, 720)
+                        lang=Language::current()
+                        theatre
+                    />
+                }
+                .into_any()
+            } else {
+                view! { <div class="player"><p class="unavailable">{tr("This video isn't available yet.")}</p></div> }.into_any()
+            }}
+        </div>
+    }
+}
+
+/// Everything under the video.
 #[component]
 fn Primary(page: VideoPage) -> impl IntoView {
     let card = page.card;
-    let poster = routes::thumbnail(card.id, 720);
     let views = count(card.views, "{n} view", "{n} views");
     let likes = count(page.likes, "{n} like", "{n} likes");
     let comments = count(page.comments, "{n} comment", "{n} comments");
@@ -83,13 +109,6 @@ fn Primary(page: VideoPage) -> impl IntoView {
     view! {
         <Title text=format!("{} - YouCraft", card.title)/>
         <div class="primary">
-            <div class="player">
-                {if page.playable {
-                    view! { <video controls preload="metadata" poster=poster src=routes::playlist_of_renditions(card.id)></video> }.into_any()
-                } else {
-                    view! { <p class="unavailable">{tr("This video isn't available yet.")}</p> }.into_any()
-                }}
-            </div>
             <h1 class="watch-title">{card.title.clone()}</h1>
             <div class="owner-row">
                 <a class="avatar" href=routes::channel(&card.channel.handle) aria-hidden="true" tabindex="-1">{initial}</a>

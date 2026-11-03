@@ -1,11 +1,18 @@
-/* The watch page: the video and its details, and the list beside it (below it when narrow). */
-.watch { display: grid; grid-template-columns: minmax(0, 1fr) 402px; gap: var(--space-6); max-inline-size: 1754px; margin-inline: auto; padding: var(--space-6); }
+/* The watch page: the video, its details under it and the list beside it (below them when
+   narrow). In theatre mode the video spans the page and the list moves down beside the details. */
+.watch { display: grid; grid-template-columns: [full-start] minmax(var(--space-6), 1fr) [main-start] minmax(0, 1280px) [main-end] var(--space-6) [side-start] 402px [side-end] minmax(var(--space-6), 1fr) [full-end]; grid-template-rows: auto 1fr; row-gap: var(--space-3); padding-block: var(--space-6); }
 
-.primary { display: grid; align-content: start; gap: var(--space-3); min-inline-size: 0; }
+.stage { grid-column: main; grid-row: 1; }
+.primary { grid-column: main; grid-row: 2; display: grid; align-content: start; gap: var(--space-3); min-inline-size: 0; }
+.secondary { grid-column: side; grid-row: 1 / span 2; }
 
-.player { aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radius-card); background: var(--player-bg); }
-.player video { display: block; inline-size: 100%; block-size: 100%; }
+.stage .player { aspect-ratio: 16 / 9; border-radius: var(--radius-card); background: var(--player-bg); }
 .unavailable { display: grid; place-items: center; block-size: 100%; color: var(--badge-text); }
+
+.watch.theatre { row-gap: var(--space-6); padding-block-start: 0; }
+.watch.theatre .stage { grid-column: full; background: var(--player-bg); }
+.watch.theatre .stage .player { aspect-ratio: auto; block-size: var(--theatre-height); border-radius: 0; }
+.watch.theatre .secondary { grid-row: 2; }
 
 .watch-title { font-size: var(--text-lg); font-weight: 700; line-height: var(--line-title-lg); }
 
@@ -25,7 +32,7 @@
 
 .comments-header h2 { font-size: var(--text-lg); }
 
-.secondary { display: grid; align-content: start; gap: var(--space-2); }
+.secondary { display: grid; align-content: start; gap: var(--space-2); min-inline-size: 0; }
 
 .compact-card { display: flex; gap: var(--space-2); }
 .compact-card .thumbnail { flex: none; inline-size: var(--compact-thumb); border-radius: var(--radius-md); }
@@ -33,13 +40,14 @@
 .compact-card .channel-name, .compact-card .byline { font-size: var(--text-xs); }
 
 @media (max-width: 1016px) {
-  .watch { grid-template-columns: minmax(0, 1fr); }
+  .watch { grid-template-columns: [full-start] var(--space-6) [main-start side-start] minmax(0, 1fr) [main-end side-end] var(--space-6) [full-end]; grid-template-rows: auto auto 1fr; }
+  .secondary, .watch.theatre .secondary { grid-row: 3; }
 }
 
 @media (max-width: 656px) {
-  .watch { padding: 0; gap: var(--space-3); }
-  .player { border-radius: 0; }
-  .primary > :not(.player) { margin-inline: var(--space-3); }
+  .watch { grid-template-columns: [full-start main-start side-start] minmax(0, 1fr) [full-end main-end side-end]; padding-block: 0; row-gap: var(--space-3); }
+  .stage { position: sticky; inset-block-start: var(--masthead-height); z-index: 2; }
+  .stage .player, .watch.theatre .stage .player { aspect-ratio: 16 / 9; block-size: auto; border-radius: 0; }
+  .primary, .secondary { padding-inline: var(--space-3); }
   .actions { margin-inline-start: 0; overflow-x: auto; }
-  .secondary { padding-inline: var(--space-3); }
 }

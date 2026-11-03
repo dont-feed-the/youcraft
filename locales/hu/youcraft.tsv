@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} hete|{n} hete
 @plural	{n} month ago|{n} months ago	{n} hónapja|{n} hónapja
 @plural	{n} year ago|{n} years ago	{n} éve|{n} éve
+	Play	Lejátszás
+	Pause	Szünet
+	Mute	Némítás
+	Unmute	Némítás feloldása
+	Volume	Hangerő
+	Seek	Tekerés
+	Theatre mode	Mozi mód
+	Default view	Alapnézet
+	Full screen	Teljes képernyő
+	Exit full screen	Kilépés a teljes képernyőből
+	Playback speed	Lejátszási sebesség
+	Normal	Normál
+	Quality	Minőség
+	Auto	Automatikus
+	Auto ({quality})	Automatikus ({quality})
+	This video can't be played in this browser.	Ez a videó nem játszható le ebben a böngészőben.
+@plural	{n} second|{n} seconds	{n} másodperc|{n} másodperc

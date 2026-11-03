@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	hace {n} semana|hace {n} semanas
 @plural	{n} month ago|{n} months ago	hace {n} mes|hace {n} meses
 @plural	{n} year ago|{n} years ago	hace {n} año|hace {n} años
+	Play	Reproducir
+	Pause	Pausar
+	Mute	Silenciar
+	Unmute	Activar sonido
+	Volume	Volumen
+	Seek	Avanzar o retroceder
+	Theatre mode	Modo cine
+	Default view	Vista predeterminada
+	Full screen	Pantalla completa
+	Exit full screen	Salir de pantalla completa
+	Playback speed	Velocidad de reproducción
+	Normal	Normal
+	Quality	Calidad
+	Auto	Automática
+	Auto ({quality})	Automática ({quality})
+	This video can't be played in this browser.	Este vídeo no se puede reproducir en este navegador.
+@plural	{n} second|{n} seconds	{n} segundo|{n} segundos

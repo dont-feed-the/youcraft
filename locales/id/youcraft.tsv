@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} minggu yang lalu
 @plural	{n} month ago|{n} months ago	{n} bulan yang lalu
 @plural	{n} year ago|{n} years ago	{n} tahun yang lalu
+	Play	Putar
+	Pause	Jeda
+	Mute	Bisukan
+	Unmute	Bunyikan
+	Volume	Volume
+	Seek	Geser
+	Theatre mode	Mode bioskop
+	Default view	Tampilan default
+	Full screen	Layar penuh
+	Exit full screen	Keluar dari layar penuh
+	Playback speed	Kecepatan putar
+	Normal	Normal
+	Quality	Kualitas
+	Auto	Otomatis
+	Auto ({quality})	Otomatis ({quality})
+	This video can't be played in this browser.	Video ini tidak dapat diputar di browser ini.
+@plural	{n} second|{n} seconds	{n} detik

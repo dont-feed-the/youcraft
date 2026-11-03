@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	acum {n} săptămână|acum {n} săptămâni|acum {n} de săptămâni
 @plural	{n} month ago|{n} months ago	acum {n} lună|acum {n} luni|acum {n} de luni
 @plural	{n} year ago|{n} years ago	acum {n} an|acum {n} ani|acum {n} de ani
+	Play	Redă
+	Pause	Întrerupe
+	Mute	Dezactivează sunetul
+	Unmute	Activează sunetul
+	Volume	Volum
+	Seek	Derulează
+	Theatre mode	Mod cinematograf
+	Default view	Vizualizare implicită
+	Full screen	Ecran complet
+	Exit full screen	Ieși din ecranul complet
+	Playback speed	Viteza de redare
+	Normal	Normală
+	Quality	Calitate
+	Auto	Automată
+	Auto ({quality})	Automată ({quality})
+	This video can't be played in this browser.	Acest videoclip nu poate fi redat în acest browser.
+@plural	{n} second|{n} seconds	{n} secundă|{n} secunde|{n} de secunde

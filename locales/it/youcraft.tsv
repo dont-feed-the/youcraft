@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} settimana fa|{n} settimane fa
 @plural	{n} month ago|{n} months ago	{n} mese fa|{n} mesi fa
 @plural	{n} year ago|{n} years ago	{n} anno fa|{n} anni fa
+	Play	Riproduci
+	Pause	Pausa
+	Mute	Disattiva audio
+	Unmute	Attiva audio
+	Volume	Volume
+	Seek	Avanza o riavvolgi
+	Theatre mode	Modalità cinema
+	Default view	Visualizzazione predefinita
+	Full screen	Schermo intero
+	Exit full screen	Esci da schermo intero
+	Playback speed	Velocità di riproduzione
+	Normal	Normale
+	Quality	Qualità
+	Auto	Automatica
+	Auto ({quality})	Automatica ({quality})
+	This video can't be played in this browser.	Questo video non può essere riprodotto in questo browser.
+@plural	{n} second|{n} seconds	{n} secondo|{n} secondi

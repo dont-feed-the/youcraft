@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} వారం క్రితం|{n} వారాల క్రితం
 @plural	{n} month ago|{n} months ago	{n} నెల క్రితం|{n} నెలల క్రితం
 @plural	{n} year ago|{n} years ago	{n} సంవత్సరం క్రితం|{n} సంవత్సరాల క్రితం
+	Play	ప్లే చేయండి
+	Pause	పాజ్ చేయండి
+	Mute	మ్యూట్ చేయండి
+	Unmute	అన్‌మ్యూట్ చేయండి
+	Volume	వాల్యూమ్
+	Seek	ముందుకు లేదా వెనక్కు జరపండి
+	Theatre mode	థియేటర్ మోడ్
+	Default view	డిఫాల్ట్ వీక్షణ
+	Full screen	పూర్తి స్క్రీన్
+	Exit full screen	పూర్తి స్క్రీన్ నుండి నిష్క్రమించండి
+	Playback speed	ప్లేబ్యాక్ వేగం
+	Normal	సాధారణం
+	Quality	నాణ్యత
+	Auto	ఆటోమేటిక్
+	Auto ({quality})	ఆటోమేటిక్ ({quality})
+	This video can't be played in this browser.	ఈ బ్రౌజర్‌లో ఈ వీడియోను ప్లే చేయడం సాధ్యం కాదు.
+@plural	{n} second|{n} seconds	{n} సెకను|{n} సెకన్లు

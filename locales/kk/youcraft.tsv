@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} апта бұрын|{n} апта бұрын
 @plural	{n} month ago|{n} months ago	{n} ай бұрын|{n} ай бұрын
 @plural	{n} year ago|{n} years ago	{n} жыл бұрын|{n} жыл бұрын
+	Play	Ойнату
+	Pause	Кідірту
+	Mute	Дыбысын өшіру
+	Unmute	Дыбысын қосу
+	Volume	Дыбыс деңгейі
+	Seek	Айналдыру
+	Theatre mode	Кинотеатр режимі
+	Default view	Әдепкі көрініс
+	Full screen	Толық экран
+	Exit full screen	Толық экраннан шығу
+	Playback speed	Ойнату жылдамдығы
+	Normal	Қалыпты
+	Quality	Сапа
+	Auto	Автоматты
+	Auto ({quality})	Автоматты ({quality})
+	This video can't be played in this browser.	Бұл бейнені осы браузерде ойнату мүмкін емес.
+@plural	{n} second|{n} seconds	{n} секунд|{n} секунд

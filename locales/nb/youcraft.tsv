@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	for {n} uke siden|for {n} uker siden
 @plural	{n} month ago|{n} months ago	for {n} måned siden|for {n} måneder siden
 @plural	{n} year ago|{n} years ago	for {n} år siden|for {n} år siden
+	Play	Spill av
+	Pause	Pause
+	Mute	Slå av lyden
+	Unmute	Slå på lyden
+	Volume	Volum
+	Seek	Spol
+	Theatre mode	Kinomodus
+	Default view	Standardvisning
+	Full screen	Fullskjerm
+	Exit full screen	Avslutt fullskjerm
+	Playback speed	Avspillingshastighet
+	Normal	Normal
+	Quality	Kvalitet
+	Auto	Automatisk
+	Auto ({quality})	Automatisk ({quality})
+	This video can't be played in this browser.	Denne videoen kan ikke spilles av i denne nettleseren.
+@plural	{n} second|{n} seconds	{n} sekund|{n} sekunder

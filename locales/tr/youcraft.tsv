@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} hafta önce|{n} hafta önce
 @plural	{n} month ago|{n} months ago	{n} ay önce|{n} ay önce
 @plural	{n} year ago|{n} years ago	{n} yıl önce|{n} yıl önce
+	Play	Oynat
+	Pause	Duraklat
+	Mute	Sesi kapat
+	Unmute	Sesi aç
+	Volume	Ses düzeyi
+	Seek	Sar
+	Theatre mode	Sinema modu
+	Default view	Varsayılan görünüm
+	Full screen	Tam ekran
+	Exit full screen	Tam ekrandan çık
+	Playback speed	Oynatma hızı
+	Normal	Normal
+	Quality	Kalite
+	Auto	Otomatik
+	Auto ({quality})	Otomatik ({quality})
+	This video can't be played in this browser.	Bu video bu tarayıcıda oynatılamıyor.
+@plural	{n} second|{n} seconds	{n} saniye|{n} saniye

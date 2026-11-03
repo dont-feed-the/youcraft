@@ -3,7 +3,7 @@ resolver = "3"
 members = ["crates/*", "xtask"]
 
 [workspace.package]
-version = "0.1.2"
+version = "0.1.3"
 edition = "2024"
 rust-version = "1.95"
 license = "MIT OR Apache-2.0"
@@ -12,6 +12,7 @@ repository = "https://github.com/dont-feed-the/youcraft"
 [workspace.dependencies]
 youcraft-api = { path = "crates/api" }
 youcraft-i18n = { path = "crates/i18n" }
+youcraft-player = { path = "crates/player" }
 youcraft-recommend = { path = "crates/recommend" }
 youcraft-store = { path = "crates/store" }
 youcraft-transcode = { path = "crates/transcode" }

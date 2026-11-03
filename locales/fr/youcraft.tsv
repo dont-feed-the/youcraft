@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	il y a {n} semaine|il y a {n} semaines
 @plural	{n} month ago|{n} months ago	il y a {n} mois|il y a {n} mois
 @plural	{n} year ago|{n} years ago	il y a {n} an|il y a {n} ans
+	Play	Lire
+	Pause	Pause
+	Mute	Couper le son
+	Unmute	Activer le son
+	Volume	Volume
+	Seek	Avancer ou reculer
+	Theatre mode	Mode cinéma
+	Default view	Vue par défaut
+	Full screen	Plein écran
+	Exit full screen	Quitter le plein écran
+	Playback speed	Vitesse de lecture
+	Normal	Normale
+	Quality	Qualité
+	Auto	Automatique
+	Auto ({quality})	Automatique ({quality})
+	This video can't be played in this browser.	Cette vidéo ne peut pas être lue dans ce navigateur.
+@plural	{n} second|{n} seconds	{n} seconde|{n} secondes

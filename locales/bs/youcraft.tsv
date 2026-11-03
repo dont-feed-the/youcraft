@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	prije {n} sedmicu|prije {n} sedmice|prije {n} sedmica
 @plural	{n} month ago|{n} months ago	prije {n} mjesec|prije {n} mjeseca|prije {n} mjeseci
 @plural	{n} year ago|{n} years ago	prije {n} godinu|prije {n} godine|prije {n} godina
+	Play	Pokreni
+	Pause	Pauziraj
+	Mute	Isključi zvuk
+	Unmute	Uključi zvuk
+	Volume	Jačina zvuka
+	Seek	Premotaj
+	Theatre mode	Kino način
+	Default view	Standardni prikaz
+	Full screen	Cijeli ekran
+	Exit full screen	Izađi iz cijelog ekrana
+	Playback speed	Brzina reprodukcije
+	Normal	Normalna
+	Quality	Kvalitet
+	Auto	Automatski
+	Auto ({quality})	Automatski ({quality})
+	This video can't be played in this browser.	Ovaj video se ne može pustiti u ovom pregledniku.
+@plural	{n} second|{n} seconds	{n} sekunda|{n} sekunde|{n} sekundi

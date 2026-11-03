@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	قبل {n} أسبوع|قبل {n} أسبوع|قبل {n} أسبوع|قبل {n} أسابيع|قبل {n} أسبوعًا|قبل {n} أسبوع
 @plural	{n} month ago|{n} months ago	قبل {n} شهر|قبل {n} شهر|قبل {n} شهر|قبل {n} أشهر|قبل {n} شهرًا|قبل {n} شهر
 @plural	{n} year ago|{n} years ago	قبل {n} سنة|قبل {n} سنة|قبل {n} سنة|قبل {n} سنوات|قبل {n} سنة|قبل {n} سنة
+	Play	تشغيل
+	Pause	إيقاف مؤقت
+	Mute	كتم الصوت
+	Unmute	إلغاء كتم الصوت
+	Volume	مستوى الصوت
+	Seek	تقديم أو إرجاع
+	Theatre mode	وضع المسرح
+	Default view	العرض العادي
+	Full screen	ملء الشاشة
+	Exit full screen	إنهاء ملء الشاشة
+	Playback speed	سرعة التشغيل
+	Normal	عادية
+	Quality	الجودة
+	Auto	تلقائية
+	Auto ({quality})	تلقائية ({quality})
+	This video can't be played in this browser.	لا يمكن تشغيل هذا الفيديو في هذا المتصفح.
+@plural	{n} second|{n} seconds	{n} ثانية|{n} ثانية|{n} ثانية|{n} ثوانٍ|{n} ثانية|{n} ثانية

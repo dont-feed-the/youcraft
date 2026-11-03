@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	преди {n} седмица|преди {n} седмици
 @plural	{n} month ago|{n} months ago	преди {n} месец|преди {n} месеца
 @plural	{n} year ago|{n} years ago	преди {n} година|преди {n} години
+	Play	Пускане
+	Pause	Пауза
+	Mute	Без звук
+	Unmute	Включване на звука
+	Volume	Сила на звука
+	Seek	Превъртане
+	Theatre mode	Режим „Кино“
+	Default view	Стандартен изглед
+	Full screen	Цял екран
+	Exit full screen	Изход от цял екран
+	Playback speed	Скорост на възпроизвеждане
+	Normal	Нормална
+	Quality	Качество
+	Auto	Автоматично
+	Auto ({quality})	Автоматично ({quality})
+	This video can't be played in this browser.	Този видеоклип не може да се пусне в този браузър.
+@plural	{n} second|{n} seconds	{n} секунда|{n} секунди

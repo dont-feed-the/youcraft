@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	לפני {n} שבוע|לפני {n} שבועות|לפני {n} שבועות
 @plural	{n} month ago|{n} months ago	לפני {n} חודש|לפני {n} חודשים|לפני {n} חודשים
 @plural	{n} year ago|{n} years ago	לפני {n} שנה|לפני {n} שנים|לפני {n} שנים
+	Play	הפעלה
+	Pause	השהיה
+	Mute	השתקה
+	Unmute	ביטול השתקה
+	Volume	עוצמת קול
+	Seek	דילוג
+	Theatre mode	מצב קולנוע
+	Default view	תצוגת ברירת מחדל
+	Full screen	מסך מלא
+	Exit full screen	יציאה ממסך מלא
+	Playback speed	מהירות הפעלה
+	Normal	רגילה
+	Quality	איכות
+	Auto	אוטומטית
+	Auto ({quality})	אוטומטית ({quality})
+	This video can't be played in this browser.	לא ניתן להפעיל את הסרטון בדפדפן הזה.
+@plural	{n} second|{n} seconds	{n} שנייה|{n} שניות|{n} שניות

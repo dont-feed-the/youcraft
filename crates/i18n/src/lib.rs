@@ -68,6 +68,16 @@ pub fn fill(template: &str, values: &[(&str, &str)]) -> String {
     craft_i18n::fmt(template, values)
 }
 
+/// `value` with `decimals` places, in the digits and separators of `lang`.
+pub fn decimal(lang: Lang, value: f64, decimals: usize) -> String {
+    craft_i18n::Format::from_tag(code(lang)).number(value, decimals)
+}
+
+/// `ratio` as a whole percentage, as `lang` writes one: 0.5 is "50%" in English.
+pub fn percent(lang: Lang, ratio: f64) -> String {
+    craft_i18n::Format::from_tag(code(lang)).percent(ratio, 0)
+}
+
 /// The language a request should be answered in: `chosen` if the person chose an offered one,
 /// else the best match of the browser's `Accept-Language`, else English.
 pub fn negotiate(chosen: Option<&str>, accept_language: &str) -> Lang {
@@ -137,6 +147,13 @@ mod tests {
         assert_eq!(quality("0.1234"), 123);
         assert_eq!(quality("2"), 0);
         assert_eq!(quality("0.x"), 0);
+    }
+
+    #[test]
+    fn numbers_are_written_as_each_language_writes_them() {
+        assert_eq!(decimal(Lang::EN, 1.25, 2), "1.25");
+        assert_eq!(decimal(Lang::EN, 2.0, 0), "2");
+        assert_eq!(percent(Lang::EN, 0.5), "50%");
     }
 
     #[test]

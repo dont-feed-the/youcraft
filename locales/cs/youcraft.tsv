@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	před {n} týdnem|před {n} týdny|před {n} týdny
 @plural	{n} month ago|{n} months ago	před {n} měsícem|před {n} měsíci|před {n} měsíci
 @plural	{n} year ago|{n} years ago	před {n} rokem|před {n} lety|před {n} lety
+	Play	Přehrát
+	Pause	Pozastavit
+	Mute	Vypnout zvuk
+	Unmute	Zapnout zvuk
+	Volume	Hlasitost
+	Seek	Posun
+	Theatre mode	Režim kina
+	Default view	Výchozí zobrazení
+	Full screen	Celá obrazovka
+	Exit full screen	Ukončit celou obrazovku
+	Playback speed	Rychlost přehrávání
+	Normal	Normální
+	Quality	Kvalita
+	Auto	Automaticky
+	Auto ({quality})	Automaticky ({quality})
+	This video can't be played in this browser.	Toto video nelze v tomto prohlížeči přehrát.
+@plural	{n} second|{n} seconds	{n} sekunda|{n} sekundy|{n} sekund

@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} সপ্তাহ আগে|{n} সপ্তাহ আগে
 @plural	{n} month ago|{n} months ago	{n} মাস আগে|{n} মাস আগে
 @plural	{n} year ago|{n} years ago	{n} বছর আগে|{n} বছর আগে
+	Play	চালান
+	Pause	বিরতি
+	Mute	নিঃশব্দ করুন
+	Unmute	শব্দ চালু করুন
+	Volume	ভলিউম
+	Seek	এগিয়ে বা পিছিয়ে যান
+	Theatre mode	থিয়েটার মোড
+	Default view	সাধারণ দৃশ্য
+	Full screen	পূর্ণ স্ক্রিন
+	Exit full screen	পূর্ণ স্ক্রিন থেকে বেরোন
+	Playback speed	প্লেব্যাকের গতি
+	Normal	স্বাভাবিক
+	Quality	মান
+	Auto	স্বয়ংক্রিয়
+	Auto ({quality})	স্বয়ংক্রিয় ({quality})
+	This video can't be played in this browser.	এই ব্রাউজারে ভিডিওটি চালানো যাচ্ছে না।
+@plural	{n} second|{n} seconds	{n} সেকেন্ড|{n} সেকেন্ড

@@ -3,7 +3,7 @@
 //! `site` builds the browser half into `<target>/site/`: the `ui` crate compiled to wasm32 with
 //! its `hydrate` feature, bound by wasm-bindgen (the library, pinned to the crate's exact version
 //! in the workspace, so the bindings always match), shrunk by wasm-opt in release when it is
-//! installed, the stylesheets of `crates/ui/style/` concatenated in name order, and the files of
+//! installed, the stylesheets of every crate's `style/` concatenated in name order, and the files of
 //! `crates/ui/assets/` copied beside them. `serve` builds the site and runs the server on it.
 
 use std::path::{Path, PathBuf};
@@ -85,10 +85,7 @@ fn site(release: bool) -> Result<PathBuf, String> {
             .arg("-o")
             .arg(&bound))?;
     }
-    write_stylesheet(
-        &root().join("crates/ui/style"),
-        &pkg.join(format!("{BUNDLE}.css")),
-    )?;
+    write_stylesheet(&root().join("crates"), &pkg.join(format!("{BUNDLE}.css")))?;
     copy_tree(&root().join("crates/ui/assets"), &site)?;
     Ok(site)
 }
@@ -106,14 +103,22 @@ fn serve(site: &Path, release: bool) -> Result<(), String> {
     run(&mut command)
 }
 
-/// Concatenate the `.css` files of `dir`, in name order, into `out`.
-fn write_stylesheet(dir: &Path, out: &Path) -> Result<(), String> {
-    let mut names: Vec<PathBuf> = std::fs::read_dir(dir)
-        .map_err(|e| format!("{}: {e}", dir.display()))?
-        .filter_map(|entry| entry.ok().map(|entry| entry.path()))
-        .filter(|path| path.extension().is_some_and(|ext| ext == "css"))
-        .collect();
-    names.sort();
+/// Concatenate the `.css` files in the `style/` directory of every crate under `crates`, in the
+/// order of their names (`00-tokens.css` first, whichever crate holds it), into `out`.
+fn write_stylesheet(crates: &Path, out: &Path) -> Result<(), String> {
+    let mut names: Vec<PathBuf> = Vec::new();
+    let members = std::fs::read_dir(crates).map_err(|e| format!("{}: {e}", crates.display()))?;
+    for member in members.filter_map(Result::ok) {
+        let Ok(styles) = std::fs::read_dir(member.path().join("style")) else {
+            continue;
+        };
+        names.extend(
+            styles
+                .filter_map(|entry| entry.ok().map(|entry| entry.path()))
+                .filter(|path| path.extension().is_some_and(|ext| ext == "css")),
+        );
+    }
+    names.sort_by(|a, b| a.file_name().cmp(&b.file_name()).then_with(|| a.cmp(b)));
     let mut css = String::new();
     for name in names {
         let text =

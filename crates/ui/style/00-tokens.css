@@ -21,6 +21,21 @@
   --scrim: rgba(0, 0, 0, 0);
   --text-on-accent: #ffffff;
   --danger: #c5221f;
+  --player-text: #ffffff;
+  --player-pill: rgba(0, 0, 0, 0.35);
+  --player-pill-hover: rgba(255, 255, 255, 0.12);
+  --player-menu: rgba(28, 28, 28, 0.92);
+  --player-rule: rgba(255, 255, 255, 0.2);
+  --player-track: rgba(255, 255, 255, 0.25);
+  --player-buffered: rgba(255, 255, 255, 0.45);
+  --player-hovered: rgba(255, 255, 255, 0.6);
+  --player-scrim: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+  --player-shade: rgba(0, 0, 0, 0.45);
+  --player-control: 40px;
+  --player-chrome-height: 48px;
+  --player-big: 64px;
+  --player-menu-width: 260px;
+  --theatre-height: min(56.25vw, calc(100vh - 169px));
 
   --font: system-ui, -apple-system, "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Mono", "Noto Sans Mono", monospace;
@@ -48,6 +63,7 @@
   --radius-field: 20px;
   --radius-card: 12px;
   --radius-pill: 18px;
+  --radius-round: 50%;
 
   --masthead-height: 56px;
   --guide-width: 240px;

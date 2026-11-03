@@ -2,6 +2,27 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.3
+
+### Added
+
+- The player: YouCraft's own controls over the video, laid out as on youtube.com and
+  m.youtube.com, streaming the renditions through Media Source Extensions (Managed Media Source
+  on iPhone, the browser's own HLS where neither exists).
+- Auto quality starts with the lowest rendition and climbs as the measured bandwidth, the buffer
+  and the player's size allow; the settings menu fixes a quality or the playback speed.
+- The seek bar shows what is buffered and, under the pointer, a frame from the storyboard with
+  its time.
+- Keyboard shortcuts as on YouTube: `k` or space, `j` and `l`, the arrows, `0`–`9`, Home and End,
+  `<` and `>`, `,` and `.`, `m`, `f` and `t`; the volume is remembered.
+- Theatre mode spreads the video across the page, with the list of videos moving beside the
+  details; full screen fills the screen with the player and its controls.
+- On phones a tap shows or hides the controls and a double tap on either side jumps ten seconds.
+
+### Changed
+
+- The local server answers small responses at once (`TCP_NODELAY`) instead of 40 ms later.
+
 ## 0.1.2
 
 ### Added

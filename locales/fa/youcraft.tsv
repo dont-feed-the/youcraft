@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} هفته پیش|{n} هفته پیش
 @plural	{n} month ago|{n} months ago	{n} ماه پیش|{n} ماه پیش
 @plural	{n} year ago|{n} years ago	{n} سال پیش|{n} سال پیش
+	Play	پخش
+	Pause	مکث
+	Mute	بی‌صدا
+	Unmute	صدادار
+	Volume	میزان صدا
+	Seek	جلو و عقب بردن
+	Theatre mode	حالت سینما
+	Default view	نمای پیش‌فرض
+	Full screen	تمام‌صفحه
+	Exit full screen	خروج از تمام‌صفحه
+	Playback speed	سرعت پخش
+	Normal	عادی
+	Quality	کیفیت
+	Auto	خودکار
+	Auto ({quality})	خودکار ({quality})
+	This video can't be played in this browser.	این ویدیو در این مرورگر پخش نمی‌شود.
+@plural	{n} second|{n} seconds	{n} ثانیه|{n} ثانیه

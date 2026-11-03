@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} week geleden|{n} weken geleden
 @plural	{n} month ago|{n} months ago	{n} maand geleden|{n} maanden geleden
 @plural	{n} year ago|{n} years ago	{n} jaar geleden|{n} jaar geleden
+	Play	Afspelen
+	Pause	Pauzeren
+	Mute	Dempen
+	Unmute	Dempen opheffen
+	Volume	Volume
+	Seek	Spoelen
+	Theatre mode	Theatermodus
+	Default view	Standaardweergave
+	Full screen	Volledig scherm
+	Exit full screen	Volledig scherm sluiten
+	Playback speed	Afspeelsnelheid
+	Normal	Normaal
+	Quality	Kwaliteit
+	Auto	Automatisch
+	Auto ({quality})	Automatisch ({quality})
+	This video can't be played in this browser.	Deze video kan niet in deze browser worden afgespeeld.
+@plural	{n} second|{n} seconds	{n} seconde|{n} seconden

@@ -53,6 +53,13 @@ pub async fn serve(site: Arc<Site>, config: &Config) -> Result<(), String> {
         }
         Listener::Tcp(socket) => {
             tracing::info!("serving http://{}", config.address);
+            // Small responses (playlists, audio segments) go out at once rather than wait for
+            // the delayed acknowledgement of the one before, which costs 40 ms each.
+            let socket = axum::serve::ListenerExt::tap_io(socket, |stream| {
+                if let Err(error) = stream.set_nodelay(true) {
+                    tracing::warn!("TCP_NODELAY: {error}");
+                }
+            });
             axum::serve(socket, app)
                 .with_graceful_shutdown(stopped())
                 .await

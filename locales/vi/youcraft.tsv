@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} tuần trước
 @plural	{n} month ago|{n} months ago	{n} tháng trước
 @plural	{n} year ago|{n} years ago	{n} năm trước
+	Play	Phát
+	Pause	Tạm dừng
+	Mute	Tắt tiếng
+	Unmute	Bật tiếng
+	Volume	Âm lượng
+	Seek	Tua
+	Theatre mode	Chế độ rạp chiếu phim
+	Default view	Chế độ xem mặc định
+	Full screen	Toàn màn hình
+	Exit full screen	Thoát toàn màn hình
+	Playback speed	Tốc độ phát
+	Normal	Bình thường
+	Quality	Chất lượng
+	Auto	Tự động
+	Auto ({quality})	Tự động ({quality})
+	This video can't be played in this browser.	Không thể phát video này trên trình duyệt này.
+@plural	{n} second|{n} seconds	{n} giây

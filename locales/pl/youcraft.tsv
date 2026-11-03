@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} tydzień temu|{n} tygodnie temu|{n} tygodni temu
 @plural	{n} month ago|{n} months ago	{n} miesiąc temu|{n} miesiące temu|{n} miesięcy temu
 @plural	{n} year ago|{n} years ago	{n} rok temu|{n} lata temu|{n} lat temu
+	Play	Odtwórz
+	Pause	Wstrzymaj
+	Mute	Wycisz
+	Unmute	Wyłącz wyciszenie
+	Volume	Głośność
+	Seek	Przewiń
+	Theatre mode	Tryb kinowy
+	Default view	Widok domyślny
+	Full screen	Pełny ekran
+	Exit full screen	Zamknij pełny ekran
+	Playback speed	Szybkość odtwarzania
+	Normal	Normalna
+	Quality	Jakość
+	Auto	Automatyczna
+	Auto ({quality})	Automatyczna ({quality})
+	This video can't be played in this browser.	Tego filmu nie można odtworzyć w tej przeglądarce.
+@plural	{n} second|{n} seconds	{n} sekunda|{n} sekundy|{n} sekund

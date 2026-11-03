@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} 週前
 @plural	{n} month ago|{n} months ago	{n} 個月前
 @plural	{n} year ago|{n} years ago	{n} 年前
+	Play	播放
+	Pause	暫停
+	Mute	靜音
+	Unmute	取消靜音
+	Volume	音量
+	Seek	跳轉
+	Theatre mode	劇院模式
+	Default view	預設檢視
+	Full screen	全螢幕
+	Exit full screen	結束全螢幕
+	Playback speed	播放速度
+	Normal	正常
+	Quality	畫質
+	Auto	自動
+	Auto ({quality})	自動 ({quality})
+	This video can't be played in this browser.	此瀏覽器無法播放這部影片。
+@plural	{n} second|{n} seconds	{n} 秒

@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	för {n} vecka sedan|för {n} veckor sedan
 @plural	{n} month ago|{n} months ago	för {n} månad sedan|för {n} månader sedan
 @plural	{n} year ago|{n} years ago	för {n} år sedan|för {n} år sedan
+	Play	Spela upp
+	Pause	Pausa
+	Mute	Stäng av ljudet
+	Unmute	Slå på ljudet
+	Volume	Volym
+	Seek	Spola
+	Theatre mode	Biografläge
+	Default view	Standardvy
+	Full screen	Helskärm
+	Exit full screen	Avsluta helskärm
+	Playback speed	Uppspelningshastighet
+	Normal	Normal
+	Quality	Kvalitet
+	Auto	Automatisk
+	Auto ({quality})	Automatisk ({quality})
+	This video can't be played in this browser.	Det här videoklippet kan inte spelas upp i den här webbläsaren.
+@plural	{n} second|{n} seconds	{n} sekund|{n} sekunder

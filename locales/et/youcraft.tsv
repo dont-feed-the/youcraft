@@ -110,3 +110,20 @@
 @plural	{n} week ago|{n} weeks ago	{n} nädal tagasi|{n} nädalat tagasi
 @plural	{n} month ago|{n} months ago	{n} kuu tagasi|{n} kuud tagasi
 @plural	{n} year ago|{n} years ago	{n} aasta tagasi|{n} aastat tagasi
+	Play	Esita
+	Pause	Peata
+	Mute	Vaigista
+	Unmute	Taasta heli
+	Volume	Helitugevus
+	Seek	Keri
+	Theatre mode	Kinorežiim
+	Default view	Vaikevaade
+	Full screen	Täisekraan
+	Exit full screen	Välju täisekraanist
+	Playback speed	Taasesituse kiirus
+	Normal	Tavaline
+	Quality	Kvaliteet
+	Auto	Automaatne
+	Auto ({quality})	Automaatne ({quality})
+	This video can't be played in this browser.	Seda videot ei saa selles brauseris esitada.
+@plural	{n} second|{n} seconds	{n} sekund|{n} sekundit
