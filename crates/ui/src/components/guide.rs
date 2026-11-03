@@ -1,5 +1,6 @@
 //! The guide: the places of the site, and the channels the person subscribes to, down the side
-//! on wide screens; a narrow column of icons below 1313px; a tab bar along the bottom on phones.
+//! on wide screens, above a footer with the project's places; a narrow column of icons below
+//! 1313px; a tab bar along the bottom on phones.
 
 use leptos::prelude::*;
 use youcraft_api::commands::channel::Subscriptions;
@@ -9,6 +10,7 @@ use youcraft_api::{List, routes};
 use crate::account::SignedIn;
 use crate::call::call;
 use crate::components::account_menu::initial;
+use crate::components::project;
 use crate::icons::{Glyph, Icon};
 use crate::lang::tr;
 
@@ -40,6 +42,11 @@ pub fn Guide() -> impl IntoView {
                 <Entry href=routes::playlist(List::Liked) icon=Icon::Like label=tr("Liked videos")/>
             </div>
             <SubscribedChannels/>
+            <footer class="guide-footer">
+                {project::places().map(|place| view! {
+                    <a class="guide-footer-link" rel="external" href=place.href>{place.label}</a>
+                }).into_iter().collect_view()}
+            </footer>
         </nav>
     }
 }

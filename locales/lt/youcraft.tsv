@@ -172,3 +172,5 @@
 @plural	{n} reply|{n} replies	{n} atsakymas|{n} atsakymai|{n} atsakymų
 @plural	{n} subscriber|{n} subscribers	{n} prenumeratorius|{n} prenumeratoriai|{n} prenumeratorių
 @plural	{n} video|{n} videos	{n} vaizdo įrašas|{n} vaizdo įrašai|{n} vaizdo įrašų
+	Chat on Discord	Pokalbiai „Discord“
+	Source code on GitHub	Išeities kodas „GitHub“

@@ -6,6 +6,7 @@ pub mod comments;
 pub mod guide;
 pub mod masthead;
 pub mod more;
+pub mod project;
 pub mod save;
 pub mod subscribe;
 pub mod video_actions;

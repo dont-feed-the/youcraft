@@ -172,3 +172,5 @@
 @plural	{n} reply|{n} replies	{n} odgovor|{n} odgovora|{n} odgovori|{n} odgovorov
 @plural	{n} subscriber|{n} subscribers	{n} naročnik|{n} naročnika|{n} naročniki|{n} naročnikov
 @plural	{n} video|{n} videos	{n} videoposnetek|{n} videoposnetka|{n} videoposnetki|{n} videoposnetkov
+	Chat on Discord	Klepet na Discordu
+	Source code on GitHub	Izvorna koda na GitHubu

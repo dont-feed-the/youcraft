@@ -172,3 +172,5 @@
 @plural	{n} reply|{n} replies	답글 {n}개
 @plural	{n} subscriber|{n} subscribers	구독자 {n}명
 @plural	{n} video|{n} videos	동영상 {n}개
+	Chat on Discord	Discord에서 채팅
+	Source code on GitHub	GitHub의 소스 코드

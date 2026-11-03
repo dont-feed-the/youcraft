@@ -73,6 +73,10 @@ pub enum Icon {
     Plus,
     /// A padlock: private.
     Lock,
+    /// A speech bubble: a conversation.
+    Chat,
+    /// Angle brackets around a slash: source code.
+    Code,
 }
 
 impl Icon {
@@ -81,7 +85,7 @@ impl Icon {
     fn directional(self) -> bool {
         matches!(
             self,
-            Icon::Share | Icon::SignOut | Icon::Back | Icon::Forward
+            Icon::Share | Icon::SignOut | Icon::Back | Icon::Forward | Icon::Chat
         )
     }
 
@@ -185,6 +189,8 @@ impl Icon {
             Icon::Expand => &["M6 9l6 6 6-6"],
             Icon::Plus => &["M12 5v14", "M5 12h14"],
             Icon::Lock => &["M6 11h12v9H6z", "M8.5 11V8a3.5 3.5 0 0 1 7 0v3"],
+            Icon::Chat => &["M4 5h16v11H9l-5 4z", "M8 9h8", "M8 12h5"],
+            Icon::Code => &["M8 7l-5 5 5 5", "M16 7l5 5-5 5", "M14 4l-4 16"],
         }
     }
 }

@@ -1,6 +1,7 @@
 //! The account end of the masthead: the avatar and its menu when signed in; the settings menu
 //! and the sign-in button when not. The menu opens on panels as YouTube's does: the account
-//! and its places first, then appearance and language, each with the current choice ticked.
+//! and its places first, then appearance and language, each with the current choice ticked,
+//! then the project's places beyond the site.
 
 use leptos::prelude::*;
 use leptos_router::hooks::use_location;
@@ -8,6 +9,7 @@ use youcraft_api::commands::account::{Me, Theme};
 use youcraft_api::{Role, routes};
 
 use crate::account::{Shown, SignedIn, choose_language, choose_theme, sign_out};
+use crate::components::project;
 use crate::icons::{Glyph, Icon};
 use crate::lang::{Language, fill, offered, tr};
 
@@ -106,7 +108,8 @@ fn Menu(me: Option<Me>, open: RwSignal<Option<Panel>>) -> impl IntoView {
     }
 }
 
-/// The first panel: the account, its places, and the entries that open the other panels.
+/// The first panel: the account, its places, the entries that open the other panels, and the
+/// project's places.
 #[component]
 fn MainPanel(me: StoredValue<Option<Me>>, open: RwSignal<Option<Panel>>) -> impl IntoView {
     let shown = use_context::<Shown>().map(|Shown(shown)| shown);
@@ -165,6 +168,12 @@ fn MainPanel(me: StoredValue<Option<Me>>, open: RwSignal<Option<Panel>>) -> impl
                 <Glyph icon=Icon::Settings/><span>{tr("Settings")}</span>
             </a>
         })}
+        <hr class="menu-rule"/>
+        {project::places().map(|place| view! {
+            <a class="menu-entry" role="menuitem" rel="external" href=place.href>
+                <Glyph icon=place.icon/><span>{place.label}</span>
+            </a>
+        }).into_iter().collect_view()}
     }
 }
 

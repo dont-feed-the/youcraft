@@ -172,3 +172,5 @@
 @plural	{n} reply|{n} replies	{n} válasz|{n} válasz
 @plural	{n} subscriber|{n} subscribers	{n} feliratkozó|{n} feliratkozó
 @plural	{n} video|{n} videos	{n} videó|{n} videó
+	Chat on Discord	Csevegés a Discordon
+	Source code on GitHub	Forráskód a GitHubon

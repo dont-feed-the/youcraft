@@ -2,6 +2,13 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.12
+
+### Added
+
+- Links to the project's Discord and its source code on GitHub, in the guide's footer on wide
+  screens and in the menu at every size.
+
 ## 0.1.11
 
 ### Added

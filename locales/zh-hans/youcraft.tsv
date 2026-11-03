@@ -172,3 +172,5 @@
 @plural	{n} reply|{n} replies	{n} 条回复
 @plural	{n} subscriber|{n} subscribers	{n} 位订阅者
 @plural	{n} video|{n} videos	{n} 个视频
+	Chat on Discord	在 Discord 上聊天
+	Source code on GitHub	GitHub 上的源代码

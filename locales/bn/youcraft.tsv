@@ -172,3 +172,5 @@
 @plural	{n} reply|{n} replies	{n}টি উত্তর|{n}টি উত্তর
 @plural	{n} subscriber|{n} subscribers	{n} জন সাবস্ক্রাইবার|{n} জন সাবস্ক্রাইবার
 @plural	{n} video|{n} videos	{n}টি ভিডিও|{n}টি ভিডিও
+	Chat on Discord	Discord-এ চ্যাট করুন
+	Source code on GitHub	GitHub-এ সোর্স কোড

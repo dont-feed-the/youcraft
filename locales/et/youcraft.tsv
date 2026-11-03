@@ -172,3 +172,5 @@
 @plural	{n} reply|{n} replies	{n} vastus|{n} vastust
 @plural	{n} subscriber|{n} subscribers	{n} tellija|{n} tellijat
 @plural	{n} video|{n} videos	{n} video|{n} videot
+	Chat on Discord	Vestlus Discordis
+	Source code on GitHub	Lähtekood GitHubis

@@ -172,3 +172,5 @@
 @plural	{n} reply|{n} replies	{n} 件の返信
 @plural	{n} subscriber|{n} subscribers	チャンネル登録者数 {n} 人
 @plural	{n} video|{n} videos	{n} 本の動画
+	Chat on Discord	Discord でチャット
+	Source code on GitHub	GitHub のソースコード

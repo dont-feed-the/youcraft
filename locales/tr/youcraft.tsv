@@ -172,3 +172,5 @@
 @plural	{n} reply|{n} replies	{n} yanıt|{n} yanıt
 @plural	{n} subscriber|{n} subscribers	{n} abone|{n} abone
 @plural	{n} video|{n} videos	{n} video|{n} video
+	Chat on Discord	Discord'da sohbet edin
+	Source code on GitHub	GitHub'da kaynak kodu
