@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+"""Build every workspace crate that runs in the browser for wasm32-unknown-unknown.
+
+A crate runs in the browser when its Cargo.toml declares
+`[package.metadata.youcraft] wasm = true`; `wasm-features` lists the features
+that build enables. Each crate is checked on its own, so a crate that builds
+for wasm32 only thanks to a sibling's features fails here. Without a workspace
+there is nothing to check.
+"""
+
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+TARGET = "wasm32-unknown-unknown"
+
+
+def browser_crates(metadata):
+    """Yield (package name, features) for each package that declares wasm = true."""
+    for package in metadata.get("packages", []):
+        settings = (package.get("metadata") or {}).get("youcraft") or {}
+        if settings.get("wasm") is True:
+            yield package["name"], [str(feature) for feature in settings.get("wasm-features", [])]
+
+
+def main():
+    root = Path(__file__).resolve().parent.parent
+    if not (root / "Cargo.toml").exists():
+        return 0
+    listing = subprocess.run(
+        ["cargo", "metadata", "--no-deps", "--format-version", "1", "--locked"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+    )
+    if listing.returncode != 0:
+        sys.stderr.write(listing.stderr)
+        return listing.returncode
+    failed = False
+    for name, features in browser_crates(json.loads(listing.stdout)):
+        command = ["cargo", "check", "--locked", "--target", TARGET, "-p", name]
+        if features:
+            command += ["--features", ",".join(features)]
+        if subprocess.run(command, cwd=root).returncode != 0:
+            print(f"{name}: does not build for {TARGET}", file=sys.stderr)
+            failed = True
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
