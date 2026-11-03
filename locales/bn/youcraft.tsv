@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	প্রক্রিয়াকরণ ব্যর্থ হয়েছে। ভিডিওটি আবার আপলোড করুন।
 	Upload failed. Try again.	আপলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।
 	The file is too large.	ফাইলটি খুব বড়।
+	(edited)	(সম্পাদিত)
+	Action menu	কাজের মেনু
+	Add a comment…	একটি মন্তব্য যোগ করুন…
+	Add a reply…	একটি উত্তর যোগ করুন…
+	Block from your channel	আপনার চ্যানেলে ব্লক করুন
+	Cancel	বাতিল
+	Channel	চ্যানেল
+	Choose a title	একটি শিরোনাম বেছে নিন
+	Clear all watch history	সম্পূর্ণ দেখার ইতিহাস মুছুন
+	Close	বন্ধ করুন
+	Comment	মন্তব্য করুন
+	Create	তৈরি করুন
+	Delete for good	চিরতরে মুছুন
+	Delete playlist	প্লেলিস্ট মুছুন
+	Latest	সর্বশেষ
+	Link copied	লিঙ্ক কপি করা হয়েছে
+	Manage videos	ভিডিও পরিচালনা করুন
+	Move to bottom	নিচে সরান
+	Move to top	উপরে সরান
+	New playlist	নতুন প্লেলিস্ট
+	Newest first	নতুনগুলো আগে
+	No results found. Try other words.	কোনো ফলাফল পাওয়া যায়নি। অন্য শব্দ চেষ্টা করুন।
+	No videos in this list yet.	এই তালিকায় এখনো কোনো ভিডিও নেই।
+	Pause watch history	দেখার ইতিহাস বিরতি দিন
+	Remove from watch history	দেখার ইতিহাস থেকে সরান
+	Remove from this list	এই তালিকা থেকে সরান
+	Reply	উত্তর দিন
+	Save video to…	ভিডিওটি সংরক্ষণ করুন…
+	Show more	আরও দেখান
+	Show more replies	আরও উত্তর দেখান
+	Sort by	সাজান
+	Subscribed	সাবস্ক্রাইব করা হয়েছে
+	The new videos of the channels you subscribe to will show here.	আপনি যেসব চ্যানেল সাবস্ক্রাইব করেন সেগুলোর নতুন ভিডিও এখানে দেখা যাবে।
+	The videos you watch will show here.	আপনি যেসব ভিডিও দেখেন সেগুলো এখানে দেখা যাবে।
+	This channel has no playlists.	এই চ্যানেলে কোনো প্লেলিস্ট নেই।
+	This channel has no videos yet.	এই চ্যানেলে এখনো কোনো ভিডিও নেই।
+	Top comments	শীর্ষ মন্তব্য
+	Turn on watch history	দেখার ইতিহাস চালু করুন
+	Videos	ভিডিও
+	View full playlist	পুরো প্লেলিস্ট দেখুন
+	Watch history	দেখার ইতিহাস
+	Your history is paused: what you watch now is not kept.	আপনার ইতিহাস বিরতিতে আছে: এখন যা দেখছেন তা রাখা হচ্ছে না।
 @plural	{n} view|{n} views	{n} বার দেখা হয়েছে|{n} বার দেখা হয়েছে
-@plural	{n} like|{n} likes	{n}টি পছন্দ|{n}টি পছন্দ
 @plural	{n} comment|{n} comments	{n}টি মন্তব্য|{n}টি মন্তব্য
 @plural	{n} second ago|{n} seconds ago	{n} সেকেন্ড আগে|{n} সেকেন্ড আগে
 @plural	{n} minute ago|{n} minutes ago	{n} মিনিট আগে|{n} মিনিট আগে
@@ -127,3 +168,6 @@
 	Auto ({quality})	স্বয়ংক্রিয় ({quality})
 	This video can't be played in this browser.	এই ব্রাউজারে ভিডিওটি চালানো যাচ্ছে না।
 @plural	{n} second|{n} seconds	{n} সেকেন্ড|{n} সেকেন্ড
+@plural	{n} reply|{n} replies	{n}টি উত্তর|{n}টি উত্তর
+@plural	{n} subscriber|{n} subscribers	{n} জন সাবস্ক্রাইবার|{n} জন সাবস্ক্রাইবার
+@plural	{n} video|{n} videos	{n}টি ভিডিও|{n}টি ভিডিও

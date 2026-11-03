@@ -4,7 +4,7 @@
 //! `/feed/…`, `/playlist?list=…`), so a YouTube address works once its host is changed. Each
 //! function writes one address; the router and the server read the same shapes.
 
-use crate::ids::{ChannelId, VideoId};
+use crate::ids::{ChannelId, List, VideoId};
 
 /// The home page.
 pub const HOME: &str = "/";
@@ -59,6 +59,16 @@ pub fn watch(video: VideoId) -> String {
 /// The page of the channel whose handle is `handle`.
 pub fn channel(handle: &str) -> String {
     format!("/@{}", encode_component(handle))
+}
+
+/// The tab `tab` (`videos`, `playlists`) of the page of the channel whose handle is `handle`.
+pub fn channel_tab(handle: &str, tab: &str) -> String {
+    format!("/@{}/{tab}", encode_component(handle))
+}
+
+/// The page of `list`.
+pub fn playlist(list: List) -> String {
+    format!("/playlist?list={list}")
 }
 
 /// The results page for `query`.
@@ -158,6 +168,8 @@ mod tests {
             "/results?search_query=chat%20noir%20%26%20blanc"
         );
         assert_eq!(command("feed.home"), "/api/v1/feed.home");
+        assert_eq!(playlist(List::WatchLater), "/playlist?list=WL");
+        assert_eq!(channel_tab("ada", "videos"), "/@ada/videos");
         assert_eq!(sign_in("/watch?v=x"), "/signin?next=%2Fwatch%3Fv%3Dx");
         assert_eq!(
             thumbnail(video, 336),

@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Өңдеу сәтсіз аяқталды. Бейнені қайта жүктеңіз.
 	Upload failed. Try again.	Жүктеу сәтсіз аяқталды. Қайталап көріңіз.
 	The file is too large.	Файл тым үлкен.
+	(edited)	(өңделді)
+	Action menu	Әрекеттер мәзірі
+	Add a comment…	Пікір қосыңыз…
+	Add a reply…	Жауап қосыңыз…
+	Block from your channel	Арнаңызда бұғаттау
+	Cancel	Бас тарту
+	Channel	Арна
+	Choose a title	Атауын таңдаңыз
+	Clear all watch history	Бүкіл көру тарихын тазалау
+	Close	Жабу
+	Comment	Пікір қалдыру
+	Create	Жасау
+	Delete for good	Біржола жою
+	Delete playlist	Ойнату тізімін жою
+	Latest	Ең жаңалары
+	Link copied	Сілтеме көшірілді
+	Manage videos	Бейнелерді басқару
+	Move to bottom	Төменге жылжыту
+	Move to top	Жоғарыға жылжыту
+	New playlist	Жаңа ойнату тізімі
+	Newest first	Алдымен жаңалары
+	No results found. Try other words.	Ештеңе табылмады. Басқа сөздерді қолданып көріңіз.
+	No videos in this list yet.	Бұл тізімде әзірге бейне жоқ.
+	Pause watch history	Көру тарихын тоқтата тұру
+	Remove from watch history	Көру тарихынан алып тастау
+	Remove from this list	Осы тізімнен алып тастау
+	Reply	Жауап беру
+	Save video to…	Бейнені мұнда сақтау…
+	Show more	Көбірек көрсету
+	Show more replies	Көбірек жауап көрсету
+	Sort by	Сұрыптау
+	Subscribed	Жазылғансыз
+	The new videos of the channels you subscribe to will show here.	Жазылған арналарыңыздың жаңа бейнелері осында көрсетіледі.
+	The videos you watch will show here.	Сіз көрген бейнелер осында көрсетіледі.
+	This channel has no playlists.	Бұл арнада ойнату тізімдері жоқ.
+	This channel has no videos yet.	Бұл арнада әзірге бейне жоқ.
+	Top comments	Үздік пікірлер
+	Turn on watch history	Көру тарихын қосу
+	Videos	Бейнелер
+	View full playlist	Бүкіл ойнату тізімін көру
+	Watch history	Көру тарихы
+	Your history is paused: what you watch now is not kept.	Тарихыңыз тоқтатылған: қазір көргендеріңіз сақталмайды.
 @plural	{n} view|{n} views	{n} қаралым|{n} қаралым
-@plural	{n} like|{n} likes	{n} ұнату|{n} ұнату
 @plural	{n} comment|{n} comments	{n} пікір|{n} пікір
 @plural	{n} second ago|{n} seconds ago	{n} секунд бұрын|{n} секунд бұрын
 @plural	{n} minute ago|{n} minutes ago	{n} минут бұрын|{n} минут бұрын
@@ -127,3 +168,6 @@
 	Auto ({quality})	Автоматты ({quality})
 	This video can't be played in this browser.	Бұл бейнені осы браузерде ойнату мүмкін емес.
 @plural	{n} second|{n} seconds	{n} секунд|{n} секунд
+@plural	{n} reply|{n} replies	{n} жауап|{n} жауап
+@plural	{n} subscriber|{n} subscribers	{n} жазылушы|{n} жазылушы
+@plural	{n} video|{n} videos	{n} бейне|{n} бейне

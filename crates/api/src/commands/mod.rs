@@ -2,8 +2,13 @@
 
 pub mod account;
 pub mod admin;
+pub mod channel;
+pub mod comment;
 pub mod feed;
+pub mod history;
 pub mod invite;
+pub mod playlist;
+pub mod search;
 pub mod site;
 pub mod studio;
 pub mod token;
@@ -20,6 +25,34 @@ macro_rules! for_each_command {
             $crate::commands::feed::Home,
             $crate::commands::video::Get,
             $crate::commands::video::Next,
+            $crate::commands::video::SetRating,
+            $crate::commands::video::View,
+            $crate::commands::feed::Subscriptions,
+            $crate::commands::channel::Get,
+            $crate::commands::channel::Videos,
+            $crate::commands::channel::Playlists,
+            $crate::commands::channel::Subscribe,
+            $crate::commands::channel::Subscriptions,
+            $crate::commands::channel::Block,
+            $crate::commands::comment::List,
+            $crate::commands::comment::Replies,
+            $crate::commands::comment::Create,
+            $crate::commands::comment::Update,
+            $crate::commands::comment::Delete,
+            $crate::commands::comment::Like,
+            $crate::commands::history::List,
+            $crate::commands::history::Remove,
+            $crate::commands::history::Clear,
+            $crate::commands::history::Pause,
+            $crate::commands::playlist::Create,
+            $crate::commands::playlist::Update,
+            $crate::commands::playlist::Delete,
+            $crate::commands::playlist::Add,
+            $crate::commands::playlist::Remove,
+            $crate::commands::playlist::Move,
+            $crate::commands::playlist::Lists,
+            $crate::commands::playlist::Get,
+            $crate::commands::search::Search,
             $crate::commands::account::Get,
             $crate::commands::account::SetPreferences,
             $crate::commands::account::SignOut,

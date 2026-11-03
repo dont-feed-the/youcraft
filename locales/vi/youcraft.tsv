@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Xử lý không thành công. Hãy tải video lên lại.
 	Upload failed. Try again.	Tải lên không thành công. Hãy thử lại.
 	The file is too large.	Tệp quá lớn.
+	(edited)	(đã chỉnh sửa)
+	Action menu	Trình đơn thao tác
+	Add a comment…	Thêm bình luận…
+	Add a reply…	Thêm phản hồi…
+	Block from your channel	Chặn trên kênh của bạn
+	Cancel	Hủy
+	Channel	Kênh
+	Choose a title	Chọn tiêu đề
+	Clear all watch history	Xóa toàn bộ nhật ký xem
+	Close	Đóng
+	Comment	Bình luận
+	Create	Tạo
+	Delete for good	Xóa vĩnh viễn
+	Delete playlist	Xóa danh sách phát
+	Latest	Mới nhất
+	Link copied	Đã sao chép đường liên kết
+	Manage videos	Quản lý video
+	Move to bottom	Chuyển xuống cuối
+	Move to top	Chuyển lên đầu
+	New playlist	Danh sách phát mới
+	Newest first	Mới nhất trước
+	No results found. Try other words.	Không tìm thấy kết quả. Hãy thử từ khác.
+	No videos in this list yet.	Chưa có video nào trong danh sách này.
+	Pause watch history	Tạm dừng nhật ký xem
+	Remove from watch history	Xóa khỏi nhật ký xem
+	Remove from this list	Xóa khỏi danh sách này
+	Reply	Phản hồi
+	Save video to…	Lưu video vào…
+	Show more	Hiện thêm
+	Show more replies	Hiện thêm phản hồi
+	Sort by	Sắp xếp theo
+	Subscribed	Đã đăng ký
+	The new videos of the channels you subscribe to will show here.	Video mới của các kênh bạn đăng ký sẽ xuất hiện ở đây.
+	The videos you watch will show here.	Video bạn xem sẽ xuất hiện ở đây.
+	This channel has no playlists.	Kênh này không có danh sách phát nào.
+	This channel has no videos yet.	Kênh này chưa có video nào.
+	Top comments	Bình luận hàng đầu
+	Turn on watch history	Bật nhật ký xem
+	Videos	Video
+	View full playlist	Xem toàn bộ danh sách phát
+	Watch history	Nhật ký xem
+	Your history is paused: what you watch now is not kept.	Nhật ký của bạn đang tạm dừng: những gì bạn xem bây giờ không được lưu lại.
 @plural	{n} view|{n} views	{n} lượt xem
-@plural	{n} like|{n} likes	{n} lượt thích
 @plural	{n} comment|{n} comments	{n} bình luận
 @plural	{n} second ago|{n} seconds ago	{n} giây trước
 @plural	{n} minute ago|{n} minutes ago	{n} phút trước
@@ -127,3 +168,6 @@
 	Auto ({quality})	Tự động ({quality})
 	This video can't be played in this browser.	Không thể phát video này trên trình duyệt này.
 @plural	{n} second|{n} seconds	{n} giây
+@plural	{n} reply|{n} replies	{n} phản hồi
+@plural	{n} subscriber|{n} subscribers	{n} người đăng ký
+@plural	{n} video|{n} videos	{n} video

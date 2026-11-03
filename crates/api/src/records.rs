@@ -58,6 +58,47 @@ pub struct VideoPage {
     pub comments_enabled: bool,
     /// Whether its renditions are ready to play.
     pub playable: bool,
+    /// How many people subscribe to its channel.
+    pub subscribers: u64,
+    /// What the caller said of it.
+    pub rating: Rating,
+    /// Whether the caller subscribes to its channel.
+    pub subscribed: bool,
+    /// Whether it is the caller's own video.
+    pub owned: bool,
+}
+
+/// What a person said of a video: nothing, that they like it, or that they do not.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum Rating {
+    /// Nothing.
+    #[default]
+    None,
+    /// They like it.
+    Like,
+    /// They do not like it.
+    Dislike,
+}
+
+impl Rating {
+    /// The value the database keeps: +1, -1, or no row for [`Rating::None`].
+    pub fn value(self) -> Option<i64> {
+        match self {
+            Rating::None => None,
+            Rating::Like => Some(1),
+            Rating::Dislike => Some(-1),
+        }
+    }
+
+    /// The rating the database keeps as `value`.
+    pub fn from_value(value: Option<i64>) -> Rating {
+        match value {
+            Some(1) => Rating::Like,
+            Some(-1) => Rating::Dislike,
+            _ => Rating::None,
+        }
+    }
 }
 
 /// The storyboard of a video: small tiles the seek bar previews, laid out row by row in sheets
@@ -78,7 +119,7 @@ pub struct Storyboard {
     pub sheets: u32,
 }
 
-/// Who may see a video.
+/// Who may see a video or a playlist.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Visibility {

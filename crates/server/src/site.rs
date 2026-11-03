@@ -17,6 +17,7 @@ pub struct Site {
     pub work: tokio::sync::Notify,
     /// Held while bytes of an upload are written, so two pieces never interleave.
     pub writing: tokio::sync::Mutex<()>,
+    salt: [u8; 32],
 }
 
 /// Who runs a command. Handlers decide with it what the caller may do: [`Caller::role`] for
@@ -29,6 +30,19 @@ pub struct Caller {
     pub role: Role,
     /// How they proved who they are.
     pub credential: Credential,
+    /// Who they are to the view counter.
+    pub viewer: ViewerKey,
+}
+
+/// Who a caller is to the view counter, which counts one view a day per viewer: a hash of their
+/// account, or of the address and browser a visitor comes from, salted with a secret the server
+/// draws when it starts, so that it names nobody and links nothing across restarts.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ViewerKey(pub [u8; 32]);
+
+impl ViewerKey {
+    /// No one in particular: the operator, and requests the server did not resolve.
+    pub const NOBODY: ViewerKey = ViewerKey([0; 32]);
 }
 
 /// How a caller proved who they are.
@@ -50,6 +64,7 @@ impl Caller {
         account: None,
         role: Role::Anyone,
         credential: Credential::Nothing,
+        viewer: ViewerKey::NOBODY,
     };
 
     /// Whoever runs `youcraft` on the server's machine: an administrator with no account.
@@ -57,10 +72,11 @@ impl Caller {
         account: None,
         role: Role::Admin,
         credential: Credential::Operator,
+        viewer: ViewerKey::NOBODY,
     };
 
-    /// The caller whose credential shows `standing`.
-    pub fn of(standing: &Standing, credential: Credential) -> Caller {
+    /// The caller whose credential shows `standing`, known to the view counter as `viewer`.
+    pub fn of(standing: &Standing, credential: Credential, viewer: ViewerKey) -> Caller {
         Caller {
             account: Some(standing.account),
             role: if standing.blocked {
@@ -69,6 +85,7 @@ impl Caller {
                 standing.role
             },
             credential,
+            viewer,
         }
     }
 
@@ -102,12 +119,18 @@ impl Site {
             config,
             work: tokio::sync::Notify::new(),
             writing: tokio::sync::Mutex::new(()),
+            salt: rand::random(),
         }
     }
 
     /// The database, for work outside a request.
     pub fn store(&self) -> &Store {
         &self.store
+    }
+
+    /// The secret that salts [`ViewerKey`]s, drawn when the site opened.
+    pub fn salt(&self) -> &[u8; 32] {
+        &self.salt
     }
 
     /// The configuration.

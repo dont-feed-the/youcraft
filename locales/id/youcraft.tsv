@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Pemrosesan gagal. Upload ulang videonya.
 	Upload failed. Try again.	Upload gagal. Coba lagi.
 	The file is too large.	File terlalu besar.
+	(edited)	(diedit)
+	Action menu	Menu tindakan
+	Add a comment…	Tambahkan komentar…
+	Add a reply…	Tambahkan balasan…
+	Block from your channel	Blokir di saluran Anda
+	Cancel	Batal
+	Channel	Saluran
+	Choose a title	Pilih judul
+	Clear all watch history	Hapus semua histori tontonan
+	Close	Tutup
+	Comment	Komentari
+	Create	Buat
+	Delete for good	Hapus selamanya
+	Delete playlist	Hapus playlist
+	Latest	Terbaru
+	Link copied	Link disalin
+	Manage videos	Kelola video
+	Move to bottom	Pindahkan ke bawah
+	Move to top	Pindahkan ke atas
+	New playlist	Playlist baru
+	Newest first	Terbaru dulu
+	No results found. Try other words.	Tidak ada hasil. Coba kata lain.
+	No videos in this list yet.	Belum ada video di daftar ini.
+	Pause watch history	Jeda histori tontonan
+	Remove from watch history	Hapus dari histori tontonan
+	Remove from this list	Hapus dari daftar ini
+	Reply	Balas
+	Save video to…	Simpan video ke…
+	Show more	Tampilkan lainnya
+	Show more replies	Tampilkan balasan lainnya
+	Sort by	Urutkan menurut
+	Subscribed	Berlangganan
+	The new videos of the channels you subscribe to will show here.	Video baru dari saluran yang Anda langgani akan muncul di sini.
+	The videos you watch will show here.	Video yang Anda tonton akan muncul di sini.
+	This channel has no playlists.	Saluran ini tidak punya playlist.
+	This channel has no videos yet.	Saluran ini belum punya video.
+	Top comments	Komentar teratas
+	Turn on watch history	Aktifkan histori tontonan
+	Videos	Video
+	View full playlist	Lihat playlist lengkap
+	Watch history	Histori tontonan
+	Your history is paused: what you watch now is not kept.	Histori Anda dijeda: yang Anda tonton sekarang tidak disimpan.
 @plural	{n} view|{n} views	{n} kali ditonton
-@plural	{n} like|{n} likes	{n} suka
 @plural	{n} comment|{n} comments	{n} komentar
 @plural	{n} second ago|{n} seconds ago	{n} detik yang lalu
 @plural	{n} minute ago|{n} minutes ago	{n} menit yang lalu
@@ -127,3 +168,6 @@
 	Auto ({quality})	Otomatis ({quality})
 	This video can't be played in this browser.	Video ini tidak dapat diputar di browser ini.
 @plural	{n} second|{n} seconds	{n} detik
+@plural	{n} reply|{n} replies	{n} balasan
+@plural	{n} subscriber|{n} subscribers	{n} subscriber
+@plural	{n} video|{n} videos	{n} video

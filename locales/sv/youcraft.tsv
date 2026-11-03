@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Bearbetningen misslyckades. Ladda upp videon igen.
 	Upload failed. Try again.	Uppladdningen misslyckades. Försök igen.
 	The file is too large.	Filen är för stor.
+	(edited)	(redigerad)
+	Action menu	Åtgärdsmeny
+	Add a comment…	Lägg till en kommentar…
+	Add a reply…	Lägg till ett svar…
+	Block from your channel	Blockera på din kanal
+	Cancel	Avbryt
+	Channel	Kanal
+	Choose a title	Välj en titel
+	Clear all watch history	Rensa hela visningshistoriken
+	Close	Stäng
+	Comment	Kommentera
+	Create	Skapa
+	Delete for good	Ta bort för gott
+	Delete playlist	Ta bort spellistan
+	Latest	Senaste
+	Link copied	Länken har kopierats
+	Manage videos	Hantera videor
+	Move to bottom	Flytta längst ned
+	Move to top	Flytta längst upp
+	New playlist	Ny spellista
+	Newest first	Nyaste först
+	No results found. Try other words.	Inga resultat. Prova andra ord.
+	No videos in this list yet.	Inga videor i den här listan än.
+	Pause watch history	Pausa visningshistoriken
+	Remove from watch history	Ta bort från visningshistoriken
+	Remove from this list	Ta bort från den här listan
+	Reply	Svara
+	Save video to…	Spara video i…
+	Show more	Visa mer
+	Show more replies	Visa fler svar
+	Sort by	Sortera efter
+	Subscribed	Prenumererar
+	The new videos of the channels you subscribe to will show here.	Nya videor från kanalerna du prenumererar på visas här.
+	The videos you watch will show here.	Videorna du tittar på visas här.
+	This channel has no playlists.	Den här kanalen har inga spellistor.
+	This channel has no videos yet.	Den här kanalen har inga videor än.
+	Top comments	Toppkommentarer
+	Turn on watch history	Aktivera visningshistoriken
+	Videos	Videor
+	View full playlist	Visa hela spellistan
+	Watch history	Visningshistorik
+	Your history is paused: what you watch now is not kept.	Din historik är pausad: det du tittar på nu sparas inte.
 @plural	{n} view|{n} views	{n} visning|{n} visningar
-@plural	{n} like|{n} likes	{n} gillamarkering|{n} gillamarkeringar
 @plural	{n} comment|{n} comments	{n} kommentar|{n} kommentarer
 @plural	{n} second ago|{n} seconds ago	för {n} sekund sedan|för {n} sekunder sedan
 @plural	{n} minute ago|{n} minutes ago	för {n} minut sedan|för {n} minuter sedan
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automatisk ({quality})
 	This video can't be played in this browser.	Det här videoklippet kan inte spelas upp i den här webbläsaren.
 @plural	{n} second|{n} seconds	{n} sekund|{n} sekunder
+@plural	{n} reply|{n} replies	{n} svar|{n} svar
+@plural	{n} subscriber|{n} subscribers	{n} prenumerant|{n} prenumeranter
+@plural	{n} video|{n} videos	{n} video|{n} videor

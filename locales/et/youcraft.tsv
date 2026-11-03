@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Töötlemine ebaõnnestus. Laadi video uuesti üles.
 	Upload failed. Try again.	Üleslaadimine ebaõnnestus. Proovi uuesti.
 	The file is too large.	Fail on liiga suur.
+	(edited)	(muudetud)
+	Action menu	Toimingute menüü
+	Add a comment…	Lisa kommentaar…
+	Add a reply…	Lisa vastus…
+	Block from your channel	Blokeeri oma kanalil
+	Cancel	Tühista
+	Channel	Kanal
+	Choose a title	Vali pealkiri
+	Clear all watch history	Kustuta kogu vaatamisajalugu
+	Close	Sulge
+	Comment	Kommenteeri
+	Create	Loo
+	Delete for good	Kustuta jäädavalt
+	Delete playlist	Kustuta esitusloend
+	Latest	Uusimad
+	Link copied	Link kopeeriti
+	Manage videos	Halda videoid
+	Move to bottom	Teisalda lõppu
+	Move to top	Teisalda algusesse
+	New playlist	Uus esitusloend
+	Newest first	Uusimad eespool
+	No results found. Try other words.	Tulemusi ei leitud. Proovi teisi sõnu.
+	No videos in this list yet.	Selles loendis pole veel videoid.
+	Pause watch history	Peata vaatamisajalugu
+	Remove from watch history	Eemalda vaatamisajaloost
+	Remove from this list	Eemalda sellest loendist
+	Reply	Vasta
+	Save video to…	Salvesta video…
+	Show more	Kuva rohkem
+	Show more replies	Kuva rohkem vastuseid
+	Sort by	Sordi
+	Subscribed	Tellitud
+	The new videos of the channels you subscribe to will show here.	Siin kuvatakse nende kanalite uued videod, mida sa tellid.
+	The videos you watch will show here.	Siin kuvatakse videod, mida sa vaatad.
+	This channel has no playlists.	Sellel kanalil pole esitusloendeid.
+	This channel has no videos yet.	Sellel kanalil pole veel videoid.
+	Top comments	Populaarsed kommentaarid
+	Turn on watch history	Lülita vaatamisajalugu sisse
+	Videos	Videod
+	View full playlist	Vaata kogu esitusloendit
+	Watch history	Vaatamisajalugu
+	Your history is paused: what you watch now is not kept.	Sinu ajalugu on peatatud: seda, mida praegu vaatad, ei salvestata.
 @plural	{n} view|{n} views	{n} vaatamine|{n} vaatamist
-@plural	{n} like|{n} likes	{n} meeldimine|{n} meeldimist
 @plural	{n} comment|{n} comments	{n} kommentaar|{n} kommentaari
 @plural	{n} second ago|{n} seconds ago	{n} sekund tagasi|{n} sekundit tagasi
 @plural	{n} minute ago|{n} minutes ago	{n} minut tagasi|{n} minutit tagasi
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automaatne ({quality})
 	This video can't be played in this browser.	Seda videot ei saa selles brauseris esitada.
 @plural	{n} second|{n} seconds	{n} sekund|{n} sekundit
+@plural	{n} reply|{n} replies	{n} vastus|{n} vastust
+@plural	{n} subscriber|{n} subscribers	{n} tellija|{n} tellijat
+@plural	{n} video|{n} videos	{n} video|{n} videot

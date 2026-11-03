@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Zpracování se nezdařilo. Nahrajte video znovu.
 	Upload failed. Try again.	Nahrání se nezdařilo. Zkuste to znovu.
 	The file is too large.	Soubor je příliš velký.
+	(edited)	(upraveno)
+	Action menu	Nabídka akcí
+	Add a comment…	Přidejte komentář…
+	Add a reply…	Přidejte odpověď…
+	Block from your channel	Zablokovat na vašem kanálu
+	Cancel	Zrušit
+	Channel	Kanál
+	Choose a title	Zvolte název
+	Clear all watch history	Vymazat celou historii sledování
+	Close	Zavřít
+	Comment	Komentovat
+	Create	Vytvořit
+	Delete for good	Smazat natrvalo
+	Delete playlist	Smazat playlist
+	Latest	Nejnovější
+	Link copied	Odkaz zkopírován
+	Manage videos	Spravovat videa
+	Move to bottom	Přesunout na konec
+	Move to top	Přesunout na začátek
+	New playlist	Nový playlist
+	Newest first	Od nejnovějších
+	No results found. Try other words.	Žádné výsledky. Zkuste jiná slova.
+	No videos in this list yet.	V tomto seznamu zatím nejsou žádná videa.
+	Pause watch history	Pozastavit historii sledování
+	Remove from watch history	Odebrat z historie sledování
+	Remove from this list	Odebrat z tohoto seznamu
+	Reply	Odpovědět
+	Save video to…	Uložit video do…
+	Show more	Zobrazit více
+	Show more replies	Zobrazit další odpovědi
+	Sort by	Seřadit podle
+	Subscribed	Odebíráte
+	The new videos of the channels you subscribe to will show here.	Zde se zobrazí nová videa kanálů, které odebíráte.
+	The videos you watch will show here.	Zde se zobrazí videa, která sledujete.
+	This channel has no playlists.	Tento kanál nemá žádné playlisty.
+	This channel has no videos yet.	Tento kanál zatím nemá žádná videa.
+	Top comments	Nejlepší komentáře
+	Turn on watch history	Zapnout historii sledování
+	Videos	Videa
+	View full playlist	Zobrazit celý playlist
+	Watch history	Historie sledování
+	Your history is paused: what you watch now is not kept.	Vaše historie je pozastavena: co teď sledujete, se neukládá.
 @plural	{n} view|{n} views	{n} zhlédnutí|{n} zhlédnutí|{n} zhlédnutí
-@plural	{n} like|{n} likes	{n} lajk|{n} lajky|{n} lajků
 @plural	{n} comment|{n} comments	{n} komentář|{n} komentáře|{n} komentářů
 @plural	{n} second ago|{n} seconds ago	před {n} sekundou|před {n} sekundami|před {n} sekundami
 @plural	{n} minute ago|{n} minutes ago	před {n} minutou|před {n} minutami|před {n} minutami
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automaticky ({quality})
 	This video can't be played in this browser.	Toto video nelze v tomto prohlížeči přehrát.
 @plural	{n} second|{n} seconds	{n} sekunda|{n} sekundy|{n} sekund
+@plural	{n} reply|{n} replies	{n} odpověď|{n} odpovědi|{n} odpovědí
+@plural	{n} subscriber|{n} subscribers	{n} odběratel|{n} odběratelé|{n} odběratelů
+@plural	{n} video|{n} videos	{n} video|{n} videa|{n} videí

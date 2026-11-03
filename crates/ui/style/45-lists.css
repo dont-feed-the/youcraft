@@ -1,0 +1,76 @@
+/* Pages of lists: search results, the history, the subscriptions feed, a channel's page, a
+   playlist; their wide rows and the cards of lists. */
+.browse-title { margin-block-end: var(--space-4); font-size: var(--text-lg); }
+
+.rows { display: grid; align-content: start; gap: var(--space-4); max-inline-size: 1096px; min-inline-size: 0; }
+
+.row-card { display: flex; gap: var(--space-4); min-inline-size: 0; }
+.row-card .thumbnail { flex: none; inline-size: var(--row-thumb); }
+.row-card .meta { flex: 1; gap: var(--space-1); }
+.row-card .title { font-size: var(--text-lg); line-height: var(--line-title-lg); font-weight: 400; }
+.row-card-end { flex: none; }
+
+.channel-row { display: flex; align-items: center; gap: var(--space-4); }
+.channel-row-avatar { display: grid; place-items: center; flex: none; inline-size: var(--row-thumb); }
+.avatar-huge { inline-size: var(--avatar-huge); block-size: var(--avatar-huge); font-size: var(--text-lg); }
+.channel-row .meta { flex: 1; }
+.description-line { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.avatar-small { inline-size: var(--avatar-small); block-size: var(--avatar-small); font-size: var(--text-xs); }
+
+.more { justify-self: center; margin-block: var(--space-4); }
+
+.playlist-card .thumbnail.stacked { box-shadow: 0 -4px 0 -2px var(--bg-hover), 0 -8px 0 -4px var(--bg-raised); margin-block-start: var(--space-2); }
+.playlist-card .duration { display: inline-flex; align-items: center; gap: var(--space-1); }
+.playlist-card .duration .glyph { inline-size: var(--icon-small); block-size: var(--icon-small); }
+
+.channel-heading { display: flex; align-items: center; gap: var(--space-6); max-inline-size: 1284px; margin-block-end: var(--space-4); }
+.avatar-channel { inline-size: var(--avatar-channel); block-size: var(--avatar-channel); font-size: var(--text-monogram); }
+.channel-names { display: grid; gap: var(--space-2); min-inline-size: 0; }
+.channel-names h1 { font-size: var(--text-xxl); line-height: 1.2; }
+.channel-buttons { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-block-start: var(--space-2); }
+
+.tabs { display: flex; gap: var(--space-6); margin-block-end: var(--space-6); border-block-end: 1px solid var(--border); overflow-x: auto; }
+.tab { padding-block: var(--space-3); border-block-end: 2px solid transparent; color: var(--text-2); font-size: var(--text-md); font-weight: 500; white-space: nowrap; }
+.tab:hover { color: var(--text); }
+.tab.current { border-block-end-color: var(--text); color: var(--text); }
+
+.history { display: flex; gap: var(--space-6); align-items: flex-start; }
+.history .rows { flex: 1; }
+.history-controls { position: sticky; inset-block-start: calc(var(--masthead-height) + var(--space-6)); display: grid; flex: none; inline-size: var(--history-side); gap: var(--space-2); }
+.history-controls .menu-entry { border-radius: var(--radius-pill); }
+
+.playlist { display: flex; gap: var(--space-6); align-items: flex-start; }
+.playlist-panel { position: sticky; inset-block-start: calc(var(--masthead-height) + var(--space-6)); display: grid; flex: none; gap: var(--space-3); inline-size: var(--panel-width); padding: var(--space-6); border-radius: var(--radius-card); background: linear-gradient(var(--panel-start), var(--panel-end)); color: var(--badge-text); }
+.playlist-panel .byline, .playlist-panel .description-text { color: inherit; opacity: 0.8; }
+.playlist-poster { aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radius-card); background: var(--badge-bg); }
+.playlist-poster img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.playlist-title { font-size: var(--text-xl); line-height: 1.25; overflow-wrap: anywhere; }
+.playlist-owner { font-weight: 600; }
+.playlist-buttons { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.playlist-panel .pill { background: var(--badge-bg); color: var(--badge-text); }
+.playlist-panel .field { color: var(--text); }
+.playlist-rows { flex: 1; }
+.playlist-rows .row-card .thumbnail { inline-size: var(--row-thumb-narrow); border-radius: var(--radius-md); }
+.playlist-rows .row-card .title { font-size: var(--text-md); line-height: var(--line-title); font-weight: 500; }
+
+@media (max-width: 1016px) {
+  .playlist, .history { flex-direction: column; align-items: stretch; }
+  .playlist-panel, .history-controls { position: static; inline-size: auto; }
+  .history-controls { order: -1; }
+}
+
+@media (max-width: 656px) {
+  .browse-title { padding: var(--space-3) var(--space-3) 0; }
+  .rows { gap: var(--space-3); padding-inline: var(--space-3); }
+  .row-card .thumbnail { inline-size: var(--row-thumb-narrow); border-radius: var(--radius-md); }
+  .row-card .title { font-size: var(--text-sm); line-height: var(--line-title-sm); }
+  .channel-row-avatar { inline-size: var(--row-thumb-narrow); }
+  .avatar-huge { inline-size: var(--avatar-huge-narrow); block-size: var(--avatar-huge-narrow); }
+  .channel-heading { gap: var(--space-4); padding: var(--space-3); }
+  .avatar-channel { inline-size: var(--avatar-channel-narrow); block-size: var(--avatar-channel-narrow); font-size: var(--text-lg); }
+  .channel-names h1 { font-size: var(--text-lg); }
+  .tabs { padding-inline: var(--space-3); }
+  .channel-page .grid, .channel-page .empty { padding-inline: 0; }
+  .playlist-panel { border-radius: 0; }
+  .playlist-card .meta { padding-inline: var(--space-3); }
+}

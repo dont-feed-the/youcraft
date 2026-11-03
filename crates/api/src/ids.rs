@@ -164,6 +164,70 @@ identifier!(
     TokenId
 );
 
+/// A list of videos, as `/playlist?list=…` names it: `WL` the viewer's Watch later, `LL` the
+/// videos they liked, `PL` and its identifier a playlist someone made.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum List {
+    /// The viewer's Watch later list.
+    WatchLater,
+    /// The videos the viewer liked.
+    Liked,
+    /// A playlist someone made.
+    Playlist(PlaylistId),
+}
+
+impl fmt::Display for List {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            List::WatchLater => f.write_str("WL"),
+            List::Liked => f.write_str("LL"),
+            List::Playlist(id) => write!(f, "PL{id}"),
+        }
+    }
+}
+
+impl FromStr for List {
+    type Err = InvalidId;
+
+    fn from_str(text: &str) -> Result<List, InvalidId> {
+        match text {
+            "WL" => Ok(List::WatchLater),
+            "LL" => Ok(List::Liked),
+            _ => text
+                .strip_prefix("PL")
+                .ok_or(InvalidId)?
+                .parse()
+                .map(List::Playlist),
+        }
+    }
+}
+
+impl Serialize for List {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.collect_str(self)
+    }
+}
+
+impl<'de> Deserialize<'de> for List {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let text = <std::borrow::Cow<'de, str>>::deserialize(deserializer)?;
+        text.parse().map_err(serde::de::Error::custom)
+    }
+}
+
+impl JsonSchema for List {
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "List".into()
+    }
+
+    fn json_schema(_: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "pattern": "^(WL|LL|PL[A-Za-z0-9_-]{10}[AEIMQUYcgkosw048])$"
+        })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -217,5 +281,21 @@ mod tests {
         assert_eq!(json, format!("\"{id}\""));
         assert_eq!(serde_json::from_str::<VideoId>(&json).unwrap(), id);
         assert!(serde_json::from_str::<VideoId>("\"AAAAAAAAAAB\"").is_err());
+    }
+
+    #[test]
+    fn lists_are_written_as_youtube_writes_them() {
+        let made = List::Playlist(PlaylistId::from_bits(0));
+        for (list, text) in [
+            (List::WatchLater, "WL"),
+            (List::Liked, "LL"),
+            (made, "PLAAAAAAAAAAA"),
+        ] {
+            assert_eq!(list.to_string(), text);
+            assert_eq!(text.parse::<List>(), Ok(list));
+        }
+        for wrong in ["", "PL", "XX", "AAAAAAAAAAA", "PLAAAAAAAAAAB", "wl"] {
+            assert!(wrong.parse::<List>().is_err(), "{wrong}");
+        }
     }
 }

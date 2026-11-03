@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	処理に失敗しました。動画をもう一度アップロードしてください。
 	Upload failed. Try again.	アップロードに失敗しました。もう一度お試しください。
 	The file is too large.	ファイルが大きすぎます。
+	(edited)	（編集済み）
+	Action menu	操作メニュー
+	Add a comment…	コメントを追加…
+	Add a reply…	返信を追加…
+	Block from your channel	自分のチャンネルでブロック
+	Cancel	キャンセル
+	Channel	チャンネル
+	Choose a title	タイトルを選択
+	Clear all watch history	再生履歴をすべて削除
+	Close	閉じる
+	Comment	コメント
+	Create	作成
+	Delete for good	完全に削除
+	Delete playlist	再生リストを削除
+	Latest	最新
+	Link copied	リンクをコピーしました
+	Manage videos	動画を管理
+	Move to bottom	一番下に移動
+	Move to top	一番上に移動
+	New playlist	新しい再生リスト
+	Newest first	新しい順
+	No results found. Try other words.	結果が見つかりませんでした。別の言葉をお試しください。
+	No videos in this list yet.	このリストにはまだ動画がありません。
+	Pause watch history	再生履歴を一時停止
+	Remove from watch history	再生履歴から削除
+	Remove from this list	このリストから削除
+	Reply	返信
+	Save video to…	動画の保存先…
+	Show more	もっと見る
+	Show more replies	他の返信を表示
+	Sort by	並べ替え
+	Subscribed	登録済み
+	The new videos of the channels you subscribe to will show here.	登録しているチャンネルの新しい動画がここに表示されます。
+	The videos you watch will show here.	視聴した動画がここに表示されます。
+	This channel has no playlists.	このチャンネルには再生リストがありません。
+	This channel has no videos yet.	このチャンネルにはまだ動画がありません。
+	Top comments	人気のコメント
+	Turn on watch history	再生履歴をオンにする
+	Videos	動画
+	View full playlist	再生リストをすべて表示
+	Watch history	再生履歴
+	Your history is paused: what you watch now is not kept.	履歴は一時停止中です。今視聴している動画は記録されません。
 @plural	{n} view|{n} views	{n} 回視聴
-@plural	{n} like|{n} likes	{n} 件のいいね
 @plural	{n} comment|{n} comments	{n} 件のコメント
 @plural	{n} second ago|{n} seconds ago	{n} 秒前
 @plural	{n} minute ago|{n} minutes ago	{n} 分前
@@ -127,3 +168,6 @@
 	Auto ({quality})	自動 ({quality})
 	This video can't be played in this browser.	このブラウザではこの動画を再生できません。
 @plural	{n} second|{n} seconds	{n} 秒
+@plural	{n} reply|{n} replies	{n} 件の返信
+@plural	{n} subscriber|{n} subscribers	チャンネル登録者数 {n} 人
+@plural	{n} video|{n} videos	{n} 本の動画

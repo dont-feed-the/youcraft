@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Обработката не бе успешна. Качете видеоклипа отново.
 	Upload failed. Try again.	Качването не бе успешно. Опитайте отново.
 	The file is too large.	Файлът е твърде голям.
+	(edited)	(редактиран)
+	Action menu	Меню с действия
+	Add a comment…	Добавете коментар…
+	Add a reply…	Добавете отговор…
+	Block from your channel	Блокиране в канала ви
+	Cancel	Отказ
+	Channel	Канал
+	Choose a title	Изберете заглавие
+	Clear all watch history	Изчистване на цялата история на гледане
+	Close	Затваряне
+	Comment	Коментиране
+	Create	Създаване
+	Delete for good	Изтриване завинаги
+	Delete playlist	Изтриване на плейлистата
+	Latest	Най-нови
+	Link copied	Връзката е копирана
+	Manage videos	Управление на видеоклиповете
+	Move to bottom	Преместване най-долу
+	Move to top	Преместване най-горе
+	New playlist	Нова плейлиста
+	Newest first	Първо най-новите
+	No results found. Try other words.	Няма резултати. Опитайте с други думи.
+	No videos in this list yet.	В този списък още няма видеоклипове.
+	Pause watch history	Поставяне на историята на гледане на пауза
+	Remove from watch history	Премахване от историята на гледане
+	Remove from this list	Премахване от този списък
+	Reply	Отговор
+	Save video to…	Запазване на видеоклипа в…
+	Show more	Показване на още
+	Show more replies	Показване на още отговори
+	Sort by	Подреждане по
+	Subscribed	Абонирани сте
+	The new videos of the channels you subscribe to will show here.	Тук ще се показват новите видеоклипове на каналите, за които сте абонирани.
+	The videos you watch will show here.	Тук ще се показват видеоклиповете, които гледате.
+	This channel has no playlists.	Този канал няма плейлисти.
+	This channel has no videos yet.	Този канал още няма видеоклипове.
+	Top comments	Най-добри коментари
+	Turn on watch history	Включване на историята на гледане
+	Videos	Видеоклипове
+	View full playlist	Преглед на цялата плейлиста
+	Watch history	История на гледане
+	Your history is paused: what you watch now is not kept.	Историята ви е на пауза: това, което гледате сега, не се запазва.
 @plural	{n} view|{n} views	{n} гледане|{n} гледания
-@plural	{n} like|{n} likes	{n} харесване|{n} харесвания
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментара
 @plural	{n} second ago|{n} seconds ago	преди {n} секунда|преди {n} секунди
 @plural	{n} minute ago|{n} minutes ago	преди {n} минута|преди {n} минути
@@ -127,3 +168,6 @@
 	Auto ({quality})	Автоматично ({quality})
 	This video can't be played in this browser.	Този видеоклип не може да се пусне в този браузър.
 @plural	{n} second|{n} seconds	{n} секунда|{n} секунди
+@plural	{n} reply|{n} replies	{n} отговор|{n} отговора
+@plural	{n} subscriber|{n} subscribers	{n} абонат|{n} абонати
+@plural	{n} video|{n} videos	{n} видеоклип|{n} видеоклипа

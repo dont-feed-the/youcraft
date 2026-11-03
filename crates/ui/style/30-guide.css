@@ -10,6 +10,11 @@
 .guide-entry { display: flex; align-items: center; gap: var(--space-6); block-size: 40px; padding-inline: var(--space-3); border-radius: var(--radius-guide); }
 .guide-entry:hover { background: var(--bg-hover); }
 
+.guide-heading { padding: var(--space-2) var(--space-3); font-size: var(--text-md); font-weight: 600; }
+.guide-channels .guide-entry { gap: var(--space-4); }
+.guide-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.guide-collapsed .guide-channels { display: none; }
+
 .guide-collapsed .guide, .mini .guide { inline-size: var(--mini-guide-width); padding: var(--space-1); }
 .guide-collapsed .guide-entry { flex-direction: column; justify-content: center; gap: var(--space-1); block-size: 74px; padding: 0; font-size: var(--text-xxs); }
 .guide-collapsed .guide-you .guide-entry:not(:first-child) { display: none; }
@@ -20,6 +25,7 @@
   .guide-entry { flex-direction: column; justify-content: center; gap: var(--space-1); block-size: 74px; padding: 0; font-size: var(--text-xxs); }
   .guide-you .guide-entry:not(:first-child) { display: none; }
   .guide-section { border: 0; padding: 0; margin: 0; }
+  .guide-channels { display: none; }
 }
 
 @media (max-width: 656px) {
@@ -27,4 +33,5 @@
   .guide { position: fixed; inset-block: auto 0; inset-inline: 0; z-index: 3; display: flex; justify-content: space-around; inline-size: auto; block-size: var(--tabbar-height); padding: 0; overflow: hidden; background: var(--bg); border-block-start: 1px solid var(--border); }
   .guide-section { display: contents; }
   .guide-entry { flex: 1; block-size: var(--tabbar-height); border-radius: 0; }
+  .guide-channels { display: none; }
 }

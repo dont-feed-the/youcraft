@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Die Verarbeitung ist fehlgeschlagen. Lade das Video erneut hoch.
 	Upload failed. Try again.	Das Hochladen ist fehlgeschlagen. Versuche es noch einmal.
 	The file is too large.	Die Datei ist zu groß.
+	(edited)	(bearbeitet)
+	Action menu	Aktionsmenü
+	Add a comment…	Kommentar hinzufügen…
+	Add a reply…	Antwort hinzufügen…
+	Block from your channel	Auf deinem Kanal blockieren
+	Cancel	Abbrechen
+	Channel	Kanal
+	Choose a title	Titel wählen
+	Clear all watch history	Gesamten Wiedergabeverlauf löschen
+	Close	Schließen
+	Comment	Kommentieren
+	Create	Erstellen
+	Delete for good	Endgültig löschen
+	Delete playlist	Playlist löschen
+	Latest	Neueste
+	Link copied	Link kopiert
+	Manage videos	Videos verwalten
+	Move to bottom	Nach unten verschieben
+	Move to top	Nach oben verschieben
+	New playlist	Neue Playlist
+	Newest first	Neueste zuerst
+	No results found. Try other words.	Keine Ergebnisse. Versuche es mit anderen Wörtern.
+	No videos in this list yet.	Noch keine Videos in dieser Liste.
+	Pause watch history	Wiedergabeverlauf pausieren
+	Remove from watch history	Aus dem Wiedergabeverlauf entfernen
+	Remove from this list	Aus dieser Liste entfernen
+	Reply	Antworten
+	Save video to…	Video speichern in…
+	Show more	Mehr anzeigen
+	Show more replies	Weitere Antworten anzeigen
+	Sort by	Sortieren nach
+	Subscribed	Abonniert
+	The new videos of the channels you subscribe to will show here.	Hier erscheinen die neuen Videos der Kanäle, die du abonniert hast.
+	The videos you watch will show here.	Hier erscheinen die Videos, die du dir ansiehst.
+	This channel has no playlists.	Dieser Kanal hat keine Playlists.
+	This channel has no videos yet.	Dieser Kanal hat noch keine Videos.
+	Top comments	Top-Kommentare
+	Turn on watch history	Wiedergabeverlauf aktivieren
+	Videos	Videos
+	View full playlist	Ganze Playlist ansehen
+	Watch history	Wiedergabeverlauf
+	Your history is paused: what you watch now is not kept.	Dein Verlauf ist pausiert: Was du jetzt ansiehst, wird nicht gespeichert.
 @plural	{n} view|{n} views	{n} Aufruf|{n} Aufrufe
-@plural	{n} like|{n} likes	{n} Like|{n} Likes
 @plural	{n} comment|{n} comments	{n} Kommentar|{n} Kommentare
 @plural	{n} second ago|{n} seconds ago	vor {n} Sekunde|vor {n} Sekunden
 @plural	{n} minute ago|{n} minutes ago	vor {n} Minute|vor {n} Minuten
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automatisch ({quality})
 	This video can't be played in this browser.	Dieses Video kann in diesem Browser nicht abgespielt werden.
 @plural	{n} second|{n} seconds	{n} Sekunde|{n} Sekunden
+@plural	{n} reply|{n} replies	{n} Antwort|{n} Antworten
+@plural	{n} subscriber|{n} subscribers	{n} Abonnent|{n} Abonnenten
+@plural	{n} video|{n} videos	{n} Video|{n} Videos

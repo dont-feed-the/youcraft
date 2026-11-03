@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	A feldolgozás nem sikerült. Töltsd fel újra a videót.
 	Upload failed. Try again.	A feltöltés nem sikerült. Próbáld újra.
 	The file is too large.	A fájl túl nagy.
+	(edited)	(szerkesztve)
+	Action menu	Műveletek menü
+	Add a comment…	Írj megjegyzést…
+	Add a reply…	Írj választ…
+	Block from your channel	Letiltás a csatornádon
+	Cancel	Mégse
+	Channel	Csatorna
+	Choose a title	Válassz címet
+	Clear all watch history	A teljes megtekintési előzmény törlése
+	Close	Bezárás
+	Comment	Megjegyzés
+	Create	Létrehozás
+	Delete for good	Végleges törlés
+	Delete playlist	Lejátszási lista törlése
+	Latest	Legújabbak
+	Link copied	Link másolva
+	Manage videos	Videók kezelése
+	Move to bottom	Áthelyezés a végére
+	Move to top	Áthelyezés az elejére
+	New playlist	Új lejátszási lista
+	Newest first	Legújabbak elöl
+	No results found. Try other words.	Nincs találat. Próbálj más szavakat.
+	No videos in this list yet.	Ebben a listában még nincs videó.
+	Pause watch history	Megtekintési előzmények szüneteltetése
+	Remove from watch history	Eltávolítás a megtekintési előzményekből
+	Remove from this list	Eltávolítás ebből a listából
+	Reply	Válasz
+	Save video to…	Videó mentése ide…
+	Show more	Több megjelenítése
+	Show more replies	További válaszok megjelenítése
+	Sort by	Rendezés
+	Subscribed	Feliratkozva
+	The new videos of the channels you subscribe to will show here.	Itt jelennek meg azoknak a csatornáknak az új videói, amelyekre feliratkoztál.
+	The videos you watch will show here.	Itt jelennek meg a videók, amelyeket megnézel.
+	This channel has no playlists.	Ennek a csatornának nincsenek lejátszási listái.
+	This channel has no videos yet.	Ennek a csatornának még nincsenek videói.
+	Top comments	Legjobb megjegyzések
+	Turn on watch history	Megtekintési előzmények bekapcsolása
+	Videos	Videók
+	View full playlist	A teljes lejátszási lista megtekintése
+	Watch history	Megtekintési előzmények
+	Your history is paused: what you watch now is not kept.	Az előzményeid szüneteltetve vannak: amit most nézel, az nem kerül mentésre.
 @plural	{n} view|{n} views	{n} megtekintés|{n} megtekintés
-@plural	{n} like|{n} likes	{n} kedvelés|{n} kedvelés
 @plural	{n} comment|{n} comments	{n} hozzászólás|{n} hozzászólás
 @plural	{n} second ago|{n} seconds ago	{n} másodperce|{n} másodperce
 @plural	{n} minute ago|{n} minutes ago	{n} perce|{n} perce
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automatikus ({quality})
 	This video can't be played in this browser.	Ez a videó nem játszható le ebben a böngészőben.
 @plural	{n} second|{n} seconds	{n} másodperc|{n} másodperc
+@plural	{n} reply|{n} replies	{n} válasz|{n} válasz
+@plural	{n} subscriber|{n} subscribers	{n} feliratkozó|{n} feliratkozó
+@plural	{n} video|{n} videos	{n} videó|{n} videó

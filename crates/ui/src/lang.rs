@@ -130,3 +130,8 @@ pub fn fill(template: &str, values: &[(&str, &str)]) -> String {
 pub fn count(n: u64, one: &str, other: &str) -> String {
     youcraft_i18n::count(Language::current(), n, one, other)
 }
+
+/// A bare number in the language of the page, as a like button shows it.
+pub fn number(n: u64) -> String {
+    youcraft_i18n::number(Language::current(), n)
+}

@@ -1,7 +1,7 @@
 //! Videos: creating them, listing the watchable ones, and what the watch page shows.
 
 use rusqlite::{OptionalExtension, Row, params};
-use youcraft_api::records::{ChannelCard, VideoCard, VideoPage, Visibility};
+use youcraft_api::records::{ChannelCard, Rating, VideoCard, VideoPage, Visibility};
 use youcraft_api::time::MediaDuration;
 use youcraft_api::{AccountId, ChannelId, VideoId};
 
@@ -42,9 +42,11 @@ pub struct Listed {
     pub comments: u64,
 }
 
+/// The columns [`card`] reads, from `videos` as `v` joined with its `channels` as `c`.
 pub(crate) const CARD_COLUMNS: &str = "v.id, v.title, v.duration_ticks, v.timescale, v.view_count, \
     COALESCE(v.published_at, v.created_at), c.id, c.handle, c.name";
 
+/// The [`VideoCard`] of a row that starts with [`CARD_COLUMNS`].
 pub(crate) fn card(row: &Row<'_>) -> rusqlite::Result<VideoCard> {
     Ok(VideoCard {
         id: VideoId::from_i64(row.get(0)?),
@@ -133,21 +135,32 @@ impl Store {
         let connection = self.connection();
         let mut statement = connection.prepare_cached(&format!(
             "SELECT {CARD_COLUMNS}, v.description, v.like_count, v.comment_count, v.comments_enabled, v.state, \
-             v.visibility, c.account_id FROM videos v JOIN channels c ON c.id = v.channel_id WHERE v.id = ?1"
+             v.visibility, c.account_id, c.subscriber_count, \
+             (SELECT l.value FROM likes l WHERE l.video_id = v.id AND l.account_id = ?2), \
+             EXISTS (SELECT 1 FROM subscriptions s WHERE s.channel_id = c.id AND s.account_id = ?2) \
+             FROM videos v JOIN channels c ON c.id = v.channel_id WHERE v.id = ?1"
         ))?;
         let page = statement
-            .query_row([video.to_i64()], |row| {
-                let owner = AccountId::from_i64(row.get(15)?);
-                let visible = row.get::<_, String>(14)? != "private" || viewer == Some(owner);
-                Ok(visible.then_some(VideoPage {
-                    card: card(row)?,
-                    description: row.get(9)?,
-                    likes: count(row.get(10)?),
-                    comments: count(row.get(11)?),
-                    comments_enabled: row.get::<_, i64>(12)? != 0,
-                    playable: row.get::<_, String>(13)? == "ready",
-                }))
-            })
+            .query_row(
+                params![video.to_i64(), viewer.map(AccountId::to_i64)],
+                |row| {
+                    let owner = AccountId::from_i64(row.get(15)?);
+                    let owned = viewer == Some(owner);
+                    let visible = row.get::<_, String>(14)? != "private" || owned;
+                    Ok(visible.then_some(VideoPage {
+                        card: card(row)?,
+                        description: row.get(9)?,
+                        likes: count(row.get(10)?),
+                        comments: count(row.get(11)?),
+                        comments_enabled: row.get::<_, i64>(12)? != 0,
+                        playable: row.get::<_, String>(13)? == "ready",
+                        subscribers: count(row.get(16)?),
+                        rating: Rating::from_value(row.get(17)?),
+                        subscribed: row.get(18)?,
+                        owned,
+                    }))
+                },
+            )
             .optional()?;
         Ok(page.flatten())
     }

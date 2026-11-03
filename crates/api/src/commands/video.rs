@@ -4,8 +4,9 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::command::Command;
+use crate::commands::site::Nothing;
 use crate::ids::VideoId;
-use crate::records::{Feed, StudioVideo, VideoPage, Visibility};
+use crate::records::{Feed, Rating, StudioVideo, VideoPage, Visibility};
 use crate::role::Role;
 
 /// Which video.
@@ -79,4 +80,45 @@ impl Command for Delete {
         "Delete one of your videos, with its comments and its media, for good.";
     type Input = Which;
     type Output = ();
+}
+
+/// A rating to give a video.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct Rate {
+    /// The video.
+    pub video: VideoId,
+    /// The caller's rating from now on; [`Rating::None`] takes theirs back.
+    pub rating: Rating,
+}
+
+/// A video's likes once the caller rated it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct Rated {
+    /// How many people like it now.
+    pub likes: u64,
+    /// The caller's rating.
+    pub rating: Rating,
+}
+
+/// Like a video, dislike it, or take the rating back.
+pub struct SetRating;
+
+impl Command for SetRating {
+    const ID: &'static str = "video.rate";
+    const REQUIRES: Role = Role::Viewer;
+    const SUMMARY: &'static str =
+        "Like or dislike a video, or take your rating back; answers its likes.";
+    type Input = Rate;
+    type Output = Rated;
+}
+
+/// Count that the caller started watching a video.
+pub struct View;
+
+impl Command for View {
+    const ID: &'static str = "video.view";
+    const REQUIRES: Role = Role::Anyone;
+    const SUMMARY: &'static str = "Count a view of a video, once a day per viewer, and keep it in the signed-in viewer's history unless they paused it.";
+    type Input = Which;
+    type Output = Nothing;
 }

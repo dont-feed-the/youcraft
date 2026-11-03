@@ -9,7 +9,10 @@ use rusqlite::Connection;
 use crate::StoreError;
 
 /// Every migration, oldest first.
-const MIGRATIONS: &[&str] = &[include_str!("migrations/0001-v1.sql")];
+const MIGRATIONS: &[&str] = &[
+    include_str!("migrations/0001-v1.sql"),
+    include_str!("migrations/0002-social.sql"),
+];
 
 /// Bring the schema of `connection` up to date.
 pub fn run(connection: &Connection) -> Result<(), StoreError> {

@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	ప్రాసెసింగ్ విఫలమైంది. వీడియోను మళ్లీ అప్‌లోడ్ చేయండి.
 	Upload failed. Try again.	అప్‌లోడ్ విఫలమైంది. మళ్లీ ప్రయత్నించండి.
 	The file is too large.	ఫైల్ చాలా పెద్దదిగా ఉంది.
+	(edited)	(సవరించబడింది)
+	Action menu	చర్యల మెనూ
+	Add a comment…	ఒక వ్యాఖ్యను జోడించండి…
+	Add a reply…	ఒక ప్రత్యుత్తరాన్ని జోడించండి…
+	Block from your channel	మీ ఛానెల్‌లో బ్లాక్ చేయండి
+	Cancel	రద్దు చేయండి
+	Channel	ఛానెల్
+	Choose a title	శీర్షికను ఎంచుకోండి
+	Clear all watch history	మొత్తం వీక్షణ చరిత్రను తొలగించండి
+	Close	మూసివేయండి
+	Comment	వ్యాఖ్యానించండి
+	Create	సృష్టించండి
+	Delete for good	శాశ్వతంగా తొలగించండి
+	Delete playlist	ప్లేలిస్ట్‌ను తొలగించండి
+	Latest	తాజావి
+	Link copied	లింక్ కాపీ చేయబడింది
+	Manage videos	వీడియోలను నిర్వహించండి
+	Move to bottom	దిగువకు తరలించండి
+	Move to top	ఎగువకు తరలించండి
+	New playlist	కొత్త ప్లేలిస్ట్
+	Newest first	కొత్తవి ముందు
+	No results found. Try other words.	ఫలితాలు ఏవీ కనుగొనబడలేదు. ఇతర పదాలను ప్రయత్నించండి.
+	No videos in this list yet.	ఈ జాబితాలో ఇంకా వీడియోలు లేవు.
+	Pause watch history	వీక్షణ చరిత్రను పాజ్ చేయండి
+	Remove from watch history	వీక్షణ చరిత్ర నుండి తీసివేయండి
+	Remove from this list	ఈ జాబితా నుండి తీసివేయండి
+	Reply	ప్రత్యుత్తరం ఇవ్వండి
+	Save video to…	వీడియోను ఇందులో సేవ్ చేయండి…
+	Show more	మరిన్ని చూపండి
+	Show more replies	మరిన్ని ప్రత్యుత్తరాలను చూపండి
+	Sort by	క్రమబద్ధీకరించండి
+	Subscribed	సబ్‌స్క్రైబ్ చేశారు
+	The new videos of the channels you subscribe to will show here.	మీరు సబ్‌స్క్రైబ్ చేసిన ఛానెల్‌ల కొత్త వీడియోలు ఇక్కడ కనిపిస్తాయి.
+	The videos you watch will show here.	మీరు చూసే వీడియోలు ఇక్కడ కనిపిస్తాయి.
+	This channel has no playlists.	ఈ ఛానెల్‌కు ప్లేలిస్ట్‌లు లేవు.
+	This channel has no videos yet.	ఈ ఛానెల్‌కు ఇంకా వీడియోలు లేవు.
+	Top comments	అగ్ర వ్యాఖ్యలు
+	Turn on watch history	వీక్షణ చరిత్రను ఆన్ చేయండి
+	Videos	వీడియోలు
+	View full playlist	మొత్తం ప్లేలిస్ట్‌ను చూడండి
+	Watch history	వీక్షణ చరిత్ర
+	Your history is paused: what you watch now is not kept.	మీ చరిత్ర పాజ్ చేయబడింది: మీరు ఇప్పుడు చూసేది ఉంచబడదు.
 @plural	{n} view|{n} views	{n} వీక్షణ|{n} వీక్షణలు
-@plural	{n} like|{n} likes	{n} లైక్|{n} లైక్‌లు
 @plural	{n} comment|{n} comments	{n} కామెంట్|{n} కామెంట్‌లు
 @plural	{n} second ago|{n} seconds ago	{n} సెకను క్రితం|{n} సెకన్ల క్రితం
 @plural	{n} minute ago|{n} minutes ago	{n} నిమిషం క్రితం|{n} నిమిషాల క్రితం
@@ -127,3 +168,6 @@
 	Auto ({quality})	ఆటోమేటిక్ ({quality})
 	This video can't be played in this browser.	ఈ బ్రౌజర్‌లో ఈ వీడియోను ప్లే చేయడం సాధ్యం కాదు.
 @plural	{n} second|{n} seconds	{n} సెకను|{n} సెకన్లు
+@plural	{n} reply|{n} replies	{n} ప్రత్యుత్తరం|{n} ప్రత్యుత్తరాలు
+@plural	{n} subscriber|{n} subscribers	{n} సబ్‌స్క్రైబర్|{n} సబ్‌స్క్రైబర్‌లు
+@plural	{n} video|{n} videos	{n} వీడియో|{n} వీడియోలు

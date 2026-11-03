@@ -1,38 +1,81 @@
-//! Commands about one video.
+//! Commands about one video: what its page shows, what to watch next, rating it, viewing it,
+//! and its creator changing or deleting it.
 
-use youcraft_api::ApiError;
-use youcraft_api::commands::video::{Delete, Edit, Get, Next, Update, Which};
+use youcraft_api::commands::site::Nothing;
+use youcraft_api::commands::video::{
+    Delete, Edit, Get, Next, Rate, Rated, SetRating, Update, View, Which,
+};
 use youcraft_api::records::{Feed, StudioVideo, VideoPage};
-use youcraft_recommend::v1::{Surface, Viewer};
+use youcraft_api::{ApiError, VideoId};
+use youcraft_recommend::v1::Surface;
 use youcraft_store::studio::VideoEdit;
 
 use crate::dispatch::Handle;
-use crate::handlers::feed::{PAGE, ranked};
+use crate::handlers::feed::{CANDIDATES, PAGE, ranked};
 use crate::handlers::studio::{description, may_manage, studio_video, title};
 use crate::site::{Caller, Site, now};
 
-impl Handle<Get> for Site {
-    async fn handle(&self, caller: Caller, which: Which) -> Result<VideoPage, ApiError> {
+/// Seconds in a day, the span in which a viewer's views of a video count once.
+const DAY: i64 = 86_400;
+
+impl Site {
+    /// The page of `video`, if `caller` may see it.
+    pub async fn video_page(&self, caller: Caller, video: VideoId) -> Result<VideoPage, ApiError> {
         let viewer = caller.account;
-        self.db(move |store| store.video_page(which.video, viewer))
+        self.db(move |store| store.video_page(video, viewer))
             .await?
             .ok_or(ApiError::NotFound)
     }
 }
 
+impl Handle<Get> for Site {
+    async fn handle(&self, caller: Caller, which: Which) -> Result<VideoPage, ApiError> {
+        self.video_page(caller, which.video).await
+    }
+}
+
 impl Handle<Next> for Site {
     async fn handle(&self, caller: Caller, which: Which) -> Result<Feed, ApiError> {
-        let viewer = caller.account;
-        let page = self
-            .db(move |store| store.video_page(which.video, viewer))
-            .await?
-            .ok_or(ApiError::NotFound)?;
-        let listed = self.db(|store| store.recent_watchable(500)).await?;
+        let page = self.video_page(caller, which.video).await?;
+        let listed = self.db(|store| store.recent_watchable(CANDIDATES)).await?;
         let surface = Surface::UpNext {
             watching: which.video.to_string(),
             channel: page.card.channel.id.to_string(),
         };
-        Ok(ranked(surface, Viewer::default(), listed, PAGE))
+        let viewer = self.viewer(caller).await?;
+        Ok(ranked(surface, viewer, listed, PAGE))
+    }
+}
+
+impl Handle<SetRating> for Site {
+    async fn handle(&self, caller: Caller, rate: Rate) -> Result<Rated, ApiError> {
+        let account = caller.signed_in()?;
+        let now = now();
+        let likes = self
+            .db(move |store| store.rate(account, rate.video, rate.rating, now))
+            .await?
+            .ok_or(ApiError::NotFound)?;
+        Ok(Rated {
+            likes,
+            rating: rate.rating,
+        })
+    }
+}
+
+impl Handle<View> for Site {
+    async fn handle(&self, caller: Caller, which: Which) -> Result<Nothing, ApiError> {
+        let page = self.video_page(caller, which.video).await?;
+        if !page.playable {
+            return Ok(Nothing {});
+        }
+        let (video, viewer, now) = (which.video, caller.viewer, now());
+        self.db(move |store| store.count_view(video, &viewer.0, now.div_euclid(DAY)))
+            .await?;
+        if let Some(account) = caller.account {
+            self.db(move |store| store.remember_watched(account, video, now))
+                .await?;
+        }
+        Ok(Nothing {})
     }
 }
 

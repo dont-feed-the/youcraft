@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	העיבוד נכשל. יש להעלות את הסרטון שוב.
 	Upload failed. Try again.	ההעלאה נכשלה. כדאי לנסות שוב.
 	The file is too large.	הקובץ גדול מדי.
+	(edited)	(נערך)
+	Action menu	תפריט פעולות
+	Add a comment…	הוספת תגובה…
+	Add a reply…	הוספת תשובה…
+	Block from your channel	חסימה בערוץ שלך
+	Cancel	ביטול
+	Channel	ערוץ
+	Choose a title	בחירת כותרת
+	Clear all watch history	ניקוי כל היסטוריית הצפייה
+	Close	סגירה
+	Comment	תגובה
+	Create	יצירה
+	Delete for good	מחיקה לצמיתות
+	Delete playlist	מחיקת הפלייליסט
+	Latest	החדשים ביותר
+	Link copied	הקישור הועתק
+	Manage videos	ניהול סרטונים
+	Move to bottom	העברה לסוף
+	Move to top	העברה להתחלה
+	New playlist	פלייליסט חדש
+	Newest first	החדשים קודם
+	No results found. Try other words.	לא נמצאו תוצאות. כדאי לנסות מילים אחרות.
+	No videos in this list yet.	אין עדיין סרטונים ברשימה הזו.
+	Pause watch history	השהיית היסטוריית הצפייה
+	Remove from watch history	הסרה מהיסטוריית הצפייה
+	Remove from this list	הסרה מהרשימה הזו
+	Reply	תשובה
+	Save video to…	שמירת הסרטון ב…
+	Show more	הצגת עוד
+	Show more replies	הצגת תשובות נוספות
+	Sort by	מיון לפי
+	Subscribed	רשום למינוי
+	The new videos of the channels you subscribe to will show here.	כאן יופיעו הסרטונים החדשים של הערוצים שנרשמת אליהם.
+	The videos you watch will show here.	כאן יופיעו הסרטונים שצפית בהם.
+	This channel has no playlists.	לערוץ הזה אין פלייליסטים.
+	This channel has no videos yet.	לערוץ הזה אין עדיין סרטונים.
+	Top comments	התגובות המובילות
+	Turn on watch history	הפעלת היסטוריית הצפייה
+	Videos	סרטונים
+	View full playlist	הצגת הפלייליסט המלא
+	Watch history	היסטוריית צפייה
+	Your history is paused: what you watch now is not kept.	ההיסטוריה שלך מושהית: מה שצופים בו עכשיו לא נשמר.
 @plural	{n} view|{n} views	{n} צפייה|{n} צפיות|{n} צפיות
-@plural	{n} like|{n} likes	{n} לייק|{n} לייקים|{n} לייקים
 @plural	{n} comment|{n} comments	{n} תגובה|{n} תגובות|{n} תגובות
 @plural	{n} second ago|{n} seconds ago	לפני {n} שנייה|לפני {n} שניות|לפני {n} שניות
 @plural	{n} minute ago|{n} minutes ago	לפני {n} דקה|לפני {n} דקות|לפני {n} דקות
@@ -127,3 +168,6 @@
 	Auto ({quality})	אוטומטית ({quality})
 	This video can't be played in this browser.	לא ניתן להפעיל את הסרטון בדפדפן הזה.
 @plural	{n} second|{n} seconds	{n} שנייה|{n} שניות|{n} שניות
+@plural	{n} reply|{n} replies	{n} תשובה|{n} תשובות|{n} תשובות
+@plural	{n} subscriber|{n} subscribers	{n} מנוי|{n} מנויים|{n} מנויים
+@plural	{n} video|{n} videos	{n} סרטון|{n} סרטונים|{n} סרטונים

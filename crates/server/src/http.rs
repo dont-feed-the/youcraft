@@ -509,4 +509,154 @@ pub mod tests {
             "blocked people may look, not act"
         );
     }
+
+    /// The JSON answer of `id` on `input`, sent with `cookie`, and its status.
+    async fn answer(
+        routes: &Router,
+        id: &str,
+        input: serde_json::Value,
+        cookie: &str,
+    ) -> (StatusCode, serde_json::Value) {
+        let (status, _, body) = send(routes, command_request(id, &input.to_string(), cookie)).await;
+        (status, serde_json::from_str(&body).unwrap_or_default())
+    }
+
+    #[tokio::test]
+    async fn viewers_rate_comment_subscribe_and_keep_lists() {
+        use serde_json::json;
+        use youcraft_api::records::Visibility;
+        use youcraft_api::time::MediaDuration;
+        use youcraft_store::videos::NewVideo;
+
+        let (site, routes) = site();
+        site.store()
+            .invite("ada@example.com", youcraft_api::Role::Creator, 1)
+            .unwrap();
+        let ada = sign_in(&routes, "ada").await;
+        let bob = sign_in(&routes, "bob").await;
+        let (_, ada_me) = answer(&routes, "account.me", json!({}), &ada).await;
+        let (_, bob_me) = answer(&routes, "account.me", json!({}), &bob).await;
+        let channel: youcraft_api::ChannelId =
+            serde_json::from_value(ada_me["channel"]["id"].clone()).unwrap();
+        let video = youcraft_api::VideoId::from_bits(42);
+        site.store()
+            .insert_ready_video(&NewVideo {
+                id: video,
+                channel,
+                title: "Standing waves",
+                description: "On a string.",
+                visibility: Visibility::Public,
+                duration: MediaDuration::from_millis(1000),
+                width: 640,
+                height: 360,
+                published_at: now(),
+            })
+            .unwrap();
+        let which = json!({ "video": video });
+
+        let (_, rated) = answer(
+            &routes,
+            "video.rate",
+            json!({ "video": video, "rating": "like" }),
+            &bob,
+        )
+        .await;
+        assert_eq!(rated["likes"], 1);
+        let (status, _) = answer(
+            &routes,
+            "video.rate",
+            json!({ "video": video, "rating": "like" }),
+            "",
+        )
+        .await;
+        assert_eq!(
+            status,
+            StatusCode::UNAUTHORIZED,
+            "signed out, one signs in first"
+        );
+
+        let (status, comment) = answer(
+            &routes,
+            "comment.create",
+            json!({ "video": video, "body": " Lovely. " }),
+            &bob,
+        )
+        .await;
+        assert_eq!(status, StatusCode::OK, "{comment}");
+        assert_eq!(comment["body"], "Lovely.");
+        let (_, comments) = answer(&routes, "comment.list", which.clone(), &ada).await;
+        let first = &comments["comments"][0];
+        assert!(
+            first["deletable"] == true && first["editable"] == false,
+            "{comments}"
+        );
+
+        let (_, subscribed) = answer(
+            &routes,
+            "channel.subscribe",
+            json!({ "channel": channel, "subscribed": true }),
+            &bob,
+        )
+        .await;
+        assert_eq!(subscribed["subscribers"], 1);
+        let (_, feed) = answer(&routes, "feed.subscriptions", json!({}), &bob).await;
+        assert_eq!(feed["videos"][0]["id"], json!(video));
+
+        for _ in 0..2 {
+            let (status, _) = answer(&routes, "video.view", which.clone(), &bob).await;
+            assert_eq!(status, StatusCode::OK);
+        }
+        let (_, page) = answer(&routes, "video.get", which.clone(), &bob).await;
+        assert_eq!(page["card"]["views"], 1, "once a day per viewer");
+        assert!(
+            page["subscribed"] == true && page["rating"] == "like",
+            "{page}"
+        );
+        let (_, history) = answer(&routes, "history.list", json!({}), &bob).await;
+        assert_eq!(history["videos"][0]["card"]["id"], json!(video));
+
+        let (status, _) = answer(
+            &routes,
+            "playlist.add",
+            json!({ "list": "WL", "video": video }),
+            &bob,
+        )
+        .await;
+        assert_eq!(status, StatusCode::OK);
+        let (_, later) = answer(&routes, "playlist.get", json!({ "list": "WL" }), &bob).await;
+        assert_eq!(later["videos"][0]["id"], json!(video));
+        let (status, _) = answer(&routes, "playlist.get", json!({ "list": "WL" }), "").await;
+        assert_eq!(status, StatusCode::UNAUTHORIZED);
+
+        let (_, found) = answer(&routes, "search.videos", json!({ "query": "WAVES" }), "").await;
+        assert_eq!(found["videos"][0]["id"], json!(video));
+
+        let handle = bob_me["channel"]["handle"].clone();
+        let (status, _) = answer(
+            &routes,
+            "channel.block",
+            json!({ "handle": handle, "blocked": true }),
+            &ada,
+        )
+        .await;
+        assert_eq!(status, StatusCode::OK);
+        let (status, _) = answer(
+            &routes,
+            "comment.create",
+            json!({ "video": video, "body": "Again" }),
+            &bob,
+        )
+        .await;
+        assert_eq!(
+            status,
+            StatusCode::FORBIDDEN,
+            "the creator keeps Bob from commenting"
+        );
+        let (_, comments) = answer(&routes, "comment.list", which, "").await;
+        assert_eq!(
+            comments["comments"],
+            json!([]),
+            "and his comments from showing"
+        );
+    }
 }

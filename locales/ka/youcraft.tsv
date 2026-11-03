@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	დამუშავება ვერ მოხერხდა. ატვირთეთ ვიდეო ხელახლა.
 	Upload failed. Try again.	ატვირთვა ვერ მოხერხდა. სცადეთ ხელახლა.
 	The file is too large.	ფაილი ძალიან დიდია.
+	(edited)	(რედაქტირებულია)
+	Action menu	მოქმედებების მენიუ
+	Add a comment…	დაამატეთ კომენტარი…
+	Add a reply…	დაამატეთ პასუხი…
+	Block from your channel	დაბლოკვა თქვენს არხზე
+	Cancel	გაუქმება
+	Channel	არხი
+	Choose a title	აირჩიეთ სათაური
+	Clear all watch history	ნახვების მთელი ისტორიის გასუფთავება
+	Close	დახურვა
+	Comment	კომენტარი
+	Create	შექმნა
+	Delete for good	სამუდამოდ წაშლა
+	Delete playlist	დასაკრავი სიის წაშლა
+	Latest	უახლესი
+	Link copied	ბმული დაკოპირდა
+	Manage videos	ვიდეოების მართვა
+	Move to bottom	ბოლოში გადატანა
+	Move to top	თავში გადატანა
+	New playlist	ახალი დასაკრავი სია
+	Newest first	ჯერ უახლესი
+	No results found. Try other words.	შედეგები ვერ მოიძებნა. სცადეთ სხვა სიტყვები.
+	No videos in this list yet.	ამ სიაში ჯერ ვიდეოები არ არის.
+	Pause watch history	ნახვების ისტორიის შეჩერება
+	Remove from watch history	ნახვების ისტორიიდან ამოშლა
+	Remove from this list	ამ სიიდან ამოშლა
+	Reply	პასუხი
+	Save video to…	ვიდეოს შენახვა…
+	Show more	მეტის ჩვენება
+	Show more replies	მეტი პასუხის ჩვენება
+	Sort by	დალაგება
+	Subscribed	გამოწერილია
+	The new videos of the channels you subscribe to will show here.	აქ გამოჩნდება თქვენ მიერ გამოწერილი არხების ახალი ვიდეოები.
+	The videos you watch will show here.	აქ გამოჩნდება ვიდეოები, რომლებსაც უყურებთ.
+	This channel has no playlists.	ამ არხს დასაკრავი სიები არ აქვს.
+	This channel has no videos yet.	ამ არხს ჯერ ვიდეოები არ აქვს.
+	Top comments	საუკეთესო კომენტარები
+	Turn on watch history	ნახვების ისტორიის ჩართვა
+	Videos	ვიდეოები
+	View full playlist	მთელი დასაკრავი სიის ნახვა
+	Watch history	ნახვების ისტორია
+	Your history is paused: what you watch now is not kept.	თქვენი ისტორია შეჩერებულია: ის, რასაც ახლა უყურებთ, არ ინახება.
 @plural	{n} view|{n} views	{n} ნახვა|{n} ნახვა
-@plural	{n} like|{n} likes	{n} მოწონება|{n} მოწონება
 @plural	{n} comment|{n} comments	{n} კომენტარი|{n} კომენტარი
 @plural	{n} second ago|{n} seconds ago	{n} წამის წინ|{n} წამის წინ
 @plural	{n} minute ago|{n} minutes ago	{n} წუთის წინ|{n} წუთის წინ
@@ -127,3 +168,6 @@
 	Auto ({quality})	ავტომატური ({quality})
 	This video can't be played in this browser.	ამ ბრაუზერში ამ ვიდეოს დაკვრა შეუძლებელია.
 @plural	{n} second|{n} seconds	{n} წამი|{n} წამი
+@plural	{n} reply|{n} replies	{n} პასუხი|{n} პასუხი
+@plural	{n} subscriber|{n} subscribers	{n} გამომწერი|{n} გამომწერი
+@plural	{n} video|{n} videos	{n} ვიდეო|{n} ვიდეო

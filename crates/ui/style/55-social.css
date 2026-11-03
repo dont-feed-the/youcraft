@@ -1,0 +1,79 @@
+/* What people do around a video: its channel and Subscribe, likes, sharing, saving to a list,
+   comments; and the menus, dialogs and notes these open. */
+.owner-row { justify-content: space-between; }
+.owner { display: flex; align-items: center; gap: var(--space-3); min-inline-size: 0; }
+.owner-names { display: grid; min-inline-size: 0; }
+.owner-subscribers { color: var(--text-2); font-size: var(--text-xs); }
+.subscribe.subscribed { background: var(--bg-raised); color: var(--text); }
+.subscribe.subscribed:hover { background: var(--bg-hover); opacity: 1; }
+.pill-part[aria-pressed="true"] .glyph { fill: currentColor; }
+
+.pill.quiet { background: transparent; }
+.pill.quiet:hover { background: var(--bg-hover); }
+.pill.primary { background: var(--accent); color: var(--text-on-accent); }
+.pill.primary:hover { background: var(--accent-dark); }
+.pill.primary:disabled { background: var(--bg-raised); color: var(--text-2); cursor: default; }
+.pill.small { block-size: 32px; padding-inline: var(--space-3); font-size: var(--text-xs); }
+.icon-button.small { inline-size: 32px; block-size: 32px; }
+.icon-button.small .glyph { inline-size: var(--icon-medium); block-size: var(--icon-medium); }
+.icon-button[aria-pressed="true"] .glyph { fill: currentColor; }
+
+.toast { position: fixed; inset-block-end: var(--space-6); inset-inline-start: var(--space-6); z-index: 6; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--bg-strong); color: var(--text-on-strong); }
+
+.popup-anchor { position: relative; }
+.popup { position: absolute; inset-block-start: 100%; inset-inline-start: 0; z-index: 5; display: grid; min-inline-size: var(--popup-width); padding-block: var(--space-2); border-radius: var(--radius-card); background: var(--bg-menu); box-shadow: var(--shadow-menu); }
+.popup-end { inset-inline-start: auto; inset-inline-end: 0; }
+
+.dialog-backdrop { position: fixed; inset: 0; z-index: 6; background: var(--badge-bg); }
+.dialog { position: fixed; inset-block-start: 50%; inset-inline-start: 50%; z-index: 7; display: grid; gap: var(--space-2); inline-size: min(var(--dialog-width), calc(100vw - 2 * var(--space-4))); max-block-size: 80vh; padding-block: var(--space-4); overflow-y: auto; border-radius: var(--radius-card); background: var(--bg-menu); box-shadow: var(--shadow-menu); transform: translate(-50%, -50%); }
+[dir="rtl"] .dialog { transform: translate(50%, -50%); }
+.dialog-heading { display: flex; align-items: center; justify-content: space-between; padding-inline: var(--space-6) var(--space-2); }
+.dialog-heading h2 { font-size: var(--text-md); font-weight: 500; }
+.dialog-body { display: grid; }
+.dialog-entry { display: flex; align-items: center; gap: var(--space-4); min-block-size: 40px; padding-inline: var(--space-6); cursor: pointer; }
+.dialog-entry:hover { background: var(--bg-hover); }
+.dialog-entry input { inline-size: var(--icon-medium); block-size: var(--icon-medium); accent-color: var(--accent); }
+.dialog-entry-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dialog-entry-mark { display: inline-grid; color: var(--text-2); }
+.dialog-new { display: flex; align-items: center; gap: var(--space-4); block-size: 40px; padding-inline: var(--space-6); border: 0; background: transparent; cursor: pointer; }
+.dialog-new:hover { background: var(--bg-hover); }
+.dialog-form { display: grid; gap: var(--space-3); padding-inline: var(--space-6); }
+.dialog-buttons { display: flex; justify-content: flex-end; gap: var(--space-2); }
+
+.comments { display: grid; gap: var(--space-6); margin-block-start: var(--space-3); }
+.comments-heading { display: flex; align-items: center; gap: var(--space-6); }
+.comments-heading h2 { font-size: var(--text-lg); }
+.comments-off { color: var(--text-2); text-align: center; }
+
+.composer { display: flex; gap: var(--space-4); }
+.composer-avatar { inline-size: var(--avatar-comment); block-size: var(--avatar-comment); background: var(--bg-raised); color: var(--text-2); }
+.composer.reply .composer-avatar { inline-size: var(--avatar-small); block-size: var(--avatar-small); }
+.composer.reply .composer-avatar .glyph { inline-size: var(--icon-small); block-size: var(--icon-small); }
+.composer-main { display: grid; flex: 1; gap: var(--space-2); min-inline-size: 0; }
+.composer-input { inline-size: 100%; min-block-size: 24px; padding: 0 0 var(--space-1); border: 0; border-block-end: 1px solid var(--border); background: transparent; color: var(--text); font: inherit; resize: none; field-sizing: content; }
+.composer-input:focus { outline: 0; border-block-end: 2px solid var(--text); }
+.composer-buttons { display: flex; justify-content: flex-end; gap: var(--space-2); }
+
+.comment { display: flex; gap: var(--space-4); }
+.comment > .avatar { inline-size: var(--avatar-comment); block-size: var(--avatar-comment); }
+.comment.reply > .avatar { inline-size: var(--avatar-small); block-size: var(--avatar-small); font-size: var(--text-xs); }
+.comment-main { display: grid; flex: 1; gap: var(--space-1); min-inline-size: 0; }
+.comment-byline { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1); font-size: var(--text-xs); }
+.comment-author { font-weight: 500; }
+.comment-author.by-creator { padding-inline: var(--space-2); border-radius: var(--radius-pill); background: var(--bg-hover); }
+.comment-age { color: var(--text-2); }
+.comment-body { white-space: pre-wrap; overflow-wrap: anywhere; }
+.comment-toolbar { display: flex; align-items: center; gap: var(--space-1); margin-inline-start: calc(-1 * var(--space-2)); }
+.comment-likes { min-inline-size: var(--space-4); color: var(--text-2); font-size: var(--text-xs); }
+.replies-toggle { display: inline-flex; align-items: center; justify-self: start; gap: var(--space-2); block-size: 36px; padding-inline: var(--space-3); border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--accent); font-weight: 500; cursor: pointer; }
+.replies-toggle:hover { background: var(--bg-hover); }
+.replies-toggle.open .glyph { transform: rotate(180deg); }
+.replies { display: grid; gap: var(--space-4); }
+
+@media (max-width: 656px) {
+  .owner-row { gap: var(--space-3); }
+  .owner { inline-size: 100%; }
+  .owner .subscribe { margin-inline-start: auto; }
+  .actions { inline-size: 100%; }
+  .toast { inset-inline: var(--space-3); inset-block-end: calc(var(--tabbar-height) + var(--space-3)); }
+}

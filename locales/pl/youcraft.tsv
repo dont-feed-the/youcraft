@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Przetwarzanie nie powiodło się. Prześlij film ponownie.
 	Upload failed. Try again.	Przesyłanie nie powiodło się. Spróbuj ponownie.
 	The file is too large.	Plik jest za duży.
+	(edited)	(edytowano)
+	Action menu	Menu działań
+	Add a comment…	Dodaj komentarz…
+	Add a reply…	Dodaj odpowiedź…
+	Block from your channel	Zablokuj na swoim kanale
+	Cancel	Anuluj
+	Channel	Kanał
+	Choose a title	Wybierz tytuł
+	Clear all watch history	Wyczyść całą historię oglądania
+	Close	Zamknij
+	Comment	Skomentuj
+	Create	Utwórz
+	Delete for good	Usuń na zawsze
+	Delete playlist	Usuń playlistę
+	Latest	Najnowsze
+	Link copied	Skopiowano link
+	Manage videos	Zarządzaj filmami
+	Move to bottom	Przenieś na dół
+	Move to top	Przenieś na górę
+	New playlist	Nowa playlista
+	Newest first	Od najnowszych
+	No results found. Try other words.	Brak wyników. Spróbuj innych słów.
+	No videos in this list yet.	Na tej liście nie ma jeszcze filmów.
+	Pause watch history	Wstrzymaj historię oglądania
+	Remove from watch history	Usuń z historii oglądania
+	Remove from this list	Usuń z tej listy
+	Reply	Odpowiedz
+	Save video to…	Zapisz film na…
+	Show more	Pokaż więcej
+	Show more replies	Pokaż więcej odpowiedzi
+	Sort by	Sortuj według
+	Subscribed	Subskrybujesz
+	The new videos of the channels you subscribe to will show here.	Tutaj pojawią się nowe filmy z kanałów, które subskrybujesz.
+	The videos you watch will show here.	Tutaj pojawią się filmy, które oglądasz.
+	This channel has no playlists.	Ten kanał nie ma playlist.
+	This channel has no videos yet.	Ten kanał nie ma jeszcze filmów.
+	Top comments	Najlepsze komentarze
+	Turn on watch history	Włącz historię oglądania
+	Videos	Filmy
+	View full playlist	Wyświetl całą playlistę
+	Watch history	Historia oglądania
+	Your history is paused: what you watch now is not kept.	Twoja historia jest wstrzymana: to, co teraz oglądasz, nie jest zapisywane.
 @plural	{n} view|{n} views	{n} wyświetlenie|{n} wyświetlenia|{n} wyświetleń
-@plural	{n} like|{n} likes	{n} polubienie|{n} polubienia|{n} polubień
 @plural	{n} comment|{n} comments	{n} komentarz|{n} komentarze|{n} komentarzy
 @plural	{n} second ago|{n} seconds ago	{n} sekundę temu|{n} sekundy temu|{n} sekund temu
 @plural	{n} minute ago|{n} minutes ago	{n} minutę temu|{n} minuty temu|{n} minut temu
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automatyczna ({quality})
 	This video can't be played in this browser.	Tego filmu nie można odtworzyć w tej przeglądarce.
 @plural	{n} second|{n} seconds	{n} sekunda|{n} sekundy|{n} sekund
+@plural	{n} reply|{n} replies	{n} odpowiedź|{n} odpowiedzi|{n} odpowiedzi
+@plural	{n} subscriber|{n} subscribers	{n} subskrybent|{n} subskrybentów|{n} subskrybentów
+@plural	{n} video|{n} videos	{n} film|{n} filmy|{n} filmów

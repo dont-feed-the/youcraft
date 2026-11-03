@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Обрада није успела. Поново отпремите видео.
 	Upload failed. Try again.	Отпремање није успело. Покушајте поново.
 	The file is too large.	Датотека је превелика.
+	(edited)	(измењено)
+	Action menu	Мени радњи
+	Add a comment…	Додајте коментар…
+	Add a reply…	Додајте одговор…
+	Block from your channel	Блокирај на свом каналу
+	Cancel	Откажи
+	Channel	Канал
+	Choose a title	Изаберите наслов
+	Clear all watch history	Обриши целу историју гледања
+	Close	Затвори
+	Comment	Коментариши
+	Create	Направи
+	Delete for good	Избриши заувек
+	Delete playlist	Избриши плејлисту
+	Latest	Најновије
+	Link copied	Линк је копиран
+	Manage videos	Управљај видео снимцима
+	Move to bottom	Премести на дно
+	Move to top	Премести на врх
+	New playlist	Нова плејлиста
+	Newest first	Прво најновије
+	No results found. Try other words.	Нема резултата. Покушајте другим речима.
+	No videos in this list yet.	На овој листи још нема видео снимака.
+	Pause watch history	Паузирај историју гледања
+	Remove from watch history	Уклони из историје гледања
+	Remove from this list	Уклони са ове листе
+	Reply	Одговори
+	Save video to…	Сачувај видео на…
+	Show more	Прикажи још
+	Show more replies	Прикажи још одговора
+	Sort by	Сортирај по
+	Subscribed	Претплаћени сте
+	The new videos of the channels you subscribe to will show here.	Овде ће се приказивати нови видео снимци канала на које сте претплаћени.
+	The videos you watch will show here.	Овде ће се приказивати видео снимци које гледате.
+	This channel has no playlists.	Овај канал нема плејлисте.
+	This channel has no videos yet.	Овај канал још нема видео снимака.
+	Top comments	Најбољи коментари
+	Turn on watch history	Укључи историју гледања
+	Videos	Видео снимци
+	View full playlist	Прикажи целу плејлисту
+	Watch history	Историја гледања
+	Your history is paused: what you watch now is not kept.	Ваша историја је паузирана: оно што сада гледате се не чува.
 @plural	{n} view|{n} views	{n} преглед|{n} прегледа|{n} прегледа
-@plural	{n} like|{n} likes	{n} свиђање|{n} свиђања|{n} свиђања
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментара|{n} коментара
 @plural	{n} second ago|{n} seconds ago	пре {n} секунде|пре {n} секунде|пре {n} секунди
 @plural	{n} minute ago|{n} minutes ago	пре {n} минута|пре {n} минута|пре {n} минута
@@ -127,3 +168,6 @@
 	Auto ({quality})	Аутоматски ({quality})
 	This video can't be played in this browser.	Овај видео не може да се пусти у овом прегледачу.
 @plural	{n} second|{n} seconds	{n} секунда|{n} секунде|{n} секунди
+@plural	{n} reply|{n} replies	{n} одговор|{n} одговора|{n} одговора
+@plural	{n} subscriber|{n} subscribers	{n} претплатник|{n} претплатника|{n} претплатника
+@plural	{n} video|{n} videos	{n} видео|{n} видеа|{n} видеа

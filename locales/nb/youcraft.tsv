@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Behandlingen mislyktes. Last opp videoen på nytt.
 	Upload failed. Try again.	Opplastingen mislyktes. Prøv igjen.
 	The file is too large.	Filen er for stor.
+	(edited)	(redigert)
+	Action menu	Handlingsmeny
+	Add a comment…	Legg til en kommentar…
+	Add a reply…	Legg til et svar…
+	Block from your channel	Blokker på kanalen din
+	Cancel	Avbryt
+	Channel	Kanal
+	Choose a title	Velg en tittel
+	Clear all watch history	Tøm hele visningsloggen
+	Close	Lukk
+	Comment	Kommenter
+	Create	Opprett
+	Delete for good	Slett for godt
+	Delete playlist	Slett spillelisten
+	Latest	Nyeste
+	Link copied	Linken er kopiert
+	Manage videos	Administrer videoer
+	Move to bottom	Flytt nederst
+	Move to top	Flytt øverst
+	New playlist	Ny spilleliste
+	Newest first	Nyeste først
+	No results found. Try other words.	Ingen resultater. Prøv andre ord.
+	No videos in this list yet.	Ingen videoer i denne listen ennå.
+	Pause watch history	Sett visningsloggen på pause
+	Remove from watch history	Fjern fra visningsloggen
+	Remove from this list	Fjern fra denne listen
+	Reply	Svar
+	Save video to…	Lagre videoen i…
+	Show more	Vis mer
+	Show more replies	Vis flere svar
+	Sort by	Sorter etter
+	Subscribed	Abonnerer
+	The new videos of the channels you subscribe to will show here.	Nye videoer fra kanalene du abonnerer på, vises her.
+	The videos you watch will show here.	Videoene du ser på, vises her.
+	This channel has no playlists.	Denne kanalen har ingen spillelister.
+	This channel has no videos yet.	Denne kanalen har ingen videoer ennå.
+	Top comments	Toppkommentarer
+	Turn on watch history	Slå på visningsloggen
+	Videos	Videoer
+	View full playlist	Se hele spillelisten
+	Watch history	Visningslogg
+	Your history is paused: what you watch now is not kept.	Loggen din er satt på pause: det du ser på nå, lagres ikke.
 @plural	{n} view|{n} views	{n} visning|{n} visninger
-@plural	{n} like|{n} likes	{n} liker|{n} liker
 @plural	{n} comment|{n} comments	{n} kommentar|{n} kommentarer
 @plural	{n} second ago|{n} seconds ago	for {n} sekund siden|for {n} sekunder siden
 @plural	{n} minute ago|{n} minutes ago	for {n} minutt siden|for {n} minutter siden
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automatisk ({quality})
 	This video can't be played in this browser.	Denne videoen kan ikke spilles av i denne nettleseren.
 @plural	{n} second|{n} seconds	{n} sekund|{n} sekunder
+@plural	{n} reply|{n} replies	{n} svar|{n} svar
+@plural	{n} subscriber|{n} subscribers	{n} abonnent|{n} abonnenter
+@plural	{n} video|{n} videos	{n} video|{n} videoer

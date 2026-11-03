@@ -17,5 +17,5 @@ pub mod time;
 
 pub use command::{Answer, Command, Descriptor, Dispatch};
 pub use error::ApiError;
-pub use ids::{AccountId, ChannelId, CommentId, PlaylistId, TokenId, VideoId};
+pub use ids::{AccountId, ChannelId, CommentId, List, PlaylistId, TokenId, VideoId};
 pub use role::Role;

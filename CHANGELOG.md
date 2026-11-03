@@ -2,6 +2,32 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.4
+
+### Added
+
+- Likes and dislikes on the watch page, Subscribe under every video and on channel pages, Share
+  (the link goes to the clipboard) and Save, which puts a video in Watch later or a playlist, or
+  in a new playlist made on the spot.
+- Comments under every video, the most liked or the newest first, with replies one level deep,
+  likes, editing and deleting one's own; creators delete any comment on their videos and can keep
+  an account from commenting on their channel, administrators delete any comment.
+- Channel pages at `/@handle`, with Home, Videos and Playlists tabs.
+- Search at `/results`: channels, then videos, in any script, ignoring case and diacritics; on
+  phones the search button turns the masthead into the search box.
+- The subscriptions feed, the watch history (remove one video, clear it, pause it), the playlists
+  page, Watch later, Liked videos, and playlists with their own page, where their owner edits,
+  deletes and reorders them.
+- The guide lists the channels the person subscribes to.
+- Views count once a day per viewer, from when the video starts playing; the home page and the
+  videos beside the one being watched follow what the viewer watched, liked and subscribed to.
+- Commands `video.rate`, `video.view`, `feed.subscriptions`, `channel.get`, `channel.videos`,
+  `channel.playlists`, `channel.subscribe`, `channel.subscriptions`, `channel.block`,
+  `comment.list`, `comment.replies`, `comment.create`, `comment.edit`, `comment.delete`,
+  `comment.like`, `history.list`, `history.remove`, `history.clear`, `history.pause`,
+  `playlist.create`, `playlist.update`, `playlist.delete`, `playlist.add`, `playlist.remove`,
+  `playlist.move`, `playlist.list`, `playlist.get`, `search.videos`.
+
 ## 0.1.3
 
 ### Added

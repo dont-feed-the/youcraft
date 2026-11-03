@@ -55,6 +55,24 @@ pub enum Icon {
     Key,
     /// An envelope: invitations.
     Mail,
+    /// Lines and a plus: save to a list.
+    Save,
+    /// Lines growing shorter: sort.
+    Sort,
+    /// A pencil: edit.
+    Edit,
+    /// A bin: delete.
+    Delete,
+    /// A circle struck through: block.
+    Block,
+    /// A cross: close.
+    Close,
+    /// A chevron pointing down: show more below.
+    Expand,
+    /// A plus: add.
+    Plus,
+    /// A padlock: private.
+    Lock,
 }
 
 impl Icon {
@@ -149,6 +167,24 @@ impl Icon {
                 "M15 12v2",
             ],
             Icon::Mail => &["M3 6h18v12H3z", "M3 6l9 7 9-7"],
+            Icon::Save => &["M3 6h13", "M3 11h13", "M3 16h8", "M18 13v8", "M14 17h8"],
+            Icon::Sort => &["M3 6h18", "M3 12h12", "M3 18h6"],
+            Icon::Edit => &[
+                "M4 20l1-4.5L15.5 5a2.1 2.1 0 0 1 3 3L8 18.5z",
+                "M13.5 7l3 3",
+            ],
+            Icon::Delete => &[
+                "M4 6h16",
+                "M9 6V4h6v2",
+                "M6 6l1 14h10l1-14",
+                "M10 10v6",
+                "M14 10v6",
+            ],
+            Icon::Block => &["M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18", "M5.6 5.6l12.8 12.8"],
+            Icon::Close => &["M6 6l12 12", "M18 6L6 18"],
+            Icon::Expand => &["M6 9l6 6 6-6"],
+            Icon::Plus => &["M12 5v14", "M5 12h14"],
+            Icon::Lock => &["M6 11h12v9H6z", "M8.5 11V8a3.5 3.5 0 0 1 7 0v3"],
         }
     }
 }

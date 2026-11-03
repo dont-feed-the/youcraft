@@ -169,6 +169,7 @@ pub mod tests {
             account: Some(account),
             role: Role::Creator,
             credential: Credential::Token,
+            viewer: crate::site::ViewerKey::NOBODY,
         };
         let input = serde_json::json!({ "title": "Waves", "size": 10 });
         let upload = crate::dispatch::run(site, caller, "upload.create", input)

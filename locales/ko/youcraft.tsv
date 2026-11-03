@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	처리하지 못했습니다. 동영상을 다시 업로드하세요.
 	Upload failed. Try again.	업로드하지 못했습니다. 다시 시도하세요.
 	The file is too large.	파일이 너무 큽니다.
+	(edited)	(수정됨)
+	Action menu	작업 메뉴
+	Add a comment…	댓글 추가…
+	Add a reply…	답글 추가…
+	Block from your channel	내 채널에서 차단
+	Cancel	취소
+	Channel	채널
+	Choose a title	제목 선택
+	Clear all watch history	시청 기록 모두 지우기
+	Close	닫기
+	Comment	댓글
+	Create	만들기
+	Delete for good	영구 삭제
+	Delete playlist	재생목록 삭제
+	Latest	최신
+	Link copied	링크가 복사됨
+	Manage videos	동영상 관리
+	Move to bottom	맨 아래로 이동
+	Move to top	맨 위로 이동
+	New playlist	새 재생목록
+	Newest first	최신순
+	No results found. Try other words.	검색 결과가 없습니다. 다른 단어로 검색해 보세요.
+	No videos in this list yet.	이 목록에 아직 동영상이 없습니다.
+	Pause watch history	시청 기록 일시중지
+	Remove from watch history	시청 기록에서 삭제
+	Remove from this list	이 목록에서 삭제
+	Reply	답글
+	Save video to…	동영상 저장 위치…
+	Show more	더보기
+	Show more replies	답글 더보기
+	Sort by	정렬 기준
+	Subscribed	구독중
+	The new videos of the channels you subscribe to will show here.	구독한 채널의 새 동영상이 여기에 표시됩니다.
+	The videos you watch will show here.	시청한 동영상이 여기에 표시됩니다.
+	This channel has no playlists.	이 채널에는 재생목록이 없습니다.
+	This channel has no videos yet.	이 채널에는 아직 동영상이 없습니다.
+	Top comments	인기 댓글
+	Turn on watch history	시청 기록 사용
+	Videos	동영상
+	View full playlist	전체 재생목록 보기
+	Watch history	시청 기록
+	Your history is paused: what you watch now is not kept.	기록이 일시중지되었습니다. 지금 시청하는 동영상은 저장되지 않습니다.
 @plural	{n} view|{n} views	조회수 {n}회
-@plural	{n} like|{n} likes	좋아요 {n}개
 @plural	{n} comment|{n} comments	댓글 {n}개
 @plural	{n} second ago|{n} seconds ago	{n}초 전
 @plural	{n} minute ago|{n} minutes ago	{n}분 전
@@ -127,3 +168,6 @@
 	Auto ({quality})	자동 ({quality})
 	This video can't be played in this browser.	이 브라우저에서는 이 동영상을 재생할 수 없습니다.
 @plural	{n} second|{n} seconds	{n}초
+@plural	{n} reply|{n} replies	답글 {n}개
+@plural	{n} subscriber|{n} subscribers	구독자 {n}명
+@plural	{n} video|{n} videos	동영상 {n}개

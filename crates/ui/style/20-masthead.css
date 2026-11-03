@@ -14,12 +14,18 @@
 .sign-in { display: inline-flex; align-items: center; gap: var(--space-2); block-size: 36px; padding-inline: var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-pill); color: var(--accent); font-weight: 500; }
 .sign-in:hover { background: var(--bg-hover); }
 
+.search-back, .search-open { display: none; }
+
 @media (max-width: 656px) {
   .masthead { gap: var(--space-2); padding-inline: var(--space-2); }
   .guide-button { display: none; }
-  .search-input { display: none; }
-  .search { flex: none; margin-inline-start: auto; }
-  .search-button { inline-size: 40px; border: 0; border-radius: 50%; background: transparent; }
+  .search { display: none; }
+  .search-open { display: inline-grid; }
+  .masthead.searching .masthead-start, .masthead.searching .masthead-end { display: none; }
+  .masthead.searching .search { display: flex; flex: 1; align-items: center; gap: var(--space-2); }
+  .masthead.searching .search-back { display: inline-grid; flex: none; }
+  .masthead.searching .search-input { border-radius: var(--radius-field); border-inline-end: 1px solid var(--border); background: var(--bg-raised); }
+  .masthead.searching .search-button { inline-size: 40px; border: 0; border-radius: 50%; background: transparent; }
   .sign-in span { display: none; }
   .sign-in { padding-inline: var(--space-2); }
 }

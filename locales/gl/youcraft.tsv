@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Non se puido procesar. Volve subir o vídeo.
 	Upload failed. Try again.	Non se puido subir. Téntao de novo.
 	The file is too large.	O ficheiro é demasiado grande.
+	(edited)	(editado)
+	Action menu	Menú de accións
+	Add a comment…	Engade un comentario…
+	Add a reply…	Engade unha resposta…
+	Block from your channel	Bloquear na túa canle
+	Cancel	Cancelar
+	Channel	Canle
+	Choose a title	Escolle un título
+	Clear all watch history	Borrar todo o historial de reprodución
+	Close	Pechar
+	Comment	Comentar
+	Create	Crear
+	Delete for good	Eliminar definitivamente
+	Delete playlist	Eliminar lista de reprodución
+	Latest	O máis recente
+	Link copied	Ligazón copiada
+	Manage videos	Xestionar vídeos
+	Move to bottom	Mover ao final
+	Move to top	Mover ao principio
+	New playlist	Nova lista de reprodución
+	Newest first	Primeiro os máis recentes
+	No results found. Try other words.	Non hai resultados. Proba con outras palabras.
+	No videos in this list yet.	Aínda non hai vídeos nesta lista.
+	Pause watch history	Pausar o historial de reprodución
+	Remove from watch history	Quitar do historial de reprodución
+	Remove from this list	Quitar desta lista
+	Reply	Responder
+	Save video to…	Gardar o vídeo en…
+	Show more	Amosar máis
+	Show more replies	Amosar máis respostas
+	Sort by	Ordenar por
+	Subscribed	Subscrito
+	The new videos of the channels you subscribe to will show here.	Aquí aparecerán os vídeos novos das canles ás que te subscribes.
+	The videos you watch will show here.	Aquí aparecerán os vídeos que vexas.
+	This channel has no playlists.	Esta canle non ten listas de reprodución.
+	This channel has no videos yet.	Esta canle aínda non ten vídeos.
+	Top comments	Comentarios destacados
+	Turn on watch history	Activar o historial de reprodución
+	Videos	Vídeos
+	View full playlist	Ver a lista de reprodución completa
+	Watch history	Historial de reprodución
+	Your history is paused: what you watch now is not kept.	O teu historial está en pausa: o que vexas agora non se garda.
 @plural	{n} view|{n} views	{n} visualización|{n} visualizacións
-@plural	{n} like|{n} likes	{n} gústame|{n} gústame
 @plural	{n} comment|{n} comments	{n} comentario|{n} comentarios
 @plural	{n} second ago|{n} seconds ago	hai {n} segundo|hai {n} segundos
 @plural	{n} minute ago|{n} minutes ago	hai {n} minuto|hai {n} minutos
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automática ({quality})
 	This video can't be played in this browser.	Este vídeo non se pode reproducir neste navegador.
 @plural	{n} second|{n} seconds	{n} segundo|{n} segundos
+@plural	{n} reply|{n} replies	{n} resposta|{n} respostas
+@plural	{n} subscriber|{n} subscribers	{n} subscritor|{n} subscritores
+@plural	{n} video|{n} videos	{n} vídeo|{n} vídeos

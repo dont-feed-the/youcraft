@@ -26,3 +26,14 @@ impl Command for Home {
     type Input = Page;
     type Output = Feed;
 }
+
+/// The newest videos of the channels the caller subscribes to.
+pub struct Subscriptions;
+
+impl Command for Subscriptions {
+    const ID: &'static str = "feed.subscriptions";
+    const REQUIRES: Role = Role::Viewer;
+    const SUMMARY: &'static str = "List the newest public videos of the channels you subscribe to.";
+    type Input = Page;
+    type Output = Feed;
+}

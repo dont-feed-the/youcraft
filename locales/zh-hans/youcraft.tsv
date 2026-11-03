@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	处理失败，请重新上传视频。
 	Upload failed. Try again.	上传失败，请重试。
 	The file is too large.	文件太大。
+	(edited)	（已编辑）
+	Action menu	操作菜单
+	Add a comment…	添加评论…
+	Add a reply…	添加回复…
+	Block from your channel	在你的频道中屏蔽
+	Cancel	取消
+	Channel	频道
+	Choose a title	选择标题
+	Clear all watch history	清除所有观看记录
+	Close	关闭
+	Comment	评论
+	Create	创建
+	Delete for good	永久删除
+	Delete playlist	删除播放列表
+	Latest	最新
+	Link copied	链接已复制
+	Manage videos	管理视频
+	Move to bottom	移到底部
+	Move to top	移到顶部
+	New playlist	新建播放列表
+	Newest first	最新优先
+	No results found. Try other words.	未找到结果。请换个词试试。
+	No videos in this list yet.	此列表中还没有视频。
+	Pause watch history	暂停观看记录
+	Remove from watch history	从观看记录中移除
+	Remove from this list	从此列表中移除
+	Reply	回复
+	Save video to…	将视频保存到…
+	Show more	显示更多
+	Show more replies	显示更多回复
+	Sort by	排序方式
+	Subscribed	已订阅
+	The new videos of the channels you subscribe to will show here.	你订阅的频道的新视频会显示在这里。
+	The videos you watch will show here.	你观看的视频会显示在这里。
+	This channel has no playlists.	此频道没有播放列表。
+	This channel has no videos yet.	此频道还没有视频。
+	Top comments	热门评论
+	Turn on watch history	开启观看记录
+	Videos	视频
+	View full playlist	查看完整播放列表
+	Watch history	观看记录
+	Your history is paused: what you watch now is not kept.	你的观看记录已暂停：现在观看的内容不会被保留。
 @plural	{n} view|{n} views	{n} 次观看
-@plural	{n} like|{n} likes	{n} 个赞
 @plural	{n} comment|{n} comments	{n} 条评论
 @plural	{n} second ago|{n} seconds ago	{n} 秒前
 @plural	{n} minute ago|{n} minutes ago	{n} 分钟前
@@ -127,3 +168,6 @@
 	Auto ({quality})	自动 ({quality})
 	This video can't be played in this browser.	此浏览器无法播放该视频。
 @plural	{n} second|{n} seconds	{n} 秒
+@plural	{n} reply|{n} replies	{n} 条回复
+@plural	{n} subscriber|{n} subscribers	{n} 位订阅者
+@plural	{n} video|{n} videos	{n} 个视频

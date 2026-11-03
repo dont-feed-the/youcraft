@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Verwerken mislukt. Upload de video opnieuw.
 	Upload failed. Try again.	Uploaden mislukt. Probeer het opnieuw.
 	The file is too large.	Het bestand is te groot.
+	(edited)	(bewerkt)
+	Action menu	Actiemenu
+	Add a comment…	Voeg een reactie toe…
+	Add a reply…	Voeg een antwoord toe…
+	Block from your channel	Blokkeren op je kanaal
+	Cancel	Annuleren
+	Channel	Kanaal
+	Choose a title	Kies een titel
+	Clear all watch history	Volledige kijkgeschiedenis wissen
+	Close	Sluiten
+	Comment	Reageren
+	Create	Maken
+	Delete for good	Definitief verwijderen
+	Delete playlist	Afspeellijst verwijderen
+	Latest	Nieuwste
+	Link copied	Link gekopieerd
+	Manage videos	Video's beheren
+	Move to bottom	Naar onderen verplaatsen
+	Move to top	Naar boven verplaatsen
+	New playlist	Nieuwe afspeellijst
+	Newest first	Nieuwste eerst
+	No results found. Try other words.	Geen resultaten. Probeer andere woorden.
+	No videos in this list yet.	Nog geen video's in deze lijst.
+	Pause watch history	Kijkgeschiedenis onderbreken
+	Remove from watch history	Uit kijkgeschiedenis verwijderen
+	Remove from this list	Uit deze lijst verwijderen
+	Reply	Antwoorden
+	Save video to…	Video opslaan in…
+	Show more	Meer tonen
+	Show more replies	Meer antwoorden tonen
+	Sort by	Sorteren op
+	Subscribed	Geabonneerd
+	The new videos of the channels you subscribe to will show here.	Hier verschijnen de nieuwe video's van de kanalen waarop je geabonneerd bent.
+	The videos you watch will show here.	Hier verschijnen de video's die je bekijkt.
+	This channel has no playlists.	Dit kanaal heeft geen afspeellijsten.
+	This channel has no videos yet.	Dit kanaal heeft nog geen video's.
+	Top comments	Topreacties
+	Turn on watch history	Kijkgeschiedenis inschakelen
+	Videos	Video's
+	View full playlist	Volledige afspeellijst bekijken
+	Watch history	Kijkgeschiedenis
+	Your history is paused: what you watch now is not kept.	Je geschiedenis is onderbroken: wat je nu bekijkt, wordt niet bewaard.
 @plural	{n} view|{n} views	{n} weergave|{n} weergaven
-@plural	{n} like|{n} likes	{n} like|{n} likes
 @plural	{n} comment|{n} comments	{n} reactie|{n} reacties
 @plural	{n} second ago|{n} seconds ago	{n} seconde geleden|{n} seconden geleden
 @plural	{n} minute ago|{n} minutes ago	{n} minuut geleden|{n} minuten geleden
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automatisch ({quality})
 	This video can't be played in this browser.	Deze video kan niet in deze browser worden afgespeeld.
 @plural	{n} second|{n} seconds	{n} seconde|{n} seconden
+@plural	{n} reply|{n} replies	{n} antwoord|{n} antwoorden
+@plural	{n} subscriber|{n} subscribers	{n} abonnee|{n} abonnees
+@plural	{n} video|{n} videos	{n} video|{n} video's

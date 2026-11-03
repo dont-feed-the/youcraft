@@ -3,12 +3,16 @@
 //! Each video is generated (a moving pattern that spells its frame numbers, and a tone), written
 //! as an MP4 file as a camera would hand it over, uploaded as a creator would, and made playable
 //! by the same job worker and child process as any upload; then it is dated as if published over
-//! the last months.
+//! the last months. The channels then subscribe to each other, like, comment and reply, and keep
+//! a playlist.
 
-use youcraft_api::records::Visibility;
-use youcraft_api::{AccountId, ChannelId, Role, VideoId};
+use youcraft_api::records::{Rating, Visibility};
+use youcraft_api::{AccountId, ChannelId, CommentId, List, PlaylistId, Role, VideoId};
 use youcraft_store::accounts::NewAccount;
+use youcraft_store::comments::NewComment;
+use youcraft_store::playlists::NewPlaylist;
 use youcraft_store::uploads::NewUpload;
+use youcraft_store::{Store, StoreError};
 use youcraft_transcode::synthetic::{self, Synthetic};
 
 use crate::site::{Site, now};
@@ -98,5 +102,60 @@ pub async fn fill(site: &Site) -> Result<(), String> {
             .set_published_at(video, now - n * n * 86_400 / 2)
             .map_err(|e| format!("demo: {e}"))?;
     }
+    converse(store, now).map_err(|e| format!("demo: {e}"))
+}
+
+/// What the demo channels do with each other's videos: subscribe, like, comment and reply,
+/// keep a playlist.
+fn converse(store: &Store, now: i64) -> Result<(), StoreError> {
+    let person = |n: u64| AccountId::from_bits(0xdead_0000 + n);
+    let channel = |n: u64| ChannelId::from_bits(0xc4a0_0000 + n);
+    let video = |n: u64| VideoId::from_bits(0x5eed_0000_0000 + n * 7919);
+    store.subscribe(person(2), channel(1), true, now)?;
+    store.subscribe(person(3), channel(1), true, now)?;
+    store.subscribe(person(1), channel(3), true, now)?;
+    store.rate(person(2), video(0), Rating::Like, now)?;
+    store.rate(person(3), video(0), Rating::Like, now)?;
+    store.rate(person(1), video(2), Rating::Like, now)?;
+    let comments = [
+        (
+            1,
+            None,
+            2,
+            "The bit about the wavefronts bending finally made it click for me.",
+        ),
+        (
+            2,
+            Some(1),
+            1,
+            "Thank you! The next one is about total internal reflection.",
+        ),
+        (3, Some(1), 3, "Same here. Could you do one on prisms?"),
+        (4, None, 3, "Lovely animation at 0:07."),
+    ];
+    for (id, parent, author, body) in comments {
+        store.add_comment(&NewComment {
+            id: CommentId::from_bits(0xc0de_0000 + id),
+            video: video(0),
+            parent: parent.map(|p| CommentId::from_bits(0xc0de_0000 + p)),
+            author: person(author),
+            body,
+            now: now - 3600 * (5 - i64::try_from(id).unwrap_or(0)),
+        })?;
+    }
+    store.create_playlist(&NewPlaylist {
+        id: PlaylistId::from_bits(0x9157_0001),
+        owner: person(1),
+        title: "Light and waves",
+        visibility: Visibility::Public,
+        video: Some(video(0)),
+        now,
+    })?;
+    store.add_to_list(
+        person(1),
+        List::Playlist(PlaylistId::from_bits(0x9157_0001)),
+        video(9),
+        now,
+    )?;
     Ok(())
 }

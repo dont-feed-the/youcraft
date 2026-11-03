@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Obdelava ni uspela. Znova naložite videoposnetek.
 	Upload failed. Try again.	Nalaganje ni uspelo. Poskusite znova.
 	The file is too large.	Datoteka je prevelika.
+	(edited)	(urejeno)
+	Action menu	Meni dejanj
+	Add a comment…	Dodajte komentar…
+	Add a reply…	Dodajte odgovor…
+	Block from your channel	Blokiraj na vašem kanalu
+	Cancel	Prekliči
+	Channel	Kanal
+	Choose a title	Izberite naslov
+	Clear all watch history	Počisti vso zgodovino ogledov
+	Close	Zapri
+	Comment	Komentiraj
+	Create	Ustvari
+	Delete for good	Izbriši za vedno
+	Delete playlist	Izbriši seznam predvajanja
+	Latest	Najnovejše
+	Link copied	Povezava je kopirana
+	Manage videos	Upravljaj videoposnetke
+	Move to bottom	Premakni na dno
+	Move to top	Premakni na vrh
+	New playlist	Nov seznam predvajanja
+	Newest first	Najprej najnovejši
+	No results found. Try other words.	Ni rezultatov. Poskusite z drugimi besedami.
+	No videos in this list yet.	Na tem seznamu še ni videoposnetkov.
+	Pause watch history	Začasno ustavi zgodovino ogledov
+	Remove from watch history	Odstrani iz zgodovine ogledov
+	Remove from this list	Odstrani s tega seznama
+	Reply	Odgovori
+	Save video to…	Shrani videoposnetek v…
+	Show more	Pokaži več
+	Show more replies	Pokaži več odgovorov
+	Sort by	Razvrsti po
+	Subscribed	Naročeni
+	The new videos of the channels you subscribe to will show here.	Tukaj bodo prikazani novi videoposnetki kanalov, na katere ste naročeni.
+	The videos you watch will show here.	Tukaj bodo prikazani videoposnetki, ki si jih ogledate.
+	This channel has no playlists.	Ta kanal nima seznamov predvajanja.
+	This channel has no videos yet.	Ta kanal še nima videoposnetkov.
+	Top comments	Najboljši komentarji
+	Turn on watch history	Vklopi zgodovino ogledov
+	Videos	Videoposnetki
+	View full playlist	Prikaži celoten seznam predvajanja
+	Watch history	Zgodovina ogledov
+	Your history is paused: what you watch now is not kept.	Vaša zgodovina je začasno ustavljena: kar si ogledate zdaj, se ne shrani.
 @plural	{n} view|{n} views	{n} ogled|{n} ogleda|{n} ogledi|{n} ogledov
-@plural	{n} like|{n} likes	{n} všeček|{n} všečka|{n} všečki|{n} všečkov
 @plural	{n} comment|{n} comments	{n} komentar|{n} komentarja|{n} komentarji|{n} komentarjev
 @plural	{n} second ago|{n} seconds ago	pred {n} sekundo|pred {n} sekundama|pred {n} sekundami|pred {n} sekundami
 @plural	{n} minute ago|{n} minutes ago	pred {n} minuto|pred {n} minutama|pred {n} minutami|pred {n} minutami
@@ -127,3 +168,6 @@
 	Auto ({quality})	Samodejno ({quality})
 	This video can't be played in this browser.	Tega videoposnetka v tem brskalniku ni mogoče predvajati.
 @plural	{n} second|{n} seconds	{n} sekunda|{n} sekundi|{n} sekunde|{n} sekund
+@plural	{n} reply|{n} replies	{n} odgovor|{n} odgovora|{n} odgovori|{n} odgovorov
+@plural	{n} subscriber|{n} subscribers	{n} naročnik|{n} naročnika|{n} naročniki|{n} naročnikov
+@plural	{n} video|{n} videos	{n} videoposnetek|{n} videoposnetka|{n} videoposnetki|{n} videoposnetkov

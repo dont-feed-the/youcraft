@@ -36,6 +36,8 @@
   --player-big: 64px;
   --player-menu-width: 260px;
   --theatre-height: min(56.25vw, calc(100vh - 169px));
+  --panel-start: #076866;
+  --panel-end: #0f0f0f;
 
   --font: system-ui, -apple-system, "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Mono", "Noto Sans Mono", monospace;
@@ -44,6 +46,9 @@
   --text-sm: 14px;
   --text-md: 16px;
   --text-lg: 20px;
+  --text-xl: 28px;
+  --text-xxl: 36px;
+  --text-monogram: 64px;
   --line: 1.4;
   --line-title: 22px;
   --line-title-sm: 20px;
@@ -77,6 +82,20 @@
   --settings-width: 720px;
   --icon: 24px;
   --compact-thumb: 168px;
+  --row-thumb: 360px;
+  --row-thumb-narrow: 160px;
+  --avatar-small: 24px;
+  --avatar-comment: 40px;
+  --avatar-channel: 160px;
+  --avatar-huge: 136px;
+  --dialog-width: 320px;
+  --popup-width: 220px;
+  --panel-width: 360px;
+  --history-side: 320px;
+  --avatar-huge-narrow: 88px;
+  --avatar-channel-narrow: 72px;
+  --icon-small: 16px;
+  --icon-medium: 20px;
 }
 
 @media (prefers-color-scheme: dark) {

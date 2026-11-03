@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	پردازش ناموفق بود. ویدیو را دوباره بارگذاری کنید.
 	Upload failed. Try again.	بارگذاری ناموفق بود. دوباره امتحان کنید.
 	The file is too large.	فایل خیلی بزرگ است.
+	(edited)	(ویرایش‌شده)
+	Action menu	منوی کنش‌ها
+	Add a comment…	افزودن نظر…
+	Add a reply…	افزودن پاسخ…
+	Block from your channel	مسدود کردن در کانال شما
+	Cancel	لغو
+	Channel	کانال
+	Choose a title	عنوانی انتخاب کنید
+	Clear all watch history	پاک کردن کل سابقهٔ تماشا
+	Close	بستن
+	Comment	نظر دادن
+	Create	ایجاد
+	Delete for good	حذف برای همیشه
+	Delete playlist	حذف فهرست پخش
+	Latest	جدیدترین‌ها
+	Link copied	پیوند کپی شد
+	Manage videos	مدیریت ویدیوها
+	Move to bottom	انتقال به پایین
+	Move to top	انتقال به بالا
+	New playlist	فهرست پخش جدید
+	Newest first	اول جدیدترین‌ها
+	No results found. Try other words.	نتیجه‌ای یافت نشد. واژه‌های دیگری را امتحان کنید.
+	No videos in this list yet.	هنوز ویدیویی در این فهرست نیست.
+	Pause watch history	توقف سابقهٔ تماشا
+	Remove from watch history	حذف از سابقهٔ تماشا
+	Remove from this list	حذف از این فهرست
+	Reply	پاسخ
+	Save video to…	ذخیرهٔ ویدیو در…
+	Show more	نمایش بیشتر
+	Show more replies	نمایش پاسخ‌های بیشتر
+	Sort by	مرتب‌سازی بر اساس
+	Subscribed	مشترک شده‌اید
+	The new videos of the channels you subscribe to will show here.	ویدیوهای جدید کانال‌هایی که مشترکشان هستید اینجا نمایش داده می‌شوند.
+	The videos you watch will show here.	ویدیوهایی که تماشا می‌کنید اینجا نمایش داده می‌شوند.
+	This channel has no playlists.	این کانال فهرست پخشی ندارد.
+	This channel has no videos yet.	این کانال هنوز ویدیویی ندارد.
+	Top comments	برترین نظرها
+	Turn on watch history	روشن کردن سابقهٔ تماشا
+	Videos	ویدیوها
+	View full playlist	مشاهدهٔ کل فهرست پخش
+	Watch history	سابقهٔ تماشا
+	Your history is paused: what you watch now is not kept.	سابقهٔ شما متوقف است: آنچه اکنون تماشا می‌کنید نگه داشته نمی‌شود.
 @plural	{n} view|{n} views	{n} بازدید|{n} بازدید
-@plural	{n} like|{n} likes	{n} پسند|{n} پسند
 @plural	{n} comment|{n} comments	{n} نظر|{n} نظر
 @plural	{n} second ago|{n} seconds ago	{n} ثانیه پیش|{n} ثانیه پیش
 @plural	{n} minute ago|{n} minutes ago	{n} دقیقه پیش|{n} دقیقه پیش
@@ -127,3 +168,6 @@
 	Auto ({quality})	خودکار ({quality})
 	This video can't be played in this browser.	این ویدیو در این مرورگر پخش نمی‌شود.
 @plural	{n} second|{n} seconds	{n} ثانیه|{n} ثانیه
+@plural	{n} reply|{n} replies	{n} پاسخ|{n} پاسخ
+@plural	{n} subscriber|{n} subscribers	{n} مشترک|{n} مشترک
+@plural	{n} video|{n} videos	{n} ویدیو|{n} ویدیو

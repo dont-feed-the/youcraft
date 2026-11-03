@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Procesarea a eșuat. Încarcă din nou videoclipul.
 	Upload failed. Try again.	Încărcarea a eșuat. Încearcă din nou.
 	The file is too large.	Fișierul este prea mare.
+	(edited)	(editat)
+	Action menu	Meniu de acțiuni
+	Add a comment…	Adaugă un comentariu…
+	Add a reply…	Adaugă un răspuns…
+	Block from your channel	Blochează pe canalul tău
+	Cancel	Anulează
+	Channel	Canal
+	Choose a title	Alege un titlu
+	Clear all watch history	Șterge tot istoricul vizionărilor
+	Close	Închide
+	Comment	Comentează
+	Create	Creează
+	Delete for good	Șterge definitiv
+	Delete playlist	Șterge playlistul
+	Latest	Cele mai noi
+	Link copied	Link copiat
+	Manage videos	Gestionează videoclipurile
+	Move to bottom	Mută la final
+	Move to top	Mută la început
+	New playlist	Playlist nou
+	Newest first	Cele mai noi mai întâi
+	No results found. Try other words.	Niciun rezultat. Încearcă alte cuvinte.
+	No videos in this list yet.	Încă nu există videoclipuri în această listă.
+	Pause watch history	Întrerupe istoricul vizionărilor
+	Remove from watch history	Elimină din istoricul vizionărilor
+	Remove from this list	Elimină din această listă
+	Reply	Răspunde
+	Save video to…	Salvează videoclipul în…
+	Show more	Afișează mai mult
+	Show more replies	Afișează mai multe răspunsuri
+	Sort by	Sortează după
+	Subscribed	Abonat
+	The new videos of the channels you subscribe to will show here.	Videoclipurile noi ale canalelor la care te abonezi vor apărea aici.
+	The videos you watch will show here.	Videoclipurile pe care le vizionezi vor apărea aici.
+	This channel has no playlists.	Acest canal nu are playlisturi.
+	This channel has no videos yet.	Acest canal nu are încă videoclipuri.
+	Top comments	Comentarii de top
+	Turn on watch history	Activează istoricul vizionărilor
+	Videos	Videoclipuri
+	View full playlist	Vezi tot playlistul
+	Watch history	Istoricul vizionărilor
+	Your history is paused: what you watch now is not kept.	Istoricul tău este întrerupt: ce vizionezi acum nu se păstrează.
 @plural	{n} view|{n} views	{n} vizionare|{n} vizionări|{n} de vizionări
-@plural	{n} like|{n} likes	{n} apreciere|{n} aprecieri|{n} de aprecieri
 @plural	{n} comment|{n} comments	{n} comentariu|{n} comentarii|{n} de comentarii
 @plural	{n} second ago|{n} seconds ago	acum {n} secundă|acum {n} secunde|acum {n} de secunde
 @plural	{n} minute ago|{n} minutes ago	acum {n} minut|acum {n} minute|acum {n} de minute
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automată ({quality})
 	This video can't be played in this browser.	Acest videoclip nu poate fi redat în acest browser.
 @plural	{n} second|{n} seconds	{n} secundă|{n} secunde|{n} de secunde
+@plural	{n} reply|{n} replies	{n} răspuns|{n} răspunsuri|{n} de răspunsuri
+@plural	{n} subscriber|{n} subscribers	{n} abonat|{n} abonați|{n} de abonați
+@plural	{n} video|{n} videos	{n} videoclip|{n} videoclipuri|{n} de videoclipuri

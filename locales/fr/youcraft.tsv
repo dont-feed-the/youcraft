@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Le traitement a échoué. Mettez à nouveau la vidéo en ligne.
 	Upload failed. Try again.	La mise en ligne a échoué. Réessayez.
 	The file is too large.	Le fichier est trop volumineux.
+	(edited)	(modifié)
+	Action menu	Menu d'actions
+	Add a comment…	Ajouter un commentaire…
+	Add a reply…	Ajouter une réponse…
+	Block from your channel	Bloquer sur votre chaîne
+	Cancel	Annuler
+	Channel	Chaîne
+	Choose a title	Choisissez un titre
+	Clear all watch history	Effacer tout l'historique des vidéos regardées
+	Close	Fermer
+	Comment	Commenter
+	Create	Créer
+	Delete for good	Supprimer définitivement
+	Delete playlist	Supprimer la playlist
+	Latest	Nouveautés
+	Link copied	Lien copié
+	Manage videos	Gérer les vidéos
+	Move to bottom	Déplacer en bas
+	Move to top	Déplacer en haut
+	New playlist	Nouvelle playlist
+	Newest first	Les plus récents
+	No results found. Try other words.	Aucun résultat. Essayez d'autres mots.
+	No videos in this list yet.	Aucune vidéo dans cette liste pour l'instant.
+	Pause watch history	Suspendre l'historique des vidéos regardées
+	Remove from watch history	Retirer de l'historique des vidéos regardées
+	Remove from this list	Retirer de cette liste
+	Reply	Répondre
+	Save video to…	Enregistrer la vidéo dans…
+	Show more	Afficher plus
+	Show more replies	Afficher plus de réponses
+	Sort by	Trier par
+	Subscribed	Abonné
+	The new videos of the channels you subscribe to will show here.	Les nouvelles vidéos des chaînes auxquelles vous êtes abonné s'afficheront ici.
+	The videos you watch will show here.	Les vidéos que vous regardez s'afficheront ici.
+	This channel has no playlists.	Cette chaîne n'a aucune playlist.
+	This channel has no videos yet.	Cette chaîne n'a encore aucune vidéo.
+	Top comments	Meilleurs commentaires
+	Turn on watch history	Activer l'historique des vidéos regardées
+	Videos	Vidéos
+	View full playlist	Voir la playlist complète
+	Watch history	Historique des vidéos regardées
+	Your history is paused: what you watch now is not kept.	Votre historique est suspendu : ce que vous regardez maintenant n'est pas conservé.
 @plural	{n} view|{n} views	{n} vue|{n} vues
-@plural	{n} like|{n} likes	{n} j'aime|{n} j'aime
 @plural	{n} comment|{n} comments	{n} commentaire|{n} commentaires
 @plural	{n} second ago|{n} seconds ago	il y a {n} seconde|il y a {n} secondes
 @plural	{n} minute ago|{n} minutes ago	il y a {n} minute|il y a {n} minutes
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automatique ({quality})
 	This video can't be played in this browser.	Cette vidéo ne peut pas être lue dans ce navigateur.
 @plural	{n} second|{n} seconds	{n} seconde|{n} secondes
+@plural	{n} reply|{n} replies	{n} réponse|{n} réponses
+@plural	{n} subscriber|{n} subscribers	{n} abonné|{n} abonnés
+@plural	{n} video|{n} videos	{n} vidéo|{n} vidéos

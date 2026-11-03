@@ -6,6 +6,7 @@ use leptos::prelude::*;
 use youcraft_api::commands::account::{self, Me, Preferences, Theme};
 use youcraft_api::commands::site::Nothing;
 
+use crate::browser;
 use crate::call::call;
 
 /// The signed-in person, `None` when nobody is (or the site cannot tell).
@@ -76,55 +77,4 @@ pub fn sign_out() {
         let _ = call::<account::SignOut>(Nothing {}).await;
         browser::reload();
     });
-}
-
-#[cfg(all(feature = "hydrate", not(feature = "ssr")))]
-mod browser {
-    //! The browser's side of a change: the document's theme, its cookies, a reload.
-
-    use wasm_bindgen::JsCast;
-    use youcraft_api::commands::account::Theme;
-
-    pub fn draw(theme: Theme) {
-        let root = web_sys::window()
-            .and_then(|window| window.document())
-            .and_then(|document| document.document_element());
-        if let Some(root) = root {
-            let _ = match theme {
-                Theme::Device => root.remove_attribute("data-theme"),
-                theme => root.set_attribute("data-theme", theme.as_str()),
-            };
-        }
-    }
-
-    pub fn remember(name: &str, value: &str) {
-        let document = web_sys::window()
-            .and_then(|window| window.document())
-            .and_then(|document| document.dyn_into::<web_sys::HtmlDocument>().ok());
-        if let Some(document) = document {
-            let max_age = youcraft_api::cookies::MAX_AGE;
-            let _ = document.set_cookie(&format!(
-                "{name}={value}; Path=/; Max-Age={max_age}; SameSite=Lax"
-            ));
-        }
-    }
-
-    pub fn reload() {
-        if let Some(window) = web_sys::window() {
-            let _ = window.location().reload();
-        }
-    }
-}
-
-#[cfg(feature = "ssr")]
-mod browser {
-    //! On the server there is no browser to change: events only happen in the browser.
-
-    use youcraft_api::commands::account::Theme;
-
-    pub fn draw(_: Theme) {}
-
-    pub fn remember(_: &str, _: &str) {}
-
-    pub fn reload() {}
 }

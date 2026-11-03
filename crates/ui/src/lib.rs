@@ -5,11 +5,17 @@
 //! ([`call`]), text from the catalogs in the reader's language ([`lang`]), and the layout follows
 //! youtube.com on wide screens and m.youtube.com on phones, with YouCraft's own look.
 
+// Leptos writes each view's type out in full, and the watch page's runs deeper than the compiler's
+// default limit allows.
+#![recursion_limit = "256"]
+
 #[cfg(not(any(feature = "ssr", feature = "hydrate")))]
 compile_error!("youcraft-ui is built with its `ssr` feature (server) or `hydrate` (browser)");
 
 pub mod account;
+pub mod act;
 pub mod app;
+pub mod browser;
 pub mod call;
 pub mod components;
 pub mod icons;

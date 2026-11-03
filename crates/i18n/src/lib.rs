@@ -61,6 +61,13 @@ pub fn count(lang: Lang, n: u64, one: &str, other: &str) -> String {
     i18n().trn_plain(lang, n, one, other)
 }
 
+/// A bare number in `lang`, as a like button shows it: written as [`count`] writes its `{n}`,
+/// so that both change together when numbers take each locale's grouping.
+pub fn number(lang: Lang, n: u64) -> String {
+    let _ = lang;
+    n.to_string()
+}
+
 /// `template` with each `{name}` replaced by its value, each value isolated from the text around
 /// it so that a name in another script keeps its direction: `fill(t(lang, "Language: {language}"),
 /// &[("language", "Français")])`.

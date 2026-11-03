@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	No se pudo procesar. Vuelve a subir el vídeo.
 	Upload failed. Try again.	No se pudo subir. Inténtalo de nuevo.
 	The file is too large.	El archivo es demasiado grande.
+	(edited)	(editado)
+	Action menu	Menú de acciones
+	Add a comment…	Añade un comentario…
+	Add a reply…	Añade una respuesta…
+	Block from your channel	Bloquear en tu canal
+	Cancel	Cancelar
+	Channel	Canal
+	Choose a title	Elige un título
+	Clear all watch history	Borrar todo el historial de reproducciones
+	Close	Cerrar
+	Comment	Comentar
+	Create	Crear
+	Delete for good	Eliminar definitivamente
+	Delete playlist	Eliminar lista de reproducción
+	Latest	Lo más reciente
+	Link copied	Enlace copiado
+	Manage videos	Gestionar vídeos
+	Move to bottom	Mover al final
+	Move to top	Mover al principio
+	New playlist	Nueva lista de reproducción
+	Newest first	Más recientes primero
+	No results found. Try other words.	No hay resultados. Prueba con otras palabras.
+	No videos in this list yet.	Aún no hay vídeos en esta lista.
+	Pause watch history	Pausar el historial de reproducciones
+	Remove from watch history	Quitar del historial de reproducciones
+	Remove from this list	Quitar de esta lista
+	Reply	Responder
+	Save video to…	Guardar vídeo en…
+	Show more	Mostrar más
+	Show more replies	Mostrar más respuestas
+	Sort by	Ordenar por
+	Subscribed	Suscrito
+	The new videos of the channels you subscribe to will show here.	Aquí aparecerán los vídeos nuevos de los canales a los que te suscribes.
+	The videos you watch will show here.	Aquí aparecerán los vídeos que veas.
+	This channel has no playlists.	Este canal no tiene listas de reproducción.
+	This channel has no videos yet.	Este canal aún no tiene vídeos.
+	Top comments	Comentarios destacados
+	Turn on watch history	Activar el historial de reproducciones
+	Videos	Vídeos
+	View full playlist	Ver lista de reproducción completa
+	Watch history	Historial de reproducciones
+	Your history is paused: what you watch now is not kept.	Tu historial está en pausa: lo que veas ahora no se guarda.
 @plural	{n} view|{n} views	{n} visualización|{n} visualizaciones
-@plural	{n} like|{n} likes	{n} me gusta|{n} me gusta
 @plural	{n} comment|{n} comments	{n} comentario|{n} comentarios
 @plural	{n} second ago|{n} seconds ago	hace {n} segundo|hace {n} segundos
 @plural	{n} minute ago|{n} minutes ago	hace {n} minuto|hace {n} minutos
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automática ({quality})
 	This video can't be played in this browser.	Este vídeo no se puede reproducir en este navegador.
 @plural	{n} second|{n} seconds	{n} segundo|{n} segundos
+@plural	{n} reply|{n} replies	{n} respuesta|{n} respuestas
+@plural	{n} subscriber|{n} subscribers	{n} suscriptor|{n} suscriptores
+@plural	{n} video|{n} videos	{n} vídeo|{n} vídeos

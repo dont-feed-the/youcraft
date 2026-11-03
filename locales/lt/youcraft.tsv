@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Apdoroti nepavyko. Įkelkite vaizdo įrašą dar kartą.
 	Upload failed. Try again.	Įkelti nepavyko. Bandykite dar kartą.
 	The file is too large.	Failas per didelis.
+	(edited)	(redaguota)
+	Action menu	Veiksmų meniu
+	Add a comment…	Pridėkite komentarą…
+	Add a reply…	Pridėkite atsakymą…
+	Block from your channel	Blokuoti savo kanale
+	Cancel	Atšaukti
+	Channel	Kanalas
+	Choose a title	Pasirinkite pavadinimą
+	Clear all watch history	Išvalyti visą žiūrėjimo istoriją
+	Close	Uždaryti
+	Comment	Komentuoti
+	Create	Sukurti
+	Delete for good	Ištrinti visam laikui
+	Delete playlist	Ištrinti grojaraštį
+	Latest	Naujausi
+	Link copied	Nuoroda nukopijuota
+	Manage videos	Tvarkyti vaizdo įrašus
+	Move to bottom	Perkelti į apačią
+	Move to top	Perkelti į viršų
+	New playlist	Naujas grojaraštis
+	Newest first	Pirmiausia naujausi
+	No results found. Try other words.	Rezultatų nerasta. Pabandykite kitus žodžius.
+	No videos in this list yet.	Šiame sąraše dar nėra vaizdo įrašų.
+	Pause watch history	Pristabdyti žiūrėjimo istoriją
+	Remove from watch history	Pašalinti iš žiūrėjimo istorijos
+	Remove from this list	Pašalinti iš šio sąrašo
+	Reply	Atsakyti
+	Save video to…	Išsaugoti vaizdo įrašą…
+	Show more	Rodyti daugiau
+	Show more replies	Rodyti daugiau atsakymų
+	Sort by	Rikiuoti pagal
+	Subscribed	Prenumeruojate
+	The new videos of the channels you subscribe to will show here.	Čia bus rodomi naujausi kanalų, kuriuos prenumeruojate, vaizdo įrašai.
+	The videos you watch will show here.	Čia bus rodomi vaizdo įrašai, kuriuos žiūrite.
+	This channel has no playlists.	Šis kanalas neturi grojaraščių.
+	This channel has no videos yet.	Šis kanalas dar neturi vaizdo įrašų.
+	Top comments	Populiariausi komentarai
+	Turn on watch history	Įjungti žiūrėjimo istoriją
+	Videos	Vaizdo įrašai
+	View full playlist	Žiūrėti visą grojaraštį
+	Watch history	Žiūrėjimo istorija
+	Your history is paused: what you watch now is not kept.	Jūsų istorija pristabdyta: tai, ką žiūrite dabar, neišsaugoma.
 @plural	{n} view|{n} views	{n} peržiūra|{n} peržiūros|{n} peržiūrų
-@plural	{n} like|{n} likes	{n} patiktukas|{n} patiktukai|{n} patiktukų
 @plural	{n} comment|{n} comments	{n} komentaras|{n} komentarai|{n} komentarų
 @plural	{n} second ago|{n} seconds ago	prieš {n} sekundę|prieš {n} sekundes|prieš {n} sekundžių
 @plural	{n} minute ago|{n} minutes ago	prieš {n} minutę|prieš {n} minutes|prieš {n} minučių
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automatinė ({quality})
 	This video can't be played in this browser.	Šio vaizdo įrašo negalima paleisti šioje naršyklėje.
 @plural	{n} second|{n} seconds	{n} sekundė|{n} sekundės|{n} sekundžių
+@plural	{n} reply|{n} replies	{n} atsakymas|{n} atsakymai|{n} atsakymų
+@plural	{n} subscriber|{n} subscribers	{n} prenumeratorius|{n} prenumeratoriai|{n} prenumeratorių
+@plural	{n} video|{n} videos	{n} vaizdo įrašas|{n} vaizdo įrašai|{n} vaizdo įrašų

@@ -23,7 +23,7 @@ use crate::state::{Notice, Player};
 const DOUBLE_TAP: f64 = 300.0;
 
 /// The player of `video`, which lasts `duration`, written in `lang`; `theatre` is the page's
-/// theatre mode, which the player toggles.
+/// theatre mode, which the player toggles; `started` runs when the video first starts playing.
 #[component]
 pub fn VideoPlayer(
     video: VideoId,
@@ -31,6 +31,7 @@ pub fn VideoPlayer(
     poster: String,
     lang: Lang,
     theatre: RwSignal<bool>,
+    #[prop(optional)] started: Option<Callback<()>>,
 ) -> impl IntoView {
     provide_context(PlayerLanguage(lang));
     let seconds = if duration.timescale == 0 {
@@ -108,6 +109,11 @@ pub fn VideoPlayer(
                 preload="metadata"
                 playsinline=true
                 on:play=move |_| {
+                    if !player.started.get_untracked()
+                        && let Some(started) = started
+                    {
+                        started.run(());
+                    }
                     player.started.set(true);
                     player.sync();
                     player.poke();

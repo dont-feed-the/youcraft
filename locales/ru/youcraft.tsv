@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Не удалось обработать видео. Загрузите его ещё раз.
 	Upload failed. Try again.	Не удалось загрузить. Повторите попытку.
 	The file is too large.	Файл слишком большой.
+	(edited)	(изменено)
+	Action menu	Меню действий
+	Add a comment…	Добавьте комментарий…
+	Add a reply…	Добавьте ответ…
+	Block from your channel	Заблокировать на вашем канале
+	Cancel	Отмена
+	Channel	Канал
+	Choose a title	Выберите название
+	Clear all watch history	Очистить всю историю просмотра
+	Close	Закрыть
+	Comment	Оставить комментарий
+	Create	Создать
+	Delete for good	Удалить навсегда
+	Delete playlist	Удалить плейлист
+	Latest	Новые
+	Link copied	Ссылка скопирована
+	Manage videos	Управление видео
+	Move to bottom	Переместить в конец
+	Move to top	Переместить в начало
+	New playlist	Новый плейлист
+	Newest first	Сначала новые
+	No results found. Try other words.	Ничего не найдено. Попробуйте другие слова.
+	No videos in this list yet.	В этом списке пока нет видео.
+	Pause watch history	Приостановить историю просмотра
+	Remove from watch history	Удалить из истории просмотра
+	Remove from this list	Удалить из этого списка
+	Reply	Ответить
+	Save video to…	Сохранить видео в…
+	Show more	Показать ещё
+	Show more replies	Показать ещё ответы
+	Sort by	Сортировать
+	Subscribed	Вы подписаны
+	The new videos of the channels you subscribe to will show here.	Здесь появятся новые видео каналов, на которые вы подписаны.
+	The videos you watch will show here.	Здесь появятся видео, которые вы смотрите.
+	This channel has no playlists.	На этом канале нет плейлистов.
+	This channel has no videos yet.	На этом канале пока нет видео.
+	Top comments	Лучшие комментарии
+	Turn on watch history	Включить историю просмотра
+	Videos	Видео
+	View full playlist	Открыть весь плейлист
+	Watch history	История просмотра
+	Your history is paused: what you watch now is not kept.	Ваша история приостановлена: то, что вы смотрите сейчас, не сохраняется.
 @plural	{n} view|{n} views	{n} просмотр|{n} просмотра|{n} просмотров
-@plural	{n} like|{n} likes	{n} лайк|{n} лайка|{n} лайков
 @plural	{n} comment|{n} comments	{n} комментарий|{n} комментария|{n} комментариев
 @plural	{n} second ago|{n} seconds ago	{n} секунду назад|{n} секунды назад|{n} секунд назад
 @plural	{n} minute ago|{n} minutes ago	{n} минуту назад|{n} минуты назад|{n} минут назад
@@ -127,3 +168,6 @@
 	Auto ({quality})	Автоматически ({quality})
 	This video can't be played in this browser.	Это видео нельзя воспроизвести в этом браузере.
 @plural	{n} second|{n} seconds	{n} секунда|{n} секунды|{n} секунд
+@plural	{n} reply|{n} replies	{n} ответ|{n} ответа|{n} ответов
+@plural	{n} subscriber|{n} subscribers	{n} подписчик|{n} подписчика|{n} подписчиков
+@plural	{n} video|{n} videos	{n} видео|{n} видео|{n} видео

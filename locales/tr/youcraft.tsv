@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	İşleme başarısız oldu. Videoyu yeniden yükleyin.
 	Upload failed. Try again.	Yükleme başarısız oldu. Tekrar deneyin.
 	The file is too large.	Dosya çok büyük.
+	(edited)	(düzenlendi)
+	Action menu	İşlem menüsü
+	Add a comment…	Yorum ekleyin…
+	Add a reply…	Yanıt ekleyin…
+	Block from your channel	Kanalınızda engelle
+	Cancel	İptal
+	Channel	Kanal
+	Choose a title	Bir başlık seçin
+	Clear all watch history	Tüm izleme geçmişini temizle
+	Close	Kapat
+	Comment	Yorum yap
+	Create	Oluştur
+	Delete for good	Kalıcı olarak sil
+	Delete playlist	Oynatma listesini sil
+	Latest	En yeniler
+	Link copied	Bağlantı kopyalandı
+	Manage videos	Videoları yönet
+	Move to bottom	En alta taşı
+	Move to top	En üste taşı
+	New playlist	Yeni oynatma listesi
+	Newest first	Önce en yeniler
+	No results found. Try other words.	Sonuç bulunamadı. Başka kelimeler deneyin.
+	No videos in this list yet.	Bu listede henüz video yok.
+	Pause watch history	İzleme geçmişini duraklat
+	Remove from watch history	İzleme geçmişinden kaldır
+	Remove from this list	Bu listeden kaldır
+	Reply	Yanıtla
+	Save video to…	Videoyu şuraya kaydet…
+	Show more	Daha fazla göster
+	Show more replies	Daha fazla yanıt göster
+	Sort by	Sırala
+	Subscribed	Abone olundu
+	The new videos of the channels you subscribe to will show here.	Abone olduğunuz kanalların yeni videoları burada görünür.
+	The videos you watch will show here.	İzlediğiniz videolar burada görünür.
+	This channel has no playlists.	Bu kanalın oynatma listesi yok.
+	This channel has no videos yet.	Bu kanalın henüz videosu yok.
+	Top comments	En iyi yorumlar
+	Turn on watch history	İzleme geçmişini aç
+	Videos	Videolar
+	View full playlist	Oynatma listesinin tamamını görüntüle
+	Watch history	İzleme geçmişi
+	Your history is paused: what you watch now is not kept.	Geçmişiniz duraklatıldı: şu anda izledikleriniz saklanmıyor.
 @plural	{n} view|{n} views	{n} görüntüleme|{n} görüntüleme
-@plural	{n} like|{n} likes	{n} beğeni|{n} beğeni
 @plural	{n} comment|{n} comments	{n} yorum|{n} yorum
 @plural	{n} second ago|{n} seconds ago	{n} saniye önce|{n} saniye önce
 @plural	{n} minute ago|{n} minutes ago	{n} dakika önce|{n} dakika önce
@@ -127,3 +168,6 @@
 	Auto ({quality})	Otomatik ({quality})
 	This video can't be played in this browser.	Bu video bu tarayıcıda oynatılamıyor.
 @plural	{n} second|{n} seconds	{n} saniye|{n} saniye
+@plural	{n} reply|{n} replies	{n} yanıt|{n} yanıt
+@plural	{n} subscriber|{n} subscribers	{n} abone|{n} abone
+@plural	{n} video|{n} videos	{n} video|{n} video

@@ -1,24 +1,66 @@
-//! The feeds: candidates from the database, ordered by the recommendation algorithm.
+//! The feeds: candidates from the database, ordered by the recommendation algorithm with what
+//! the viewer did, and the subscriptions feed, newest first.
 
-use youcraft_api::commands::feed::{Home, Page};
+use youcraft_api::commands::feed::{Home, Page, Subscriptions};
 use youcraft_api::records::Feed;
 use youcraft_api::{ApiError, VideoId};
 use youcraft_recommend::default::Default as DefaultAlgorithm;
-use youcraft_recommend::v1::{Algorithm, Candidate, Request, Surface, Viewer};
+use youcraft_recommend::v1::{Algorithm, Candidate, Request, Surface, Viewer, Watched};
 use youcraft_store::videos::Listed;
 
 use crate::dispatch::Handle;
+use crate::handlers::input::{next, window};
 use crate::site::{Caller, Site, now};
 
 /// How many recent videos the algorithm chooses from.
-const CANDIDATES: u32 = 500;
+pub const CANDIDATES: u32 = 500;
 /// How many videos one page of a feed holds.
 pub const PAGE: u32 = 48;
 
 impl Handle<Home> for Site {
-    async fn handle(&self, _: Caller, _: Page) -> Result<Feed, ApiError> {
+    async fn handle(&self, caller: Caller, _: Page) -> Result<Feed, ApiError> {
         let listed = self.db(|store| store.recent_watchable(CANDIDATES)).await?;
-        Ok(ranked(Surface::Home, Viewer::default(), listed, PAGE))
+        let viewer = self.viewer(caller).await?;
+        Ok(ranked(Surface::Home, viewer, listed, PAGE))
+    }
+}
+
+impl Handle<Subscriptions> for Site {
+    async fn handle(&self, caller: Caller, page: Page) -> Result<Feed, ApiError> {
+        let account = caller.signed_in()?;
+        let window = window(page.after.as_deref(), PAGE)?;
+        let found = self
+            .db(move |store| store.subscription_feed(account, window))
+            .await?;
+        Ok(Feed {
+            videos: found.items,
+            next: next(window, found.more),
+        })
+    }
+}
+
+impl Site {
+    /// What the recommendation algorithm may know of `caller`: what they watched, liked and
+    /// subscribed to; nothing for someone signed out.
+    pub async fn viewer(&self, caller: Caller) -> Result<Viewer, ApiError> {
+        let Some(account) = caller.account else {
+            return Ok(Viewer::default());
+        };
+        let signals = self.db(move |store| store.signals(account)).await?;
+        Ok(Viewer {
+            signed_in: true,
+            watched: signals
+                .watched
+                .into_iter()
+                .map(|(video, channel, at)| Watched {
+                    video: video.to_string(),
+                    channel: channel.to_string(),
+                    at,
+                })
+                .collect(),
+            liked: signals.liked.iter().map(VideoId::to_string).collect(),
+            subscribed: signals.subscribed.iter().map(ToString::to_string).collect(),
+        })
     }
 }
 

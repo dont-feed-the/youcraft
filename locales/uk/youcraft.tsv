@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Не вдалося обробити. Завантажте відео ще раз.
 	Upload failed. Try again.	Не вдалося завантажити. Спробуйте ще раз.
 	The file is too large.	Файл завеликий.
+	(edited)	(змінено)
+	Action menu	Меню дій
+	Add a comment…	Додайте коментар…
+	Add a reply…	Додайте відповідь…
+	Block from your channel	Заблокувати на вашому каналі
+	Cancel	Скасувати
+	Channel	Канал
+	Choose a title	Виберіть назву
+	Clear all watch history	Очистити всю історію переглядів
+	Close	Закрити
+	Comment	Коментувати
+	Create	Створити
+	Delete for good	Видалити назавжди
+	Delete playlist	Видалити плейлист
+	Latest	Нові
+	Link copied	Посилання скопійовано
+	Manage videos	Керувати відео
+	Move to bottom	Перемістити в кінець
+	Move to top	Перемістити на початок
+	New playlist	Новий плейлист
+	Newest first	Спочатку нові
+	No results found. Try other words.	Нічого не знайдено. Спробуйте інші слова.
+	No videos in this list yet.	У цьому списку ще немає відео.
+	Pause watch history	Призупинити історію переглядів
+	Remove from watch history	Видалити з історії переглядів
+	Remove from this list	Видалити з цього списку
+	Reply	Відповісти
+	Save video to…	Зберегти відео в…
+	Show more	Показати більше
+	Show more replies	Показати більше відповідей
+	Sort by	Сортувати
+	Subscribed	Ви підписані
+	The new videos of the channels you subscribe to will show here.	Тут з’являтимуться нові відео каналів, на які ви підписані.
+	The videos you watch will show here.	Тут з’являтимуться відео, які ви переглядаєте.
+	This channel has no playlists.	На цьому каналі немає плейлистів.
+	This channel has no videos yet.	На цьому каналі ще немає відео.
+	Top comments	Найкращі коментарі
+	Turn on watch history	Увімкнути історію переглядів
+	Videos	Відео
+	View full playlist	Переглянути весь плейлист
+	Watch history	Історія переглядів
+	Your history is paused: what you watch now is not kept.	Вашу історію призупинено: те, що ви дивитеся зараз, не зберігається.
 @plural	{n} view|{n} views	{n} перегляд|{n} перегляди|{n} переглядів
-@plural	{n} like|{n} likes	{n} вподобання|{n} вподобання|{n} вподобань
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментарі|{n} коментарів
 @plural	{n} second ago|{n} seconds ago	{n} секунду тому|{n} секунди тому|{n} секунд тому
 @plural	{n} minute ago|{n} minutes ago	{n} хвилину тому|{n} хвилини тому|{n} хвилин тому
@@ -127,3 +168,6 @@
 	Auto ({quality})	Автоматично ({quality})
 	This video can't be played in this browser.	Це відео не можна відтворити в цьому браузері.
 @plural	{n} second|{n} seconds	{n} секунда|{n} секунди|{n} секунд
+@plural	{n} reply|{n} replies	{n} відповідь|{n} відповіді|{n} відповідей
+@plural	{n} subscriber|{n} subscribers	{n} підписник|{n} підписники|{n} підписників
+@plural	{n} video|{n} videos	{n} відео|{n} відео|{n} відео

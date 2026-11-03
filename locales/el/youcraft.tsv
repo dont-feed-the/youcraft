@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Η επεξεργασία απέτυχε. Μεταφορτώστε ξανά το βίντεο.
 	Upload failed. Try again.	Η μεταφόρτωση απέτυχε. Δοκιμάστε ξανά.
 	The file is too large.	Το αρχείο είναι πολύ μεγάλο.
+	(edited)	(επεξεργάστηκε)
+	Action menu	Μενού ενεργειών
+	Add a comment…	Προσθέστε ένα σχόλιο…
+	Add a reply…	Προσθέστε μια απάντηση…
+	Block from your channel	Αποκλεισμός στο κανάλι σας
+	Cancel	Ακύρωση
+	Channel	Κανάλι
+	Choose a title	Επιλέξτε τίτλο
+	Clear all watch history	Διαγραφή όλου του ιστορικού παρακολούθησης
+	Close	Κλείσιμο
+	Comment	Σχόλιο
+	Create	Δημιουργία
+	Delete for good	Οριστική διαγραφή
+	Delete playlist	Διαγραφή λίστας αναπαραγωγής
+	Latest	Πιο πρόσφατα
+	Link copied	Ο σύνδεσμος αντιγράφηκε
+	Manage videos	Διαχείριση βίντεο
+	Move to bottom	Μετακίνηση στο τέλος
+	Move to top	Μετακίνηση στην αρχή
+	New playlist	Νέα λίστα αναπαραγωγής
+	Newest first	Πρώτα τα πιο πρόσφατα
+	No results found. Try other words.	Δεν βρέθηκαν αποτελέσματα. Δοκιμάστε άλλες λέξεις.
+	No videos in this list yet.	Δεν υπάρχουν ακόμη βίντεο σε αυτή τη λίστα.
+	Pause watch history	Παύση ιστορικού παρακολούθησης
+	Remove from watch history	Κατάργηση από το ιστορικό παρακολούθησης
+	Remove from this list	Κατάργηση από αυτή τη λίστα
+	Reply	Απάντηση
+	Save video to…	Αποθήκευση βίντεο σε…
+	Show more	Εμφάνιση περισσότερων
+	Show more replies	Εμφάνιση περισσότερων απαντήσεων
+	Sort by	Ταξινόμηση κατά
+	Subscribed	Εγγεγραμμένος
+	The new videos of the channels you subscribe to will show here.	Εδώ θα εμφανίζονται τα νέα βίντεο των καναλιών στα οποία έχετε εγγραφεί.
+	The videos you watch will show here.	Εδώ θα εμφανίζονται τα βίντεο που παρακολουθείτε.
+	This channel has no playlists.	Αυτό το κανάλι δεν έχει λίστες αναπαραγωγής.
+	This channel has no videos yet.	Αυτό το κανάλι δεν έχει ακόμη βίντεο.
+	Top comments	Κορυφαία σχόλια
+	Turn on watch history	Ενεργοποίηση ιστορικού παρακολούθησης
+	Videos	Βίντεο
+	View full playlist	Προβολή ολόκληρης της λίστας αναπαραγωγής
+	Watch history	Ιστορικό παρακολούθησης
+	Your history is paused: what you watch now is not kept.	Το ιστορικό σας είναι σε παύση: ό,τι παρακολουθείτε τώρα δεν διατηρείται.
 @plural	{n} view|{n} views	{n} προβολή|{n} προβολές
-@plural	{n} like|{n} likes	{n} «μου αρέσει»|{n} «μου αρέσει»
 @plural	{n} comment|{n} comments	{n} σχόλιο|{n} σχόλια
 @plural	{n} second ago|{n} seconds ago	πριν από {n} δευτερόλεπτο|πριν από {n} δευτερόλεπτα
 @plural	{n} minute ago|{n} minutes ago	πριν από {n} λεπτό|πριν από {n} λεπτά
@@ -127,3 +168,6 @@
 	Auto ({quality})	Αυτόματη ({quality})
 	This video can't be played in this browser.	Αυτό το βίντεο δεν μπορεί να αναπαραχθεί σε αυτό το πρόγραμμα περιήγησης.
 @plural	{n} second|{n} seconds	{n} δευτερόλεπτο|{n} δευτερόλεπτα
+@plural	{n} reply|{n} replies	{n} απάντηση|{n} απαντήσεις
+@plural	{n} subscriber|{n} subscribers	{n} συνδρομητής|{n} συνδρομητές
+@plural	{n} video|{n} videos	{n} βίντεο|{n} βίντεο

@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Obrada nije uspjela. Ponovo učitajte video.
 	Upload failed. Try again.	Učitavanje nije uspjelo. Pokušajte ponovo.
 	The file is too large.	Datoteka je prevelika.
+	(edited)	(uređeno)
+	Action menu	Meni radnji
+	Add a comment…	Dodajte komentar…
+	Add a reply…	Dodajte odgovor…
+	Block from your channel	Blokiraj na svom kanalu
+	Cancel	Otkaži
+	Channel	Kanal
+	Choose a title	Odaberite naslov
+	Clear all watch history	Obriši cijelu historiju gledanja
+	Close	Zatvori
+	Comment	Komentiraj
+	Create	Kreiraj
+	Delete for good	Obriši zauvijek
+	Delete playlist	Obriši plejlistu
+	Latest	Najnovije
+	Link copied	Link je kopiran
+	Manage videos	Upravljaj videozapisima
+	Move to bottom	Premjesti na dno
+	Move to top	Premjesti na vrh
+	New playlist	Nova plejlista
+	Newest first	Najprije najnovije
+	No results found. Try other words.	Nema rezultata. Pokušajte s drugim riječima.
+	No videos in this list yet.	Na ovoj listi još nema videozapisa.
+	Pause watch history	Pauziraj historiju gledanja
+	Remove from watch history	Ukloni iz historije gledanja
+	Remove from this list	Ukloni s ove liste
+	Reply	Odgovori
+	Save video to…	Sačuvaj videozapis u…
+	Show more	Prikaži više
+	Show more replies	Prikaži više odgovora
+	Sort by	Sortiraj po
+	Subscribed	Pretplaćeni ste
+	The new videos of the channels you subscribe to will show here.	Ovdje će se prikazivati novi videozapisi kanala na koje ste pretplaćeni.
+	The videos you watch will show here.	Ovdje će se prikazivati videozapisi koje gledate.
+	This channel has no playlists.	Ovaj kanal nema plejlista.
+	This channel has no videos yet.	Ovaj kanal još nema videozapisa.
+	Top comments	Najbolji komentari
+	Turn on watch history	Uključi historiju gledanja
+	Videos	Videozapisi
+	View full playlist	Prikaži cijelu plejlistu
+	Watch history	Historija gledanja
+	Your history is paused: what you watch now is not kept.	Vaša historija je pauzirana: ono što sada gledate ne čuva se.
 @plural	{n} view|{n} views	{n} pregled|{n} pregleda|{n} pregleda
-@plural	{n} like|{n} likes	{n} sviđanje|{n} sviđanja|{n} sviđanja
 @plural	{n} comment|{n} comments	{n} komentar|{n} komentara|{n} komentara
 @plural	{n} second ago|{n} seconds ago	prije {n} sekundu|prije {n} sekunde|prije {n} sekundi
 @plural	{n} minute ago|{n} minutes ago	prije {n} minutu|prije {n} minute|prije {n} minuta
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automatski ({quality})
 	This video can't be played in this browser.	Ovaj video se ne može pustiti u ovom pregledniku.
 @plural	{n} second|{n} seconds	{n} sekunda|{n} sekunde|{n} sekundi
+@plural	{n} reply|{n} replies	{n} odgovor|{n} odgovora|{n} odgovora
+@plural	{n} subscriber|{n} subscribers	{n} pretplatnik|{n} pretplatnika|{n} pretplatnika
+@plural	{n} video|{n} videos	{n} videozapis|{n} videozapisa|{n} videozapisa

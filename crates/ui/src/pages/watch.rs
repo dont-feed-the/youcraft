@@ -10,10 +10,12 @@ use youcraft_api::records::VideoPage;
 use youcraft_api::{ApiError, VideoId, routes};
 use youcraft_player::VideoPlayer;
 
+use crate::act::act;
 use crate::call::call;
 use crate::components::card::CompactCard;
-use crate::icons::{Glyph, Icon};
-use crate::lang::{Language, count, tr};
+use crate::components::comments::CommentSection;
+use crate::components::video_actions::OwnerRow;
+use crate::lang::{Language, RenderTime, count, tr};
 use crate::pages::not_found::Trouble;
 
 /// The video the address names, `/watch?v=…`.
@@ -72,6 +74,8 @@ pub fn Watch() -> impl IntoView {
 #[component]
 fn Stage(page: VideoPage, theatre: RwSignal<bool>) -> impl IntoView {
     let card = page.card;
+    let video = card.id;
+    let started = Callback::new(move |()| act::<video::View>(video::Which { video }, |_| ()));
     view! {
         <div class="stage">
             {if page.playable {
@@ -82,6 +86,7 @@ fn Stage(page: VideoPage, theatre: RwSignal<bool>) -> impl IntoView {
                         poster=routes::thumbnail(card.id, 720)
                         lang=Language::current()
                         theatre
+                        started
                     />
                 }
                 .into_any()
@@ -95,44 +100,23 @@ fn Stage(page: VideoPage, theatre: RwSignal<bool>) -> impl IntoView {
 /// Everything under the video.
 #[component]
 fn Primary(page: VideoPage) -> impl IntoView {
-    let card = page.card;
+    let card = page.card.clone();
     let views = count(card.views, "{n} view", "{n} views");
-    let likes = count(page.likes, "{n} like", "{n} likes");
-    let comments = count(page.comments, "{n} comment", "{n} comments");
-    let initial = card
-        .channel
-        .name
-        .chars()
-        .next()
-        .map(String::from)
-        .unwrap_or_default();
+    let age = youcraft_i18n::when::ago(
+        Language::current(),
+        card.published_at,
+        RenderTime::current(),
+    );
     view! {
         <Title text=format!("{} - YouCraft", card.title)/>
         <div class="primary">
-            <h1 class="watch-title">{card.title.clone()}</h1>
-            <div class="owner-row">
-                <a class="avatar" href=routes::channel(&card.channel.handle) aria-hidden="true" tabindex="-1">{initial}</a>
-                <a class="owner-name" href=routes::channel(&card.channel.handle)>{card.channel.name.clone()}</a>
-                <button class="pill subscribe" type="button">{tr("Subscribe")}</button>
-                <div class="actions">
-                    <span class="pill like-pill">
-                        <button class="pill-part" type="button" aria-label=tr("Like")><Glyph icon=Icon::Like/><span>{likes}</span></button>
-                        <button class="pill-part" type="button" aria-label=tr("Dislike")><Glyph icon=Icon::Dislike/></button>
-                    </span>
-                    <button class="pill" type="button"><Glyph icon=Icon::Share/><span>{tr("Share")}</span></button>
-                </div>
-            </div>
+            <h1 class="watch-title" dir="auto">{card.title.clone()}</h1>
+            <OwnerRow page=page.clone()/>
             <section class="description">
-                <p class="description-meta">{views}</p>
-                <p class="description-text">{page.description}</p>
+                <p class="description-meta">{format!("{views}  {age}")}</p>
+                <p class="description-text" dir="auto">{page.description}</p>
             </section>
-            <section class="comments-header">
-                {if page.comments_enabled {
-                    view! { <h2>{comments}</h2> }.into_any()
-                } else {
-                    view! { <p>{tr("Comments are turned off.")}</p> }.into_any()
-                }}
-            </section>
+            <CommentSection video=card.id total=page.comments enabled=page.comments_enabled owned=page.owned/>
         </div>
     }
 }

@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	處理失敗，請重新上傳影片。
 	Upload failed. Try again.	上傳失敗，請再試一次。
 	The file is too large.	檔案太大。
+	(edited)	（已編輯）
+	Action menu	操作選單
+	Add a comment…	新增留言…
+	Add a reply…	新增回覆…
+	Block from your channel	在你的頻道中封鎖
+	Cancel	取消
+	Channel	頻道
+	Choose a title	選擇標題
+	Clear all watch history	清除所有觀看紀錄
+	Close	關閉
+	Comment	留言
+	Create	建立
+	Delete for good	永久刪除
+	Delete playlist	刪除播放清單
+	Latest	最新
+	Link copied	已複製連結
+	Manage videos	管理影片
+	Move to bottom	移至底部
+	Move to top	移至頂端
+	New playlist	新增播放清單
+	Newest first	最新優先
+	No results found. Try other words.	找不到結果，請換個字詞試試。
+	No videos in this list yet.	這個清單中還沒有影片。
+	Pause watch history	暫停觀看紀錄
+	Remove from watch history	從觀看紀錄中移除
+	Remove from this list	從這個清單中移除
+	Reply	回覆
+	Save video to…	將影片儲存至…
+	Show more	顯示更多
+	Show more replies	顯示更多回覆
+	Sort by	排序依據
+	Subscribed	已訂閱
+	The new videos of the channels you subscribe to will show here.	你訂閱的頻道的新影片會顯示在這裡。
+	The videos you watch will show here.	你觀看的影片會顯示在這裡。
+	This channel has no playlists.	這個頻道沒有播放清單。
+	This channel has no videos yet.	這個頻道還沒有影片。
+	Top comments	熱門留言
+	Turn on watch history	開啟觀看紀錄
+	Videos	影片
+	View full playlist	查看完整播放清單
+	Watch history	觀看紀錄
+	Your history is paused: what you watch now is not kept.	你的觀看紀錄已暫停：現在觀看的內容不會保留。
 @plural	{n} view|{n} views	觀看次數：{n} 次
-@plural	{n} like|{n} likes	{n} 個喜歡
 @plural	{n} comment|{n} comments	{n} 則留言
 @plural	{n} second ago|{n} seconds ago	{n} 秒前
 @plural	{n} minute ago|{n} minutes ago	{n} 分鐘前
@@ -127,3 +168,6 @@
 	Auto ({quality})	自動 ({quality})
 	This video can't be played in this browser.	此瀏覽器無法播放這部影片。
 @plural	{n} second|{n} seconds	{n} 秒
+@plural	{n} reply|{n} replies	{n} 則回覆
+@plural	{n} subscriber|{n} subscribers	{n} 位訂閱者
+@plural	{n} video|{n} videos	{n} 部影片

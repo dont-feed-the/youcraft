@@ -1,15 +1,20 @@
-//! The guide: the places of the site, down the side on wide screens and along the bottom on
-//! phones.
+//! The guide: the places of the site, and the channels the person subscribes to, down the side
+//! on wide screens; a narrow column of icons below 1313px; a tab bar along the bottom on phones.
 
 use leptos::prelude::*;
-use youcraft_api::routes;
+use youcraft_api::commands::channel::Subscriptions;
+use youcraft_api::commands::site::Nothing;
+use youcraft_api::{List, routes};
 
+use crate::account::SignedIn;
+use crate::call::call;
+use crate::components::account_menu::initial;
 use crate::icons::{Glyph, Icon};
 use crate::lang::tr;
 
 /// One place the guide leads to, its label already in the page's language.
 #[component]
-fn Entry(href: &'static str, icon: Icon, label: &'static str) -> impl IntoView {
+fn Entry(href: String, icon: Icon, label: &'static str) -> impl IntoView {
     view! {
         <a class="guide-entry" href=href>
             <Glyph icon=icon/>
@@ -24,16 +29,55 @@ pub fn Guide() -> impl IntoView {
     view! {
         <nav class="guide" aria-label=tr("Guide")>
             <div class="guide-section">
-                <Entry href=routes::HOME icon=Icon::Home label=tr("Home")/>
-                <Entry href=routes::SUBSCRIPTIONS icon=Icon::Subscriptions label=tr("Subscriptions")/>
+                <Entry href=routes::HOME.to_owned() icon=Icon::Home label=tr("Home")/>
+                <Entry href=routes::SUBSCRIPTIONS.to_owned() icon=Icon::Subscriptions label=tr("Subscriptions")/>
             </div>
             <div class="guide-section guide-you">
-                <Entry href=routes::PLAYLISTS icon=Icon::You label=tr("You")/>
-                <Entry href=routes::HISTORY icon=Icon::History label=tr("History")/>
-                <Entry href=routes::PLAYLISTS icon=Icon::Playlists label=tr("Playlists")/>
-                <Entry href="/playlist?list=WL" icon=Icon::WatchLater label=tr("Watch later")/>
-                <Entry href="/playlist?list=LL" icon=Icon::Like label=tr("Liked videos")/>
+                <Entry href=routes::PLAYLISTS.to_owned() icon=Icon::You label=tr("You")/>
+                <Entry href=routes::HISTORY.to_owned() icon=Icon::History label=tr("History")/>
+                <Entry href=routes::PLAYLISTS.to_owned() icon=Icon::Playlists label=tr("Playlists")/>
+                <Entry href=routes::playlist(List::WatchLater) icon=Icon::WatchLater label=tr("Watch later")/>
+                <Entry href=routes::playlist(List::Liked) icon=Icon::Like label=tr("Liked videos")/>
             </div>
+            <SubscribedChannels/>
         </nav>
+    }
+}
+
+/// The channels the signed-in person subscribes to, by name.
+#[component]
+fn SubscribedChannels() -> impl IntoView {
+    let me = SignedIn::resource();
+    let channels = Resource::new(
+        || (),
+        move |()| async move {
+            let signed_in = match me {
+                Some(me) => me.await.is_some(),
+                None => false,
+            };
+            if signed_in {
+                call::<Subscriptions>(Nothing {}).await.unwrap_or_default()
+            } else {
+                Vec::new()
+            }
+        },
+    );
+    view! {
+        <Suspense fallback=|| ()>
+            {move || Suspend::new(async move {
+                let channels = channels.await;
+                (!channels.is_empty()).then(|| view! {
+                    <div class="guide-section guide-channels">
+                        <h2 class="guide-heading">{tr("Subscriptions")}</h2>
+                        {channels.into_iter().map(|channel| view! {
+                            <a class="guide-entry" href=routes::channel(&channel.handle)>
+                                <span class="avatar avatar-small" aria-hidden="true">{initial(&channel.name)}</span>
+                                <span class="guide-label">{channel.name}</span>
+                            </a>
+                        }).collect_view()}
+                    </div>
+                })
+            })}
+        </Suspense>
     }
 }

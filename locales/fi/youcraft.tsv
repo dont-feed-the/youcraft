@@ -100,8 +100,49 @@
 	Processing failed. Upload the video again.	Käsittely epäonnistui. Lataa video uudelleen.
 	Upload failed. Try again.	Lataus epäonnistui. Yritä uudelleen.
 	The file is too large.	Tiedosto on liian suuri.
+	(edited)	(muokattu)
+	Action menu	Toimintovalikko
+	Add a comment…	Lisää kommentti…
+	Add a reply…	Lisää vastaus…
+	Block from your channel	Estä kanavallasi
+	Cancel	Peruuta
+	Channel	Kanava
+	Choose a title	Valitse nimi
+	Clear all watch history	Tyhjennä koko katseluhistoria
+	Close	Sulje
+	Comment	Kommentoi
+	Create	Luo
+	Delete for good	Poista pysyvästi
+	Delete playlist	Poista soittolista
+	Latest	Uusimmat
+	Link copied	Linkki kopioitu
+	Manage videos	Hallinnoi videoita
+	Move to bottom	Siirrä alimmaksi
+	Move to top	Siirrä ylimmäksi
+	New playlist	Uusi soittolista
+	Newest first	Uusimmat ensin
+	No results found. Try other words.	Ei tuloksia. Kokeile muita sanoja.
+	No videos in this list yet.	Tällä listalla ei ole vielä videoita.
+	Pause watch history	Keskeytä katseluhistoria
+	Remove from watch history	Poista katseluhistoriasta
+	Remove from this list	Poista tältä listalta
+	Reply	Vastaa
+	Save video to…	Tallenna video kohteeseen…
+	Show more	Näytä lisää
+	Show more replies	Näytä lisää vastauksia
+	Sort by	Järjestä
+	Subscribed	Tilattu
+	The new videos of the channels you subscribe to will show here.	Tilaamiesi kanavien uudet videot näkyvät tässä.
+	The videos you watch will show here.	Katsomasi videot näkyvät tässä.
+	This channel has no playlists.	Tällä kanavalla ei ole soittolistoja.
+	This channel has no videos yet.	Tällä kanavalla ei ole vielä videoita.
+	Top comments	Suosituimmat kommentit
+	Turn on watch history	Ota katseluhistoria käyttöön
+	Videos	Videot
+	View full playlist	Näytä koko soittolista
+	Watch history	Katseluhistoria
+	Your history is paused: what you watch now is not kept.	Historiasi on keskeytetty: nyt katsomiasi videoita ei tallenneta.
 @plural	{n} view|{n} views	{n} katselukerta|{n} katselukertaa
-@plural	{n} like|{n} likes	{n} tykkäys|{n} tykkäystä
 @plural	{n} comment|{n} comments	{n} kommentti|{n} kommenttia
 @plural	{n} second ago|{n} seconds ago	{n} sekunti sitten|{n} sekuntia sitten
 @plural	{n} minute ago|{n} minutes ago	{n} minuutti sitten|{n} minuuttia sitten
@@ -127,3 +168,6 @@
 	Auto ({quality})	Automaattinen ({quality})
 	This video can't be played in this browser.	Tätä videota ei voi toistaa tässä selaimessa.
 @plural	{n} second|{n} seconds	{n} sekunti|{n} sekuntia
+@plural	{n} reply|{n} replies	{n} vastaus|{n} vastausta
+@plural	{n} subscriber|{n} subscribers	{n} tilaaja|{n} tilaajaa
+@plural	{n} video|{n} videos	{n} video|{n} videota
