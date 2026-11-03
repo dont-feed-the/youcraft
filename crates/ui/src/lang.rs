@@ -80,22 +80,38 @@ pub fn from_page() -> (Language, RenderTime, Theme) {
         .and_then(|element| element.text_content())
         .unwrap_or_default();
     let value: serde_json::Value = serde_json::from_str(&text).unwrap_or_default();
-    let code = value["code"].as_str().unwrap_or("en");
-    youcraft_i18n::install(code, value["catalog"].as_str().unwrap_or(""));
+    let code = value
+        .get("code")
+        .and_then(serde_json::Value::as_str)
+        .unwrap_or("en");
+    youcraft_i18n::install(
+        code,
+        value
+            .get("catalog")
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or(""),
+    );
     let language = Language(youcraft_i18n::i18n().from_code(code).unwrap_or(Lang::EN));
-    let theme = value["theme"]
-        .as_str()
+    let theme = value
+        .get("theme")
+        .and_then(serde_json::Value::as_str)
         .and_then(Theme::from_name)
         .unwrap_or_default();
     #[cfg(not(feature = "ssr"))]
     {
         let languages: Vec<(String, String)> =
-            serde_json::from_value(value["languages"].clone()).unwrap_or_default();
+            serde_json::from_value(value.get("languages").cloned().unwrap_or_default())
+                .unwrap_or_default();
         let _ = OFFERED.set(languages);
     }
     (
         language,
-        RenderTime(value["now"].as_i64().unwrap_or(0)),
+        RenderTime(
+            value
+                .get("now")
+                .and_then(serde_json::Value::as_i64)
+                .unwrap_or(0),
+        ),
         theme,
     )
 }

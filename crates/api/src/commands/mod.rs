@@ -5,7 +5,9 @@ pub mod admin;
 pub mod feed;
 pub mod invite;
 pub mod site;
+pub mod studio;
 pub mod token;
+pub mod upload;
 pub mod video;
 
 /// Call `$callback!` with the path of every command type, once each. Add a new command here, in
@@ -29,6 +31,12 @@ macro_rules! for_each_command {
             $crate::commands::invite::Revoke,
             $crate::commands::admin::SetRole,
             $crate::commands::admin::Block,
+            $crate::commands::video::Update,
+            $crate::commands::video::Delete,
+            $crate::commands::upload::Create,
+            $crate::commands::upload::Status,
+            $crate::commands::upload::Finish,
+            $crate::commands::studio::Videos,
         }
     };
 }

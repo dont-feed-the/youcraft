@@ -75,6 +75,31 @@
 	Withdraw	Peru kutsu
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Tilisi on estetty: voit katsoa videoita, mutta et tykätä, kommentoida etkä julkaista.
+	Channel content	Kanavan sisältö
+	Upload video	Lataa video
+	Select file	Valitse tiedosto
+	Choose a video file to upload.	Valitse ladattava videotiedosto.
+	Title	Nimi
+	Description	Kuvaus
+	Visibility	Näkyvyys
+	Public	Julkinen
+	Unlisted	Listaamaton
+	Private	Yksityinen
+	Allow comments	Salli kommentit
+	Save	Tallenna
+	Delete	Poista
+	Delete this video for good?	Poistetaanko tämä video pysyvästi?
+	Edit	Muokkaa
+	Video	Video
+	Date	Päivämäärä
+	Views	Katselukerrat
+	Uploading {n}%	Ladataan: {n} %
+	Processing {n}%	Käsitellään: {n} %
+	This file isn't a video YouCraft can read.	Tämä tiedosto ei ole video, jota YouCraft osaa lukea.
+	This file is damaged.	Tämä tiedosto on vioittunut.
+	Processing failed. Upload the video again.	Käsittely epäonnistui. Lataa video uudelleen.
+	Upload failed. Try again.	Lataus epäonnistui. Yritä uudelleen.
+	The file is too large.	Tiedosto on liian suuri.
 @plural	{n} view|{n} views	{n} katselukerta|{n} katselukertaa
 @plural	{n} like|{n} likes	{n} tykkäys|{n} tykkäystä
 @plural	{n} comment|{n} comments	{n} kommentti|{n} kommenttia

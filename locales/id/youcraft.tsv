@@ -75,6 +75,31 @@
 	Withdraw	Tarik
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Akun Anda diblokir: Anda dapat menonton video, tetapi tidak dapat menyukai, berkomentar, atau memublikasikan.
+	Channel content	Konten channel
+	Upload video	Upload video
+	Select file	Pilih file
+	Choose a video file to upload.	Pilih file video yang akan diupload.
+	Title	Judul
+	Description	Deskripsi
+	Visibility	Visibilitas
+	Public	Publik
+	Unlisted	Tidak publik
+	Private	Pribadi
+	Allow comments	Izinkan komentar
+	Save	Simpan
+	Delete	Hapus
+	Delete this video for good?	Hapus video ini selamanya?
+	Edit	Edit
+	Video	Video
+	Date	Tanggal
+	Views	Penayangan
+	Uploading {n}%	Mengupload: {n}%
+	Processing {n}%	Memproses: {n}%
+	This file isn't a video YouCraft can read.	File ini bukan video yang dapat dibaca YouCraft.
+	This file is damaged.	File ini rusak.
+	Processing failed. Upload the video again.	Pemrosesan gagal. Upload ulang videonya.
+	Upload failed. Try again.	Upload gagal. Coba lagi.
+	The file is too large.	File terlalu besar.
 @plural	{n} view|{n} views	{n} kali ditonton
 @plural	{n} like|{n} likes	{n} suka
 @plural	{n} comment|{n} comments	{n} komentar

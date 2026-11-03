@@ -75,6 +75,31 @@
 	Withdraw	వెనక్కి తీసుకోండి
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	మీ ఖాతా బ్లాక్ చేయబడింది: మీరు వీడియోలు చూడవచ్చు, కానీ లైక్, కామెంట్ లేదా ప్రచురించలేరు.
+	Channel content	ఛానెల్ కంటెంట్
+	Upload video	వీడియోను అప్‌లోడ్ చేయండి
+	Select file	ఫైల్‌ను ఎంచుకోండి
+	Choose a video file to upload.	అప్‌లోడ్ చేయడానికి ఒక వీడియో ఫైల్‌ను ఎంచుకోండి.
+	Title	శీర్షిక
+	Description	వివరణ
+	Visibility	విజిబిలిటీ
+	Public	పబ్లిక్
+	Unlisted	జాబితాలో లేనిది
+	Private	ప్రైవేట్
+	Allow comments	కామెంట్‌లను అనుమతించండి
+	Save	సేవ్ చేయండి
+	Delete	తొలగించండి
+	Delete this video for good?	ఈ వీడియోను శాశ్వతంగా తొలగించాలా?
+	Edit	ఎడిట్ చేయండి
+	Video	వీడియో
+	Date	తేదీ
+	Views	వీక్షణలు
+	Uploading {n}%	అప్‌లోడ్ అవుతోంది: {n}%
+	Processing {n}%	ప్రాసెస్ అవుతోంది: {n}%
+	This file isn't a video YouCraft can read.	ఈ ఫైల్ YouCraft చదవగలిగే వీడియో కాదు.
+	This file is damaged.	ఈ ఫైల్ పాడైంది.
+	Processing failed. Upload the video again.	ప్రాసెసింగ్ విఫలమైంది. వీడియోను మళ్లీ అప్‌లోడ్ చేయండి.
+	Upload failed. Try again.	అప్‌లోడ్ విఫలమైంది. మళ్లీ ప్రయత్నించండి.
+	The file is too large.	ఫైల్ చాలా పెద్దదిగా ఉంది.
 @plural	{n} view|{n} views	{n} వీక్షణ|{n} వీక్షణలు
 @plural	{n} like|{n} likes	{n} లైక్|{n} లైక్‌లు
 @plural	{n} comment|{n} comments	{n} కామెంట్|{n} కామెంట్‌లు

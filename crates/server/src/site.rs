@@ -13,6 +13,10 @@ use crate::config::Config;
 pub struct Site {
     store: Arc<Store>,
     config: Config,
+    /// Wakes the job worker when an upload is finished.
+    pub work: tokio::sync::Notify,
+    /// Held while bytes of an upload are written, so two pieces never interleave.
+    pub writing: tokio::sync::Mutex<()>,
 }
 
 /// Who runs a command. Handlers decide with it what the caller may do: [`Caller::role`] for
@@ -77,8 +81,15 @@ impl Caller {
 impl Site {
     /// Open the site's data directory and database.
     pub fn open(config: &Config) -> Result<Site, String> {
-        std::fs::create_dir_all(&config.data)
-            .map_err(|e| format!("{}: {e}", config.data.display()))?;
+        for dir in [
+            config.data.clone(),
+            config.uploads(),
+            config.originals(),
+            config.work(),
+            config.media(),
+        ] {
+            std::fs::create_dir_all(&dir).map_err(|e| format!("{}: {e}", dir.display()))?;
+        }
         let path = config.data.join("youcraft.sqlite");
         let store = Store::open(&path).map_err(|e| format!("{}: {e}", path.display()))?;
         Ok(Site::with(store, config.clone()))
@@ -89,6 +100,8 @@ impl Site {
         Site {
             store: Arc::new(store),
             config,
+            work: tokio::sync::Notify::new(),
+            writing: tokio::sync::Mutex::new(()),
         }
     }
 

@@ -75,6 +75,31 @@
 	Withdraw	Stiahnuť
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Váš účet je zablokovaný: môžete pozerať videá, ale nie hodnotiť, komentovať ani publikovať.
+	Channel content	Obsah kanála
+	Upload video	Nahrať video
+	Select file	Vybrať súbor
+	Choose a video file to upload.	Vyberte videosúbor, ktorý chcete nahrať.
+	Title	Názov
+	Description	Popis
+	Visibility	Viditeľnosť
+	Public	Verejné
+	Unlisted	Nezaradené
+	Private	Súkromné
+	Allow comments	Povoliť komentáre
+	Save	Uložiť
+	Delete	Odstrániť
+	Delete this video for good?	Odstrániť toto video natrvalo?
+	Edit	Upraviť
+	Video	Video
+	Date	Dátum
+	Views	Zhliadnutia
+	Uploading {n}%	Nahrávanie: {n} %
+	Processing {n}%	Spracúvanie: {n} %
+	This file isn't a video YouCraft can read.	Tento súbor nie je video, ktoré YouCraft dokáže prečítať.
+	This file is damaged.	Tento súbor je poškodený.
+	Processing failed. Upload the video again.	Spracovanie zlyhalo. Nahrajte video znova.
+	Upload failed. Try again.	Nahrávanie zlyhalo. Skúste to znova.
+	The file is too large.	Súbor je príliš veľký.
 @plural	{n} view|{n} views	{n} zhliadnutie|{n} zhliadnutia|{n} zhliadnutí
 @plural	{n} like|{n} likes	{n} lajk|{n} lajky|{n} lajkov
 @plural	{n} comment|{n} comments	{n} komentár|{n} komentáre|{n} komentárov

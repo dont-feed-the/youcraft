@@ -11,6 +11,8 @@ pub enum Icon {
     Search,
     /// A plus in a circle: create.
     Create,
+    /// An arrow up out of a tray: upload.
+    Upload,
     /// A head and shoulders: an account.
     Account,
     /// A house: home.
@@ -74,6 +76,7 @@ impl Icon {
                 "M15.3 15.3L21 21",
             ],
             Icon::Create => &["M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18", "M12 8v8", "M8 12h8"],
+            Icon::Upload => &["M12 15V4", "M7.5 8.5L12 4l4.5 4.5", "M4 15v5h16v-5"],
             Icon::Account => &[
                 "M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8",
                 "M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7",

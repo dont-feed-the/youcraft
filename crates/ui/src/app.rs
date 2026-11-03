@@ -12,6 +12,8 @@ use crate::pages::account::Account;
 use crate::pages::home::Home;
 use crate::pages::not_found::NotFound;
 use crate::pages::sign_in_failed::SignInFailed;
+use crate::pages::studio::Studio;
+use crate::pages::upload::UploadPage;
 use crate::pages::watch::Watch;
 
 /// Whether the guide (the list of places on the side) is expanded.
@@ -36,6 +38,8 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/watch") view=Watch/>
                     <Route path=path!("/account") view=Account/>
                     <Route path=path!("/signin/failed") view=SignInFailed/>
+                    <Route path=path!("/studio") view=Studio/>
+                    <Route path=path!("/upload") view=UploadPage/>
                 </Routes>
             </div>
         </Router>

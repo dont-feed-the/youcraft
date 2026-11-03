@@ -75,6 +75,31 @@
 	Withdraw	Visszavonás
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	A fiókod le van tiltva: nézhetsz videókat, de nem kedvelhetsz, nem kommentelhetsz és nem tehetsz közzé semmit.
+	Channel content	Csatorna tartalma
+	Upload video	Videó feltöltése
+	Select file	Fájl kiválasztása
+	Choose a video file to upload.	Válaszd ki a feltöltendő videofájlt.
+	Title	Cím
+	Description	Leírás
+	Visibility	Láthatóság
+	Public	Nyilvános
+	Unlisted	Nem nyilvános
+	Private	Privát
+	Allow comments	Hozzászólások engedélyezése
+	Save	Mentés
+	Delete	Törlés
+	Delete this video for good?	Véglegesen törlöd ezt a videót?
+	Edit	Szerkesztés
+	Video	Videó
+	Date	Dátum
+	Views	Megtekintések
+	Uploading {n}%	Feltöltés: {n}%
+	Processing {n}%	Feldolgozás: {n}%
+	This file isn't a video YouCraft can read.	Ez a fájl nem olyan videó, amelyet a YouCraft be tud olvasni.
+	This file is damaged.	Ez a fájl sérült.
+	Processing failed. Upload the video again.	A feldolgozás nem sikerült. Töltsd fel újra a videót.
+	Upload failed. Try again.	A feltöltés nem sikerült. Próbáld újra.
+	The file is too large.	A fájl túl nagy.
 @plural	{n} view|{n} views	{n} megtekintés|{n} megtekintés
 @plural	{n} like|{n} likes	{n} kedvelés|{n} kedvelés
 @plural	{n} comment|{n} comments	{n} hozzászólás|{n} hozzászólás

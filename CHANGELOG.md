@@ -2,6 +2,28 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.2
+
+### Added
+
+- Uploads: a creator chooses a file on `/upload` and gives it a title, a description and a
+  visibility while it is sent in resumable pieces (`PATCH` at an offset, `HEAD` to resume, as tus
+  does), up to `YOUCRAFT_UPLOAD_BYTES` (16 GiB by default).
+- Processing: every upload is made into H.264 renditions at 360p, 720p and 1080p (never above the
+  source), with an AAC track, as CMAF files with HLS playlists addressed by byte range, keyframes
+  every two seconds at the same exact ticks in every rendition; plus thumbnails at every card size
+  and a storyboard for the seek bar. All through FilmCraft's codecs, in a child process
+  (`youcraft transcode`) limited in memory, CPU time and file size, one job at a time, resumed
+  after a restart.
+- The studio, `/studio`: the channel's videos in every state, with upload and processing progress,
+  why processing failed, and a form to change a video's title, description, visibility and
+  comments, or to delete it.
+- Media is served only to those who may watch the video: a private video's to its channel.
+- `youcraft demo` generates its videos in code (a moving pattern that spells its frame numbers,
+  and a tone) and makes them playable as any upload.
+- Commands: `upload.create`, `upload.status`, `upload.finish`, `video.update`, `video.delete`,
+  `studio.videos`.
+
 ## 0.1.1
 
 ### Added

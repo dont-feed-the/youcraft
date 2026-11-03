@@ -75,6 +75,31 @@
 	Withdraw	ফিরিয়ে নিন
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	আপনার অ্যাকাউন্ট ব্লক করা হয়েছে: আপনি ভিডিও দেখতে পারবেন, কিন্তু লাইক, মন্তব্য বা প্রকাশ করতে পারবেন না।
+	Channel content	চ্যানেলের কন্টেন্ট
+	Upload video	ভিডিও আপলোড করুন
+	Select file	ফাইল বেছে নিন
+	Choose a video file to upload.	আপলোড করার জন্য একটি ভিডিও ফাইল বেছে নিন।
+	Title	শিরোনাম
+	Description	বিবরণ
+	Visibility	দৃশ্যমানতা
+	Public	সর্বজনীন
+	Unlisted	তালিকাভুক্ত নয়
+	Private	ব্যক্তিগত
+	Allow comments	মন্তব্য করার অনুমতি দিন
+	Save	সংরক্ষণ করুন
+	Delete	মুছুন
+	Delete this video for good?	এই ভিডিওটি চিরতরে মুছে ফেলবেন?
+	Edit	সম্পাদনা করুন
+	Video	ভিডিও
+	Date	তারিখ
+	Views	ভিউ
+	Uploading {n}%	আপলোড হচ্ছে: {n}%
+	Processing {n}%	প্রক্রিয়া করা হচ্ছে: {n}%
+	This file isn't a video YouCraft can read.	এই ফাইলটি এমন কোনো ভিডিও নয় যা YouCraft পড়তে পারে।
+	This file is damaged.	এই ফাইলটি ক্ষতিগ্রস্ত।
+	Processing failed. Upload the video again.	প্রক্রিয়াকরণ ব্যর্থ হয়েছে। ভিডিওটি আবার আপলোড করুন।
+	Upload failed. Try again.	আপলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।
+	The file is too large.	ফাইলটি খুব বড়।
 @plural	{n} view|{n} views	{n} বার দেখা হয়েছে|{n} বার দেখা হয়েছে
 @plural	{n} like|{n} likes	{n}টি পছন্দ|{n}টি পছন্দ
 @plural	{n} comment|{n} comments	{n}টি মন্তব্য|{n}টি মন্তব্য

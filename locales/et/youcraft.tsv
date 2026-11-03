@@ -75,6 +75,31 @@
 	Withdraw	Võta tagasi
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Sinu konto on blokeeritud: saad videoid vaadata, kuid mitte meeldivaks märkida, kommenteerida ega avaldada.
+	Channel content	Kanali sisu
+	Upload video	Laadi video üles
+	Select file	Vali fail
+	Choose a video file to upload.	Vali üleslaaditav videofail.
+	Title	Pealkiri
+	Description	Kirjeldus
+	Visibility	Nähtavus
+	Public	Avalik
+	Unlisted	Loendist väljas
+	Private	Privaatne
+	Allow comments	Luba kommentaarid
+	Save	Salvesta
+	Delete	Kustuta
+	Delete this video for good?	Kas kustutada see video jäädavalt?
+	Edit	Muuda
+	Video	Video
+	Date	Kuupäev
+	Views	Vaatamised
+	Uploading {n}%	Üleslaadimine: {n}%
+	Processing {n}%	Töötlemine: {n}%
+	This file isn't a video YouCraft can read.	See fail ei ole video, mida YouCraft lugeda oskab.
+	This file is damaged.	See fail on rikutud.
+	Processing failed. Upload the video again.	Töötlemine ebaõnnestus. Laadi video uuesti üles.
+	Upload failed. Try again.	Üleslaadimine ebaõnnestus. Proovi uuesti.
+	The file is too large.	Fail on liiga suur.
 @plural	{n} view|{n} views	{n} vaatamine|{n} vaatamist
 @plural	{n} like|{n} likes	{n} meeldimine|{n} meeldimist
 @plural	{n} comment|{n} comments	{n} kommentaar|{n} kommentaari

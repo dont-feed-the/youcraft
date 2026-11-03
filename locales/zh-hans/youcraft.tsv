@@ -75,6 +75,31 @@
 	Withdraw	撤回
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	你的帐号已被封禁：你可以观看视频，但不能点赞、评论或发布。
+	Channel content	频道内容
+	Upload video	上传视频
+	Select file	选择文件
+	Choose a video file to upload.	选择要上传的视频文件。
+	Title	标题
+	Description	说明
+	Visibility	公开范围
+	Public	公开
+	Unlisted	不公开列出
+	Private	私享
+	Allow comments	允许评论
+	Save	保存
+	Delete	删除
+	Delete this video for good?	要永久删除此视频吗？
+	Edit	修改
+	Video	视频
+	Date	日期
+	Views	观看次数
+	Uploading {n}%	正在上传：{n}%
+	Processing {n}%	正在处理：{n}%
+	This file isn't a video YouCraft can read.	此文件不是 YouCraft 能读取的视频。
+	This file is damaged.	此文件已损坏。
+	Processing failed. Upload the video again.	处理失败，请重新上传视频。
+	Upload failed. Try again.	上传失败，请重试。
+	The file is too large.	文件太大。
 @plural	{n} view|{n} views	{n} 次观看
 @plural	{n} like|{n} likes	{n} 个赞
 @plural	{n} comment|{n} comments	{n} 条评论

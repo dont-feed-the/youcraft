@@ -75,6 +75,31 @@
 	Withdraw	Atšaukti kvietimą
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Jūsų paskyra užblokuota: galite žiūrėti vaizdo įrašus, bet negalite jų įvertinti, komentuoti ar skelbti.
+	Channel content	Kanalo turinys
+	Upload video	Įkelti vaizdo įrašą
+	Select file	Pasirinkti failą
+	Choose a video file to upload.	Pasirinkite vaizdo įrašo failą, kurį norite įkelti.
+	Title	Pavadinimas
+	Description	Aprašas
+	Visibility	Matomumas
+	Public	Viešas
+	Unlisted	Neįtrauktas į sąrašą
+	Private	Privatus
+	Allow comments	Leisti komentarus
+	Save	Išsaugoti
+	Delete	Ištrinti
+	Delete this video for good?	Ištrinti šį vaizdo įrašą visam laikui?
+	Edit	Redaguoti
+	Video	Vaizdo įrašas
+	Date	Data
+	Views	Peržiūros
+	Uploading {n}%	Įkeliama: {n} %
+	Processing {n}%	Apdorojama: {n} %
+	This file isn't a video YouCraft can read.	Šis failas nėra vaizdo įrašas, kurį YouCraft gali perskaityti.
+	This file is damaged.	Šis failas sugadintas.
+	Processing failed. Upload the video again.	Apdoroti nepavyko. Įkelkite vaizdo įrašą dar kartą.
+	Upload failed. Try again.	Įkelti nepavyko. Bandykite dar kartą.
+	The file is too large.	Failas per didelis.
 @plural	{n} view|{n} views	{n} peržiūra|{n} peržiūros|{n} peržiūrų
 @plural	{n} like|{n} likes	{n} patiktukas|{n} patiktukai|{n} patiktukų
 @plural	{n} comment|{n} comments	{n} komentaras|{n} komentarai|{n} komentarų

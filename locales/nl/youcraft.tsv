@@ -75,6 +75,31 @@
 	Withdraw	Intrekken
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Je account is geblokkeerd: je kunt video's bekijken, maar niet liken, reageren of publiceren.
+	Channel content	Kanaalcontent
+	Upload video	Video uploaden
+	Select file	Bestand selecteren
+	Choose a video file to upload.	Kies een videobestand om te uploaden.
+	Title	Titel
+	Description	Beschrijving
+	Visibility	Zichtbaarheid
+	Public	Openbaar
+	Unlisted	Verborgen
+	Private	Privé
+	Allow comments	Reacties toestaan
+	Save	Opslaan
+	Delete	Verwijderen
+	Delete this video for good?	Deze video definitief verwijderen?
+	Edit	Bewerken
+	Video	Video
+	Date	Datum
+	Views	Weergaven
+	Uploading {n}%	Uploaden: {n}%
+	Processing {n}%	Verwerken: {n}%
+	This file isn't a video YouCraft can read.	Dit bestand is geen video die YouCraft kan lezen.
+	This file is damaged.	Dit bestand is beschadigd.
+	Processing failed. Upload the video again.	Verwerken mislukt. Upload de video opnieuw.
+	Upload failed. Try again.	Uploaden mislukt. Probeer het opnieuw.
+	The file is too large.	Het bestand is te groot.
 @plural	{n} view|{n} views	{n} weergave|{n} weergaven
 @plural	{n} like|{n} likes	{n} like|{n} likes
 @plural	{n} comment|{n} comments	{n} reactie|{n} reacties

@@ -75,6 +75,31 @@
 	Withdraw	משיכה
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	החשבון שלך חסום: אפשר לצפות בסרטונים, אבל לא לסמן לייק, להגיב או לפרסם.
+	Channel content	תוכן הערוץ
+	Upload video	העלאת סרטון
+	Select file	בחירת קובץ
+	Choose a video file to upload.	יש לבחור קובץ וידאו להעלאה.
+	Title	כותרת
+	Description	תיאור
+	Visibility	חשיפה
+	Public	ציבורי
+	Unlisted	לא רשום
+	Private	פרטי
+	Allow comments	לאפשר תגובות
+	Save	שמירה
+	Delete	מחיקה
+	Delete this video for good?	למחוק את הסרטון הזה לצמיתות?
+	Edit	עריכה
+	Video	סרטון
+	Date	תאריך
+	Views	צפיות
+	Uploading {n}%	מעלה: {n}%
+	Processing {n}%	מעבד: {n}%
+	This file isn't a video YouCraft can read.	הקובץ הזה אינו סרטון ש-YouCraft יכול לקרוא.
+	This file is damaged.	הקובץ הזה פגום.
+	Processing failed. Upload the video again.	העיבוד נכשל. יש להעלות את הסרטון שוב.
+	Upload failed. Try again.	ההעלאה נכשלה. כדאי לנסות שוב.
+	The file is too large.	הקובץ גדול מדי.
 @plural	{n} view|{n} views	{n} צפייה|{n} צפיות|{n} צפיות
 @plural	{n} like|{n} likes	{n} לייק|{n} לייקים|{n} לייקים
 @plural	{n} comment|{n} comments	{n} תגובה|{n} תגובות|{n} תגובות

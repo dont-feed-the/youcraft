@@ -75,6 +75,31 @@
 	Withdraw	پس گرفتن
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	حساب شما مسدود است: می‌توانید ویدیو تماشا کنید، اما نمی‌توانید پسند کنید، نظر بدهید یا منتشر کنید.
+	Channel content	محتوای کانال
+	Upload video	بارگذاری ویدیو
+	Select file	انتخاب فایل
+	Choose a video file to upload.	یک فایل ویدیویی برای بارگذاری انتخاب کنید.
+	Title	عنوان
+	Description	توضیحات
+	Visibility	نمایانی
+	Public	عمومی
+	Unlisted	فهرست‌نشده
+	Private	خصوصی
+	Allow comments	اجازهٔ دیدگاه
+	Save	ذخیره
+	Delete	حذف
+	Delete this video for good?	این ویدیو برای همیشه حذف شود؟
+	Edit	ویرایش
+	Video	ویدیو
+	Date	تاریخ
+	Views	بازدیدها
+	Uploading {n}%	در حال بارگذاری: ٪{n}
+	Processing {n}%	در حال پردازش: ٪{n}
+	This file isn't a video YouCraft can read.	این فایل ویدیویی نیست که YouCraft بتواند بخواند.
+	This file is damaged.	این فایل آسیب دیده است.
+	Processing failed. Upload the video again.	پردازش ناموفق بود. ویدیو را دوباره بارگذاری کنید.
+	Upload failed. Try again.	بارگذاری ناموفق بود. دوباره امتحان کنید.
+	The file is too large.	فایل خیلی بزرگ است.
 @plural	{n} view|{n} views	{n} بازدید|{n} بازدید
 @plural	{n} like|{n} likes	{n} پسند|{n} پسند
 @plural	{n} comment|{n} comments	{n} نظر|{n} نظر

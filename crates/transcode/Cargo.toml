@@ -1,0 +1,25 @@
+[package]
+name = "youcraft-transcode"
+description = "Uploads to renditions, thumbnails and storyboards, through FilmCraft's codecs"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+filmcraft-aac.workspace = true
+filmcraft-codecs.workspace = true
+filmcraft-frame.workspace = true
+filmcraft-h264enc.workspace = true
+filmcraft-isobmff.workspace = true
+filmcraft-media.workspace = true
+filmcraft-time.workspace = true
+image.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+youcraft-api.workspace = true
+
+[lints]
+workspace = true

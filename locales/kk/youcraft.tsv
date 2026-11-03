@@ -75,6 +75,31 @@
 	Withdraw	Кері қайтару
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Аккаунтыңыз бұғатталған: бейнелерді көре аласыз, бірақ ұнату, пікір жазу немесе жариялау мүмкін емес.
+	Channel content	Арна контенті
+	Upload video	Бейне жүктеу
+	Select file	Файлды таңдау
+	Choose a video file to upload.	Жүктейтін бейнефайлды таңдаңыз.
+	Title	Атауы
+	Description	Сипаттама
+	Visibility	Көрінуі
+	Public	Жалпыға ашық
+	Unlisted	Тізімде жоқ
+	Private	Жеке
+	Allow comments	Пікірлерге рұқсат беру
+	Save	Сақтау
+	Delete	Жою
+	Delete this video for good?	Бұл бейнені біржола жою керек пе?
+	Edit	Өңдеу
+	Video	Бейне
+	Date	Күні
+	Views	Көрілім
+	Uploading {n}%	Жүктелуде: {n}%
+	Processing {n}%	Өңделуде: {n}%
+	This file isn't a video YouCraft can read.	Бұл файл YouCraft оқи алатын бейне емес.
+	This file is damaged.	Бұл файл зақымдалған.
+	Processing failed. Upload the video again.	Өңдеу сәтсіз аяқталды. Бейнені қайта жүктеңіз.
+	Upload failed. Try again.	Жүктеу сәтсіз аяқталды. Қайталап көріңіз.
+	The file is too large.	Файл тым үлкен.
 @plural	{n} view|{n} views	{n} қаралым|{n} қаралым
 @plural	{n} like|{n} likes	{n} ұнату|{n} ұнату
 @plural	{n} comment|{n} comments	{n} пікір|{n} пікір

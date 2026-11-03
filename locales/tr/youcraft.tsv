@@ -75,6 +75,31 @@
 	Withdraw	Geri çek
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Hesabınız engellendi: video izleyebilirsiniz ancak beğenemez, yorum yapamaz veya yayınlayamazsınız.
+	Channel content	Kanal içeriği
+	Upload video	Video yükle
+	Select file	Dosya seç
+	Choose a video file to upload.	Yüklenecek bir video dosyası seçin.
+	Title	Başlık
+	Description	Açıklama
+	Visibility	Görünürlük
+	Public	Herkese açık
+	Unlisted	Liste dışı
+	Private	Özel
+	Allow comments	Yorumlara izin ver
+	Save	Kaydet
+	Delete	Sil
+	Delete this video for good?	Bu video kalıcı olarak silinsin mi?
+	Edit	Düzenle
+	Video	Video
+	Date	Tarih
+	Views	Görüntülemeler
+	Uploading {n}%	Yükleniyor: %{n}
+	Processing {n}%	İşleniyor: %{n}
+	This file isn't a video YouCraft can read.	Bu dosya YouCraft'ın okuyabildiği bir video değil.
+	This file is damaged.	Bu dosya bozuk.
+	Processing failed. Upload the video again.	İşleme başarısız oldu. Videoyu yeniden yükleyin.
+	Upload failed. Try again.	Yükleme başarısız oldu. Tekrar deneyin.
+	The file is too large.	Dosya çok büyük.
 @plural	{n} view|{n} views	{n} görüntüleme|{n} görüntüleme
 @plural	{n} like|{n} likes	{n} beğeni|{n} beğeni
 @plural	{n} comment|{n} comments	{n} yorum|{n} yorum

@@ -5,5 +5,7 @@ mod admin;
 mod feed;
 mod invite;
 mod site;
+pub mod studio;
 mod token;
+pub mod upload;
 mod video;

@@ -1,32 +1,11 @@
 //! Videos: creating them, listing the watchable ones, and what the watch page shows.
 
 use rusqlite::{OptionalExtension, Row, params};
-use youcraft_api::records::{ChannelCard, VideoCard, VideoPage};
+use youcraft_api::records::{ChannelCard, VideoCard, VideoPage, Visibility};
 use youcraft_api::time::MediaDuration;
 use youcraft_api::{AccountId, ChannelId, VideoId};
 
 use crate::{Store, StoreError};
-
-/// Who may see a video.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Visibility {
-    /// Everyone, and it appears in feeds and search.
-    Public,
-    /// Anyone with its address; it appears nowhere.
-    Unlisted,
-    /// Its channel only.
-    Private,
-}
-
-impl Visibility {
-    fn as_str(self) -> &'static str {
-        match self {
-            Visibility::Public => "public",
-            Visibility::Unlisted => "unlisted",
-            Visibility::Private => "private",
-        }
-    }
-}
 
 /// A video already made into renditions, as a demo or a test inserts it.
 pub struct NewVideo<'a> {
@@ -63,10 +42,10 @@ pub struct Listed {
     pub comments: u64,
 }
 
-const CARD_COLUMNS: &str = "v.id, v.title, v.duration_ticks, v.timescale, v.view_count, \
+pub(crate) const CARD_COLUMNS: &str = "v.id, v.title, v.duration_ticks, v.timescale, v.view_count, \
     COALESCE(v.published_at, v.created_at), c.id, c.handle, c.name";
 
-fn card(row: &Row<'_>) -> rusqlite::Result<VideoCard> {
+pub(crate) fn card(row: &Row<'_>) -> rusqlite::Result<VideoCard> {
     Ok(VideoCard {
         id: VideoId::from_i64(row.get(0)?),
         title: row.get(1)?,
@@ -85,7 +64,7 @@ fn card(row: &Row<'_>) -> rusqlite::Result<VideoCard> {
 }
 
 /// A stored count, never negative.
-fn count(value: i64) -> u64 {
+pub(crate) fn count(value: i64) -> u64 {
     u64::try_from(value).unwrap_or(0)
 }
 
@@ -122,6 +101,26 @@ impl Store {
             })
         })?;
         Ok(rows.collect::<Result<_, _>>()?)
+    }
+
+    /// Who may watch `video`: its visibility and the account of its channel.
+    pub fn audience(&self, video: VideoId) -> Result<Option<(Visibility, AccountId)>, StoreError> {
+        let row: Option<(String, i64)> = self
+            .connection()
+            .query_row(
+                "SELECT v.visibility, c.account_id FROM videos v JOIN channels c ON c.id = v.channel_id WHERE v.id = ?1",
+                [video.to_i64()],
+                |row| Ok((row.get(0)?, row.get(1)?)),
+            )
+            .optional()?;
+        match row {
+            None => Ok(None),
+            Some((name, owner)) => {
+                let visibility = Visibility::from_name(&name)
+                    .ok_or_else(|| StoreError::Corrupt(format!("visibility {name}")))?;
+                Ok(Some((visibility, AccountId::from_i64(owner))))
+            }
+        }
     }
 
     /// What the watch page shows about `video`, if `viewer` may see it: anyone a public or unlisted

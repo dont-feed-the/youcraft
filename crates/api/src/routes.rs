@@ -31,8 +31,10 @@ pub const SIGN_IN_UNAVAILABLE: &str = "unavailable";
 pub const SIGN_IN_REFUSED: &str = "refused";
 /// The signed-in person's settings: appearance, language, personal tokens.
 pub const ACCOUNT: &str = "/account";
-/// The creator's studio.
+/// The creator's studio: their channel's videos.
 pub const STUDIO: &str = "/studio";
+/// The page that uploads a video.
+pub const UPLOAD: &str = "/upload";
 
 /// The address that signs the person in, then brings them back to `next` (a path of this site).
 pub fn sign_in(next: &str) -> String {
@@ -69,9 +71,34 @@ pub fn command(id: &str) -> String {
     format!("{COMMANDS}/{id}")
 }
 
+/// The directory that holds the media files of `video`; each file's name within it is in
+/// [`media_files`].
+pub fn media(video: VideoId) -> String {
+    format!("/media/{video}")
+}
+
+/// The names of a video's media files within its [`media`] directory, as the transcoder writes
+/// them and the server serves them.
+pub mod media_files {
+    /// The HLS playlist that lists the renditions.
+    pub const RENDITIONS: &str = "master.m3u8";
+    /// What the storyboard is: a [`crate::records::Storyboard`] as JSON.
+    pub const STORYBOARD: &str = "storyboard.json";
+
+    /// The thumbnail `width` pixels wide.
+    pub fn thumbnail(width: u32) -> String {
+        format!("thumbnail/{width}.jpg")
+    }
+
+    /// Sheet `index` of the storyboard, counted from 0.
+    pub fn storyboard_sheet(index: u32) -> String {
+        format!("storyboard/{index}.jpg")
+    }
+}
+
 /// The thumbnail of `video`, `width` pixels wide (one of [`THUMBNAIL_WIDTHS`]).
 pub fn thumbnail(video: VideoId, width: u32) -> String {
-    format!("/media/{video}/thumbnail/{width}.jpg")
+    format!("{}/{}", media(video), media_files::thumbnail(width))
 }
 
 /// The widths every thumbnail is made at, smallest first.
@@ -79,7 +106,23 @@ pub const THUMBNAIL_WIDTHS: [u32; 5] = [168, 246, 336, 480, 720];
 
 /// The HLS playlist that lists the renditions of `video`.
 pub fn playlist_of_renditions(video: VideoId) -> String {
-    format!("/media/{video}/master.m3u8")
+    format!("{}/{}", media(video), media_files::RENDITIONS)
+}
+
+/// What the storyboard of `video` is, as JSON.
+pub fn storyboard(video: VideoId) -> String {
+    format!("{}/{}", media(video), media_files::STORYBOARD)
+}
+
+/// Sheet `index` of the storyboard of `video`.
+pub fn storyboard_sheet(video: VideoId, index: u32) -> String {
+    format!("{}/{}", media(video), media_files::storyboard_sheet(index))
+}
+
+/// Where the bytes of an upload in progress are sent, `PATCH` at an offset, and its offset
+/// asked, `HEAD`.
+pub fn upload(video: VideoId) -> String {
+    format!("/upload/{video}")
 }
 
 /// The avatar of `channel`, `size` pixels square.
@@ -116,6 +159,18 @@ mod tests {
         );
         assert_eq!(command("feed.home"), "/api/v1/feed.home");
         assert_eq!(sign_in("/watch?v=x"), "/signin?next=%2Fwatch%3Fv%3Dx");
+        assert_eq!(
+            thumbnail(video, 336),
+            "/media/AAAAAAAAAAA/thumbnail/336.jpg"
+        );
+        assert_eq!(
+            playlist_of_renditions(video),
+            "/media/AAAAAAAAAAA/master.m3u8"
+        );
+        assert_eq!(
+            storyboard_sheet(video, 2),
+            "/media/AAAAAAAAAAA/storyboard/2.jpg"
+        );
     }
 
     #[test]

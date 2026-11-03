@@ -75,6 +75,31 @@
 	Withdraw	Отозвать
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Ваш аккаунт заблокирован: вы можете смотреть видео, но не можете ставить отметки «Нравится», комментировать и публиковать.
+	Channel content	Контент на канале
+	Upload video	Загрузить видео
+	Select file	Выбрать файл
+	Choose a video file to upload.	Выберите видеофайл для загрузки.
+	Title	Название
+	Description	Описание
+	Visibility	Доступ
+	Public	Открытый
+	Unlisted	По ссылке
+	Private	Ограниченный
+	Allow comments	Разрешить комментарии
+	Save	Сохранить
+	Delete	Удалить
+	Delete this video for good?	Удалить это видео навсегда?
+	Edit	Изменить
+	Video	Видео
+	Date	Дата
+	Views	Просмотры
+	Uploading {n}%	Загрузка: {n}%
+	Processing {n}%	Обработка: {n}%
+	This file isn't a video YouCraft can read.	Этот файл — не видео, которое может прочитать YouCraft.
+	This file is damaged.	Этот файл повреждён.
+	Processing failed. Upload the video again.	Не удалось обработать видео. Загрузите его ещё раз.
+	Upload failed. Try again.	Не удалось загрузить. Повторите попытку.
+	The file is too large.	Файл слишком большой.
 @plural	{n} view|{n} views	{n} просмотр|{n} просмотра|{n} просмотров
 @plural	{n} like|{n} likes	{n} лайк|{n} лайка|{n} лайков
 @plural	{n} comment|{n} comments	{n} комментарий|{n} комментария|{n} комментариев

@@ -59,3 +59,123 @@ pub struct VideoPage {
     /// Whether its renditions are ready to play.
     pub playable: bool,
 }
+
+/// The storyboard of a video: small tiles the seek bar previews, laid out row by row in sheets
+/// of `columns × rows` tiles; tile `i` shows the time `i × interval`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct Storyboard {
+    /// The time between two tiles.
+    pub interval: MediaDuration,
+    /// A tile's size in pixels.
+    pub tile_width: u32,
+    /// A tile's size in pixels.
+    pub tile_height: u32,
+    /// Tiles per sheet row.
+    pub columns: u32,
+    /// Rows per full sheet; the last sheet may have fewer.
+    pub rows: u32,
+    /// How many sheets there are.
+    pub sheets: u32,
+}
+
+/// Who may see a video.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum Visibility {
+    /// Everyone; it appears in feeds and search.
+    Public,
+    /// Anyone with its address; it appears nowhere.
+    Unlisted,
+    /// Its channel only.
+    #[default]
+    Private,
+}
+
+impl Visibility {
+    /// Its name in the database and in the API.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Visibility::Public => "public",
+            Visibility::Unlisted => "unlisted",
+            Visibility::Private => "private",
+        }
+    }
+
+    /// The visibility named `name`.
+    pub fn from_name(name: &str) -> Option<Visibility> {
+        [
+            Visibility::Public,
+            Visibility::Unlisted,
+            Visibility::Private,
+        ]
+        .into_iter()
+        .find(|v| v.as_str() == name)
+    }
+}
+
+/// Where a video is on its way from upload to playable.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(tag = "state", rename_all = "snake_case")]
+pub enum Processing {
+    /// Its file is arriving: `received` bytes of `size`.
+    Uploading {
+        /// Bytes received.
+        received: u64,
+        /// Bytes in all.
+        size: u64,
+    },
+    /// Its renditions are being made: `permille` thousandths done.
+    Processing {
+        /// Thousandths done.
+        permille: u32,
+    },
+    /// It plays.
+    Ready,
+    /// It could not be made playable: `unsupported` (not a video the site reads), `decode` (the
+    /// file is damaged) or `internal`.
+    Failed {
+        /// Why.
+        reason: String,
+    },
+}
+
+/// A video as its channel sees it in the studio.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct StudioVideo {
+    /// The video as its card shows it.
+    pub card: VideoCard,
+    /// Its description.
+    pub description: String,
+    /// Who may see it.
+    pub visibility: Visibility,
+    /// Whether it plays yet.
+    pub processing: Processing,
+    /// Whether people may comment on it.
+    pub comments_enabled: bool,
+    /// How many people liked it.
+    pub likes: u64,
+    /// How many comments it has.
+    pub comments: u64,
+}
+
+/// A page of the studio's videos, newest first, and where the next page starts.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct StudioPage {
+    /// The videos of this page.
+    pub videos: Vec<StudioVideo>,
+    /// What to send for the next page; `None` at the end.
+    pub next: Option<String>,
+}
+
+/// An upload in progress: where to send its bytes, and how many have arrived.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct Upload {
+    /// The video it becomes.
+    pub video: VideoId,
+    /// Where its bytes go: `PATCH` with the header `Upload-Offset`, one piece at a time.
+    pub address: String,
+    /// The most bytes one `PATCH` may carry.
+    pub piece: u64,
+    /// Bytes received so far: the offset of the next piece.
+    pub received: u64,
+}

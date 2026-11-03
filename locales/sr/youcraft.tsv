@@ -75,6 +75,31 @@
 	Withdraw	Повуци
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Ваш налог је блокиран: можете да гледате видео снимке, али не и да их означавате са „свиђа ми се“, коментаришете или објављујете.
+	Channel content	Садржај канала
+	Upload video	Отпреми видео
+	Select file	Изабери датотеку
+	Choose a video file to upload.	Изаберите видео датотеку коју желите да отпремите.
+	Title	Наслов
+	Description	Опис
+	Visibility	Видљивост
+	Public	Јавно
+	Unlisted	Ненаведено
+	Private	Приватно
+	Allow comments	Дозволи коментаре
+	Save	Сачувај
+	Delete	Избриши
+	Delete this video for good?	Трајно избрисати овај видео?
+	Edit	Измени
+	Video	Видео
+	Date	Датум
+	Views	Прегледи
+	Uploading {n}%	Отпремање: {n}%
+	Processing {n}%	Обрада: {n}%
+	This file isn't a video YouCraft can read.	Ова датотека није видео који YouCraft може да прочита.
+	This file is damaged.	Ова датотека је оштећена.
+	Processing failed. Upload the video again.	Обрада није успела. Поново отпремите видео.
+	Upload failed. Try again.	Отпремање није успело. Покушајте поново.
+	The file is too large.	Датотека је превелика.
 @plural	{n} view|{n} views	{n} преглед|{n} прегледа|{n} прегледа
 @plural	{n} like|{n} likes	{n} свиђање|{n} свиђања|{n} свиђања
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментара|{n} коментара

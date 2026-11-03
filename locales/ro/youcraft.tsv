@@ -75,6 +75,31 @@
 	Withdraw	Retrage
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Contul tău este blocat: poți viziona videoclipuri, dar nu poți aprecia, comenta sau publica.
+	Channel content	Conținutul canalului
+	Upload video	Încarcă un videoclip
+	Select file	Selectează fișierul
+	Choose a video file to upload.	Alege un fișier video pentru încărcare.
+	Title	Titlu
+	Description	Descriere
+	Visibility	Vizibilitate
+	Public	Public
+	Unlisted	Nelistat
+	Private	Privat
+	Allow comments	Permite comentariile
+	Save	Salvează
+	Delete	Șterge
+	Delete this video for good?	Ștergi definitiv acest videoclip?
+	Edit	Editează
+	Video	Videoclip
+	Date	Data
+	Views	Vizionări
+	Uploading {n}%	Se încarcă: {n} %
+	Processing {n}%	Se procesează: {n} %
+	This file isn't a video YouCraft can read.	Acest fișier nu este un videoclip pe care YouCraft îl poate citi.
+	This file is damaged.	Acest fișier este deteriorat.
+	Processing failed. Upload the video again.	Procesarea a eșuat. Încarcă din nou videoclipul.
+	Upload failed. Try again.	Încărcarea a eșuat. Încearcă din nou.
+	The file is too large.	Fișierul este prea mare.
 @plural	{n} view|{n} views	{n} vizionare|{n} vizionări|{n} de vizionări
 @plural	{n} like|{n} likes	{n} apreciere|{n} aprecieri|{n} de aprecieri
 @plural	{n} comment|{n} comments	{n} comentariu|{n} comentarii|{n} de comentarii

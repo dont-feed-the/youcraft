@@ -8,7 +8,10 @@
 pub mod accounts;
 pub mod credentials;
 pub mod invitations;
+pub mod jobs;
 mod migrations;
+pub mod studio;
+pub mod uploads;
 pub mod videos;
 
 use std::path::Path;

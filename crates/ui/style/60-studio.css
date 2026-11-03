@@ -1,0 +1,46 @@
+/* The studio's list of a channel's videos, the form that edits one, and the upload page. */
+.studio, .upload { display: grid; align-content: start; gap: var(--space-4); max-inline-size: 1280px; margin-inline: auto; padding: var(--space-6); }
+.upload { max-inline-size: 720px; }
+.studio h1, .upload h1 { font-size: var(--text-lg); }
+
+.studio-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+
+.pill.accent { background: var(--accent); color: var(--text-on-accent); }
+.pill.accent:hover { background: var(--accent-dark); }
+.pill.danger { background: transparent; color: var(--danger); }
+.pill:disabled { opacity: 0.5; cursor: default; }
+
+.studio-table { display: grid; }
+.studio-row { display: grid; grid-template-columns: minmax(0, 1fr) 120px 140px 100px; gap: var(--space-4); align-items: center; padding-block: var(--space-3); border-block-end: 1px solid var(--border); }
+.studio-head { color: var(--text-2); font-size: var(--text-xs); font-weight: 500; }
+.studio-video { display: flex; gap: var(--space-3); min-inline-size: 0; }
+.studio-thumb { flex: none; inline-size: 120px; border-radius: var(--radius-md); }
+.studio-video .title { font-size: var(--text-sm); line-height: var(--line-title-sm); }
+.studio-state { color: var(--accent-dark); }
+
+.text-button { justify-self: start; padding: 0; border: 0; background: none; color: var(--text-2); cursor: pointer; }
+.text-button:hover { color: var(--text); }
+
+.editor { display: grid; gap: var(--space-4); padding: var(--space-4); border-radius: var(--radius-card); background: var(--bg-raised); }
+.field { display: grid; gap: var(--space-1); color: var(--text-2); font-size: var(--text-xs); }
+.field input, .field textarea, .field select { padding: var(--space-2) var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg); color: var(--text); font: inherit; font-size: var(--text-sm); }
+.field textarea { resize: vertical; }
+.check { display: flex; align-items: center; gap: var(--space-2); }
+.editor-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
+
+.drop { position: relative; display: grid; justify-items: center; gap: var(--space-4); padding: var(--space-10) var(--space-6); border: 2px dashed var(--border); border-radius: var(--radius-card); color: var(--text-2); text-align: center; cursor: pointer; }
+.drop .glyph { inline-size: 64px; block-size: 64px; color: var(--accent); }
+.drop:hover { border-color: var(--accent); }
+.file { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+.upload-progress { display: grid; gap: var(--space-2); }
+.upload-progress .pill { justify-self: start; }
+.upload-progress progress { inline-size: 100%; block-size: var(--space-2); accent-color: var(--accent); }
+.failure { color: var(--danger); }
+
+@media (max-width: 656px) {
+  .studio, .upload { padding: var(--space-3); }
+  .studio-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .studio-row > :nth-child(3), .studio-row > :nth-child(4) { display: none; }
+  .studio-thumb { inline-size: 96px; }
+}

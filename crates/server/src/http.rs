@@ -1,5 +1,5 @@
 //! The HTTP side: pages rendered by the server, commands at `/api/v1/<id>`, the browser bundle,
-//! media, and `/health`.
+//! media, the bytes of uploads, and `/health`.
 //!
 //! Each page is rendered with its request's context: the caller, the language (theirs if they
 //! chose one, else their browser's) and theme, the render time, a fresh nonce for the scripts,
@@ -9,10 +9,10 @@ use std::sync::Arc;
 
 use axum::Router;
 use axum::body::Bytes;
-use axum::extract::{Extension, FromRef, Path, State};
+use axum::extract::{DefaultBodyLimit, Extension, FromRef, Path, Request, State};
 use axum::http::{HeaderMap, StatusCode, header};
 use axum::response::{IntoResponse, Response};
-use axum::routing::{get, post};
+use axum::routing::{get, head, post};
 use leptos::prelude::*;
 use leptos_axum::LeptosRoutes;
 use tower_http::services::{ServeDir, ServeFile};
@@ -22,6 +22,7 @@ use youcraft_ui::lang::{Language, RenderTime};
 
 use crate::config::Config;
 use crate::dispatch::{self, RequestDispatch};
+use crate::handlers::upload::PIECE;
 use crate::listen::{Listener, listen, stopped};
 use crate::signin;
 use crate::site::{Caller, Credential, Site, now};
@@ -61,7 +62,8 @@ pub async fn serve(site: Arc<Site>, config: &Config) -> Result<(), String> {
 }
 
 /// The routes of the site. Pages, commands and signing in run after the visitor is resolved
-/// ([`visitor::layer`]); the bundle, media and icon are files that need no visitor.
+/// ([`visitor::layer`]), and so do media, which only some may watch, and uploads; the bundle and
+/// icon are files that need no visitor.
 fn router(site: Arc<Site>, config: &Config) -> Router {
     let site_root = config.site.to_string_lossy().into_owned();
     let options = LeptosOptions::builder()
@@ -88,6 +90,15 @@ fn router(site: Arc<Site>, config: &Config) -> Router {
         .with_state(Arc::clone(&site));
     let visited = Router::new()
         .route("/api/v1/{id}", post(command))
+        .route("/media/{video}/{*file}", get(media))
+        .route(
+            "/upload/{video}",
+            head(upload_offset)
+                .patch(upload_piece)
+                .layer(DefaultBodyLimit::max(
+                    usize::try_from(PIECE).unwrap_or(usize::MAX),
+                )),
+        )
         .leptos_routes_with_context(&state, pages, context.clone(), shell.clone())
         .fallback(leptos_axum::render_app_to_stream_with_context(
             context, shell,
@@ -101,7 +112,6 @@ fn router(site: Arc<Site>, config: &Config) -> Router {
     Router::new()
         .route(routes::HEALTH, get(|| async { "ok" }))
         .nest_service("/pkg", ServeDir::new(config.site.join("pkg")))
-        .nest_service("/media", ServeDir::new(config.data.join("media")))
         .route_service(
             "/favicon.svg",
             ServeFile::new(config.site.join("favicon.svg")),
@@ -159,12 +169,61 @@ async fn command(
     };
     match answer {
         Ok(value) => axum::Json(value).into_response(),
-        Err(error) => {
-            let status =
-                StatusCode::from_u16(error.status()).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
-            (status, axum::Json(error)).into_response()
+        Err(error) => error_response(&error),
+    }
+}
+
+/// `error` as JSON, with its status.
+pub fn error_response(error: &ApiError) -> Response {
+    let status = StatusCode::from_u16(error.status()).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
+    (status, axum::Json(error)).into_response()
+}
+
+/// `GET /media/<video>/<file>`.
+async fn media(
+    State(state): State<AppState>,
+    Path((video, file)): Path<(String, String)>,
+    Extension(visitor): Extension<Visitor>,
+    request: Request,
+) -> Response {
+    crate::media::serve(&state.site, visitor.caller, &video, &file, request).await
+}
+
+/// `HEAD /upload/<video>`.
+async fn upload_offset(
+    State(state): State<AppState>,
+    Path(video): Path<String>,
+    Extension(visitor): Extension<Visitor>,
+) -> Response {
+    crate::uploads::offset(&state.site, visitor.caller, &video).await
+}
+
+/// `PATCH /upload/<video>`: a piece of an upload, which a browser's session may send only from
+/// the site's own pages, as it may post commands.
+async fn upload_piece(
+    State(state): State<AppState>,
+    Path(video): Path<String>,
+    Extension(visitor): Extension<Visitor>,
+    headers: HeaderMap,
+    body: Bytes,
+) -> Response {
+    if let Err(error) = from_own_pages(&state.site, &visitor, &headers) {
+        return error_response(&error);
+    }
+    crate::uploads::receive(&state.site, visitor.caller, &video, &headers, body).await
+}
+
+/// Refuse a request that a browser's session sends from another site's page.
+fn from_own_pages(site: &Site, visitor: &Visitor, headers: &HeaderMap) -> Result<(), ApiError> {
+    if let Credential::Session(_) = visitor.caller.credential {
+        let origin = headers
+            .get(header::ORIGIN)
+            .and_then(|value| value.to_str().ok());
+        if origin != Some(site.config().origin.as_str()) {
+            return Err(ApiError::Forbidden);
         }
     }
+    Ok(())
 }
 
 /// The input of a command request, if its kind and origin let it run.
@@ -182,14 +241,7 @@ fn checked(
     if !json {
         return Err(ApiError::invalid("content-type", "application/json"));
     }
-    if let Credential::Session(_) = visitor.caller.credential {
-        let origin = headers
-            .get(header::ORIGIN)
-            .and_then(|value| value.to_str().ok());
-        if origin != Some(site.config().origin.as_str()) {
-            return Err(ApiError::Forbidden);
-        }
-    }
+    from_own_pages(site, visitor, headers)?;
     if body.is_empty() {
         Ok(serde_json::json!({}))
     } else {
@@ -233,6 +285,11 @@ pub mod tests {
                 client_id: CLIENT.to_owned(),
                 keys,
             }),
+            upload_bytes: 1 << 20,
+            transcode: crate::config::TranscodeLimits {
+                memory_bytes: 1 << 30,
+                wall: std::time::Duration::from_secs(60),
+            },
         };
         let site = Arc::new(Site::with(Store::in_memory().unwrap(), config.clone()));
         let routes = router(Arc::clone(&site), &config);

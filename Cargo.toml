@@ -3,7 +3,7 @@ resolver = "3"
 members = ["crates/*", "xtask"]
 
 [workspace.package]
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 rust-version = "1.95"
 license = "MIT OR Apache-2.0"
@@ -14,12 +14,21 @@ youcraft-api = { path = "crates/api" }
 youcraft-i18n = { path = "crates/i18n" }
 youcraft-recommend = { path = "crates/recommend" }
 youcraft-store = { path = "crates/store" }
+youcraft-transcode = { path = "crates/transcode" }
 youcraft-ui = { path = "crates/ui" }
 
 axum = "0.8.9"
 base64 = "0.22.1"
 console_error_panic_hook = "0.1.7"
+filmcraft-aac = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
+filmcraft-codecs = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
+filmcraft-frame = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
+filmcraft-h264enc = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
+filmcraft-isobmff = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
+filmcraft-media = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
+filmcraft-time = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
 craft-i18n = { git = "https://github.com/storytold/craft-libs", rev = "c5a1cbfb5f9049f9270955caffb5bee5997aebf7" }
+image = { version = "0.25", default-features = false, features = ["jpeg"] }
 js-sys = "0.3.107"
 leptos = "0.8.23"
 leptos_axum = "0.8.10"
@@ -28,6 +37,7 @@ leptos_router = "0.8.17"
 listenfd = "1.0.2"
 rand = "0.10.3"
 rsa = { version = "0.9.10", default-features = false, features = ["std", "u64_digit"] }
+rlimit = "0.11.0"
 rusqlite = { version = "0.41.1", features = ["bundled"] }
 schemars = "1.2.3"
 send_wrapper = { version = "0.6.0", features = ["futures"] }
@@ -35,7 +45,8 @@ serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"
 sha2 = { version = "0.10.9", features = ["oid"] }
 thiserror = "2.0.21"
-tokio = { version = "1.54.1", features = ["macros", "net", "rt-multi-thread", "signal", "sync", "time"] }
+tokio = { version = "1.54.1", features = ["fs", "io-util", "macros", "net", "process", "rt-multi-thread", "signal", "sync", "time"] }
+tower = { version = "0.5.3", features = ["util"] }
 tower-http = { version = "0.7.1", features = ["fs"] }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
@@ -59,6 +70,34 @@ unwrap_used = "deny"
 # RSA's big-number arithmetic, optimized in debug builds too, so tests that sign stay quick.
 [profile.dev.package.num-bigint-dig]
 opt-level = 3
+# Codecs are hot loops: even a debug build runs them optimised, or tests and the demo crawl.
+[profile.dev.package.youcraft-transcode]
+opt-level = 3
+overflow-checks = false
+[profile.dev.package.filmcraft-aac]
+opt-level = 3
+overflow-checks = false
+[profile.dev.package.filmcraft-codecs]
+opt-level = 3
+overflow-checks = false
+[profile.dev.package.filmcraft-frame]
+opt-level = 3
+overflow-checks = false
+[profile.dev.package.filmcraft-h264]
+opt-level = 3
+overflow-checks = false
+[profile.dev.package.filmcraft-h264enc]
+opt-level = 3
+overflow-checks = false
+[profile.dev.package.filmcraft-media]
+opt-level = 3
+overflow-checks = false
+[profile.dev.package.craft-media]
+opt-level = 3
+overflow-checks = false
+[profile.dev.package.image]
+opt-level = 3
+overflow-checks = false
 
 [profile.wasm-release]
 inherits = "release"

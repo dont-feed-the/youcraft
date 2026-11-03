@@ -75,6 +75,31 @@
 	Withdraw	سحب
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	حسابك محظور: يمكنك مشاهدة الفيديوهات، لكن لا يمكنك الإعجاب أو التعليق أو النشر.
+	Channel content	محتوى القناة
+	Upload video	تحميل فيديو
+	Select file	اختيار ملف
+	Choose a video file to upload.	اختر ملف فيديو لتحميله.
+	Title	العنوان
+	Description	الوصف
+	Visibility	مستوى الظهور
+	Public	عام
+	Unlisted	غير مدرج
+	Private	خاص
+	Allow comments	السماح بالتعليقات
+	Save	حفظ
+	Delete	حذف
+	Delete this video for good?	هل تريد حذف هذا الفيديو نهائيًا؟
+	Edit	تعديل
+	Video	الفيديو
+	Date	التاريخ
+	Views	المشاهدات
+	Uploading {n}%	جارٍ التحميل: {n}٪
+	Processing {n}%	جارٍ المعالجة: {n}٪
+	This file isn't a video YouCraft can read.	هذا الملف ليس فيديو يمكن لـ YouCraft قراءته.
+	This file is damaged.	هذا الملف تالف.
+	Processing failed. Upload the video again.	تعذّرت المعالجة. حمّل الفيديو مرة أخرى.
+	Upload failed. Try again.	تعذّر التحميل. حاول مرة أخرى.
+	The file is too large.	الملف كبير جدًا.
 @plural	{n} view|{n} views	{n} مشاهدة|{n} مشاهدة|{n} مشاهدة|{n} مشاهدات|{n} مشاهدة|{n} مشاهدة
 @plural	{n} like|{n} likes	{n} إعجاب|{n} إعجاب|{n} إعجاب|{n} إعجابات|{n} إعجابًا|{n} إعجاب
 @plural	{n} comment|{n} comments	{n} تعليق|{n} تعليق|{n} تعليق|{n} تعليقات|{n} تعليقًا|{n} تعليق

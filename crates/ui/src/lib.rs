@@ -16,6 +16,8 @@ pub mod icons;
 pub mod lang;
 pub mod pages;
 pub mod shell;
+#[cfg(feature = "hydrate")]
+pub mod transfer;
 
 pub use app::App;
 pub use shell::shell;

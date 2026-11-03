@@ -75,6 +75,31 @@
 	Withdraw	取り下げる
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	アカウントはブロックされています。動画は視聴できますが、高評価、コメント、公開はできません。
+	Channel content	チャンネルのコンテンツ
+	Upload video	動画をアップロード
+	Select file	ファイルを選択
+	Choose a video file to upload.	アップロードする動画ファイルを選択してください。
+	Title	タイトル
+	Description	説明
+	Visibility	公開設定
+	Public	公開
+	Unlisted	限定公開
+	Private	非公開
+	Allow comments	コメントを許可
+	Save	保存
+	Delete	削除
+	Delete this video for good?	この動画を完全に削除しますか？
+	Edit	編集
+	Video	動画
+	Date	日付
+	Views	視聴回数
+	Uploading {n}%	アップロード中: {n}%
+	Processing {n}%	処理中: {n}%
+	This file isn't a video YouCraft can read.	このファイルは YouCraft が読み込める動画ではありません。
+	This file is damaged.	このファイルは破損しています。
+	Processing failed. Upload the video again.	処理に失敗しました。動画をもう一度アップロードしてください。
+	Upload failed. Try again.	アップロードに失敗しました。もう一度お試しください。
+	The file is too large.	ファイルが大きすぎます。
 @plural	{n} view|{n} views	{n} 回視聴
 @plural	{n} like|{n} likes	{n} 件のいいね
 @plural	{n} comment|{n} comments	{n} 件のコメント

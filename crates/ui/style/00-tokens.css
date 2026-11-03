@@ -19,6 +19,8 @@
   --bg-menu: #ffffff;
   --shadow-menu: 0 4px 32px rgba(0, 0, 0, 0.1);
   --scrim: rgba(0, 0, 0, 0);
+  --text-on-accent: #ffffff;
+  --danger: #c5221f;
 
   --font: system-ui, -apple-system, "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Mono", "Noto Sans Mono", monospace;
@@ -74,6 +76,7 @@
     --border: #3f3f3f;
     --bg-menu: #282828;
     --shadow-menu: 0 4px 32px rgba(0, 0, 0, 0.4);
+    --danger: #f28b82;
   }
 }
 
@@ -89,4 +92,5 @@
   --border: #3f3f3f;
   --bg-menu: #282828;
   --shadow-menu: 0 4px 32px rgba(0, 0, 0, 0.4);
+  --danger: #f28b82;
 }

@@ -1,5 +1,6 @@
 //! The `youcraft` binary: `serve` runs the site, `demo` fills an empty database with examples,
-//! and the operator's commands ([`cli`]) act on its database.
+//! `transcode <input> <output>` is the child process that makes one upload playable, and the
+//! operator's commands ([`cli`]) act on its database.
 //!
 //! Configuration comes from the environment (see [`config`]). Under systemd the site serves the
 //! socket it is handed (socket activation); otherwise it listens on `YOUCRAFT_ADDRESS`. It stops
@@ -13,10 +14,14 @@ mod dispatch;
 mod google;
 mod handlers;
 mod http;
+mod jobs;
 mod listen;
+mod media;
 mod secrets;
 mod signin;
 mod site;
+mod transcode;
+mod uploads;
 mod visitor;
 
 use std::process::ExitCode;
@@ -39,6 +44,10 @@ fn main() -> ExitCode {
     let result = match command {
         "serve" => serve(),
         "demo" => demo(),
+        "transcode" => match rest {
+            [input, output] => transcode::run(input.as_ref(), output.as_ref()),
+            _ => Err("usage: youcraft transcode <input> <output directory>".to_owned()),
+        },
         _ => operate(command, rest),
     };
     match result {
@@ -54,13 +63,17 @@ fn serve() -> Result<(), String> {
     let config = Config::from_env()?;
     let site = Arc::new(Site::open(&config)?);
     let runtime = tokio::runtime::Runtime::new().map_err(|e| format!("tokio: {e}"))?;
-    runtime.block_on(http::serve(site, &config))
+    runtime.block_on(async {
+        tokio::spawn(jobs::serve(Arc::clone(&site)));
+        http::serve(site, &config).await
+    })
 }
 
 fn demo() -> Result<(), String> {
     let config = Config::from_env()?;
     let site = Site::open(&config)?;
-    demo::fill(site.store()).map_err(|e| format!("demo: {e}"))
+    let runtime = tokio::runtime::Runtime::new().map_err(|e| format!("tokio: {e}"))?;
+    runtime.block_on(demo::fill(&site))
 }
 
 fn operate(name: &str, arguments: &[String]) -> Result<(), String> {

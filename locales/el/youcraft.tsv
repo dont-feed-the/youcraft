@@ -75,6 +75,31 @@
 	Withdraw	Απόσυρση
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Ο λογαριασμός σας έχει αποκλειστεί: μπορείτε να παρακολουθείτε βίντεο, αλλά όχι να κάνετε «Μου αρέσει», να σχολιάζετε ή να δημοσιεύετε.
+	Channel content	Περιεχόμενο καναλιού
+	Upload video	Μεταφόρτωση βίντεο
+	Select file	Επιλογή αρχείου
+	Choose a video file to upload.	Επιλέξτε ένα αρχείο βίντεο για μεταφόρτωση.
+	Title	Τίτλος
+	Description	Περιγραφή
+	Visibility	Ορατότητα
+	Public	Δημόσιο
+	Unlisted	Μη καταχωρισμένο
+	Private	Ιδιωτικό
+	Allow comments	Να επιτρέπονται σχόλια
+	Save	Αποθήκευση
+	Delete	Διαγραφή
+	Delete this video for good?	Να διαγραφεί οριστικά αυτό το βίντεο;
+	Edit	Επεξεργασία
+	Video	Βίντεο
+	Date	Ημερομηνία
+	Views	Προβολές
+	Uploading {n}%	Μεταφόρτωση: {n}%
+	Processing {n}%	Επεξεργασία: {n}%
+	This file isn't a video YouCraft can read.	Αυτό το αρχείο δεν είναι βίντεο που μπορεί να διαβάσει το YouCraft.
+	This file is damaged.	Αυτό το αρχείο είναι κατεστραμμένο.
+	Processing failed. Upload the video again.	Η επεξεργασία απέτυχε. Μεταφορτώστε ξανά το βίντεο.
+	Upload failed. Try again.	Η μεταφόρτωση απέτυχε. Δοκιμάστε ξανά.
+	The file is too large.	Το αρχείο είναι πολύ μεγάλο.
 @plural	{n} view|{n} views	{n} προβολή|{n} προβολές
 @plural	{n} like|{n} likes	{n} «μου αρέσει»|{n} «μου αρέσει»
 @plural	{n} comment|{n} comments	{n} σχόλιο|{n} σχόλια

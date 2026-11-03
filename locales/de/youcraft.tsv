@@ -75,6 +75,31 @@
 	Withdraw	Zurückziehen
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Dein Konto ist gesperrt: Du kannst Videos ansehen, aber nicht liken, kommentieren oder veröffentlichen.
+	Channel content	Kanalinhalte
+	Upload video	Video hochladen
+	Select file	Datei auswählen
+	Choose a video file to upload.	Wähle eine Videodatei zum Hochladen aus.
+	Title	Titel
+	Description	Beschreibung
+	Visibility	Sichtbarkeit
+	Public	Öffentlich
+	Unlisted	Nicht gelistet
+	Private	Privat
+	Allow comments	Kommentare zulassen
+	Save	Speichern
+	Delete	Löschen
+	Delete this video for good?	Dieses Video endgültig löschen?
+	Edit	Bearbeiten
+	Video	Video
+	Date	Datum
+	Views	Aufrufe
+	Uploading {n}%	Wird hochgeladen: {n} %
+	Processing {n}%	Wird verarbeitet: {n} %
+	This file isn't a video YouCraft can read.	Diese Datei ist kein Video, das YouCraft lesen kann.
+	This file is damaged.	Diese Datei ist beschädigt.
+	Processing failed. Upload the video again.	Die Verarbeitung ist fehlgeschlagen. Lade das Video erneut hoch.
+	Upload failed. Try again.	Das Hochladen ist fehlgeschlagen. Versuche es noch einmal.
+	The file is too large.	Die Datei ist zu groß.
 @plural	{n} view|{n} views	{n} Aufruf|{n} Aufrufe
 @plural	{n} like|{n} likes	{n} Like|{n} Likes
 @plural	{n} comment|{n} comments	{n} Kommentar|{n} Kommentare

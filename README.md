@@ -10,7 +10,7 @@ everyone who changes the code, people and agents alike.
 
 ```sh
 rustup target add wasm32-unknown-unknown
-cargo run -p youcraft-server -- demo   # example channels and videos in data/
+cargo run -p youcraft-server -- demo   # example channels, and videos made in code, in data/
 cargo xtask serve                      # http://127.0.0.1:3100
 ```
 

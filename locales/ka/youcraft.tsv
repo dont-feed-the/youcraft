@@ -75,6 +75,31 @@
 	Withdraw	გაწვევა
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	თქვენი ანგარიში დაბლოკილია: შეგიძლიათ უყუროთ ვიდეოებს, მაგრამ ვერ მოიწონებთ, დააკომენტარებთ ან გამოაქვეყნებთ.
+	Channel content	არხის კონტენტი
+	Upload video	ვიდეოს ატვირთვა
+	Select file	ფაილის არჩევა
+	Choose a video file to upload.	აირჩიეთ ასატვირთი ვიდეოფაილი.
+	Title	სათაური
+	Description	აღწერა
+	Visibility	ხილვადობა
+	Public	საჯარო
+	Unlisted	სიაში არ არის
+	Private	პირადი
+	Allow comments	კომენტარების დაშვება
+	Save	შენახვა
+	Delete	წაშლა
+	Delete this video for good?	წაიშალოს ეს ვიდეო სამუდამოდ?
+	Edit	რედაქტირება
+	Video	ვიდეო
+	Date	თარიღი
+	Views	ნახვები
+	Uploading {n}%	იტვირთება: {n}%
+	Processing {n}%	მუშავდება: {n}%
+	This file isn't a video YouCraft can read.	ეს ფაილი არ არის ვიდეო, რომლის წაკითხვაც YouCraft-ს შეუძლია.
+	This file is damaged.	ეს ფაილი დაზიანებულია.
+	Processing failed. Upload the video again.	დამუშავება ვერ მოხერხდა. ატვირთეთ ვიდეო ხელახლა.
+	Upload failed. Try again.	ატვირთვა ვერ მოხერხდა. სცადეთ ხელახლა.
+	The file is too large.	ფაილი ძალიან დიდია.
 @plural	{n} view|{n} views	{n} ნახვა|{n} ნახვა
 @plural	{n} like|{n} likes	{n} მოწონება|{n} მოწონება
 @plural	{n} comment|{n} comments	{n} კომენტარი|{n} კომენტარი

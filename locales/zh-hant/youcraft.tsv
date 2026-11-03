@@ -75,6 +75,31 @@
 	Withdraw	撤回
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	你的帳戶已遭封鎖：你可以觀看影片，但無法按讚、留言或發布內容。
+	Channel content	頻道內容
+	Upload video	上傳影片
+	Select file	選取檔案
+	Choose a video file to upload.	選擇要上傳的影片檔案。
+	Title	標題
+	Description	說明
+	Visibility	瀏覽權限
+	Public	公開
+	Unlisted	不公開
+	Private	私人
+	Allow comments	允許留言
+	Save	儲存
+	Delete	刪除
+	Delete this video for good?	要永久刪除這部影片嗎？
+	Edit	編輯
+	Video	影片
+	Date	日期
+	Views	觀看次數
+	Uploading {n}%	上傳中：{n}%
+	Processing {n}%	處理中：{n}%
+	This file isn't a video YouCraft can read.	這個檔案不是 YouCraft 能讀取的影片。
+	This file is damaged.	這個檔案已損毀。
+	Processing failed. Upload the video again.	處理失敗，請重新上傳影片。
+	Upload failed. Try again.	上傳失敗，請再試一次。
+	The file is too large.	檔案太大。
 @plural	{n} view|{n} views	觀看次數：{n} 次
 @plural	{n} like|{n} likes	{n} 個喜歡
 @plural	{n} comment|{n} comments	{n} 則留言

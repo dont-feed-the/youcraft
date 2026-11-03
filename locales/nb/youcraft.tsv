@@ -75,6 +75,31 @@
 	Withdraw	Trekk tilbake
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Kontoen din er blokkert: du kan se videoer, men ikke like, kommentere eller publisere.
+	Channel content	Kanalinnhold
+	Upload video	Last opp video
+	Select file	Velg fil
+	Choose a video file to upload.	Velg en videofil du vil laste opp.
+	Title	Tittel
+	Description	Beskrivelse
+	Visibility	Synlighet
+	Public	Offentlig
+	Unlisted	Ikke oppført
+	Private	Privat
+	Allow comments	Tillat kommentarer
+	Save	Lagre
+	Delete	Slett
+	Delete this video for good?	Vil du slette denne videoen for godt?
+	Edit	Rediger
+	Video	Video
+	Date	Dato
+	Views	Visninger
+	Uploading {n}%	Laster opp: {n} %
+	Processing {n}%	Behandler: {n} %
+	This file isn't a video YouCraft can read.	Denne filen er ikke en video YouCraft kan lese.
+	This file is damaged.	Denne filen er skadet.
+	Processing failed. Upload the video again.	Behandlingen mislyktes. Last opp videoen på nytt.
+	Upload failed. Try again.	Opplastingen mislyktes. Prøv igjen.
+	The file is too large.	Filen er for stor.
 @plural	{n} view|{n} views	{n} visning|{n} visninger
 @plural	{n} like|{n} likes	{n} liker|{n} liker
 @plural	{n} comment|{n} comments	{n} kommentar|{n} kommentarer

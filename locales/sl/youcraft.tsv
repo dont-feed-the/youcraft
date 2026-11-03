@@ -75,6 +75,31 @@
 	Withdraw	Umakni
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Vaš račun je blokiran: videoposnetke lahko gledate, ne morete pa všečkati, komentirati ali objavljati.
+	Channel content	Vsebina kanala
+	Upload video	Naloži videoposnetek
+	Select file	Izberi datoteko
+	Choose a video file to upload.	Izberite videodatoteko, ki jo želite naložiti.
+	Title	Naslov
+	Description	Opis
+	Visibility	Vidnost
+	Public	Javno
+	Unlisted	Nerazvrščeno
+	Private	Zasebno
+	Allow comments	Dovoli komentarje
+	Save	Shrani
+	Delete	Izbriši
+	Delete this video for good?	Želite ta videoposnetek trajno izbrisati?
+	Edit	Uredi
+	Video	Videoposnetek
+	Date	Datum
+	Views	Ogledi
+	Uploading {n}%	Nalaganje: {n} %
+	Processing {n}%	Obdelava: {n} %
+	This file isn't a video YouCraft can read.	Ta datoteka ni videoposnetek, ki ga YouCraft zna prebrati.
+	This file is damaged.	Ta datoteka je poškodovana.
+	Processing failed. Upload the video again.	Obdelava ni uspela. Znova naložite videoposnetek.
+	Upload failed. Try again.	Nalaganje ni uspelo. Poskusite znova.
+	The file is too large.	Datoteka je prevelika.
 @plural	{n} view|{n} views	{n} ogled|{n} ogleda|{n} ogledi|{n} ogledov
 @plural	{n} like|{n} likes	{n} všeček|{n} všečka|{n} všečki|{n} všečkov
 @plural	{n} comment|{n} comments	{n} komentar|{n} komentarja|{n} komentarji|{n} komentarjev

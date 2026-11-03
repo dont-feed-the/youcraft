@@ -75,6 +75,31 @@
 	Withdraw	Rút lại
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Tài khoản của bạn bị chặn: bạn có thể xem video, nhưng không thể thích, bình luận hay đăng.
+	Channel content	Nội dung trên kênh
+	Upload video	Tải video lên
+	Select file	Chọn tệp
+	Choose a video file to upload.	Chọn một tệp video để tải lên.
+	Title	Tiêu đề
+	Description	Mô tả
+	Visibility	Chế độ hiển thị
+	Public	Công khai
+	Unlisted	Không công khai
+	Private	Riêng tư
+	Allow comments	Cho phép bình luận
+	Save	Lưu
+	Delete	Xóa
+	Delete this video for good?	Xóa vĩnh viễn video này?
+	Edit	Chỉnh sửa
+	Video	Video
+	Date	Ngày
+	Views	Lượt xem
+	Uploading {n}%	Đang tải lên: {n}%
+	Processing {n}%	Đang xử lý: {n}%
+	This file isn't a video YouCraft can read.	Tệp này không phải là video mà YouCraft có thể đọc.
+	This file is damaged.	Tệp này bị hỏng.
+	Processing failed. Upload the video again.	Xử lý không thành công. Hãy tải video lên lại.
+	Upload failed. Try again.	Tải lên không thành công. Hãy thử lại.
+	The file is too large.	Tệp quá lớn.
 @plural	{n} view|{n} views	{n} lượt xem
 @plural	{n} like|{n} likes	{n} lượt thích
 @plural	{n} comment|{n} comments	{n} bình luận

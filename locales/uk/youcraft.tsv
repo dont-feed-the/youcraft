@@ -75,6 +75,31 @@
 	Withdraw	Відкликати
 	YouCraft Studio	YouCraft Studio
 	Your account is blocked: you can watch videos, but not like, comment or publish.	Ваш обліковий запис заблоковано: ви можете дивитися відео, але не можете ставити позначки «Подобається», коментувати чи публікувати.
+	Channel content	Вміст каналу
+	Upload video	Завантажити відео
+	Select file	Вибрати файл
+	Choose a video file to upload.	Виберіть відеофайл для завантаження.
+	Title	Назва
+	Description	Опис
+	Visibility	Видимість
+	Public	Загальнодоступне
+	Unlisted	Не в списку
+	Private	Приватне
+	Allow comments	Дозволити коментарі
+	Save	Зберегти
+	Delete	Видалити
+	Delete this video for good?	Видалити це відео назавжди?
+	Edit	Редагувати
+	Video	Відео
+	Date	Дата
+	Views	Перегляди
+	Uploading {n}%	Завантаження: {n}%
+	Processing {n}%	Обробка: {n}%
+	This file isn't a video YouCraft can read.	Цей файл не є відео, яке може прочитати YouCraft.
+	This file is damaged.	Цей файл пошкоджено.
+	Processing failed. Upload the video again.	Не вдалося обробити. Завантажте відео ще раз.
+	Upload failed. Try again.	Не вдалося завантажити. Спробуйте ще раз.
+	The file is too large.	Файл завеликий.
 @plural	{n} view|{n} views	{n} перегляд|{n} перегляди|{n} переглядів
 @plural	{n} like|{n} likes	{n} вподобання|{n} вподобання|{n} вподобань
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментарі|{n} коментарів
