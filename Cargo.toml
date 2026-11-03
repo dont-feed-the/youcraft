@@ -3,7 +3,7 @@ resolver = "3"
 members = ["crates/*", "xtask"]
 
 [workspace.package]
-version = "0.1.4"
+version = "0.1.5"
 edition = "2024"
 rust-version = "1.95"
 license = "MIT OR Apache-2.0"
@@ -51,6 +51,7 @@ tower = { version = "0.5.3", features = ["util"] }
 tower-http = { version = "0.7.1", features = ["fs"] }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+ureq = { version = "3.5.1", default-features = false, features = ["rustls"] }
 wasm-bindgen = "=0.2.130"
 wasm-bindgen-cli-support = "=0.2.130"
 wasm-bindgen-futures = "0.4.80"
@@ -63,6 +64,7 @@ unsafe_code = "forbid"
 expect_used = "deny"
 indexing_slicing = "deny"
 panic = "deny"
+print_stdout = "deny"
 todo = "deny"
 unimplemented = "deny"
 unreachable = "deny"

@@ -59,8 +59,7 @@ pub async fn run(site: &Site, id: &str, input: Value) -> Result<(), String> {
     let answer = dispatch::run(site, Caller::OPERATOR, id, input)
         .await
         .map_err(|error| format!("{id}: {error}"))?;
-    println!("{answer:#}");
-    Ok(())
+    crate::print(&format!("{answer:#}"))
 }
 
 #[cfg(test)]

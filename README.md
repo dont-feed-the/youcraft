@@ -20,6 +20,28 @@ finds the browser bundle; `YOUCRAFT_ORIGIN` is the address people reach it at
 `site.commands` lists them all with their schemas. Programs sign in with a personal token, made on
 the settings page and sent as `Authorization: Bearer <token>`.
 
+## Programs and agents
+
+Make a personal token on the settings page (`/account`, under Personal tokens); it can do exactly
+what its owner can. The same commands then answer three ways:
+
+```sh
+export YOUCRAFT_TOKEN=yct_…                        # without it, as someone signed out
+youcraft commands                                  # every command, with the role it requires
+youcraft call search.videos '{"query": "waves"}'   # at https://youcraft.tube, or --site <url>
+curl -H "Authorization: Bearer $YOUCRAFT_TOKEN" -H 'Content-Type: application/json' \
+     -d '{}' https://youcraft.tube/api/v1/account.me
+```
+
+Agents reach them as tools over the Model Context Protocol at `https://youcraft.tube/mcp`
+(Streamable HTTP, with the token as `Authorization: Bearer`); each tool is a command, named by its
+id with `-` for `.`, such as `video-get`. For Claude Code:
+
+```sh
+claude mcp add --transport http youcraft https://youcraft.tube/mcp \
+  --header "Authorization: Bearer $YOUCRAFT_TOKEN"
+```
+
 ## Sign-in and the first administrator
 
 People sign in with Google. Give the site its OAuth client ID in `YOUCRAFT_GOOGLE_CLIENT_ID`, and in

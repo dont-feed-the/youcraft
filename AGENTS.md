@@ -34,8 +34,9 @@ if it needs some), and `scripts/check-wasm` builds it for `wasm32-unknown-unknow
 
 ### Never crash (outranks feature work)
 - Non-test code never panics: no `unwrap()`, `expect()`, `panic!`, `unreachable!`, `todo!`,
-  `unimplemented!`, and no indexing that can fall out of bounds. The root `Cargo.toml` denies them
-  in `[workspace.lints]`, every crate takes `[lints] workspace = true`, and `unsafe_code = "forbid"`.
+  `unimplemented!`, no `println!` (it panics once standard output is closed), and no indexing that
+  can fall out of bounds. The root `Cargo.toml` denies them in `[workspace.lints]`, every crate
+  takes `[lints] workspace = true`, and `unsafe_code = "forbid"`.
 - Errors are `Result`s of the crate's error type, propagated with `?`. A failed request answers
   with a page or status the person can act on, in their language, and the server keeps serving.
 - Input is hostile: uploads, form fields, command JSON, cookies, headers (`Range` included), tokens

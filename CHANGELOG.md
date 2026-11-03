@@ -2,6 +2,20 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.5
+
+### Added
+
+- Agents run the site's commands as tools over the Model Context Protocol at `/mcp`, signed in
+  with a personal token, each seeing the tools its owner's role allows.
+- `youcraft call <command> [<json>] [--site <url>]` runs a command of a site from afar with the
+  token in `YOUCRAFT_TOKEN`; `youcraft commands` lists the commands with the role each requires.
+
+### Changed
+
+- The binary's log goes to standard error, so that what the command line prints is only its
+  answer.
+
 ## 0.1.4
 
 ### Added

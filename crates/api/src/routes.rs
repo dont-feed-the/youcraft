@@ -12,6 +12,8 @@ pub const HOME: &str = "/";
 pub const HEALTH: &str = "/health";
 /// Where commands are posted: `/api/v1/<command id>`.
 pub const COMMANDS: &str = "/api/v1";
+/// Where agents reach the commands as tools, over the Model Context Protocol.
+pub const MCP: &str = "/mcp";
 /// The subscriptions feed.
 pub const SUBSCRIPTIONS: &str = "/feed/subscriptions";
 /// The viewer's history.

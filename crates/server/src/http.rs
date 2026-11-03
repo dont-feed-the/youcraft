@@ -1,5 +1,5 @@
-//! The HTTP side: pages rendered by the server, commands at `/api/v1/<id>`, the browser bundle,
-//! media, the bytes of uploads, and `/health`.
+//! The HTTP side: pages rendered by the server, commands at `/api/v1/<id>` and as MCP tools at
+//! `/mcp`, the browser bundle, media, the bytes of uploads, and `/health`.
 //!
 //! Each page is rendered with its request's context: the caller, the language (theirs if they
 //! chose one, else their browser's) and theme, the render time, a fresh nonce for the scripts,
@@ -97,6 +97,7 @@ fn router(site: Arc<Site>, config: &Config) -> Router {
         .with_state(Arc::clone(&site));
     let visited = Router::new()
         .route("/api/v1/{id}", post(command))
+        .route(routes::MCP, post(mcp))
         .route("/media/{video}/{*file}", get(media))
         .route(
             "/upload/{video}",
@@ -178,6 +179,16 @@ async fn command(
         Ok(value) => axum::Json(value).into_response(),
         Err(error) => error_response(&error),
     }
+}
+
+/// `POST /mcp`: one message of the Model Context Protocol.
+async fn mcp(
+    State(state): State<AppState>,
+    Extension(visitor): Extension<Visitor>,
+    headers: HeaderMap,
+    body: Bytes,
+) -> Response {
+    crate::mcp::answer(&state.site, visitor.caller, &headers, &body).await
 }
 
 /// `error` as JSON, with its status.
