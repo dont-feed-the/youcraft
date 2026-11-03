@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+"""Write crates/i18n/src/compact_data.rs: CLDR's short compact patterns for YouCraft's languages.
+
+For English and each catalog of locales/, the short decimal patterns of the locale's default
+numbering system, from 10^3 up, as `1.2K` and `1,2 k` write counts. A pattern that depends on
+the plural category of the number shown (Arabic `3 آلاف`) is resolved here, with CLDR's rules,
+for every number YouCraft shows: one decimal under 10, whole numbers from 10 up. Downloads
+CLDR's JSON at the pinned tag into ~/.cache/youcraft-cldr; needs only python3.
+"""
+
+import json
+import pathlib
+import re
+import sys
+import urllib.request
+from decimal import Decimal
+
+CLDR = "48.2.1"
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+CACHE = pathlib.Path.home() / ".cache" / "youcraft-cldr" / CLDR
+BASE = f"https://raw.githubusercontent.com/unicode-org/cldr-json/{CLDR}/cldr-json"
+OUT = ROOT / "crates" / "i18n" / "src" / "compact_data.rs"
+# YouCraft's codes that CLDR spells otherwise; CLDR's `pt` is Brazilian Portuguese.
+CLDR_ID = {"pt-br": "pt", "sr-latn": "sr-Latn", "zh-hans": "zh-Hans", "zh-hant": "zh-Hant"}
+
+
+def fetch(path):
+    local = CACHE / path
+    if not local.exists():
+        local.parent.mkdir(parents=True, exist_ok=True)
+        with urllib.request.urlopen(f"{BASE}/{path}") as answer:
+            local.write_bytes(answer.read())
+    return json.loads(local.read_text(encoding="utf-8"))
+
+
+def operands(shown):
+    """CLDR's plural operands of a number as shown (`3`, `3.5`): n, i, v, w, f, t, c, e."""
+    whole, _, fraction = shown.partition(".")
+    n = Decimal(shown)
+    return {
+        "n": n,
+        "i": int(whole),
+        "v": len(fraction),
+        "w": len(fraction.rstrip("0")),
+        "f": int(fraction or "0"),
+        "t": int(fraction.rstrip("0") or "0"),
+        "c": 0,
+        "e": 0,
+    }
+
+
+def holds(rule, ops):
+    """Whether CLDR plural `rule` (samples after `@` ignored) holds for `ops`."""
+    rule = rule.split("@")[0].strip()
+    if not rule:
+        return True
+    for alternative in rule.split(" or "):
+        if all(relation(r.strip(), ops) for r in alternative.split(" and ")):
+            return True
+    return False
+
+
+def relation(text, ops):
+    m = re.fullmatch(r"([niftvwce])\s*(?:%\s*(\d+))?\s*(!=|=)\s*([\d.,\s]+)", text)
+    if not m:
+        sys.exit(f"unreadable plural relation: {text!r}")
+    operand, modulus, op, ranges = m.groups()
+    value = ops[operand]
+    if modulus:
+        value = value % int(modulus)
+    inside = False
+    for item in ranges.split(","):
+        low, _, high = item.strip().partition("..")
+        low, high = int(low), int(high or low)
+        # A range holds whole numbers only: n = 3..10 doesn't hold for 3.5.
+        if value == int(value) and low <= int(value) <= high:
+            inside = True
+    return inside if op == "=" else not inside
+
+
+def category(rules, shown):
+    for name in ("zero", "one", "two", "few", "many"):
+        rule = rules.get(f"pluralRule-count-{name}")
+        if rule and holds(rule, operands(shown)):
+            return name
+    return "other"
+
+
+def parsed(pattern):
+    """A CLDR pattern (`0 тыс'.'`) as (integer digits, text before, text after); digits 0 is
+    `0`, a number written in full."""
+    if pattern == "0":
+        return (0, "", "")
+    m = re.fullmatch(r"([^0]*)(0+)([^0]*)", pattern)
+    if not m:
+        sys.exit(f"unreadable compact pattern: {pattern!r}")
+
+    def unquote(text):
+        return re.sub(r"'([^']*)'", lambda q: q.group(1) or "'", text)
+
+    return (len(m.group(2)), unquote(m.group(1)), unquote(m.group(3)))
+
+
+def rust(text):
+    return json.dumps(text, ensure_ascii=False)
+
+
+def magnitudes(code):
+    cldr = CLDR_ID.get(code, code)
+    numbers = fetch(f"cldr-numbers-full/main/{cldr}/numbers.json")["main"][cldr]["numbers"]
+    system = numbers["defaultNumberingSystem"]
+    short = numbers[f"decimalFormats-numberSystem-{system}"]["short"]["decimalFormat"]
+    plurals = fetch("cldr-core/supplemental/plurals.json")["supplemental"]["plurals-type-cardinal"]
+    rules = plurals.get(cldr, plurals.get(cldr.split("-")[0], {}))
+    out = []
+    exponent = 3
+    while any(key.startswith(f"{10**exponent}-count-") for key in short):
+        by_count = {
+            key.rsplit("-", 1)[1]: value
+            for key, value in short.items()
+            if key.startswith(f"{10**exponent}-count-")
+        }
+        other = parsed(by_count["other"])
+        digits = other[0]
+        # Numbers shown with this pattern, in tenths: 1.0 to 9.9, then 10 to 999.
+        top = 10 ** max(digits, 1)
+        shown = [(t, f"{t // 10}.{t % 10}" if t % 10 else str(t // 10)) for t in range(10, 100)]
+        shown += [(w * 10, str(w)) for w in range(10, top)]
+        exceptions = []
+        for tenths, text in shown:
+            pattern = parsed(by_count.get(category(rules, text), by_count["other"]))
+            if pattern != other:
+                if pattern[0] != digits:
+                    sys.exit(f"{code} 10^{exponent}: patterns with different digits")
+                exceptions.append((tenths, pattern[1], pattern[2]))
+        out.append((digits, other[1], other[2], exceptions))
+        exponent += 1
+    return out
+
+
+def main():
+    codes = ["en"] + sorted(p.name for p in (ROOT / "locales").iterdir() if (p / "youcraft.tsv").is_file())
+    lines = [
+        "//! CLDR " + CLDR + "'s short compact decimal patterns for English and every catalog of",
+        "//! `locales/`, written by `scripts/generate-compact-patterns`: do not edit.",
+        "",
+        "use crate::compact::Magnitude;",
+        "",
+        "/// (locale, its magnitudes from 10^3 up).",
+        "#[rustfmt::skip]",
+        "pub(crate) static PATTERNS: &[(&str, &[Magnitude])] = &[",
+    ]
+    for code in codes:
+        lines.append(f"    ({rust(code)}, &[")
+        for digits, before, after, exceptions in magnitudes(code):
+            special = ", ".join(f"({t}, {rust(b)}, {rust(a)})" for t, b, a in exceptions)
+            lines.append(f"        Magnitude::new({digits}, {rust(before)}, {rust(after)}, &[{special}]),")
+        lines.append("    ]),")
+    lines.append("];")
+    OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()

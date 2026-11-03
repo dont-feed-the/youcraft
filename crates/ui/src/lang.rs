@@ -126,12 +126,19 @@ pub fn fill(template: &str, values: &[(&str, &str)]) -> String {
     youcraft_i18n::fill(template, values)
 }
 
-/// A count in the language of the page: `one` and `other` are the English forms with `{n}`.
+/// A count in the language of the page, the number in full (`1,234 comments`): `one` and
+/// `other` are the English forms with `{n}`.
 pub fn count(n: u64, one: &str, other: &str) -> String {
     youcraft_i18n::count(Language::current(), n, one, other)
 }
 
-/// A bare number in the language of the page, as a like button shows it.
-pub fn number(n: u64) -> String {
-    youcraft_i18n::number(Language::current(), n)
+/// A count in the language of the page, the number compact as views and subscribers are shown:
+/// `1.2K views`.
+pub fn compact_count(n: u64, one: &str, other: &str) -> String {
+    youcraft_i18n::compact_count(Language::current(), n, one, other)
+}
+
+/// A bare number in the language of the page, compact as a like button shows it: `1.2K`.
+pub fn compact(n: u64) -> String {
+    youcraft_i18n::compact(Language::current(), n)
 }

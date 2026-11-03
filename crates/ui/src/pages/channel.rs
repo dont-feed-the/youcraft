@@ -15,7 +15,7 @@ use crate::components::card::{GridCard, PlaylistGridCard};
 use crate::components::guide::Guide;
 use crate::components::more::{Pages, ShowMore};
 use crate::components::subscribe::SubscribeButton;
-use crate::lang::{count, tr};
+use crate::lang::{compact_count, tr};
 use crate::pages::not_found::Trouble;
 
 /// The tabs of a channel's page.
@@ -75,7 +75,7 @@ pub fn Channel(tab: Tab) -> impl IntoView {
 #[component]
 fn Heading(page: ChannelPage) -> impl IntoView {
     let subscribers = RwSignal::new(page.subscribers);
-    let videos = count(page.videos, "{n} video", "{n} videos");
+    let videos = compact_count(page.videos, "{n} video", "{n} videos");
     view! {
         <Title text=format!("{} - YouCraft", page.card.name)/>
         <header class="channel-heading">
@@ -85,7 +85,7 @@ fn Heading(page: ChannelPage) -> impl IntoView {
                 <p class="byline">
                     <bdi class="channel-handle">{format!("@{}", page.card.handle)}</bdi>
                     " • "
-                    {move || count(subscribers.get(), "{n} subscriber", "{n} subscribers")}
+                    {move || compact_count(subscribers.get(), "{n} subscriber", "{n} subscribers")}
                     " • "
                     {videos}
                 </p>

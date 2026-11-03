@@ -16,7 +16,7 @@ use crate::call::call;
 use crate::components::account_menu::initial;
 use crate::components::more::ShowMore;
 use crate::icons::{Glyph, Icon};
-use crate::lang::{Language, RenderTime, count, number, tr};
+use crate::lang::{Language, RenderTime, compact, count, tr};
 
 /// Add `page` to `items`, and keep where the next one starts.
 fn extend(items: RwSignal<Vec<Comment>>, next: RwSignal<Option<String>>, page: Comments) {
@@ -374,7 +374,7 @@ fn LikeButton(id: CommentId, likes: u64, liked: bool) -> impl IntoView {
             aria-pressed=move || if liked.get() { "true" } else { "false" } on:click=toggle>
             <Glyph icon=Icon::Like/>
         </button>
-        <span class="comment-likes">{move || (likes.get() > 0).then(|| number(likes.get()))}</span>
+        <span class="comment-likes">{move || (likes.get() > 0).then(|| compact(likes.get()))}</span>
     }
 }
 

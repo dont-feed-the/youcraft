@@ -15,7 +15,7 @@ use crate::components::card::RowCard;
 use crate::components::guide::Guide;
 use crate::components::more::{Pages, ShowMore};
 use crate::components::subscribe::SubscribeButton;
-use crate::lang::{count, tr};
+use crate::lang::{compact_count, tr};
 use crate::pages::not_found::Trouble;
 
 /// The query the address holds.
@@ -99,7 +99,7 @@ pub fn ChannelRow(channel: ChannelPage) -> impl IntoView {
                 <p class="byline">
                     <bdi>{format!("@{}", channel.card.handle)}</bdi>
                     " • "
-                    {move || count(subscribers.get(), "{n} subscriber", "{n} subscribers")}
+                    {move || compact_count(subscribers.get(), "{n} subscriber", "{n} subscribers")}
                 </p>
                 <p class="byline description-line">{channel.description.clone()}</p>
             </div>

@@ -2,6 +2,16 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.7
+
+### Changed
+
+- Views, subscribers and likes are shown compact, as each language writes them: `1.2K views`,
+  `1,2 k vues`, `1,2 Mio. Aufrufe`, `1.2万 回視聴`, `3 آلاف مشاهدة`. The number is cut down, never
+  rounded up, so 1,999 views reads `1.9K`, and the words agree with the number shown.
+- Other counts (comments, replies, a playlist's videos, views in the studio) are written in full
+  with each language's grouping and digits: `1,234`, `1 234`, `12,34,567`, `۱٬۲۳۴`.
+
 ## 0.1.6
 
 ### Added

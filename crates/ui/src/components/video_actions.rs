@@ -12,7 +12,7 @@ use crate::components::account_menu::initial;
 use crate::components::save::SaveDialog;
 use crate::components::subscribe::SubscribeButton;
 use crate::icons::{Glyph, Icon};
-use crate::lang::{count, number, tr};
+use crate::lang::{compact, compact_count, tr};
 
 /// The row.
 #[component]
@@ -27,7 +27,7 @@ pub fn OwnerRow(page: VideoPage) -> AnyView {
                 <div class="owner-names">
                     <a class="owner-name" href=channel>{card.channel.name.clone()}</a>
                     <span class="owner-subscribers">
-                        {move || count(subscribers.get(), "{n} subscriber", "{n} subscribers")}
+                        {move || compact_count(subscribers.get(), "{n} subscriber", "{n} subscribers")}
                     </span>
                 </div>
                 <SubscribeButton channel=card.channel.id subscribed=page.subscribed subscribers owned=page.owned/>
@@ -98,7 +98,7 @@ fn RatingButtons(video: VideoId, likes: u64, rating: Rating) -> impl IntoView {
         <span class="pill like-pill">
             <button class="pill-part" type="button" aria-label=tr("Like")
                 aria-pressed=move || pressed(Rating::Like) on:click=move |_| rate(Rating::Like)>
-                <Glyph icon=Icon::Like/><span>{move || number(likes.get())}</span>
+                <Glyph icon=Icon::Like/><span>{move || compact(likes.get())}</span>
             </button>
             <button class="pill-part" type="button" aria-label=tr("Dislike")
                 aria-pressed=move || pressed(Rating::Dislike) on:click=move |_| rate(Rating::Dislike)>

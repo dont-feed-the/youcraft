@@ -15,7 +15,7 @@ use crate::call::call;
 use crate::components::card::CompactCard;
 use crate::components::comments::CommentSection;
 use crate::components::video_actions::OwnerRow;
-use crate::lang::{Language, RenderTime, count, tr};
+use crate::lang::{Language, RenderTime, compact_count, tr};
 use crate::pages::not_found::Trouble;
 
 /// The video the address names, `/watch?v=…`.
@@ -101,7 +101,7 @@ fn Stage(page: VideoPage, theatre: RwSignal<bool>) -> impl IntoView {
 #[component]
 fn Primary(page: VideoPage) -> impl IntoView {
     let card = page.card.clone();
-    let views = count(card.views, "{n} view", "{n} views");
+    let views = compact_count(card.views, "{n} view", "{n} views");
     let age = youcraft_i18n::when::ago(
         Language::current(),
         card.published_at,

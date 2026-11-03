@@ -8,7 +8,7 @@ use youcraft_api::routes;
 
 use crate::components::save::{list_name, visibility_name};
 use crate::icons::{Glyph, Icon};
-use crate::lang::{Language, RenderTime, count, tr};
+use crate::lang::{Language, RenderTime, compact_count, tr};
 
 /// The `srcset` of a video's thumbnail: every width it is made at.
 fn thumbnail_set(card: &VideoCard) -> String {
@@ -21,7 +21,7 @@ fn thumbnail_set(card: &VideoCard) -> String {
 
 /// "1,234 views • 3 days ago", in the page's language, counted from the render time.
 fn byline(card: &VideoCard) -> String {
-    let views = count(card.views, "{n} view", "{n} views");
+    let views = compact_count(card.views, "{n} view", "{n} views");
     let age = youcraft_i18n::when::ago(
         Language::current(),
         card.published_at,
@@ -109,7 +109,7 @@ pub fn RowCard(card: VideoCard, #[prop(optional)] children: Option<Children>) ->
 #[component]
 pub fn PlaylistGridCard(card: PlaylistCard) -> impl IntoView {
     let page = routes::playlist(card.list);
-    let videos = count(card.videos, "{n} video", "{n} videos");
+    let videos = compact_count(card.videos, "{n} video", "{n} videos");
     let name = list_name(&card);
     view! {
         <article class="card playlist-card">

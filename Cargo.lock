@@ -1348,7 +1348,9 @@ checksum = "9eb8f655bba2d0c0459e43a5b0e6cd3cd388109898fb3d85d048165e8b0abd08"
 dependencies = [
  "displaydoc",
  "fixed_decimal",
+ "icu_decimal_data",
  "icu_locale_core",
+ "icu_locale_fallback",
  "icu_pattern",
  "icu_plurals",
  "icu_provider",
@@ -1356,6 +1358,12 @@ dependencies = [
  "writeable",
  "zerovec",
 ]
+
+[[package]]
+name = "icu_decimal_data"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e4c887fc7d4c297cf3f9436864af9e3dba7f8be9415a6c2a7f392f3b1636298c"
 
 [[package]]
 name = "icu_locale_core"
@@ -1435,10 +1443,18 @@ checksum = "e475e6766ef87b1d3c1f97be6363995b0bfaeddbc789671615df598a97ff0593"
 dependencies = [
  "displaydoc",
  "fixed_decimal",
+ "icu_locale_fallback",
+ "icu_plurals_data",
  "icu_provider",
  "serde",
  "zerovec",
 ]
+
+[[package]]
+name = "icu_plurals_data"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1251aa39a95e1333888e499b1263e1c196447a28948acf5bdabd82c046f153bf"
 
 [[package]]
 name = "icu_properties"
@@ -4201,7 +4217,7 @@ dependencies = [
 
 [[package]]
 name = "xtask"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "wasm-bindgen-cli-support",
 ]
@@ -4237,7 +4253,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-api"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "schemars",
  "serde",
@@ -4247,14 +4263,16 @@ dependencies = [
 
 [[package]]
 name = "youcraft-i18n"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "craft-i18n",
+ "icu_decimal",
+ "icu_locale_core",
 ]
 
 [[package]]
 name = "youcraft-player"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "js-sys",
  "leptos",
@@ -4268,7 +4286,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-recommend"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "serde",
  "serde_json",
@@ -4276,7 +4294,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-server"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "axum",
  "base64 0.22.1",
@@ -4307,7 +4325,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-store"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "rusqlite",
  "thiserror 2.0.21",
@@ -4316,7 +4334,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-transcode"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "filmcraft-aac",
  "filmcraft-codecs",
@@ -4334,7 +4352,7 @@ dependencies = [
 
 [[package]]
 name = "youcraft-ui"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "console_error_panic_hook",
  "http",
