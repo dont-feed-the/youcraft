@@ -31,7 +31,7 @@ pub fn SignInFailed() -> impl IntoView {
         <main class="trouble">
             <h1>{tr("Sign-in did not work")}</h1>
             <p>{text}</p>
-            <a class="pill" href=move || routes::sign_in(routes::local_path(&next()))>{tr("Try again")}</a>
+            <a class="pill" rel="external" href=move || routes::sign_in(routes::local_path(&next()))>{tr("Try again")}</a>
         </main>
     }
 }

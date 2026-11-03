@@ -197,17 +197,17 @@ pub fn Editor(
     ];
     view! {
         <form class="editor" on:submit=move |event| { event.prevent_default(); save.dispatch(()); }>
-            <label class="field">
+            <label class="labelled">
                 <span>{tr("Title")}</span>
-                <input type="text" maxlength="100" required bind:value=title/>
+                <input class="field" type="text" maxlength="100" required bind:value=title/>
             </label>
-            <label class="field">
+            <label class="labelled">
                 <span>{tr("Description")}</span>
-                <textarea rows="4" maxlength="5000" bind:value=description></textarea>
+                <textarea class="field" rows="4" maxlength="5000" bind:value=description></textarea>
             </label>
-            <label class="field">
+            <label class="labelled">
                 <span>{tr("Visibility")}</span>
-                <select bind:value=visibility>
+                <select class="field" bind:value=visibility>
                     {options.map(|v| view! { <option value=visibility_value(v)>{visibility_name(v)}</option> }).collect_view()}
                 </select>
             </label>

@@ -29,3 +29,9 @@ h1, h2, h3, p { margin: 0; }
 .mark .facet-light { fill: var(--accent-light); }
 .mark .facet-dark { fill: var(--accent); }
 .mark .fold { stroke: var(--accent-dark); stroke-width: 0.8; }
+
+/* A form's text box or menu; a `.labelled` label puts its caption above the one it holds. */
+.field { min-block-size: 40px; padding: var(--space-2) var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg); color: var(--text); font: inherit; font-size: var(--text-sm); }
+.field:focus { outline: 1px solid var(--focus); }
+textarea.field { resize: vertical; }
+.labelled { display: grid; gap: var(--space-1); color: var(--text-2); font-size: var(--text-xs); }

@@ -6,7 +6,8 @@
 //! so that a private video's existence never leaks.
 
 use youcraft_api::commands::feed::Page;
-use youcraft_api::commands::studio::Videos;
+use youcraft_api::commands::studio::{Video, Videos};
+use youcraft_api::commands::video::Which;
 use youcraft_api::records::{StudioPage, StudioVideo};
 use youcraft_api::{ApiError, Role, VideoId};
 
@@ -52,6 +53,13 @@ pub async fn studio_video(site: &Site, video: VideoId) -> Result<StudioVideo, Ap
     site.db(move |store| store.studio_video(video))
         .await?
         .ok_or(ApiError::NotFound)
+}
+
+impl Handle<Video> for Site {
+    async fn handle(&self, caller: Caller, which: Which) -> Result<StudioVideo, ApiError> {
+        may_manage(self, caller, which.video).await?;
+        studio_video(self, which.video).await
+    }
 }
 
 impl Handle<Videos> for Site {

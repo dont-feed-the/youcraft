@@ -70,7 +70,7 @@ pub fn AccountArea() -> impl IntoView {
                             aria-haspopup="menu" aria-expanded=expanded on:click=toggle>
                             <Glyph icon=Icon::More/>
                         </button>
-                        <a class="sign-in" href=move || routes::sign_in(&here())>
+                        <a class="sign-in" rel="external" href=move || routes::sign_in(&here())>
                             <Glyph icon=Icon::Account/>
                             <span>{tr("Sign in")}</span>
                         </a>

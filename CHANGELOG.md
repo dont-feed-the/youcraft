@@ -2,6 +2,19 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.8
+
+### Added
+
+- `studio.video` gets one of your videos as the studio lists it, and the upload page uses it to
+  follow the video until it plays, then links to it.
+
+### Fixed
+
+- Sign in opens Google's sign-in at once, instead of only after a reload.
+- The upload and studio forms draw each field once: their boxes no longer nest out of line.
+- A playlist's description box keeps the height of its rows.
+
 ## 0.1.7
 
 ### Changed

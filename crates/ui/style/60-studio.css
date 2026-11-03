@@ -22,9 +22,6 @@
 .text-button:hover { color: var(--text); }
 
 .editor { display: grid; gap: var(--space-4); padding: var(--space-4); border-radius: var(--radius-card); background: var(--bg-raised); }
-.field { display: grid; gap: var(--space-1); color: var(--text-2); font-size: var(--text-xs); }
-.field input, .field textarea, .field select { padding: var(--space-2) var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg); color: var(--text); font: inherit; font-size: var(--text-sm); }
-.field textarea { resize: vertical; }
 .check { display: flex; align-items: center; gap: var(--space-2); }
 .editor-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
 

@@ -3,12 +3,12 @@
 //!
 //! The video is created the moment the file is chosen, so the details can be saved while the
 //! bytes travel; when the last piece has arrived, the details are saved once more and the file is
-//! handed over to be made playable.
+//! handed over to be made playable, and the page follows it until it plays.
 
 use leptos::prelude::*;
 use leptos_meta::Title;
 use youcraft_api::commands::video;
-use youcraft_api::records::Visibility;
+use youcraft_api::records::{Processing, Visibility};
 use youcraft_api::{VideoId, routes};
 
 use crate::call::call;
@@ -24,7 +24,7 @@ enum Stage {
     Choosing,
     /// `sent` bytes of `size` have arrived.
     Sending { sent: u64, size: u64 },
-    /// All of it arrived; it is being made playable.
+    /// All of it arrived; it is on its way to playing, as the page's `processing` says.
     Processing,
     /// It failed, for the reason shown.
     Failed(&'static str),
@@ -46,6 +46,7 @@ fn failure(error: &youcraft_api::ApiError) -> &'static str {
 #[component]
 pub fn UploadPage() -> impl IntoView {
     let stage = RwSignal::new(Stage::Choosing);
+    let processing = RwSignal::new(Processing::Processing { permille: 0 });
     let video = RwSignal::new(None::<VideoId>);
     let title = RwSignal::new(String::new());
     let description = RwSignal::new(String::new());
@@ -69,7 +70,15 @@ pub fn UploadPage() -> impl IntoView {
     let choose = move |event: leptos::ev::Event| {
         #[cfg(feature = "hydrate")]
         if let Some(file) = crate::transfer::chosen_file(&event) {
-            start(file, stage, video, title, description, visibility, edit);
+            let signals = Signals {
+                stage,
+                processing,
+                video,
+                title,
+                description,
+                visibility,
+            };
+            start(file, signals, edit);
         }
         #[cfg(not(feature = "hydrate"))]
         let _ = event;
@@ -101,26 +110,35 @@ pub fn UploadPage() -> impl IntoView {
                                 <p>{text}</p>
                             }.into_any()
                         }
-                        Stage::Processing => view! {
-                            <p>{processing_text(&youcraft_api::records::Processing::Processing { permille: 0 })}</p>
-                            <a class="pill" href=routes::STUDIO>{tr("Channel content")}</a>
-                        }.into_any(),
+                        Stage::Processing => {
+                            let state = match processing_text(&processing.get()) {
+                                Some(text) => view! { <p>{text}</p> }.into_any(),
+                                None => {
+                                    let watch = video.get().map(routes::watch);
+                                    view! { <a class="pill accent" href=watch>{title.get()}</a> }.into_any()
+                                }
+                            };
+                            view! {
+                                {state}
+                                <a class="pill" href=routes::STUDIO>{tr("Channel content")}</a>
+                            }.into_any()
+                        }
                         Stage::Failed(reason) => view! { <p class="failure">{reason}</p> }.into_any(),
                         Stage::Choosing => ().into_any(),
                     }}
                 </div>
                 <form class="editor" on:submit=move |event| { event.prevent_default(); save.dispatch(()); }>
-                    <label class="field">
+                    <label class="labelled">
                         <span>{tr("Title")}</span>
-                        <input type="text" maxlength="100" required bind:value=title/>
+                        <input class="field" type="text" maxlength="100" required bind:value=title/>
                     </label>
-                    <label class="field">
+                    <label class="labelled">
                         <span>{tr("Description")}</span>
-                        <textarea rows="5" maxlength="5000" bind:value=description></textarea>
+                        <textarea class="field" rows="5" maxlength="5000" bind:value=description></textarea>
                     </label>
-                    <label class="field">
+                    <label class="labelled">
                         <span>{tr("Visibility")}</span>
-                        <select bind:value=visibility>
+                        <select class="field" bind:value=visibility>
                             {options.map(|v| view! { <option value=v.as_str()>{visibility_name(v)}</option> }).collect_view()}
                         </select>
                     </label>
@@ -135,19 +153,35 @@ pub fn UploadPage() -> impl IntoView {
     }
 }
 
-/// Create the video for `file`, send its bytes, save the details and hand it over.
+/// The page's signals that an upload moves.
 #[cfg(feature = "hydrate")]
-fn start(
-    file: web_sys::File,
+#[derive(Clone, Copy)]
+struct Signals {
     stage: RwSignal<Stage>,
+    processing: RwSignal<Processing>,
     video: RwSignal<Option<VideoId>>,
     title: RwSignal<String>,
     description: RwSignal<String>,
     visibility: RwSignal<String>,
-    edit: impl Fn(VideoId) -> video::Edit + 'static,
-) {
+}
+
+/// How often the page asks how far a handed-over video has come.
+#[cfg(feature = "hydrate")]
+const FOLLOW_MILLISECONDS: u64 = 3000;
+
+/// Create the video for `file`, send its bytes, save the details, hand it over and follow it.
+#[cfg(feature = "hydrate")]
+fn start(file: web_sys::File, signals: Signals, edit: impl Fn(VideoId) -> video::Edit + 'static) {
     use youcraft_api::commands::upload;
 
+    let Signals {
+        stage,
+        processing,
+        video,
+        title,
+        description,
+        visibility,
+    } = signals;
     if title.get_untracked().trim().is_empty() {
         let name = file.name();
         let stem = name
@@ -177,9 +211,39 @@ fn start(
             })
             .await
         };
-        stage.set(match done.await {
-            Ok(_) => Stage::Processing,
-            Err(error) => Stage::Failed(failure(&error)),
-        });
+        match done.await {
+            Ok(_) => {
+                stage.set(Stage::Processing);
+                if let Some(id) = video.get_untracked() {
+                    follow(id, processing);
+                }
+            }
+            Err(error) => stage.set(Stage::Failed(failure(&error))),
+        }
     });
+}
+
+/// Ask, every few seconds, how far `video` has come, until it plays or fails; a failed question
+/// ends the following, and the studio's list still shows the rest.
+#[cfg(feature = "hydrate")]
+fn follow(video: VideoId, processing: RwSignal<Processing>) {
+    use youcraft_api::commands::studio;
+
+    set_timeout(
+        move || {
+            leptos::task::spawn_local(async move {
+                if let Ok(found) = call::<studio::Video>(video::Which { video }).await {
+                    let on_its_way = matches!(
+                        found.processing,
+                        Processing::Uploading { .. } | Processing::Processing { .. }
+                    );
+                    processing.set(found.processing);
+                    if on_its_way {
+                        follow(video, processing);
+                    }
+                }
+            });
+        },
+        std::time::Duration::from_millis(FOLLOW_MILLISECONDS),
+    );
 }

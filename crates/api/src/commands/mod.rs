@@ -70,6 +70,7 @@ macro_rules! for_each_command {
             $crate::commands::upload::Status,
             $crate::commands::upload::Finish,
             $crate::commands::studio::Videos,
+            $crate::commands::studio::Video,
         }
     };
 }

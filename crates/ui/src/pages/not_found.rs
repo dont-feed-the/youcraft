@@ -34,7 +34,7 @@ pub fn Trouble(error: ApiError) -> impl IntoView {
     let here = move || format!("{}{}", location.pathname.get(), location.search.get());
     let way_out = match error {
         ApiError::SignInRequired => view! {
-            <a class="pill" href=move || routes::sign_in(&here())>{tr("Sign in")}</a>
+            <a class="pill" rel="external" href=move || routes::sign_in(&here())>{tr("Sign in")}</a>
         }
         .into_any(),
         _ => view! { <a class="pill" href=routes::HOME>{tr("Go to home")}</a> }.into_any(),
