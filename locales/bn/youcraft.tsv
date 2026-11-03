@@ -36,6 +36,45 @@
 	Dislike	অপছন্দ
 	Share	শেয়ার করুন
 	Comments are turned off.	মন্তব্য বন্ধ আছে।
+	A personal token lets a program act as you, with all your rights. Keep it secret.	একটি ব্যক্তিগত টোকেন কোনো প্রোগ্রামকে আপনার সব অধিকার নিয়ে আপনার হয়ে কাজ করতে দেয়। এটি গোপন রাখুন।
+	Account	অ্যাকাউন্ট
+	Account menu	অ্যাকাউন্ট মেনু
+	Administrator	অ্যাডমিনিস্ট্রেটর
+	Appearance	চেহারা
+	Appearance: {theme}	চেহারা: {theme}
+	Back	ফিরে যান
+	Copy this token now: it will not be shown again.	এখনই টোকেনটি কপি করুন: এটি আর দেখানো হবে না।
+	Create token	টোকেন তৈরি করুন
+	Created {when}	{when} তৈরি হয়েছে
+	Creator	ক্রিয়েটর
+	Dark	গাঢ়
+	Dark theme	গাঢ় থিম
+	Device theme	ডিভাইসের থিম
+	E-mail address	ইমেল ঠিকানা
+	Google did not confirm who you are, or signing in was cancelled.	Google আপনার পরিচয় নিশ্চিত করেনি, অথবা সাইন ইন বাতিল করা হয়েছে।
+	Invitations	আমন্ত্রণ
+	Invite	আমন্ত্রণ জানান
+	Invited people become creators or administrators when they first sign in with Google.	আমন্ত্রিতরা প্রথমবার Google দিয়ে সাইন ইন করলে ক্রিয়েটর বা অ্যাডমিনিস্ট্রেটর হয়ে যান।
+	Language	ভাষা
+	Language: {language}	ভাষা: {language}
+	Last used {when}	শেষ ব্যবহার {when}
+	Light	হালকা
+	Light theme	হালকা থিম
+	Personal tokens	ব্যক্তিগত টোকেন
+	Revoke	প্রত্যাহার করুন
+	Role	ভূমিকা
+	Settings	সেটিংস
+	Sign out	সাইন আউট করুন
+	Sign-in did not work	সাইন ইন করা যায়নি
+	Sign-in is not set up on this server.	এই সার্ভারে সাইন ইন সেট আপ করা নেই।
+	Token name	টোকেনের নাম
+	Try again	আবার চেষ্টা করুন
+	Use device theme	ডিভাইসের থিম ব্যবহার করুন
+	View your channel	আপনার চ্যানেল দেখুন
+	Viewer	দর্শক
+	Withdraw	ফিরিয়ে নিন
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	আপনার অ্যাকাউন্ট ব্লক করা হয়েছে: আপনি ভিডিও দেখতে পারবেন, কিন্তু লাইক, মন্তব্য বা প্রকাশ করতে পারবেন না।
 @plural	{n} view|{n} views	{n} বার দেখা হয়েছে|{n} বার দেখা হয়েছে
 @plural	{n} like|{n} likes	{n}টি পছন্দ|{n}টি পছন্দ
 @plural	{n} comment|{n} comments	{n}টি মন্তব্য|{n}টি মন্তব্য

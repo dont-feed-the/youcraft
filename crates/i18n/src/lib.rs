@@ -61,6 +61,13 @@ pub fn count(lang: Lang, n: u64, one: &str, other: &str) -> String {
     i18n().trn_plain(lang, n, one, other)
 }
 
+/// `template` with each `{name}` replaced by its value, each value isolated from the text around
+/// it so that a name in another script keeps its direction: `fill(t(lang, "Language: {language}"),
+/// &[("language", "Français")])`.
+pub fn fill(template: &str, values: &[(&str, &str)]) -> String {
+    craft_i18n::fmt(template, values)
+}
+
 /// The language a request should be answered in: `chosen` if the person chose an offered one,
 /// else the best match of the browser's `Accept-Language`, else English.
 pub fn negotiate(chosen: Option<&str>, accept_language: &str) -> Lang {

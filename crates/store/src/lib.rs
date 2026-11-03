@@ -6,6 +6,8 @@
 //! with bound parameters. Calls are synchronous; the server runs them off its async threads.
 
 pub mod accounts;
+pub mod credentials;
+pub mod invitations;
 mod migrations;
 pub mod videos;
 

@@ -36,6 +36,45 @@
 	Dislike	踩
 	Share	分享
 	Comments are turned off.	评论已关闭。
+	A personal token lets a program act as you, with all your rights. Keep it secret.	个人令牌可让程序以你的身份、用你的全部权限执行操作。请妥善保密。
+	Account	帐号
+	Account menu	帐号菜单
+	Administrator	管理员
+	Appearance	外观
+	Appearance: {theme}	外观：{theme}
+	Back	返回
+	Copy this token now: it will not be shown again.	请立即复制此令牌：它不会再次显示。
+	Create token	创建令牌
+	Created {when}	创建于{when}
+	Creator	创作者
+	Dark	深色
+	Dark theme	深色主题
+	Device theme	设备主题
+	E-mail address	电子邮件地址
+	Google did not confirm who you are, or signing in was cancelled.	Google 未确认你的身份，或登录已取消。
+	Invitations	邀请
+	Invite	邀请
+	Invited people become creators or administrators when they first sign in with Google.	受邀者首次使用 Google 登录时即成为创作者或管理员。
+	Language	语言
+	Language: {language}	语言：{language}
+	Last used {when}	上次使用于{when}
+	Light	浅色
+	Light theme	浅色主题
+	Personal tokens	个人令牌
+	Revoke	撤销
+	Role	角色
+	Settings	设置
+	Sign out	退出
+	Sign-in did not work	登录未成功
+	Sign-in is not set up on this server.	此服务器未设置登录。
+	Token name	令牌名称
+	Try again	重试
+	Use device theme	使用设备主题
+	View your channel	查看你的频道
+	Viewer	观众
+	Withdraw	撤回
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	你的帐号已被封禁：你可以观看视频，但不能点赞、评论或发布。
 @plural	{n} view|{n} views	{n} 次观看
 @plural	{n} like|{n} likes	{n} 个赞
 @plural	{n} comment|{n} comments	{n} 条评论

@@ -36,6 +36,45 @@
 	Dislike	לא אהבתי
 	Share	שיתוף
 	Comments are turned off.	התגובות מושבתות.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	אסימון אישי מאפשר לתוכנה לפעול בשמך, עם כל ההרשאות שלך. שמרו אותו בסוד.
+	Account	חשבון
+	Account menu	תפריט החשבון
+	Administrator	מנהל
+	Appearance	מראה
+	Appearance: {theme}	מראה: {theme}
+	Back	חזרה
+	Copy this token now: it will not be shown again.	העתיקו את האסימון עכשיו: הוא לא יוצג שוב.
+	Create token	יצירת אסימון
+	Created {when}	נוצר {when}
+	Creator	יוצר
+	Dark	כהה
+	Dark theme	עיצוב כהה
+	Device theme	עיצוב המכשיר
+	E-mail address	כתובת אימייל
+	Google did not confirm who you are, or signing in was cancelled.	Google לא אישרה את זהותך, או שהכניסה בוטלה.
+	Invitations	הזמנות
+	Invite	הזמנה
+	Invited people become creators or administrators when they first sign in with Google.	מוזמנים הופכים ליוצרים או למנהלים כשהם נכנסים בפעם הראשונה עם Google.
+	Language	שפה
+	Language: {language}	שפה: {language}
+	Last used {when}	שימוש אחרון {when}
+	Light	בהיר
+	Light theme	עיצוב בהיר
+	Personal tokens	אסימונים אישיים
+	Revoke	ביטול
+	Role	תפקיד
+	Settings	הגדרות
+	Sign out	יציאה
+	Sign-in did not work	הכניסה לא הצליחה
+	Sign-in is not set up on this server.	הכניסה לא הוגדרה בשרת הזה.
+	Token name	שם האסימון
+	Try again	ניסיון חוזר
+	Use device theme	שימוש בעיצוב המכשיר
+	View your channel	צפייה בערוץ שלך
+	Viewer	צופה
+	Withdraw	משיכה
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	החשבון שלך חסום: אפשר לצפות בסרטונים, אבל לא לסמן לייק, להגיב או לפרסם.
 @plural	{n} view|{n} views	{n} צפייה|{n} צפיות|{n} צפיות
 @plural	{n} like|{n} likes	{n} לייק|{n} לייקים|{n} לייקים
 @plural	{n} comment|{n} comments	{n} תגובה|{n} תגובות|{n} תגובות

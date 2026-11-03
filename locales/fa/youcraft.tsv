@@ -36,6 +36,45 @@
 	Dislike	نپسندیدن
 	Share	هم‌رسانی
 	Comments are turned off.	نظرها خاموش است.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	توکن شخصی به یک برنامه اجازه می‌دهد با همهٔ اختیارات شما از طرف شما عمل کند. آن را محرمانه نگه دارید.
+	Account	حساب
+	Account menu	منوی حساب
+	Administrator	مدیر
+	Appearance	ظاهر
+	Appearance: {theme}	ظاهر: {theme}
+	Back	بازگشت
+	Copy this token now: it will not be shown again.	این توکن را همین حالا کپی کنید: دوباره نمایش داده نمی‌شود.
+	Create token	ساخت توکن
+	Created {when}	ساخته‌شده {when}
+	Creator	سازنده
+	Dark	تیره
+	Dark theme	زمینهٔ تیره
+	Device theme	زمینهٔ دستگاه
+	E-mail address	نشانی ایمیل
+	Google did not confirm who you are, or signing in was cancelled.	Google هویت شما را تأیید نکرد، یا ورود لغو شد.
+	Invitations	دعوت‌ها
+	Invite	دعوت
+	Invited people become creators or administrators when they first sign in with Google.	افراد دعوت‌شده هنگام نخستین ورود با Google سازنده یا مدیر می‌شوند.
+	Language	زبان
+	Language: {language}	زبان: {language}
+	Last used {when}	آخرین استفاده {when}
+	Light	روشن
+	Light theme	زمینهٔ روشن
+	Personal tokens	توکن‌های شخصی
+	Revoke	باطل کردن
+	Role	نقش
+	Settings	تنظیمات
+	Sign out	خروج
+	Sign-in did not work	ورود انجام نشد
+	Sign-in is not set up on this server.	ورود در این سرور راه‌اندازی نشده است.
+	Token name	نام توکن
+	Try again	تلاش دوباره
+	Use device theme	استفاده از زمینهٔ دستگاه
+	View your channel	مشاهدهٔ کانال شما
+	Viewer	بیننده
+	Withdraw	پس گرفتن
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	حساب شما مسدود است: می‌توانید ویدیو تماشا کنید، اما نمی‌توانید پسند کنید، نظر بدهید یا منتشر کنید.
 @plural	{n} view|{n} views	{n} بازدید|{n} بازدید
 @plural	{n} like|{n} likes	{n} پسند|{n} پسند
 @plural	{n} comment|{n} comments	{n} نظر|{n} نظر

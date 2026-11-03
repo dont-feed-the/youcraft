@@ -36,6 +36,45 @@
 	Dislike	Ұнамайды
 	Share	Бөлісу
 	Comments are turned off.	Пікірлер өшірулі.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Жеке токен бағдарламаға сіздің атыңыздан барлық құқықтарыңызбен әрекет етуге мүмкіндік береді. Оны құпия сақтаңыз.
+	Account	Аккаунт
+	Account menu	Аккаунт мәзірі
+	Administrator	Әкімші
+	Appearance	Сыртқы түрі
+	Appearance: {theme}	Сыртқы түрі: {theme}
+	Back	Артқа
+	Copy this token now: it will not be shown again.	Токенді қазір көшіріп алыңыз: ол қайта көрсетілмейді.
+	Create token	Токен жасау
+	Created {when}	Жасалды: {when}
+	Creator	Автор
+	Dark	Қараңғы
+	Dark theme	Қараңғы тақырып
+	Device theme	Құрылғы тақырыбы
+	E-mail address	Электрондық пошта мекенжайы
+	Google did not confirm who you are, or signing in was cancelled.	Google сіздің жеке басыңызды растамады немесе кіру тоқтатылды.
+	Invitations	Шақырулар
+	Invite	Шақыру
+	Invited people become creators or administrators when they first sign in with Google.	Шақырылған адамдар Google арқылы алғаш кіргенде автор немесе әкімші болады.
+	Language	Тіл
+	Language: {language}	Тіл: {language}
+	Last used {when}	Соңғы рет қолданылды: {when}
+	Light	Ашық
+	Light theme	Ашық тақырып
+	Personal tokens	Жеке токендер
+	Revoke	Қайтарып алу
+	Role	Рөл
+	Settings	Параметрлер
+	Sign out	Шығу
+	Sign-in did not work	Кіру сәтсіз аяқталды
+	Sign-in is not set up on this server.	Бұл серверде кіру бапталмаған.
+	Token name	Токен атауы
+	Try again	Қайталап көру
+	Use device theme	Құрылғы тақырыбын пайдалану
+	View your channel	Арнаңызды көру
+	Viewer	Көрермен
+	Withdraw	Кері қайтару
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Аккаунтыңыз бұғатталған: бейнелерді көре аласыз, бірақ ұнату, пікір жазу немесе жариялау мүмкін емес.
 @plural	{n} view|{n} views	{n} қаралым|{n} қаралым
 @plural	{n} like|{n} likes	{n} ұнату|{n} ұнату
 @plural	{n} comment|{n} comments	{n} пікір|{n} пікір

@@ -31,13 +31,38 @@ pub enum Icon {
     Dislike,
     /// An arrow leaving a curve: share.
     Share,
+    /// Three dots in a column: more.
+    More,
+    /// A toothed wheel: settings.
+    Settings,
+    /// An arrow leaving a door: sign out.
+    SignOut,
+    /// A clapperboard: the studio.
+    Studio,
+    /// A circle, half of it shaded: appearance.
+    Appearance,
+    /// A character and a letter: language.
+    Translate,
+    /// A tick: the chosen entry.
+    Check,
+    /// An arrow pointing back along the line: back.
+    Back,
+    /// A chevron pointing along the line: more inside.
+    Forward,
+    /// A key: personal tokens.
+    Key,
+    /// An envelope: invitations.
+    Mail,
 }
 
 impl Icon {
     /// Whether the icon points along the line of text, and so mirrors right to left. Clocks,
     /// thumbs and media keep their direction.
     fn directional(self) -> bool {
-        matches!(self, Icon::Share)
+        matches!(
+            self,
+            Icon::Share | Icon::SignOut | Icon::Back | Icon::Forward
+        )
     }
 
     /// The stroke paths of the icon.
@@ -73,6 +98,54 @@ impl Icon {
                 "M17 14l-4 7c-1.7 0-2.5-1.2-2-3l1-3.5H5.5c-1.2 0-2-1-1.8-2.2l1.4-6.6c.2-1 1-1.7 2-1.7H17",
             ],
             Icon::Share => &["M14 5l7 6.5-7 6.5", "M21 11.5h-8C7.5 11.5 4 14.5 3 20"],
+            Icon::More => &[
+                "M12 4a1 1 0 1 0 0 2a1 1 0 1 0 0-2",
+                "M12 11a1 1 0 1 0 0 2a1 1 0 1 0 0-2",
+                "M12 18a1 1 0 1 0 0 2a1 1 0 1 0 0-2",
+            ],
+            Icon::Settings => &[
+                "M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6",
+                "M12 2.5v3",
+                "M12 18.5v3",
+                "M2.5 12h3",
+                "M18.5 12h3",
+                "M5.3 5.3l2.1 2.1",
+                "M16.6 16.6l2.1 2.1",
+                "M5.3 18.7l2.1-2.1",
+                "M16.6 7.4l2.1-2.1",
+            ],
+            Icon::SignOut => &["M10 4H5v16h5", "M14 8l4 4-4 4", "M18 12H9"],
+            Icon::Studio => &[
+                "M3 9h18v11H3z",
+                "M3 9l2-5 16 0-2 5",
+                "M9 4l-2 5",
+                "M15 4l-2 5",
+            ],
+            Icon::Appearance => &[
+                "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18",
+                "M12 3v18",
+                "M12 8h5",
+                "M12 12h7",
+                "M12 16h5",
+            ],
+            Icon::Translate => &[
+                "M3 5h10",
+                "M8 3v2",
+                "M11 5c-1 4-3.5 7-7 9",
+                "M6 9c1.5 2.5 3.5 4 6 5",
+                "M13 21l4-9 4 9",
+                "M14.5 18h5",
+            ],
+            Icon::Check => &["M5 12.5l4.5 4.5L19 7"],
+            Icon::Back => &["M20 12H4", "M10 6l-6 6 6 6"],
+            Icon::Forward => &["M9 5l7 7-7 7"],
+            Icon::Key => &[
+                "M8 9a4 4 0 1 0 0 6a4 4 0 1 0 0-6",
+                "M11.5 12H21",
+                "M18 12v3",
+                "M15 12v2",
+            ],
+            Icon::Mail => &["M3 6h18v12H3z", "M3 6l9 7 9-7"],
         }
     }
 }

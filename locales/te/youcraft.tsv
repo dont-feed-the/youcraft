@@ -36,6 +36,45 @@
 	Dislike	నచ్చలేదు
 	Share	షేర్ చేయండి
 	Comments are turned off.	కామెంట్‌లు ఆఫ్ చేయబడ్డాయి.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	వ్యక్తిగత టోకెన్ ఒక ప్రోగ్రామ్‌ను మీ అన్ని హక్కులతో మీ తరఫున పనిచేయడానికి అనుమతిస్తుంది. దాన్ని రహస్యంగా ఉంచండి.
+	Account	ఖాతా
+	Account menu	ఖాతా మెనూ
+	Administrator	నిర్వాహకులు
+	Appearance	రూపం
+	Appearance: {theme}	రూపం: {theme}
+	Back	వెనుకకు
+	Copy this token now: it will not be shown again.	ఈ టోకెన్‌ను ఇప్పుడే కాపీ చేయండి: ఇది మళ్లీ చూపబడదు.
+	Create token	టోకెన్‌ను సృష్టించండి
+	Created {when}	{when} సృష్టించబడింది
+	Creator	క్రియేటర్
+	Dark	ముదురు
+	Dark theme	ముదురు థీమ్
+	Device theme	పరికర థీమ్
+	E-mail address	ఈమెయిల్ చిరునామా
+	Google did not confirm who you are, or signing in was cancelled.	Google మీ గుర్తింపును నిర్ధారించలేదు, లేదా సైన్ ఇన్ రద్దు చేయబడింది.
+	Invitations	ఆహ్వానాలు
+	Invite	ఆహ్వానించండి
+	Invited people become creators or administrators when they first sign in with Google.	ఆహ్వానించబడినవారు Googleతో మొదటిసారి సైన్ ఇన్ చేసినప్పుడు క్రియేటర్లు లేదా నిర్వాహకులు అవుతారు.
+	Language	భాష
+	Language: {language}	భాష: {language}
+	Last used {when}	చివరిగా ఉపయోగించినది {when}
+	Light	లేత
+	Light theme	లేత థీమ్
+	Personal tokens	వ్యక్తిగత టోకెన్‌లు
+	Revoke	ఉపసంహరించండి
+	Role	పాత్ర
+	Settings	సెట్టింగ్‌లు
+	Sign out	సైన్ అవుట్ చేయండి
+	Sign-in did not work	సైన్ ఇన్ పని చేయలేదు
+	Sign-in is not set up on this server.	ఈ సర్వర్‌లో సైన్ ఇన్ సెటప్ చేయబడలేదు.
+	Token name	టోకెన్ పేరు
+	Try again	మళ్లీ ప్రయత్నించండి
+	Use device theme	పరికర థీమ్‌ను ఉపయోగించండి
+	View your channel	మీ ఛానెల్‌ను చూడండి
+	Viewer	వీక్షకులు
+	Withdraw	వెనక్కి తీసుకోండి
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	మీ ఖాతా బ్లాక్ చేయబడింది: మీరు వీడియోలు చూడవచ్చు, కానీ లైక్, కామెంట్ లేదా ప్రచురించలేరు.
 @plural	{n} view|{n} views	{n} వీక్షణ|{n} వీక్షణలు
 @plural	{n} like|{n} likes	{n} లైక్|{n} లైక్‌లు
 @plural	{n} comment|{n} comments	{n} కామెంట్|{n} కామెంట్‌లు

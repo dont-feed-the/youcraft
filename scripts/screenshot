@@ -6,11 +6,13 @@
 """Render YouCraft pages to PNG with Playwright's browsers, to look at what a change did.
 
 Usage: scripts/screenshot BASE_URL OUT_DIR PATH... [--webkit] [--rtl] [--lang CODE]
+                          [--cookie NAME=VALUE]... [--click SELECTOR]
 
 Each path is drawn at 1440x900 and 390x844, in light and dark, after the page settles (its
 WebAssembly loaded and hydrated). `--rtl` adds a right-to-left run (Arabic, or `--lang`), and
-`--webkit` uses WebKit, Safari's engine, instead of Chromium. Files are named
-`<path>-<width>-<theme>[-<lang>].png`. Playwright 1.64 matches the browsers already installed in
+`--webkit` uses WebKit, Safari's engine, instead of Chromium. `--cookie` gives the browser a
+cookie (a session, to look at pages signed in), and `--click` clicks an element before the
+picture (to open a menu). Files are named `<path>-<width>-<theme>[-<lang>].png`. Playwright 1.64 matches the browsers already installed in
 `~/.cache/ms-playwright`; nothing is downloaded.
 """
 
@@ -30,17 +32,28 @@ def name_of(path: str) -> str:
 
 
 def main(argv: list[str]) -> int:
-    flags = [a for a in argv if a.startswith("--")]
-    rest = [a for a in argv if not a.startswith("--")]
-    lang = None
-    if "--lang" in argv:
-        index = argv.index("--lang")
-        lang = argv[index + 1] if index + 1 < len(argv) else None
-        rest = [a for a in rest if a != lang]
+    valued = {"--lang": [], "--cookie": [], "--click": []}
+    flags, rest = [], []
+    words = iter(argv)
+    for word in words:
+        if word in valued:
+            valued[word].append(next(words, ""))
+        elif word.startswith("--"):
+            flags.append(word)
+        else:
+            rest.append(word)
+    lang = valued["--lang"][-1] if valued["--lang"] else None
+    click = valued["--click"][-1] if valued["--click"] else None
     if len(rest) < 3:
         print(__doc__, file=sys.stderr)
         return 2
     base, out, paths = rest[0].rstrip("/"), Path(rest[1]), rest[2:]
+    # Secure, as the site's own cookies are; browsers send those to localhost over http too.
+    secure_base = re.sub(r"^http:", "https:", base)
+    cookies = [
+        {"name": name, "value": value, "url": secure_base, "secure": True}
+        for name, _, value in (cookie.partition("=") for cookie in valued["--cookie"])
+    ]
     out.mkdir(parents=True, exist_ok=True)
     languages = [None] + ([lang or "ar"] if "--rtl" in flags or lang else [])
     with sync_playwright() as playwright:
@@ -56,12 +69,16 @@ def main(argv: list[str]) -> int:
                         color_scheme=theme,
                         extra_http_headers=headers,
                     )
+                    context.add_cookies(cookies)
                     page = context.new_page()
                     errors = []
                     page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
                     page.on("pageerror", lambda e: errors.append(str(e)))
                     for path in paths:
                         page.goto(base + path, wait_until="networkidle")
+                        if click:
+                            page.click(click)
+                            page.wait_for_timeout(200)
                         suffix = f"-{language}" if language else ""
                         file = out / f"{name_of(path)}-{width}-{theme}{suffix}.png"
                         page.screenshot(path=str(file), full_page=False)

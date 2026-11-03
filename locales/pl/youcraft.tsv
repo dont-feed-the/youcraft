@@ -36,6 +36,45 @@
 	Dislike	Nie lubię tego
 	Share	Udostępnij
 	Comments are turned off.	Komentarze są wyłączone.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Token osobisty pozwala programowi działać w Twoim imieniu, ze wszystkimi Twoimi uprawnieniami. Zachowaj go w tajemnicy.
+	Account	Konto
+	Account menu	Menu konta
+	Administrator	Administrator
+	Appearance	Wygląd
+	Appearance: {theme}	Wygląd: {theme}
+	Back	Wstecz
+	Copy this token now: it will not be shown again.	Skopiuj ten token teraz: nie zostanie pokazany ponownie.
+	Create token	Utwórz token
+	Created {when}	Utworzono {when}
+	Creator	Twórca
+	Dark	Ciemny
+	Dark theme	Ciemny motyw
+	Device theme	Motyw urządzenia
+	E-mail address	Adres e-mail
+	Google did not confirm who you are, or signing in was cancelled.	Google nie potwierdził Twojej tożsamości lub logowanie zostało anulowane.
+	Invitations	Zaproszenia
+	Invite	Zaproś
+	Invited people become creators or administrators when they first sign in with Google.	Zaproszone osoby zostają twórcami lub administratorami, gdy po raz pierwszy zalogują się przez Google.
+	Language	Język
+	Language: {language}	Język: {language}
+	Last used {when}	Ostatnio użyty {when}
+	Light	Jasny
+	Light theme	Jasny motyw
+	Personal tokens	Tokeny osobiste
+	Revoke	Unieważnij
+	Role	Rola
+	Settings	Ustawienia
+	Sign out	Wyloguj się
+	Sign-in did not work	Logowanie nie powiodło się
+	Sign-in is not set up on this server.	Logowanie nie jest skonfigurowane na tym serwerze.
+	Token name	Nazwa tokena
+	Try again	Spróbuj ponownie
+	Use device theme	Użyj motywu urządzenia
+	View your channel	Wyświetl swój kanał
+	Viewer	Widz
+	Withdraw	Wycofaj
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Twoje konto jest zablokowane: możesz oglądać filmy, ale nie możesz oceniać, komentować ani publikować.
 @plural	{n} view|{n} views	{n} wyświetlenie|{n} wyświetlenia|{n} wyświetleń
 @plural	{n} like|{n} likes	{n} polubienie|{n} polubienia|{n} polubień
 @plural	{n} comment|{n} comments	{n} komentarz|{n} komentarze|{n} komentarzy

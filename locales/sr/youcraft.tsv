@@ -36,6 +36,45 @@
 	Dislike	Не свиђа ми се
 	Share	Подели
 	Comments are turned off.	Коментари су искључени.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Лични токен омогућава програму да делује у ваше име, са свим вашим правима. Чувајте га у тајности.
+	Account	Налог
+	Account menu	Мени налога
+	Administrator	Администратор
+	Appearance	Изглед
+	Appearance: {theme}	Изглед: {theme}
+	Back	Назад
+	Copy this token now: it will not be shown again.	Копирајте овај токен сада: више неће бити приказан.
+	Create token	Направи токен
+	Created {when}	Направљено {when}
+	Creator	Аутор
+	Dark	Тамно
+	Dark theme	Тамна тема
+	Device theme	Тема уређаја
+	E-mail address	Имејл адреса
+	Google did not confirm who you are, or signing in was cancelled.	Google није потврдио ваш идентитет или је пријављивање отказано.
+	Invitations	Позивнице
+	Invite	Позови
+	Invited people become creators or administrators when they first sign in with Google.	Позване особе постају аутори или администратори када се први пут пријаве преко Google-а.
+	Language	Језик
+	Language: {language}	Језик: {language}
+	Last used {when}	Последње коришћење {when}
+	Light	Светло
+	Light theme	Светла тема
+	Personal tokens	Лични токени
+	Revoke	Опозови
+	Role	Улога
+	Settings	Подешавања
+	Sign out	Одјави ме
+	Sign-in did not work	Пријављивање није успело
+	Sign-in is not set up on this server.	Пријављивање није подешено на овом серверу.
+	Token name	Назив токена
+	Try again	Покушај поново
+	Use device theme	Користи тему уређаја
+	View your channel	Погледајте свој канал
+	Viewer	Гледалац
+	Withdraw	Повуци
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Ваш налог је блокиран: можете да гледате видео снимке, али не и да их означавате са „свиђа ми се“, коментаришете или објављујете.
 @plural	{n} view|{n} views	{n} преглед|{n} прегледа|{n} прегледа
 @plural	{n} like|{n} likes	{n} свиђање|{n} свиђања|{n} свиђања
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментара|{n} коментара

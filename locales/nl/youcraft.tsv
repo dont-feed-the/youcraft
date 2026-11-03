@@ -36,6 +36,45 @@
 	Dislike	Niet leuk
 	Share	Delen
 	Comments are turned off.	Reacties staan uit.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Met een persoonlijk token kan een programma namens jou handelen, met al je rechten. Houd het geheim.
+	Account	Account
+	Account menu	Accountmenu
+	Administrator	Beheerder
+	Appearance	Weergave
+	Appearance: {theme}	Weergave: {theme}
+	Back	Terug
+	Copy this token now: it will not be shown again.	Kopieer dit token nu: het wordt niet opnieuw getoond.
+	Create token	Token maken
+	Created {when}	Gemaakt {when}
+	Creator	Creator
+	Dark	Donker
+	Dark theme	Donker thema
+	Device theme	Apparaatthema
+	E-mail address	E-mailadres
+	Google did not confirm who you are, or signing in was cancelled.	Google heeft niet bevestigd wie je bent, of het inloggen is geannuleerd.
+	Invitations	Uitnodigingen
+	Invite	Uitnodigen
+	Invited people become creators or administrators when they first sign in with Google.	Uitgenodigde mensen worden creator of beheerder wanneer ze voor het eerst inloggen met Google.
+	Language	Taal
+	Language: {language}	Taal: {language}
+	Last used {when}	Laatst gebruikt {when}
+	Light	Licht
+	Light theme	Licht thema
+	Personal tokens	Persoonlijke tokens
+	Revoke	Intrekken
+	Role	Rol
+	Settings	Instellingen
+	Sign out	Uitloggen
+	Sign-in did not work	Inloggen is niet gelukt
+	Sign-in is not set up on this server.	Inloggen is niet ingesteld op deze server.
+	Token name	Naam van het token
+	Try again	Opnieuw proberen
+	Use device theme	Apparaatthema gebruiken
+	View your channel	Je kanaal bekijken
+	Viewer	Kijker
+	Withdraw	Intrekken
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Je account is geblokkeerd: je kunt video's bekijken, maar niet liken, reageren of publiceren.
 @plural	{n} view|{n} views	{n} weergave|{n} weergaven
 @plural	{n} like|{n} likes	{n} like|{n} likes
 @plural	{n} comment|{n} comments	{n} reactie|{n} reacties

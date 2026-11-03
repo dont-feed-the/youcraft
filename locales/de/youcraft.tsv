@@ -36,6 +36,45 @@
 	Dislike	Mag ich nicht
 	Share	Teilen
 	Comments are turned off.	Kommentare sind deaktiviert.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Mit einem persönlichen Token kann ein Programm mit all deinen Rechten in deinem Namen handeln. Halte es geheim.
+	Account	Konto
+	Account menu	Kontomenü
+	Administrator	Administrator
+	Appearance	Darstellung
+	Appearance: {theme}	Darstellung: {theme}
+	Back	Zurück
+	Copy this token now: it will not be shown again.	Kopiere dieses Token jetzt: Es wird nicht noch einmal angezeigt.
+	Create token	Token erstellen
+	Created {when}	Erstellt {when}
+	Creator	Creator
+	Dark	Dunkel
+	Dark theme	Dunkles Design
+	Device theme	Gerätedesign
+	E-mail address	E-Mail-Adresse
+	Google did not confirm who you are, or signing in was cancelled.	Google hat deine Identität nicht bestätigt, oder die Anmeldung wurde abgebrochen.
+	Invitations	Einladungen
+	Invite	Einladen
+	Invited people become creators or administrators when they first sign in with Google.	Eingeladene Personen werden Creator oder Administratoren, sobald sie sich zum ersten Mal mit Google anmelden.
+	Language	Sprache
+	Language: {language}	Sprache: {language}
+	Last used {when}	Zuletzt verwendet {when}
+	Light	Hell
+	Light theme	Helles Design
+	Personal tokens	Persönliche Tokens
+	Revoke	Widerrufen
+	Role	Rolle
+	Settings	Einstellungen
+	Sign out	Abmelden
+	Sign-in did not work	Die Anmeldung hat nicht funktioniert
+	Sign-in is not set up on this server.	Die Anmeldung ist auf diesem Server nicht eingerichtet.
+	Token name	Name des Tokens
+	Try again	Erneut versuchen
+	Use device theme	Gerätedesign verwenden
+	View your channel	Deinen Kanal ansehen
+	Viewer	Zuschauer
+	Withdraw	Zurückziehen
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Dein Konto ist gesperrt: Du kannst Videos ansehen, aber nicht liken, kommentieren oder veröffentlichen.
 @plural	{n} view|{n} views	{n} Aufruf|{n} Aufrufe
 @plural	{n} like|{n} likes	{n} Like|{n} Likes
 @plural	{n} comment|{n} comments	{n} Kommentar|{n} Kommentare

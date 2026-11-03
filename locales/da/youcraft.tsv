@@ -36,6 +36,45 @@
 	Dislike	Synes ikke om
 	Share	Del
 	Comments are turned off.	Kommentarer er slået fra.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Et personligt token lader et program handle som dig med alle dine rettigheder. Hold det hemmeligt.
+	Account	Konto
+	Account menu	Kontomenu
+	Administrator	Administrator
+	Appearance	Udseende
+	Appearance: {theme}	Udseende: {theme}
+	Back	Tilbage
+	Copy this token now: it will not be shown again.	Kopiér dette token nu: det bliver ikke vist igen.
+	Create token	Opret token
+	Created {when}	Oprettet {when}
+	Creator	Skaber
+	Dark	Mørkt
+	Dark theme	Mørkt tema
+	Device theme	Enhedens tema
+	E-mail address	Mailadresse
+	Google did not confirm who you are, or signing in was cancelled.	Google bekræftede ikke, hvem du er, eller login blev annulleret.
+	Invitations	Invitationer
+	Invite	Inviter
+	Invited people become creators or administrators when they first sign in with Google.	Inviterede personer bliver skabere eller administratorer, første gang de logger ind med Google.
+	Language	Sprog
+	Language: {language}	Sprog: {language}
+	Last used {when}	Sidst brugt {when}
+	Light	Lyst
+	Light theme	Lyst tema
+	Personal tokens	Personlige tokens
+	Revoke	Tilbagekald
+	Role	Rolle
+	Settings	Indstillinger
+	Sign out	Log ud
+	Sign-in did not work	Login lykkedes ikke
+	Sign-in is not set up on this server.	Login er ikke konfigureret på denne server.
+	Token name	Tokenets navn
+	Try again	Prøv igen
+	Use device theme	Brug enhedens tema
+	View your channel	Se din kanal
+	Viewer	Seer
+	Withdraw	Træk tilbage
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Din konto er blokeret: du kan se videoer, men ikke synes godt om, kommentere eller udgive.
 @plural	{n} view|{n} views	{n} visning|{n} visninger
 @plural	{n} like|{n} likes	{n} synes godt om|{n} synes godt om
 @plural	{n} comment|{n} comments	{n} kommentar|{n} kommentarer

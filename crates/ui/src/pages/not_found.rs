@@ -1,6 +1,7 @@
 //! What a page shows when there is nothing there, or when the server could not answer.
 
 use leptos::prelude::*;
+use leptos_router::hooks::use_location;
 use youcraft_api::{ApiError, routes};
 
 use crate::lang::tr;
@@ -29,10 +30,19 @@ pub fn Trouble(error: ApiError) -> impl IntoView {
         ApiError::Forbidden => tr("You can't see this page."),
         _ => tr("Something went wrong. Try again later."),
     };
+    let location = use_location();
+    let here = move || format!("{}{}", location.pathname.get(), location.search.get());
+    let way_out = match error {
+        ApiError::SignInRequired => view! {
+            <a class="pill" href=move || routes::sign_in(&here())>{tr("Sign in")}</a>
+        }
+        .into_any(),
+        _ => view! { <a class="pill" href=routes::HOME>{tr("Go to home")}</a> }.into_any(),
+    };
     view! {
         <div class="trouble">
             <p>{text}</p>
-            <a class="pill" href=routes::HOME>{tr("Go to home")}</a>
+            {way_out}
         </div>
     }
 }

@@ -36,6 +36,45 @@
 	Dislike	Nepatinka
 	Share	Bendrinti
 	Comments are turned off.	Komentarai išjungti.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Asmeninis prieigos raktas leidžia programai veikti jūsų vardu su visomis jūsų teisėmis. Laikykite jį paslaptyje.
+	Account	Paskyra
+	Account menu	Paskyros meniu
+	Administrator	Administratorius
+	Appearance	Išvaizda
+	Appearance: {theme}	Išvaizda: {theme}
+	Back	Atgal
+	Copy this token now: it will not be shown again.	Nukopijuokite raktą dabar: jis daugiau nebus rodomas.
+	Create token	Kurti raktą
+	Created {when}	Sukurta {when}
+	Creator	Kūrėjas
+	Dark	Tamsi
+	Dark theme	Tamsi tema
+	Device theme	Įrenginio tema
+	E-mail address	El. pašto adresas
+	Google did not confirm who you are, or signing in was cancelled.	„Google“ nepatvirtino jūsų tapatybės arba prisijungimas buvo atšauktas.
+	Invitations	Kvietimai
+	Invite	Pakviesti
+	Invited people become creators or administrators when they first sign in with Google.	Pakviesti žmonės tampa kūrėjais arba administratoriais, kai pirmą kartą prisijungia per „Google“.
+	Language	Kalba
+	Language: {language}	Kalba: {language}
+	Last used {when}	Paskutinį kartą naudota {when}
+	Light	Šviesi
+	Light theme	Šviesi tema
+	Personal tokens	Asmeniniai prieigos raktai
+	Revoke	Atšaukti
+	Role	Vaidmuo
+	Settings	Nustatymai
+	Sign out	Atsijungti
+	Sign-in did not work	Prisijungti nepavyko
+	Sign-in is not set up on this server.	Prisijungimas šiame serveryje nesukonfigūruotas.
+	Token name	Rakto pavadinimas
+	Try again	Bandyti dar kartą
+	Use device theme	Naudoti įrenginio temą
+	View your channel	Peržiūrėti savo kanalą
+	Viewer	Žiūrovas
+	Withdraw	Atšaukti kvietimą
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Jūsų paskyra užblokuota: galite žiūrėti vaizdo įrašus, bet negalite jų įvertinti, komentuoti ar skelbti.
 @plural	{n} view|{n} views	{n} peržiūra|{n} peržiūros|{n} peržiūrų
 @plural	{n} like|{n} likes	{n} patiktukas|{n} patiktukai|{n} patiktukų
 @plural	{n} comment|{n} comments	{n} komentaras|{n} komentarai|{n} komentarų

@@ -1,16 +1,23 @@
-//! The `youcraft` binary: `serve` runs the site, `demo` fills an empty database with examples.
+//! The `youcraft` binary: `serve` runs the site, `demo` fills an empty database with examples,
+//! and the operator's commands ([`cli`]) act on its database.
 //!
 //! Configuration comes from the environment (see [`config`]). Under systemd the site serves the
 //! socket it is handed (socket activation); otherwise it listens on `YOUCRAFT_ADDRESS`. It stops
 //! on SIGTERM or Ctrl-C after the requests in flight are answered, as PID 1 of a container must.
 
+mod cli;
 mod config;
+mod cookies;
 mod demo;
 mod dispatch;
+mod google;
 mod handlers;
 mod http;
 mod listen;
+mod secrets;
+mod signin;
 mod site;
+mod visitor;
 
 use std::process::ExitCode;
 use std::sync::Arc;
@@ -25,11 +32,14 @@ fn main() -> ExitCode {
                 .unwrap_or_else(|_| "info".into()),
         )
         .init();
-    let command = std::env::args().nth(1).unwrap_or_default();
-    let result = match command.as_str() {
+    let arguments: Vec<String> = std::env::args().skip(1).collect();
+    let (command, rest) = arguments
+        .split_first()
+        .map_or(("", &[][..]), |(c, r)| (c.as_str(), r));
+    let result = match command {
         "serve" => serve(),
         "demo" => demo(),
-        _ => Err("usage: youcraft serve | youcraft demo".to_owned()),
+        _ => operate(command, rest),
     };
     match result {
         Ok(()) => ExitCode::SUCCESS,
@@ -51,4 +61,13 @@ fn demo() -> Result<(), String> {
     let config = Config::from_env()?;
     let site = Site::open(&config)?;
     demo::fill(site.store()).map_err(|e| format!("demo: {e}"))
+}
+
+fn operate(name: &str, arguments: &[String]) -> Result<(), String> {
+    let (id, input) = cli::parse(name, arguments)
+        .map_err(|e| format!("{e}\nor: youcraft serve | youcraft demo"))?;
+    let config = Config::from_env()?;
+    let site = Site::open(&config)?;
+    let runtime = tokio::runtime::Runtime::new().map_err(|e| format!("tokio: {e}"))?;
+    runtime.block_on(cli::run(&site, id, input))
 }

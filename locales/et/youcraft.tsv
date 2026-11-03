@@ -36,6 +36,45 @@
 	Dislike	Ei meeldi
 	Share	Jaga
 	Comments are turned off.	Kommentaarid on välja lülitatud.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Isiklik luba võimaldab programmil tegutseda sinu nimel kõigi sinu õigustega. Hoia see salajas.
+	Account	Konto
+	Account menu	Konto menüü
+	Administrator	Administraator
+	Appearance	Välimus
+	Appearance: {theme}	Välimus: {theme}
+	Back	Tagasi
+	Copy this token now: it will not be shown again.	Kopeeri see luba kohe: seda ei näidata enam.
+	Create token	Loo luba
+	Created {when}	Loodud {when}
+	Creator	Looja
+	Dark	Tume
+	Dark theme	Tume teema
+	Device theme	Seadme teema
+	E-mail address	E-posti aadress
+	Google did not confirm who you are, or signing in was cancelled.	Google ei kinnitanud sinu isikut või sisselogimine tühistati.
+	Invitations	Kutsed
+	Invite	Kutsu
+	Invited people become creators or administrators when they first sign in with Google.	Kutsutud inimestest saavad loojad või administraatorid, kui nad esimest korda Google'iga sisse logivad.
+	Language	Keel
+	Language: {language}	Keel: {language}
+	Last used {when}	Viimati kasutatud {when}
+	Light	Hele
+	Light theme	Hele teema
+	Personal tokens	Isiklikud load
+	Revoke	Tühista
+	Role	Roll
+	Settings	Seaded
+	Sign out	Logi välja
+	Sign-in did not work	Sisselogimine ebaõnnestus
+	Sign-in is not set up on this server.	Sisselogimine pole selles serveris seadistatud.
+	Token name	Loa nimi
+	Try again	Proovi uuesti
+	Use device theme	Kasuta seadme teemat
+	View your channel	Vaata oma kanalit
+	Viewer	Vaataja
+	Withdraw	Võta tagasi
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Sinu konto on blokeeritud: saad videoid vaadata, kuid mitte meeldivaks märkida, kommenteerida ega avaldada.
 @plural	{n} view|{n} views	{n} vaatamine|{n} vaatamist
 @plural	{n} like|{n} likes	{n} meeldimine|{n} meeldimist
 @plural	{n} comment|{n} comments	{n} kommentaar|{n} kommentaari

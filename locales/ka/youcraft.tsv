@@ -36,6 +36,45 @@
 	Dislike	არ მომწონს
 	Share	გაზიარება
 	Comments are turned off.	კომენტარები გამორთულია.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	პირადი ტოკენი პროგრამას საშუალებას აძლევს, იმოქმედოს თქვენი სახელით, თქვენი ყველა უფლებით. შეინახეთ საიდუმლოდ.
+	Account	ანგარიში
+	Account menu	ანგარიშის მენიუ
+	Administrator	ადმინისტრატორი
+	Appearance	იერსახე
+	Appearance: {theme}	იერსახე: {theme}
+	Back	უკან
+	Copy this token now: it will not be shown again.	დააკოპირეთ ეს ტოკენი ახლავე: ის აღარ გამოჩნდება.
+	Create token	ტოკენის შექმნა
+	Created {when}	შექმნილია {when}
+	Creator	ავტორი
+	Dark	მუქი
+	Dark theme	მუქი თემა
+	Device theme	მოწყობილობის თემა
+	E-mail address	ელფოსტის მისამართი
+	Google did not confirm who you are, or signing in was cancelled.	Google-მა არ დაადასტურა თქვენი ვინაობა, ან შესვლა გაუქმდა.
+	Invitations	მოწვევები
+	Invite	მოწვევა
+	Invited people become creators or administrators when they first sign in with Google.	მოწვეული ადამიანები ავტორები ან ადმინისტრატორები ხდებიან, როცა პირველად შედიან Google-ით.
+	Language	ენა
+	Language: {language}	ენა: {language}
+	Last used {when}	ბოლოს გამოყენებულია {when}
+	Light	ღია
+	Light theme	ღია თემა
+	Personal tokens	პირადი ტოკენები
+	Revoke	გაუქმება
+	Role	როლი
+	Settings	პარამეტრები
+	Sign out	გასვლა
+	Sign-in did not work	შესვლა ვერ მოხერხდა
+	Sign-in is not set up on this server.	ამ სერვერზე შესვლა არ არის გამართული.
+	Token name	ტოკენის სახელი
+	Try again	ხელახლა ცდა
+	Use device theme	მოწყობილობის თემის გამოყენება
+	View your channel	თქვენი არხის ნახვა
+	Viewer	მაყურებელი
+	Withdraw	გაწვევა
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	თქვენი ანგარიში დაბლოკილია: შეგიძლიათ უყუროთ ვიდეოებს, მაგრამ ვერ მოიწონებთ, დააკომენტარებთ ან გამოაქვეყნებთ.
 @plural	{n} view|{n} views	{n} ნახვა|{n} ნახვა
 @plural	{n} like|{n} likes	{n} მოწონება|{n} მოწონება
 @plural	{n} comment|{n} comments	{n} კომენტარი|{n} კომენტარი

@@ -36,6 +36,45 @@
 	Dislike	En tykkää
 	Share	Jaa
 	Comments are turned off.	Kommentit on poistettu käytöstä.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Henkilökohtaisella tunnuksella ohjelma voi toimia puolestasi kaikilla oikeuksillasi. Pidä se salassa.
+	Account	Tili
+	Account menu	Tilivalikko
+	Administrator	Järjestelmänvalvoja
+	Appearance	Ulkoasu
+	Appearance: {theme}	Ulkoasu: {theme}
+	Back	Takaisin
+	Copy this token now: it will not be shown again.	Kopioi tunnus nyt: sitä ei näytetä uudelleen.
+	Create token	Luo tunnus
+	Created {when}	Luotu {when}
+	Creator	Sisällöntuottaja
+	Dark	Tumma
+	Dark theme	Tumma teema
+	Device theme	Laitteen teema
+	E-mail address	Sähköpostiosoite
+	Google did not confirm who you are, or signing in was cancelled.	Google ei vahvistanut henkilöllisyyttäsi, tai kirjautuminen peruttiin.
+	Invitations	Kutsut
+	Invite	Kutsu
+	Invited people become creators or administrators when they first sign in with Google.	Kutsutuista tulee sisällöntuottajia tai järjestelmänvalvojia, kun he kirjautuvat ensimmäisen kerran Googlella.
+	Language	Kieli
+	Language: {language}	Kieli: {language}
+	Last used {when}	Viimeksi käytetty {when}
+	Light	Vaalea
+	Light theme	Vaalea teema
+	Personal tokens	Henkilökohtaiset tunnukset
+	Revoke	Peru
+	Role	Rooli
+	Settings	Asetukset
+	Sign out	Kirjaudu ulos
+	Sign-in did not work	Kirjautuminen epäonnistui
+	Sign-in is not set up on this server.	Kirjautumista ei ole määritetty tällä palvelimella.
+	Token name	Tunnuksen nimi
+	Try again	Yritä uudelleen
+	Use device theme	Käytä laitteen teemaa
+	View your channel	Näytä kanavasi
+	Viewer	Katsoja
+	Withdraw	Peru kutsu
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Tilisi on estetty: voit katsoa videoita, mutta et tykätä, kommentoida etkä julkaista.
 @plural	{n} view|{n} views	{n} katselukerta|{n} katselukertaa
 @plural	{n} like|{n} likes	{n} tykkäys|{n} tykkäystä
 @plural	{n} comment|{n} comments	{n} kommentti|{n} kommenttia

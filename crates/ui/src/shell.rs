@@ -1,17 +1,20 @@
-//! The HTML document around every page: language and direction, the stylesheet, what the browser
-//! hydrates with (catalog and render time), the hydration scripts under a per-request nonce, and the content
-//! security policy that admits nothing from anywhere else.
+//! The HTML document around every page: language, direction and theme, the stylesheet, what the
+//! browser hydrates with (catalog, render time, theme, languages), the hydration scripts under a
+//! per-request nonce, and the content security policy that admits nothing from anywhere else.
 
 use leptos::prelude::*;
 use leptos_meta::MetaTags;
+use youcraft_api::commands::account::Theme;
 
 use crate::app::App;
-use crate::lang::{CARRIER, Language, RenderTime, carried};
+use crate::lang::{CARRIER, Language, RenderTime, carried, theme};
 
 /// The document for one request; the server provides the [`Language`] and a nonce first.
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     let language = use_context::<Language>().unwrap_or(Language(youcraft_i18n::Lang::EN));
     let time = use_context::<RenderTime>().unwrap_or(RenderTime(0));
+    let theme = theme();
+    let drawn = (theme != Theme::Device).then_some(theme.as_str());
     let code = youcraft_i18n::code(language.0);
     let dir = if youcraft_i18n::rtl(language.0) {
         "rtl"
@@ -22,14 +25,14 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
     send_security_policy();
     view! {
         <!DOCTYPE html>
-        <html lang=code dir=dir>
+        <html lang=code dir=dir data-theme=drawn>
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <meta name="color-scheme" content="light dark"/>
                 <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
                 <link rel="stylesheet" href="/pkg/youcraft.css"/>
-                <script type="application/json" id=CARRIER inner_html=carried(language, time)></script>
+                <script type="application/json" id=CARRIER inner_html=carried(language, time, theme)></script>
                 <HydrationScripts options/>
                 <MetaTags/>
             </head>

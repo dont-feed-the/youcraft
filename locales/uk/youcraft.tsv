@@ -36,6 +36,45 @@
 	Dislike	Не подобається
 	Share	Поділитися
 	Comments are turned off.	Коментарі вимкнено.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Особистий токен дає змогу програмі діяти від вашого імені з усіма вашими правами. Зберігайте його в таємниці.
+	Account	Обліковий запис
+	Account menu	Меню облікового запису
+	Administrator	Адміністратор
+	Appearance	Вигляд
+	Appearance: {theme}	Вигляд: {theme}
+	Back	Назад
+	Copy this token now: it will not be shown again.	Скопіюйте токен зараз: його більше не буде показано.
+	Create token	Створити токен
+	Created {when}	Створено {when}
+	Creator	Автор
+	Dark	Темна
+	Dark theme	Темна тема
+	Device theme	Тема пристрою
+	E-mail address	Електронна адреса
+	Google did not confirm who you are, or signing in was cancelled.	Google не підтвердив вашу особу, або вхід скасовано.
+	Invitations	Запрошення
+	Invite	Запросити
+	Invited people become creators or administrators when they first sign in with Google.	Запрошені стають авторами або адміністраторами, коли вперше входять через Google.
+	Language	Мова
+	Language: {language}	Мова: {language}
+	Last used {when}	Востаннє використано {when}
+	Light	Світла
+	Light theme	Світла тема
+	Personal tokens	Особисті токени
+	Revoke	Відкликати
+	Role	Роль
+	Settings	Налаштування
+	Sign out	Вийти
+	Sign-in did not work	Не вдалося ввійти
+	Sign-in is not set up on this server.	Вхід на цьому сервері не налаштовано.
+	Token name	Назва токена
+	Try again	Спробувати ще раз
+	Use device theme	Використовувати тему пристрою
+	View your channel	Переглянути свій канал
+	Viewer	Глядач
+	Withdraw	Відкликати
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Ваш обліковий запис заблоковано: ви можете дивитися відео, але не можете ставити позначки «Подобається», коментувати чи публікувати.
 @plural	{n} view|{n} views	{n} перегляд|{n} перегляди|{n} переглядів
 @plural	{n} like|{n} likes	{n} вподобання|{n} вподобання|{n} вподобань
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментарі|{n} коментарів

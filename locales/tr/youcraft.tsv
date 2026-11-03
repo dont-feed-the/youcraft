@@ -36,6 +36,45 @@
 	Dislike	Beğenme
 	Share	Paylaş
 	Comments are turned off.	Yorumlar kapalı.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Kişisel jeton, bir programın tüm haklarınızla sizin adınıza işlem yapmasını sağlar. Gizli tutun.
+	Account	Hesap
+	Account menu	Hesap menüsü
+	Administrator	Yönetici
+	Appearance	Görünüm
+	Appearance: {theme}	Görünüm: {theme}
+	Back	Geri
+	Copy this token now: it will not be shown again.	Bu jetonu şimdi kopyalayın: bir daha gösterilmeyecek.
+	Create token	Jeton oluştur
+	Created {when}	Oluşturuldu: {when}
+	Creator	İçerik üreticisi
+	Dark	Koyu
+	Dark theme	Koyu tema
+	Device theme	Cihaz teması
+	E-mail address	E-posta adresi
+	Google did not confirm who you are, or signing in was cancelled.	Google kimliğinizi doğrulamadı veya oturum açma iptal edildi.
+	Invitations	Davetler
+	Invite	Davet et
+	Invited people become creators or administrators when they first sign in with Google.	Davet edilen kişiler Google ile ilk kez oturum açtıklarında içerik üreticisi veya yönetici olur.
+	Language	Dil
+	Language: {language}	Dil: {language}
+	Last used {when}	Son kullanım: {when}
+	Light	Açık
+	Light theme	Açık tema
+	Personal tokens	Kişisel jetonlar
+	Revoke	İptal et
+	Role	Rol
+	Settings	Ayarlar
+	Sign out	Oturumu kapat
+	Sign-in did not work	Oturum açılamadı
+	Sign-in is not set up on this server.	Bu sunucuda oturum açma ayarlanmamış.
+	Token name	Jeton adı
+	Try again	Tekrar dene
+	Use device theme	Cihaz temasını kullan
+	View your channel	Kanalınızı görüntüleyin
+	Viewer	İzleyici
+	Withdraw	Geri çek
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Hesabınız engellendi: video izleyebilirsiniz ancak beğenemez, yorum yapamaz veya yayınlayamazsınız.
 @plural	{n} view|{n} views	{n} görüntüleme|{n} görüntüleme
 @plural	{n} like|{n} likes	{n} beğeni|{n} beğeni
 @plural	{n} comment|{n} comments	{n} yorum|{n} yorum

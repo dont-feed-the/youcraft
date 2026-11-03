@@ -36,6 +36,45 @@
 	Dislike	Tidak suka
 	Share	Bagikan
 	Comments are turned off.	Komentar dinonaktifkan.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Token pribadi memungkinkan program bertindak atas nama Anda, dengan semua hak Anda. Rahasiakan token ini.
+	Account	Akun
+	Account menu	Menu akun
+	Administrator	Administrator
+	Appearance	Tampilan
+	Appearance: {theme}	Tampilan: {theme}
+	Back	Kembali
+	Copy this token now: it will not be shown again.	Salin token ini sekarang: token tidak akan ditampilkan lagi.
+	Create token	Buat token
+	Created {when}	Dibuat {when}
+	Creator	Kreator
+	Dark	Gelap
+	Dark theme	Tema gelap
+	Device theme	Tema perangkat
+	E-mail address	Alamat email
+	Google did not confirm who you are, or signing in was cancelled.	Google tidak mengonfirmasi identitas Anda, atau proses masuk dibatalkan.
+	Invitations	Undangan
+	Invite	Undang
+	Invited people become creators or administrators when they first sign in with Google.	Orang yang diundang menjadi kreator atau administrator saat pertama kali masuk dengan Google.
+	Language	Bahasa
+	Language: {language}	Bahasa: {language}
+	Last used {when}	Terakhir digunakan {when}
+	Light	Terang
+	Light theme	Tema terang
+	Personal tokens	Token pribadi
+	Revoke	Cabut
+	Role	Peran
+	Settings	Setelan
+	Sign out	Keluar
+	Sign-in did not work	Gagal masuk
+	Sign-in is not set up on this server.	Proses masuk belum disiapkan di server ini.
+	Token name	Nama token
+	Try again	Coba lagi
+	Use device theme	Gunakan tema perangkat
+	View your channel	Lihat channel Anda
+	Viewer	Penonton
+	Withdraw	Tarik
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Akun Anda diblokir: Anda dapat menonton video, tetapi tidak dapat menyukai, berkomentar, atau memublikasikan.
 @plural	{n} view|{n} views	{n} kali ditonton
 @plural	{n} like|{n} likes	{n} suka
 @plural	{n} comment|{n} comments	{n} komentar

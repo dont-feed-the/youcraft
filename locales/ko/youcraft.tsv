@@ -36,6 +36,45 @@
 	Dislike	싫어요
 	Share	공유
 	Comments are turned off.	댓글이 사용 중지되었습니다.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	개인 토큰을 사용하면 프로그램이 내 모든 권한으로 나를 대신해 작업할 수 있습니다. 비밀로 유지하세요.
+	Account	계정
+	Account menu	계정 메뉴
+	Administrator	관리자
+	Appearance	디자인
+	Appearance: {theme}	디자인: {theme}
+	Back	뒤로
+	Copy this token now: it will not be shown again.	지금 이 토큰을 복사하세요. 다시 표시되지 않습니다.
+	Create token	토큰 만들기
+	Created {when}	{when} 생성됨
+	Creator	크리에이터
+	Dark	어두운 테마
+	Dark theme	어두운 테마
+	Device theme	기기 테마
+	E-mail address	이메일 주소
+	Google did not confirm who you are, or signing in was cancelled.	Google에서 본인 확인을 하지 못했거나 로그인이 취소되었습니다.
+	Invitations	초대
+	Invite	초대하기
+	Invited people become creators or administrators when they first sign in with Google.	초대받은 사람은 Google로 처음 로그인할 때 크리에이터 또는 관리자가 됩니다.
+	Language	언어
+	Language: {language}	언어: {language}
+	Last used {when}	마지막 사용 {when}
+	Light	밝은 테마
+	Light theme	밝은 테마
+	Personal tokens	개인 토큰
+	Revoke	취소
+	Role	역할
+	Settings	설정
+	Sign out	로그아웃
+	Sign-in did not work	로그인하지 못했습니다
+	Sign-in is not set up on this server.	이 서버에는 로그인이 설정되어 있지 않습니다.
+	Token name	토큰 이름
+	Try again	다시 시도
+	Use device theme	기기 테마 사용
+	View your channel	내 채널 보기
+	Viewer	시청자
+	Withdraw	철회
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	계정이 차단되었습니다. 동영상은 볼 수 있지만 좋아요, 댓글, 게시는 할 수 없습니다.
 @plural	{n} view|{n} views	조회수 {n}회
 @plural	{n} like|{n} likes	좋아요 {n}개
 @plural	{n} comment|{n} comments	댓글 {n}개

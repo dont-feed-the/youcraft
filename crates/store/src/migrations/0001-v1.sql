@@ -14,6 +14,7 @@ CREATE TABLE accounts (
     history_paused INTEGER NOT NULL DEFAULT 0 CHECK (history_paused IN (0, 1)),
     created_at INTEGER NOT NULL
 ) STRICT;
+CREATE INDEX accounts_by_email ON accounts (email COLLATE NOCASE);
 
 -- E-mail addresses invited to publish or to run the site; applied when that person signs in.
 CREATE TABLE invitations (
@@ -22,21 +23,26 @@ CREATE TABLE invitations (
     created_at INTEGER NOT NULL
 ) STRICT;
 
--- Signed-in browsers and programs, by the SHA-256 of their secret.
+-- Signed-in browsers, by the SHA-256 of the secret their cookie holds.
 CREATE TABLE sessions (
     secret_hash BLOB PRIMARY KEY,
     account_id INTEGER NOT NULL REFERENCES accounts (id) ON DELETE CASCADE,
     created_at INTEGER NOT NULL,
     expires_at INTEGER NOT NULL
 ) STRICT;
+CREATE INDEX sessions_of_account ON sessions (account_id);
+CREATE INDEX sessions_expiring ON sessions (expires_at);
 
+-- Personal tokens of programs, by the SHA-256 of their secret.
 CREATE TABLE tokens (
-    secret_hash BLOB PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
+    secret_hash BLOB NOT NULL UNIQUE,
     account_id INTEGER NOT NULL REFERENCES accounts (id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     created_at INTEGER NOT NULL,
     last_used_at INTEGER
 ) STRICT;
+CREATE INDEX tokens_of_account ON tokens (account_id, created_at DESC);
 
 -- Every account has one channel, its public face; `handle_key` is the handle case-folded.
 CREATE TABLE channels (

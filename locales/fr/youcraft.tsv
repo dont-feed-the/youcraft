@@ -36,6 +36,45 @@
 	Dislike	Je n'aime pas
 	Share	Partager
 	Comments are turned off.	Les commentaires sont désactivés.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Un jeton personnel permet à un programme d'agir en votre nom, avec tous vos droits. Gardez-le secret.
+	Account	Compte
+	Account menu	Menu du compte
+	Administrator	Administrateur
+	Appearance	Apparence
+	Appearance: {theme}	Apparence : {theme}
+	Back	Retour
+	Copy this token now: it will not be shown again.	Copiez ce jeton maintenant : il ne sera plus affiché.
+	Create token	Créer un jeton
+	Created {when}	Créé {when}
+	Creator	Créateur
+	Dark	Sombre
+	Dark theme	Thème sombre
+	Device theme	Thème de l'appareil
+	E-mail address	Adresse e-mail
+	Google did not confirm who you are, or signing in was cancelled.	Google n'a pas confirmé votre identité, ou la connexion a été annulée.
+	Invitations	Invitations
+	Invite	Inviter
+	Invited people become creators or administrators when they first sign in with Google.	Les personnes invitées deviennent créateurs ou administrateurs lors de leur première connexion avec Google.
+	Language	Langue
+	Language: {language}	Langue : {language}
+	Last used {when}	Dernière utilisation {when}
+	Light	Clair
+	Light theme	Thème clair
+	Personal tokens	Jetons personnels
+	Revoke	Révoquer
+	Role	Rôle
+	Settings	Paramètres
+	Sign out	Se déconnecter
+	Sign-in did not work	La connexion n'a pas abouti
+	Sign-in is not set up on this server.	La connexion n'est pas configurée sur ce serveur.
+	Token name	Nom du jeton
+	Try again	Réessayer
+	Use device theme	Utiliser le thème de l'appareil
+	View your channel	Voir votre chaîne
+	Viewer	Spectateur
+	Withdraw	Retirer
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Votre compte est bloqué : vous pouvez regarder des vidéos, mais pas aimer, commenter ni publier.
 @plural	{n} view|{n} views	{n} vue|{n} vues
 @plural	{n} like|{n} likes	{n} j'aime|{n} j'aime
 @plural	{n} comment|{n} comments	{n} commentaire|{n} commentaires

@@ -36,6 +36,45 @@
 	Dislike	Non me gusta
 	Share	Compartir
 	Comments are turned off.	Os comentarios están desactivados.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Un token persoal permite que un programa actúe no teu nome, con todos os teus dereitos. Gárdao en segredo.
+	Account	Conta
+	Account menu	Menú da conta
+	Administrator	Administrador
+	Appearance	Aparencia
+	Appearance: {theme}	Aparencia: {theme}
+	Back	Atrás
+	Copy this token now: it will not be shown again.	Copia este token agora: non se volverá mostrar.
+	Create token	Crear token
+	Created {when}	Creado {when}
+	Creator	Creador
+	Dark	Escuro
+	Dark theme	Tema escuro
+	Device theme	Tema do dispositivo
+	E-mail address	Enderezo de correo electrónico
+	Google did not confirm who you are, or signing in was cancelled.	Google non confirmou a túa identidade ou cancelouse o inicio de sesión.
+	Invitations	Invitacións
+	Invite	Invitar
+	Invited people become creators or administrators when they first sign in with Google.	As persoas invitadas convértense en creadoras ou administradoras a primeira vez que inician sesión con Google.
+	Language	Idioma
+	Language: {language}	Idioma: {language}
+	Last used {when}	Último uso {when}
+	Light	Claro
+	Light theme	Tema claro
+	Personal tokens	Tokens persoais
+	Revoke	Revogar
+	Role	Función
+	Settings	Configuración
+	Sign out	Pechar sesión
+	Sign-in did not work	Non se puido iniciar sesión
+	Sign-in is not set up on this server.	O inicio de sesión non está configurado neste servidor.
+	Token name	Nome do token
+	Try again	Tentar de novo
+	Use device theme	Usar o tema do dispositivo
+	View your channel	Ver a túa canle
+	Viewer	Espectador
+	Withdraw	Retirar
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	A túa conta está bloqueada: podes ver vídeos, pero non marcar Gústame, comentar nin publicar.
 @plural	{n} view|{n} views	{n} visualización|{n} visualizacións
 @plural	{n} like|{n} likes	{n} gústame|{n} gústame
 @plural	{n} comment|{n} comments	{n} comentario|{n} comentarios

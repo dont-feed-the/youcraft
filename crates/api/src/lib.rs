@@ -7,6 +7,7 @@
 
 pub mod command;
 pub mod commands;
+pub mod cookies;
 pub mod error;
 pub mod ids;
 pub mod records;
@@ -16,5 +17,5 @@ pub mod time;
 
 pub use command::{Answer, Command, Descriptor, Dispatch};
 pub use error::ApiError;
-pub use ids::{AccountId, ChannelId, CommentId, PlaylistId, VideoId};
+pub use ids::{AccountId, ChannelId, CommentId, PlaylistId, TokenId, VideoId};
 pub use role::Role;

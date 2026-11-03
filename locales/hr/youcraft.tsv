@@ -36,6 +36,45 @@
 	Dislike	Ne sviđa mi se
 	Share	Podijeli
 	Comments are turned off.	Komentari su isključeni.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Osobni token omogućuje programu da djeluje u vaše ime, sa svim vašim pravima. Čuvajte ga u tajnosti.
+	Account	Račun
+	Account menu	Izbornik računa
+	Administrator	Administrator
+	Appearance	Izgled
+	Appearance: {theme}	Izgled: {theme}
+	Back	Natrag
+	Copy this token now: it will not be shown again.	Kopirajte ovaj token sada: više se neće prikazati.
+	Create token	Izradi token
+	Created {when}	Izrađeno {when}
+	Creator	Autor
+	Dark	Tamno
+	Dark theme	Tamna tema
+	Device theme	Tema uređaja
+	E-mail address	Adresa e-pošte
+	Google did not confirm who you are, or signing in was cancelled.	Google nije potvrdio vaš identitet ili je prijava otkazana.
+	Invitations	Pozivnice
+	Invite	Pozovi
+	Invited people become creators or administrators when they first sign in with Google.	Pozvane osobe postaju autori ili administratori kad se prvi put prijave putem Googlea.
+	Language	Jezik
+	Language: {language}	Jezik: {language}
+	Last used {when}	Zadnja upotreba {when}
+	Light	Svijetlo
+	Light theme	Svijetla tema
+	Personal tokens	Osobni tokeni
+	Revoke	Opozovi
+	Role	Uloga
+	Settings	Postavke
+	Sign out	Odjava
+	Sign-in did not work	Prijava nije uspjela
+	Sign-in is not set up on this server.	Prijava nije postavljena na ovom poslužitelju.
+	Token name	Naziv tokena
+	Try again	Pokušaj ponovno
+	Use device theme	Koristi temu uređaja
+	View your channel	Pogledajte svoj kanal
+	Viewer	Gledatelj
+	Withdraw	Povuci
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Vaš je račun blokiran: možete gledati videozapise, ali ne i označavati da vam se sviđaju, komentirati ili objavljivati.
 @plural	{n} view|{n} views	{n} pregled|{n} pregleda|{n} pregleda
 @plural	{n} like|{n} likes	{n} sviđanje|{n} sviđanja|{n} sviđanja
 @plural	{n} comment|{n} comments	{n} komentar|{n} komentara|{n} komentara

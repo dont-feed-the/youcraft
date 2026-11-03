@@ -36,6 +36,45 @@
 	Dislike	Não curtir
 	Share	Compartilhar
 	Comments are turned off.	Os comentários estão desativados.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Um token pessoal permite que um programa aja em seu nome, com todos os seus direitos. Mantenha-o em segredo.
+	Account	Conta
+	Account menu	Menu da conta
+	Administrator	Administrador
+	Appearance	Aparência
+	Appearance: {theme}	Aparência: {theme}
+	Back	Voltar
+	Copy this token now: it will not be shown again.	Copie este token agora: ele não será mostrado novamente.
+	Create token	Criar token
+	Created {when}	Criado {when}
+	Creator	Criador
+	Dark	Escuro
+	Dark theme	Tema escuro
+	Device theme	Tema do dispositivo
+	E-mail address	Endereço de e-mail
+	Google did not confirm who you are, or signing in was cancelled.	O Google não confirmou sua identidade, ou o login foi cancelado.
+	Invitations	Convites
+	Invite	Convidar
+	Invited people become creators or administrators when they first sign in with Google.	As pessoas convidadas se tornam criadores ou administradores ao fazer login pela primeira vez com o Google.
+	Language	Idioma
+	Language: {language}	Idioma: {language}
+	Last used {when}	Último uso {when}
+	Light	Claro
+	Light theme	Tema claro
+	Personal tokens	Tokens pessoais
+	Revoke	Revogar
+	Role	Função
+	Settings	Configurações
+	Sign out	Sair
+	Sign-in did not work	Não foi possível fazer login
+	Sign-in is not set up on this server.	O login não está configurado neste servidor.
+	Token name	Nome do token
+	Try again	Tentar novamente
+	Use device theme	Usar o tema do dispositivo
+	View your channel	Ver seu canal
+	Viewer	Espectador
+	Withdraw	Retirar
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Sua conta está bloqueada: você pode assistir a vídeos, mas não curtir, comentar nem publicar.
 @plural	{n} view|{n} views	{n} visualização|{n} visualizações
 @plural	{n} like|{n} likes	{n} curtida|{n} curtidas
 @plural	{n} comment|{n} comments	{n} comentário|{n} comentários

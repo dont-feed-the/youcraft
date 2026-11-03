@@ -36,6 +36,45 @@
 	Dislike	Nepáči sa mi
 	Share	Zdieľať
 	Comments are turned off.	Komentáre sú vypnuté.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Osobný token umožňuje programu konať vaším menom so všetkými vašimi právami. Uchovajte ho v tajnosti.
+	Account	Účet
+	Account menu	Ponuka účtu
+	Administrator	Správca
+	Appearance	Vzhľad
+	Appearance: {theme}	Vzhľad: {theme}
+	Back	Späť
+	Copy this token now: it will not be shown again.	Skopírujte si token hneď: znova sa nezobrazí.
+	Create token	Vytvoriť token
+	Created {when}	Vytvorené {when}
+	Creator	Tvorca
+	Dark	Tmavý
+	Dark theme	Tmavý motív
+	Device theme	Motív zariadenia
+	E-mail address	E-mailová adresa
+	Google did not confirm who you are, or signing in was cancelled.	Google nepotvrdil vašu totožnosť alebo bolo prihlásenie zrušené.
+	Invitations	Pozvánky
+	Invite	Pozvať
+	Invited people become creators or administrators when they first sign in with Google.	Pozvaní ľudia sa stanú tvorcami alebo správcami, keď sa prvýkrát prihlásia cez Google.
+	Language	Jazyk
+	Language: {language}	Jazyk: {language}
+	Last used {when}	Naposledy použité {when}
+	Light	Svetlý
+	Light theme	Svetlý motív
+	Personal tokens	Osobné tokeny
+	Revoke	Odvolať
+	Role	Rola
+	Settings	Nastavenia
+	Sign out	Odhlásiť sa
+	Sign-in did not work	Prihlásenie sa nepodarilo
+	Sign-in is not set up on this server.	Prihlasovanie na tomto serveri nie je nastavené.
+	Token name	Názov tokenu
+	Try again	Skúsiť znova
+	Use device theme	Použiť motív zariadenia
+	View your channel	Zobraziť váš kanál
+	Viewer	Divák
+	Withdraw	Stiahnuť
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Váš účet je zablokovaný: môžete pozerať videá, ale nie hodnotiť, komentovať ani publikovať.
 @plural	{n} view|{n} views	{n} zhliadnutie|{n} zhliadnutia|{n} zhliadnutí
 @plural	{n} like|{n} likes	{n} lajk|{n} lajky|{n} lajkov
 @plural	{n} comment|{n} comments	{n} komentár|{n} komentáre|{n} komentárov

@@ -36,6 +36,45 @@
 	Dislike	Ne sviđa mi se
 	Share	Podijeli
 	Comments are turned off.	Komentari su isključeni.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Lični token omogućava programu da djeluje u vaše ime, sa svim vašim pravima. Čuvajte ga u tajnosti.
+	Account	Račun
+	Account menu	Meni računa
+	Administrator	Administrator
+	Appearance	Izgled
+	Appearance: {theme}	Izgled: {theme}
+	Back	Nazad
+	Copy this token now: it will not be shown again.	Kopirajte ovaj token sada: više se neće prikazati.
+	Create token	Kreiraj token
+	Created {when}	Kreirano {when}
+	Creator	Kreator
+	Dark	Tamno
+	Dark theme	Tamna tema
+	Device theme	Tema uređaja
+	E-mail address	Adresa e-pošte
+	Google did not confirm who you are, or signing in was cancelled.	Google nije potvrdio vaš identitet ili je prijava otkazana.
+	Invitations	Pozivnice
+	Invite	Pozovi
+	Invited people become creators or administrators when they first sign in with Google.	Pozvane osobe postaju kreatori ili administratori kada se prvi put prijave putem Googlea.
+	Language	Jezik
+	Language: {language}	Jezik: {language}
+	Last used {when}	Posljednja upotreba {when}
+	Light	Svijetlo
+	Light theme	Svijetla tema
+	Personal tokens	Lični tokeni
+	Revoke	Opozovi
+	Role	Uloga
+	Settings	Postavke
+	Sign out	Odjava
+	Sign-in did not work	Prijava nije uspjela
+	Sign-in is not set up on this server.	Prijava nije postavljena na ovom serveru.
+	Token name	Naziv tokena
+	Try again	Pokušaj ponovo
+	Use device theme	Koristi temu uređaja
+	View your channel	Pogledajte svoj kanal
+	Viewer	Gledalac
+	Withdraw	Povuci
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Vaš račun je blokiran: možete gledati videozapise, ali ne i lajkati, komentarisati ili objavljivati.
 @plural	{n} view|{n} views	{n} pregled|{n} pregleda|{n} pregleda
 @plural	{n} like|{n} likes	{n} sviđanje|{n} sviđanja|{n} sviđanja
 @plural	{n} comment|{n} comments	{n} komentar|{n} komentara|{n} komentara

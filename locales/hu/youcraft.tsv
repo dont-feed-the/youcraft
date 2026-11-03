@@ -36,6 +36,45 @@
 	Dislike	Nem tetszik
 	Share	Megosztás
 	Comments are turned off.	A hozzászólások ki vannak kapcsolva.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	A személyes token lehetővé teszi, hogy egy program a nevedben, az összes jogoddal eljárjon. Tartsd titokban.
+	Account	Fiók
+	Account menu	Fiókmenü
+	Administrator	Rendszergazda
+	Appearance	Megjelenés
+	Appearance: {theme}	Megjelenés: {theme}
+	Back	Vissza
+	Copy this token now: it will not be shown again.	Másold ki most ezt a tokent: többé nem jelenik meg.
+	Create token	Token létrehozása
+	Created {when}	Létrehozva: {when}
+	Creator	Alkotó
+	Dark	Sötét
+	Dark theme	Sötét téma
+	Device theme	Eszköz témája
+	E-mail address	E-mail-cím
+	Google did not confirm who you are, or signing in was cancelled.	A Google nem erősítette meg, ki vagy, vagy a bejelentkezés megszakadt.
+	Invitations	Meghívások
+	Invite	Meghívás
+	Invited people become creators or administrators when they first sign in with Google.	A meghívott személyek alkotók vagy rendszergazdák lesznek, amikor először bejelentkeznek a Google-lel.
+	Language	Nyelv
+	Language: {language}	Nyelv: {language}
+	Last used {when}	Utoljára használva: {when}
+	Light	Világos
+	Light theme	Világos téma
+	Personal tokens	Személyes tokenek
+	Revoke	Visszavonás
+	Role	Szerepkör
+	Settings	Beállítások
+	Sign out	Kijelentkezés
+	Sign-in did not work	A bejelentkezés nem sikerült
+	Sign-in is not set up on this server.	A bejelentkezés nincs beállítva ezen a szerveren.
+	Token name	Token neve
+	Try again	Próbáld újra
+	Use device theme	Eszköz témájának használata
+	View your channel	Csatornád megtekintése
+	Viewer	Néző
+	Withdraw	Visszavonás
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	A fiókod le van tiltva: nézhetsz videókat, de nem kedvelhetsz, nem kommentelhetsz és nem tehetsz közzé semmit.
 @plural	{n} view|{n} views	{n} megtekintés|{n} megtekintés
 @plural	{n} like|{n} likes	{n} kedvelés|{n} kedvelés
 @plural	{n} comment|{n} comments	{n} hozzászólás|{n} hozzászólás

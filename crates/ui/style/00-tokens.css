@@ -16,8 +16,12 @@
   --badge-text: #ffffff;
   --focus: #1a73e8;
   --player-bg: #000000;
+  --bg-menu: #ffffff;
+  --shadow-menu: 0 4px 32px rgba(0, 0, 0, 0.1);
+  --scrim: rgba(0, 0, 0, 0);
 
   --font: system-ui, -apple-system, "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Noto Sans Mono", monospace;
   --text-xxs: 10px;
   --text-xs: 12px;
   --text-sm: 14px;
@@ -48,6 +52,11 @@
   --mini-guide-width: 72px;
   --tabbar-height: 48px;
   --avatar: 36px;
+  --avatar-menu: 40px;
+  --avatar-large: 64px;
+  --menu-width: 300px;
+  --menu-height: 75vh;
+  --settings-width: 720px;
   --icon: 24px;
   --compact-thumb: 168px;
 }
@@ -63,6 +72,8 @@
     --text-2: #aaaaaa;
     --text-on-strong: #0f0f0f;
     --border: #3f3f3f;
+    --bg-menu: #282828;
+    --shadow-menu: 0 4px 32px rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -76,4 +87,6 @@
   --text-2: #aaaaaa;
   --text-on-strong: #0f0f0f;
   --border: #3f3f3f;
+  --bg-menu: #282828;
+  --shadow-menu: 0 4px 32px rgba(0, 0, 0, 0.4);
 }

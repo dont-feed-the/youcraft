@@ -159,6 +159,10 @@ identifier!(
     /// A person's account, never shown to others.
     AccountId
 );
+identifier!(
+    /// A personal token, as its owner lists and revokes it; never its secret.
+    TokenId
+);
 
 #[cfg(test)]
 mod tests {

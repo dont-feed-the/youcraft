@@ -36,6 +36,45 @@
 	Dislike	不喜歡
 	Share	分享
 	Comments are turned off.	留言功能已關閉。
+	A personal token lets a program act as you, with all your rights. Keep it secret.	個人權杖可讓程式以你的身分、用你的所有權限執行操作。請妥善保密。
+	Account	帳戶
+	Account menu	帳戶選單
+	Administrator	管理員
+	Appearance	外觀
+	Appearance: {theme}	外觀：{theme}
+	Back	返回
+	Copy this token now: it will not be shown again.	請立即複製這個權杖：它不會再次顯示。
+	Create token	建立權杖
+	Created {when}	建立於{when}
+	Creator	創作者
+	Dark	深色
+	Dark theme	深色主題
+	Device theme	裝置主題
+	E-mail address	電子郵件地址
+	Google did not confirm who you are, or signing in was cancelled.	Google 未確認你的身分，或登入已取消。
+	Invitations	邀請
+	Invite	邀請
+	Invited people become creators or administrators when they first sign in with Google.	受邀者首次使用 Google 登入時，就會成為創作者或管理員。
+	Language	語言
+	Language: {language}	語言：{language}
+	Last used {when}	上次使用時間：{when}
+	Light	淺色
+	Light theme	淺色主題
+	Personal tokens	個人權杖
+	Revoke	撤銷
+	Role	角色
+	Settings	設定
+	Sign out	登出
+	Sign-in did not work	登入失敗
+	Sign-in is not set up on this server.	這個伺服器尚未設定登入功能。
+	Token name	權杖名稱
+	Try again	重試
+	Use device theme	使用裝置主題
+	View your channel	查看你的頻道
+	Viewer	觀眾
+	Withdraw	撤回
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	你的帳戶已遭封鎖：你可以觀看影片，但無法按讚、留言或發布內容。
 @plural	{n} view|{n} views	觀看次數：{n} 次
 @plural	{n} like|{n} likes	{n} 個喜歡
 @plural	{n} comment|{n} comments	{n} 則留言

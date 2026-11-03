@@ -8,6 +8,7 @@
 #[cfg(not(any(feature = "ssr", feature = "hydrate")))]
 compile_error!("youcraft-ui is built with its `ssr` feature (server) or `hydrate` (browser)");
 
+pub mod account;
 pub mod app;
 pub mod call;
 pub mod components;
@@ -24,10 +25,11 @@ pub use shell::shell;
 #[wasm_bindgen::prelude::wasm_bindgen]
 pub fn hydrate() {
     console_error_panic_hook::set_once();
-    let (language, time) = lang::from_page();
+    let (language, time, theme) = lang::from_page();
     leptos::mount::hydrate_body(move || {
         leptos::prelude::provide_context(language);
         leptos::prelude::provide_context(time);
+        leptos::prelude::provide_context(theme);
         leptos::prelude::view! { <App/> }
     });
 }

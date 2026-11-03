@@ -36,6 +36,45 @@
 	Dislike	Δεν μου αρέσει
 	Share	Κοινοποίηση
 	Comments are turned off.	Τα σχόλια είναι απενεργοποιημένα.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Ένα προσωπικό διακριτικό επιτρέπει σε ένα πρόγραμμα να ενεργεί ως εσείς, με όλα τα δικαιώματά σας. Κρατήστε το μυστικό.
+	Account	Λογαριασμός
+	Account menu	Μενού λογαριασμού
+	Administrator	Διαχειριστής
+	Appearance	Εμφάνιση
+	Appearance: {theme}	Εμφάνιση: {theme}
+	Back	Πίσω
+	Copy this token now: it will not be shown again.	Αντιγράψτε τώρα το διακριτικό: δεν θα εμφανιστεί ξανά.
+	Create token	Δημιουργία διακριτικού
+	Created {when}	Δημιουργήθηκε {when}
+	Creator	Δημιουργός
+	Dark	Σκούρο
+	Dark theme	Σκούρο θέμα
+	Device theme	Θέμα συσκευής
+	E-mail address	Διεύθυνση email
+	Google did not confirm who you are, or signing in was cancelled.	Η Google δεν επιβεβαίωσε την ταυτότητά σας ή η σύνδεση ακυρώθηκε.
+	Invitations	Προσκλήσεις
+	Invite	Πρόσκληση
+	Invited people become creators or administrators when they first sign in with Google.	Όσοι προσκαλούνται γίνονται δημιουργοί ή διαχειριστές όταν συνδεθούν για πρώτη φορά με Google.
+	Language	Γλώσσα
+	Language: {language}	Γλώσσα: {language}
+	Last used {when}	Τελευταία χρήση {when}
+	Light	Ανοιχτό
+	Light theme	Ανοιχτό θέμα
+	Personal tokens	Προσωπικά διακριτικά
+	Revoke	Ανάκληση
+	Role	Ρόλος
+	Settings	Ρυθμίσεις
+	Sign out	Αποσύνδεση
+	Sign-in did not work	Η σύνδεση απέτυχε
+	Sign-in is not set up on this server.	Η σύνδεση δεν έχει ρυθμιστεί σε αυτόν τον διακομιστή.
+	Token name	Όνομα διακριτικού
+	Try again	Δοκιμάστε ξανά
+	Use device theme	Χρήση θέματος συσκευής
+	View your channel	Προβολή του καναλιού σας
+	Viewer	Θεατής
+	Withdraw	Απόσυρση
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Ο λογαριασμός σας έχει αποκλειστεί: μπορείτε να παρακολουθείτε βίντεο, αλλά όχι να κάνετε «Μου αρέσει», να σχολιάζετε ή να δημοσιεύετε.
 @plural	{n} view|{n} views	{n} προβολή|{n} προβολές
 @plural	{n} like|{n} likes	{n} «μου αρέσει»|{n} «μου αρέσει»
 @plural	{n} comment|{n} comments	{n} σχόλιο|{n} σχόλια

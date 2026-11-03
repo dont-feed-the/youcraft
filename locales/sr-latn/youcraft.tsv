@@ -36,6 +36,45 @@
 	Dislike	Ne sviđa mi se
 	Share	Podeli
 	Comments are turned off.	Komentari su isključeni.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Lični token omogućava programu da deluje u vaše ime, sa svim vašim pravima. Čuvajte ga u tajnosti.
+	Account	Nalog
+	Account menu	Meni naloga
+	Administrator	Administrator
+	Appearance	Izgled
+	Appearance: {theme}	Izgled: {theme}
+	Back	Nazad
+	Copy this token now: it will not be shown again.	Kopirajte ovaj token sada: više neće biti prikazan.
+	Create token	Napravi token
+	Created {when}	Napravljeno {when}
+	Creator	Autor
+	Dark	Tamno
+	Dark theme	Tamna tema
+	Device theme	Tema uređaja
+	E-mail address	Imejl adresa
+	Google did not confirm who you are, or signing in was cancelled.	Google nije potvrdio vaš identitet ili je prijavljivanje otkazano.
+	Invitations	Pozivnice
+	Invite	Pozovi
+	Invited people become creators or administrators when they first sign in with Google.	Pozvane osobe postaju autori ili administratori kada se prvi put prijave preko Google-a.
+	Language	Jezik
+	Language: {language}	Jezik: {language}
+	Last used {when}	Poslednje korišćenje {when}
+	Light	Svetlo
+	Light theme	Svetla tema
+	Personal tokens	Lični tokeni
+	Revoke	Opozovi
+	Role	Uloga
+	Settings	Podešavanja
+	Sign out	Odjavi me
+	Sign-in did not work	Prijavljivanje nije uspelo
+	Sign-in is not set up on this server.	Prijavljivanje nije podešeno na ovom serveru.
+	Token name	Naziv tokena
+	Try again	Pokušaj ponovo
+	Use device theme	Koristi temu uređaja
+	View your channel	Pogledajte svoj kanal
+	Viewer	Gledalac
+	Withdraw	Povuci
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Vaš nalog je blokiran: možete da gledate video snimke, ali ne i da ih označavate sa „sviđa mi se“, komentarišete ili objavljujete.
 @plural	{n} view|{n} views	{n} pregled|{n} pregleda|{n} pregleda
 @plural	{n} like|{n} likes	{n} sviđanje|{n} sviđanja|{n} sviđanja
 @plural	{n} comment|{n} comments	{n} komentar|{n} komentara|{n} komentara

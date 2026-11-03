@@ -36,6 +36,45 @@
 	Dislike	Не нравится
 	Share	Поделиться
 	Comments are turned off.	Комментарии отключены.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Личный токен позволяет программе действовать от вашего имени со всеми вашими правами. Храните его в секрете.
+	Account	Аккаунт
+	Account menu	Меню аккаунта
+	Administrator	Администратор
+	Appearance	Тема
+	Appearance: {theme}	Тема: {theme}
+	Back	Назад
+	Copy this token now: it will not be shown again.	Скопируйте токен сейчас: он больше не будет показан.
+	Create token	Создать токен
+	Created {when}	Создан {when}
+	Creator	Автор
+	Dark	Тёмная
+	Dark theme	Тёмная тема
+	Device theme	Как на устройстве
+	E-mail address	Адрес электронной почты
+	Google did not confirm who you are, or signing in was cancelled.	Google не подтвердил вашу личность, или вход был отменён.
+	Invitations	Приглашения
+	Invite	Пригласить
+	Invited people become creators or administrators when they first sign in with Google.	Приглашённые становятся авторами или администраторами при первом входе через Google.
+	Language	Язык
+	Language: {language}	Язык: {language}
+	Last used {when}	Последнее использование {when}
+	Light	Светлая
+	Light theme	Светлая тема
+	Personal tokens	Личные токены
+	Revoke	Отозвать
+	Role	Роль
+	Settings	Настройки
+	Sign out	Выйти
+	Sign-in did not work	Не удалось войти
+	Sign-in is not set up on this server.	Вход на этом сервере не настроен.
+	Token name	Название токена
+	Try again	Повторить попытку
+	Use device theme	Как на устройстве
+	View your channel	Перейти на свой канал
+	Viewer	Зритель
+	Withdraw	Отозвать
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Ваш аккаунт заблокирован: вы можете смотреть видео, но не можете ставить отметки «Нравится», комментировать и публиковать.
 @plural	{n} view|{n} views	{n} просмотр|{n} просмотра|{n} просмотров
 @plural	{n} like|{n} likes	{n} лайк|{n} лайка|{n} лайков
 @plural	{n} comment|{n} comments	{n} комментарий|{n} комментария|{n} комментариев

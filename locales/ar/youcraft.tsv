@@ -36,6 +36,45 @@
 	Dislike	عدم إعجاب
 	Share	مشاركة
 	Comments are turned off.	التعليقات متوقفة.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	يتيح الرمز المميّز الشخصي لبرنامج أن يتصرّف باسمك، بكل صلاحياتك. احتفظ به سرًّا.
+	Account	الحساب
+	Account menu	قائمة الحساب
+	Administrator	مشرف
+	Appearance	المظهر
+	Appearance: {theme}	المظهر: {theme}
+	Back	رجوع
+	Copy this token now: it will not be shown again.	انسخ هذا الرمز الآن: لن يظهر مرة أخرى.
+	Create token	إنشاء رمز
+	Created {when}	أُنشئ {when}
+	Creator	صانع محتوى
+	Dark	داكن
+	Dark theme	مظهر داكن
+	Device theme	مظهر الجهاز
+	E-mail address	عنوان البريد الإلكتروني
+	Google did not confirm who you are, or signing in was cancelled.	لم تؤكّد Google هويتك، أو أُلغي تسجيل الدخول.
+	Invitations	الدعوات
+	Invite	دعوة
+	Invited people become creators or administrators when they first sign in with Google.	يصبح المدعوّون صنّاع محتوى أو مشرفين عند تسجيل دخولهم لأول مرة باستخدام Google.
+	Language	اللغة
+	Language: {language}	اللغة: {language}
+	Last used {when}	آخر استخدام {when}
+	Light	فاتح
+	Light theme	مظهر فاتح
+	Personal tokens	الرموز المميّزة الشخصية
+	Revoke	إبطال
+	Role	الدور
+	Settings	الإعدادات
+	Sign out	تسجيل الخروج
+	Sign-in did not work	تعذّر تسجيل الدخول
+	Sign-in is not set up on this server.	تسجيل الدخول غير مُعدّ على هذا الخادم.
+	Token name	اسم الرمز
+	Try again	إعادة المحاولة
+	Use device theme	استخدام مظهر الجهاز
+	View your channel	عرض قناتك
+	Viewer	مشاهد
+	Withdraw	سحب
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	حسابك محظور: يمكنك مشاهدة الفيديوهات، لكن لا يمكنك الإعجاب أو التعليق أو النشر.
 @plural	{n} view|{n} views	{n} مشاهدة|{n} مشاهدة|{n} مشاهدة|{n} مشاهدات|{n} مشاهدة|{n} مشاهدة
 @plural	{n} like|{n} likes	{n} إعجاب|{n} إعجاب|{n} إعجاب|{n} إعجابات|{n} إعجابًا|{n} إعجاب
 @plural	{n} comment|{n} comments	{n} تعليق|{n} تعليق|{n} تعليق|{n} تعليقات|{n} تعليقًا|{n} تعليق

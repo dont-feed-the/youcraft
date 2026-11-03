@@ -36,6 +36,45 @@
 	Dislike	Nu-mi place
 	Share	Distribuie
 	Comments are turned off.	Comentariile sunt dezactivate.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Un token personal permite unui program să acționeze în numele tău, cu toate drepturile tale. Păstrează-l secret.
+	Account	Cont
+	Account menu	Meniul contului
+	Administrator	Administrator
+	Appearance	Aspect
+	Appearance: {theme}	Aspect: {theme}
+	Back	Înapoi
+	Copy this token now: it will not be shown again.	Copiază tokenul acum: nu va mai fi afișat.
+	Create token	Creează un token
+	Created {when}	Creat {when}
+	Creator	Creator
+	Dark	Întunecat
+	Dark theme	Temă întunecată
+	Device theme	Tema dispozitivului
+	E-mail address	Adresă de e-mail
+	Google did not confirm who you are, or signing in was cancelled.	Google nu ți-a confirmat identitatea sau conectarea a fost anulată.
+	Invitations	Invitații
+	Invite	Invită
+	Invited people become creators or administrators when they first sign in with Google.	Persoanele invitate devin creatori sau administratori la prima conectare cu Google.
+	Language	Limbă
+	Language: {language}	Limbă: {language}
+	Last used {when}	Folosit ultima dată {when}
+	Light	Luminos
+	Light theme	Temă luminoasă
+	Personal tokens	Tokenuri personale
+	Revoke	Revocă
+	Role	Rol
+	Settings	Setări
+	Sign out	Deconectează-te
+	Sign-in did not work	Conectarea nu a reușit
+	Sign-in is not set up on this server.	Conectarea nu este configurată pe acest server.
+	Token name	Numele tokenului
+	Try again	Încearcă din nou
+	Use device theme	Folosește tema dispozitivului
+	View your channel	Vezi canalul tău
+	Viewer	Spectator
+	Withdraw	Retrage
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Contul tău este blocat: poți viziona videoclipuri, dar nu poți aprecia, comenta sau publica.
 @plural	{n} view|{n} views	{n} vizionare|{n} vizionări|{n} de vizionări
 @plural	{n} like|{n} likes	{n} apreciere|{n} aprecieri|{n} de aprecieri
 @plural	{n} comment|{n} comments	{n} comentariu|{n} comentarii|{n} de comentarii

@@ -36,6 +36,45 @@
 	Dislike	Ogilla
 	Share	Dela
 	Comments are turned off.	Kommentarer är avstängda.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	En personlig token låter ett program agera som du, med alla dina rättigheter. Håll den hemlig.
+	Account	Konto
+	Account menu	Kontomeny
+	Administrator	Administratör
+	Appearance	Utseende
+	Appearance: {theme}	Utseende: {theme}
+	Back	Tillbaka
+	Copy this token now: it will not be shown again.	Kopiera token nu: den visas inte igen.
+	Create token	Skapa token
+	Created {when}	Skapad {when}
+	Creator	Kreatör
+	Dark	Mörkt
+	Dark theme	Mörkt tema
+	Device theme	Enhetens tema
+	E-mail address	E-postadress
+	Google did not confirm who you are, or signing in was cancelled.	Google bekräftade inte vem du är, eller så avbröts inloggningen.
+	Invitations	Inbjudningar
+	Invite	Bjud in
+	Invited people become creators or administrators when they first sign in with Google.	Inbjudna personer blir kreatörer eller administratörer när de loggar in med Google första gången.
+	Language	Språk
+	Language: {language}	Språk: {language}
+	Last used {when}	Senast använd {when}
+	Light	Ljust
+	Light theme	Ljust tema
+	Personal tokens	Personliga token
+	Revoke	Återkalla
+	Role	Roll
+	Settings	Inställningar
+	Sign out	Logga ut
+	Sign-in did not work	Inloggningen fungerade inte
+	Sign-in is not set up on this server.	Inloggning är inte konfigurerad på den här servern.
+	Token name	Tokenens namn
+	Try again	Försök igen
+	Use device theme	Använd enhetens tema
+	View your channel	Visa din kanal
+	Viewer	Tittare
+	Withdraw	Dra tillbaka
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Ditt konto är blockerat: du kan titta på videor, men inte gilla, kommentera eller publicera.
 @plural	{n} view|{n} views	{n} visning|{n} visningar
 @plural	{n} like|{n} likes	{n} gillamarkering|{n} gillamarkeringar
 @plural	{n} comment|{n} comments	{n} kommentar|{n} kommentarer

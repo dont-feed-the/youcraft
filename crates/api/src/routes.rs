@@ -18,6 +18,36 @@ pub const SUBSCRIPTIONS: &str = "/feed/subscriptions";
 pub const HISTORY: &str = "/feed/history";
 /// The viewer's playlists.
 pub const PLAYLISTS: &str = "/feed/playlists";
+/// Where signing in starts; see [`sign_in`].
+pub const SIGN_IN: &str = "/signin";
+/// Where Google posts the person back, signed in: the redirect URI registered with Google.
+pub const SIGNED_IN_WITH_GOOGLE: &str = "/signin/google";
+/// Where a sign-in that did not work ends, with `?why=`[`SIGN_IN_UNAVAILABLE`] or
+/// [`SIGN_IN_REFUSED`].
+pub const SIGN_IN_FAILED: &str = "/signin/failed";
+/// Why a sign-in failed: the server is not set up to sign anyone in.
+pub const SIGN_IN_UNAVAILABLE: &str = "unavailable";
+/// Why a sign-in failed: Google did not vouch for the person, or they cancelled.
+pub const SIGN_IN_REFUSED: &str = "refused";
+/// The signed-in person's settings: appearance, language, personal tokens.
+pub const ACCOUNT: &str = "/account";
+/// The creator's studio.
+pub const STUDIO: &str = "/studio";
+
+/// The address that signs the person in, then brings them back to `next` (a path of this site).
+pub fn sign_in(next: &str) -> String {
+    format!("{SIGN_IN}?next={}", encode_component(next))
+}
+
+/// `next` if it is a path of this site (`/…`, never `//…` or `/\…`, which browsers read as
+/// another host), else the home page: where to go after signing in.
+pub fn local_path(next: &str) -> &str {
+    let mut bytes = next.bytes();
+    let local = bytes.next() == Some(b'/')
+        && !matches!(bytes.next(), Some(b'/' | b'\\'))
+        && !next.bytes().any(|b| b.is_ascii_control());
+    if local { next } else { HOME }
+}
 
 /// The watch page of `video`.
 pub fn watch(video: VideoId) -> String {
@@ -85,6 +115,22 @@ mod tests {
             "/results?search_query=chat%20noir%20%26%20blanc"
         );
         assert_eq!(command("feed.home"), "/api/v1/feed.home");
+        assert_eq!(sign_in("/watch?v=x"), "/signin?next=%2Fwatch%3Fv%3Dx");
+    }
+
+    #[test]
+    fn only_paths_of_this_site_are_local() {
+        assert_eq!(local_path("/watch?v=x"), "/watch?v=x");
+        assert_eq!(local_path("/"), "/");
+        for elsewhere in [
+            "//evil.example",
+            "/\\evil.example",
+            "https://evil.example",
+            "",
+            "/a\nb",
+        ] {
+            assert_eq!(local_path(elsewhere), HOME, "{elsewhere:?}");
+        }
     }
 
     #[test]

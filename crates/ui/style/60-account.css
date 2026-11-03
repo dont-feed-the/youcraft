@@ -1,0 +1,59 @@
+/* The account menu of the masthead, and the settings page. */
+.masthead-end .avatar { cursor: pointer; }
+
+.menu-backdrop { position: fixed; inset: 0; z-index: 4; background: var(--scrim); }
+.menu { position: absolute; inset-block-start: calc(var(--masthead-height) - var(--space-2)); inset-inline-end: var(--space-4); z-index: 5; display: flex; flex-direction: column; inline-size: var(--menu-width); max-block-size: var(--menu-height); padding-block: var(--space-2); overflow-y: auto; border-radius: var(--radius-card); background: var(--bg-menu); box-shadow: var(--shadow-menu); }
+
+.menu-account { display: flex; gap: var(--space-4); padding: var(--space-4); }
+.menu-account .avatar { inline-size: var(--avatar-menu); block-size: var(--avatar-menu); }
+.menu-account-names { display: flex; flex-direction: column; gap: var(--space-1); min-inline-size: 0; }
+.menu-account-name { font-size: var(--text-md); }
+.menu-account-handle { color: var(--text); }
+.menu-link { color: var(--accent); }
+.menu-link:hover { text-decoration: underline; }
+
+.menu-rule { inline-size: 100%; margin-block: var(--space-2); border: 0; border-block-start: 1px solid var(--border); }
+
+.menu-entry { display: flex; align-items: center; gap: var(--space-4); min-block-size: 40px; padding-inline: var(--space-4); border: 0; background: transparent; text-align: start; cursor: pointer; }
+.menu-entry:hover { background: var(--bg-hover); }
+.menu-entry > span:not(.menu-tick):not(.menu-more) { flex: 1; }
+.menu-more { display: inline-grid; margin-inline-start: auto; }
+.menu-tick { display: inline-grid; visibility: hidden; }
+.menu-tick.ticked { visibility: visible; }
+
+.menu-heading { display: flex; align-items: center; gap: var(--space-2); padding-inline: var(--space-2); font-size: var(--text-md); }
+.menu-scroll { overflow-y: auto; }
+.menu-close { display: none; }
+
+.settings { max-inline-size: var(--settings-width); margin-inline: auto; padding: var(--space-6) var(--space-4); }
+.settings-title { margin-block-end: var(--space-6); font-size: var(--text-lg); }
+.settings-section { display: grid; gap: var(--space-3); padding-block: var(--space-5); border-block-start: 1px solid var(--border); }
+.settings-section h2 { font-size: var(--text-md); }
+.settings-hint { color: var(--text-2); }
+.settings-notice { padding: var(--space-3); border-radius: var(--radius-md); background: var(--bg-raised); }
+.settings-account { display: flex; align-items: center; gap: var(--space-4); }
+.avatar-large { inline-size: var(--avatar-large); block-size: var(--avatar-large); font-size: var(--text-lg); }
+.settings-account-names { display: flex; flex-direction: column; gap: var(--space-1); }
+.settings-account-name { font-size: var(--text-md); font-weight: 500; }
+.settings-form { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.settings-form .field[type="text"], .settings-form .field[type="email"] { flex: 1 1 240px; }
+.settings-secret { display: grid; gap: var(--space-2); }
+.settings-list { display: grid; margin: 0; padding: 0; list-style: none; }
+.settings-row { display: flex; align-items: center; gap: var(--space-4); padding-block: var(--space-3); }
+.settings-row-text { display: flex; flex: 1; flex-direction: column; min-inline-size: 0; overflow-wrap: anywhere; }
+
+.field { block-size: 40px; padding-inline: var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg); color: var(--text); font: inherit; }
+.field:focus { outline: 1px solid var(--focus); }
+.field.secret { font-family: var(--font-mono); }
+select.field { justify-self: start; }
+
+.choices { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.choice { block-size: 36px; padding-inline: var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-pill); background: transparent; cursor: pointer; }
+.choice:hover { background: var(--bg-hover); }
+.choice.chosen { border-color: var(--accent); background: var(--accent); color: var(--badge-text); }
+
+@media (max-width: 656px) {
+  .menu { position: fixed; inset: 0; inline-size: auto; max-block-size: none; border-radius: 0; box-shadow: none; }
+  .menu-close { display: flex; }
+}
+.trouble h1 { color: var(--text); font-size: var(--text-lg); }

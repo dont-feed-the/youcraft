@@ -36,6 +36,45 @@
 	Dislike	Non mi piace
 	Share	Condividi
 	Comments are turned off.	I commenti sono disattivati.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Un token personale consente a un programma di agire per tuo conto, con tutti i tuoi diritti. Tienilo segreto.
+	Account	Account
+	Account menu	Menu dell'account
+	Administrator	Amministratore
+	Appearance	Aspetto
+	Appearance: {theme}	Aspetto: {theme}
+	Back	Indietro
+	Copy this token now: it will not be shown again.	Copia ora questo token: non verrà più mostrato.
+	Create token	Crea token
+	Created {when}	Creato {when}
+	Creator	Creator
+	Dark	Scuro
+	Dark theme	Tema scuro
+	Device theme	Tema del dispositivo
+	E-mail address	Indirizzo email
+	Google did not confirm who you are, or signing in was cancelled.	Google non ha confermato la tua identità, oppure l'accesso è stato annullato.
+	Invitations	Inviti
+	Invite	Invita
+	Invited people become creators or administrators when they first sign in with Google.	Le persone invitate diventano creator o amministratori al primo accesso con Google.
+	Language	Lingua
+	Language: {language}	Lingua: {language}
+	Last used {when}	Ultimo utilizzo {when}
+	Light	Chiaro
+	Light theme	Tema chiaro
+	Personal tokens	Token personali
+	Revoke	Revoca
+	Role	Ruolo
+	Settings	Impostazioni
+	Sign out	Esci
+	Sign-in did not work	Accesso non riuscito
+	Sign-in is not set up on this server.	L'accesso non è configurato su questo server.
+	Token name	Nome del token
+	Try again	Riprova
+	Use device theme	Usa il tema del dispositivo
+	View your channel	Visualizza il tuo canale
+	Viewer	Spettatore
+	Withdraw	Ritira
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Il tuo account è bloccato: puoi guardare i video, ma non mettere Mi piace, commentare o pubblicare.
 @plural	{n} view|{n} views	{n} visualizzazione|{n} visualizzazioni
 @plural	{n} like|{n} likes	{n} Mi piace|{n} Mi piace
 @plural	{n} comment|{n} comments	{n} commento|{n} commenti

@@ -36,6 +36,45 @@
 	Dislike	よくない
 	Share	共有
 	Comments are turned off.	コメントは無効になっています。
+	A personal token lets a program act as you, with all your rights. Keep it secret.	個人用トークンを使うと、プログラムがあなたのすべての権限であなたとして操作できます。秘密にしてください。
+	Account	アカウント
+	Account menu	アカウント メニュー
+	Administrator	管理者
+	Appearance	デザイン
+	Appearance: {theme}	デザイン: {theme}
+	Back	戻る
+	Copy this token now: it will not be shown again.	今すぐこのトークンをコピーしてください。再表示されません。
+	Create token	トークンを作成
+	Created {when}	{when}に作成
+	Creator	クリエイター
+	Dark	ダーク
+	Dark theme	ダークテーマ
+	Device theme	デバイスのテーマ
+	E-mail address	メールアドレス
+	Google did not confirm who you are, or signing in was cancelled.	Google で本人確認ができなかったか、ログインがキャンセルされました。
+	Invitations	招待
+	Invite	招待する
+	Invited people become creators or administrators when they first sign in with Google.	招待された人は、Google で初めてログインしたときにクリエイターまたは管理者になります。
+	Language	言語
+	Language: {language}	言語: {language}
+	Last used {when}	最終使用: {when}
+	Light	ライト
+	Light theme	ライトテーマ
+	Personal tokens	個人用トークン
+	Revoke	取り消す
+	Role	役割
+	Settings	設定
+	Sign out	ログアウト
+	Sign-in did not work	ログインできませんでした
+	Sign-in is not set up on this server.	このサーバーではログインが設定されていません。
+	Token name	トークン名
+	Try again	再試行
+	Use device theme	デバイスのテーマを使用
+	View your channel	チャンネルを表示
+	Viewer	視聴者
+	Withdraw	取り下げる
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	アカウントはブロックされています。動画は視聴できますが、高評価、コメント、公開はできません。
 @plural	{n} view|{n} views	{n} 回視聴
 @plural	{n} like|{n} likes	{n} 件のいいね
 @plural	{n} comment|{n} comments	{n} 件のコメント

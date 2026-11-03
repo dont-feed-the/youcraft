@@ -36,6 +36,45 @@
 	Dislike	Không thích
 	Share	Chia sẻ
 	Comments are turned off.	Bình luận đã bị tắt.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Mã thông báo cá nhân cho phép một chương trình hành động thay bạn, với mọi quyền của bạn. Hãy giữ bí mật.
+	Account	Tài khoản
+	Account menu	Trình đơn tài khoản
+	Administrator	Quản trị viên
+	Appearance	Giao diện
+	Appearance: {theme}	Giao diện: {theme}
+	Back	Quay lại
+	Copy this token now: it will not be shown again.	Hãy sao chép mã này ngay: mã sẽ không hiển thị lại.
+	Create token	Tạo mã
+	Created {when}	Đã tạo {when}
+	Creator	Nhà sáng tạo
+	Dark	Tối
+	Dark theme	Giao diện tối
+	Device theme	Giao diện thiết bị
+	E-mail address	Địa chỉ email
+	Google did not confirm who you are, or signing in was cancelled.	Google không xác nhận danh tính của bạn, hoặc quá trình đăng nhập đã bị hủy.
+	Invitations	Lời mời
+	Invite	Mời
+	Invited people become creators or administrators when they first sign in with Google.	Người được mời sẽ trở thành nhà sáng tạo hoặc quản trị viên khi đăng nhập bằng Google lần đầu.
+	Language	Ngôn ngữ
+	Language: {language}	Ngôn ngữ: {language}
+	Last used {when}	Dùng lần cuối {when}
+	Light	Sáng
+	Light theme	Giao diện sáng
+	Personal tokens	Mã thông báo cá nhân
+	Revoke	Thu hồi
+	Role	Vai trò
+	Settings	Cài đặt
+	Sign out	Đăng xuất
+	Sign-in did not work	Không đăng nhập được
+	Sign-in is not set up on this server.	Máy chủ này chưa thiết lập đăng nhập.
+	Token name	Tên mã
+	Try again	Thử lại
+	Use device theme	Dùng giao diện thiết bị
+	View your channel	Xem kênh của bạn
+	Viewer	Người xem
+	Withdraw	Rút lại
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Tài khoản của bạn bị chặn: bạn có thể xem video, nhưng không thể thích, bình luận hay đăng.
 @plural	{n} view|{n} views	{n} lượt xem
 @plural	{n} like|{n} likes	{n} lượt thích
 @plural	{n} comment|{n} comments	{n} bình luận

@@ -36,6 +36,45 @@
 	Dislike	Не харесвам
 	Share	Споделяне
 	Comments are turned off.	Коментарите са изключени.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Личният токен позволява на програма да действа от ваше име с всичките ви права. Пазете го в тайна.
+	Account	Профил
+	Account menu	Меню на профила
+	Administrator	Администратор
+	Appearance	Изглед
+	Appearance: {theme}	Изглед: {theme}
+	Back	Назад
+	Copy this token now: it will not be shown again.	Копирайте токена сега: той няма да бъде показан отново.
+	Create token	Създаване на токен
+	Created {when}	Създаден {when}
+	Creator	Автор
+	Dark	Тъмен
+	Dark theme	Тъмна тема
+	Device theme	Тема на устройството
+	E-mail address	Имейл адрес
+	Google did not confirm who you are, or signing in was cancelled.	Google не потвърди самоличността ви или влизането беше отменено.
+	Invitations	Покани
+	Invite	Поканване
+	Invited people become creators or administrators when they first sign in with Google.	Поканените стават автори или администратори, когато влязат за първи път с Google.
+	Language	Език
+	Language: {language}	Език: {language}
+	Last used {when}	Последно използван {when}
+	Light	Светъл
+	Light theme	Светла тема
+	Personal tokens	Лични токени
+	Revoke	Отмяна
+	Role	Роля
+	Settings	Настройки
+	Sign out	Изход
+	Sign-in did not work	Влизането не бе успешно
+	Sign-in is not set up on this server.	Влизането не е настроено на този сървър.
+	Token name	Име на токена
+	Try again	Опитайте отново
+	Use device theme	Използване на темата на устройството
+	View your channel	Преглед на канала ви
+	Viewer	Зрител
+	Withdraw	Оттегляне
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Профилът ви е блокиран: можете да гледате видеоклипове, но не и да харесвате, коментирате или публикувате.
 @plural	{n} view|{n} views	{n} гледане|{n} гледания
 @plural	{n} like|{n} likes	{n} харесване|{n} харесвания
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментара

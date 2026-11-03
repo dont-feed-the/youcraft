@@ -36,6 +36,45 @@
 	Dislike	Ni mi všeč
 	Share	Deli
 	Comments are turned off.	Komentarji so izklopljeni.
+	A personal token lets a program act as you, with all your rights. Keep it secret.	Osebni žeton omogoča programu, da deluje v vašem imenu z vsemi vašimi pravicami. Hranite ga na skrivnem.
+	Account	Račun
+	Account menu	Meni računa
+	Administrator	Skrbnik
+	Appearance	Videz
+	Appearance: {theme}	Videz: {theme}
+	Back	Nazaj
+	Copy this token now: it will not be shown again.	Kopirajte žeton zdaj: ne bo več prikazan.
+	Create token	Ustvari žeton
+	Created {when}	Ustvarjeno {when}
+	Creator	Ustvarjalec
+	Dark	Temno
+	Dark theme	Temna tema
+	Device theme	Tema naprave
+	E-mail address	E-poštni naslov
+	Google did not confirm who you are, or signing in was cancelled.	Google ni potrdil vaše identitete ali pa je bila prijava preklicana.
+	Invitations	Povabila
+	Invite	Povabi
+	Invited people become creators or administrators when they first sign in with Google.	Povabljeni postanejo ustvarjalci ali skrbniki, ko se prvič prijavijo z Googlom.
+	Language	Jezik
+	Language: {language}	Jezik: {language}
+	Last used {when}	Nazadnje uporabljeno {when}
+	Light	Svetlo
+	Light theme	Svetla tema
+	Personal tokens	Osebni žetoni
+	Revoke	Prekliči
+	Role	Vloga
+	Settings	Nastavitve
+	Sign out	Odjava
+	Sign-in did not work	Prijava ni uspela
+	Sign-in is not set up on this server.	Prijava na tem strežniku ni nastavljena.
+	Token name	Ime žetona
+	Try again	Poskusi znova
+	Use device theme	Uporabi temo naprave
+	View your channel	Ogled vašega kanala
+	Viewer	Gledalec
+	Withdraw	Umakni
+	YouCraft Studio	YouCraft Studio
+	Your account is blocked: you can watch videos, but not like, comment or publish.	Vaš račun je blokiran: videoposnetke lahko gledate, ne morete pa všečkati, komentirati ali objavljati.
 @plural	{n} view|{n} views	{n} ogled|{n} ogleda|{n} ogledi|{n} ogledov
 @plural	{n} like|{n} likes	{n} všeček|{n} všečka|{n} všečki|{n} všečkov
 @plural	{n} comment|{n} comments	{n} komentar|{n} komentarja|{n} komentarji|{n} komentarjev

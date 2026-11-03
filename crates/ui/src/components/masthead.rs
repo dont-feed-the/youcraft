@@ -4,6 +4,7 @@ use leptos::prelude::*;
 use youcraft_api::routes;
 
 use crate::app::GuideOpen;
+use crate::components::account_menu::AccountArea;
 use crate::icons::{Glyph, Icon, Mark};
 use crate::lang::tr;
 
@@ -35,10 +36,7 @@ pub fn Masthead() -> impl IntoView {
                 </button>
             </form>
             <div class="masthead-end">
-                <a class="sign-in" href="/signin">
-                    <Glyph icon=Icon::Account/>
-                    <span>{tr("Sign in")}</span>
-                </a>
+                <AccountArea/>
             </div>
         </header>
     }
