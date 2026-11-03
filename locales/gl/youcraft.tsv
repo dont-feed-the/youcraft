@@ -1,0 +1,48 @@
+# Galician (gl) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Galego
+	Guide	Menú
+	YouCraft home	Páxina principal de YouCraft
+	Search	Buscar
+	Sign in	Iniciar sesión
+	Home	Inicio
+	Subscriptions	Subscricións
+	You	Ti
+	History	Historial
+	Playlists	Listas de reprodución
+	Watch later	Ver máis tarde
+	Liked videos	Vídeos que che gustan
+	No videos yet.	Aínda non hai vídeos.
+	This page isn't available.	Esta páxina non está dispoñible.
+	Go to home	Ir á páxina principal
+	Sign in to see this page.	Inicia sesión para ver esta páxina.
+	You can't see this page.	Non podes ver esta páxina.
+	Something went wrong. Try again later.	Produciuse un erro. Téntao de novo máis tarde.
+	Up next	A continuación
+	This video isn't available yet.	Este vídeo aínda non está dispoñible.
+	Subscribe	Subscribirse
+	Like	Gústame
+	Dislike	Non me gusta
+	Share	Compartir
+	Comments are turned off.	Os comentarios están desactivados.
+@plural	{n} view|{n} views	{n} visualización|{n} visualizacións
+@plural	{n} like|{n} likes	{n} gústame|{n} gústame
+@plural	{n} comment|{n} comments	{n} comentario|{n} comentarios
+@plural	{n} second ago|{n} seconds ago	hai {n} segundo|hai {n} segundos
+@plural	{n} minute ago|{n} minutes ago	hai {n} minuto|hai {n} minutos
+@plural	{n} hour ago|{n} hours ago	hai {n} hora|hai {n} horas
+@plural	{n} day ago|{n} days ago	hai {n} día|hai {n} días
+@plural	{n} week ago|{n} weeks ago	hai {n} semana|hai {n} semanas
+@plural	{n} month ago|{n} months ago	hai {n} mes|hai {n} meses
+@plural	{n} year ago|{n} years ago	hai {n} ano|hai {n} anos

@@ -1,0 +1,48 @@
+# Finnish (fi) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Suomi
+	Guide	Valikko
+	YouCraft home	YouCraftin etusivu
+	Search	Hae
+	Sign in	Kirjaudu sisään
+	Home	Etusivu
+	Subscriptions	Tilaukset
+	You	Sinä
+	History	Historia
+	Playlists	Soittolistat
+	Watch later	Katso myöhemmin
+	Liked videos	Tykätyt videot
+	No videos yet.	Ei vielä videoita.
+	This page isn't available.	Tämä sivu ei ole saatavilla.
+	Go to home	Siirry etusivulle
+	Sign in to see this page.	Kirjaudu sisään nähdäksesi tämän sivun.
+	You can't see this page.	Et voi nähdä tätä sivua.
+	Something went wrong. Try again later.	Jokin meni vikaan. Yritä myöhemmin uudelleen.
+	Up next	Seuraavaksi
+	This video isn't available yet.	Tämä video ei ole vielä saatavilla.
+	Subscribe	Tilaa
+	Like	Tykkää
+	Dislike	En tykkää
+	Share	Jaa
+	Comments are turned off.	Kommentit on poistettu käytöstä.
+@plural	{n} view|{n} views	{n} katselukerta|{n} katselukertaa
+@plural	{n} like|{n} likes	{n} tykkäys|{n} tykkäystä
+@plural	{n} comment|{n} comments	{n} kommentti|{n} kommenttia
+@plural	{n} second ago|{n} seconds ago	{n} sekunti sitten|{n} sekuntia sitten
+@plural	{n} minute ago|{n} minutes ago	{n} minuutti sitten|{n} minuuttia sitten
+@plural	{n} hour ago|{n} hours ago	{n} tunti sitten|{n} tuntia sitten
+@plural	{n} day ago|{n} days ago	{n} päivä sitten|{n} päivää sitten
+@plural	{n} week ago|{n} weeks ago	{n} viikko sitten|{n} viikkoa sitten
+@plural	{n} month ago|{n} months ago	{n} kuukausi sitten|{n} kuukautta sitten
+@plural	{n} year ago|{n} years ago	{n} vuosi sitten|{n} vuotta sitten

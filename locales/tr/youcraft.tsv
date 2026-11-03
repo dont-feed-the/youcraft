@@ -1,0 +1,48 @@
+# Turkish (tr) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Türkçe
+	Guide	Menü
+	YouCraft home	YouCraft ana sayfası
+	Search	Ara
+	Sign in	Oturum aç
+	Home	Ana sayfa
+	Subscriptions	Abonelikler
+	You	Siz
+	History	Geçmiş
+	Playlists	Oynatma listeleri
+	Watch later	Daha sonra izle
+	Liked videos	Beğenilen videolar
+	No videos yet.	Henüz video yok.
+	This page isn't available.	Bu sayfa kullanılamıyor.
+	Go to home	Ana sayfaya git
+	Sign in to see this page.	Bu sayfayı görmek için oturum açın.
+	You can't see this page.	Bu sayfayı göremezsiniz.
+	Something went wrong. Try again later.	Bir sorun oluştu. Daha sonra tekrar deneyin.
+	Up next	Sıradaki
+	This video isn't available yet.	Bu video henüz kullanılamıyor.
+	Subscribe	Abone ol
+	Like	Beğen
+	Dislike	Beğenme
+	Share	Paylaş
+	Comments are turned off.	Yorumlar kapalı.
+@plural	{n} view|{n} views	{n} görüntüleme|{n} görüntüleme
+@plural	{n} like|{n} likes	{n} beğeni|{n} beğeni
+@plural	{n} comment|{n} comments	{n} yorum|{n} yorum
+@plural	{n} second ago|{n} seconds ago	{n} saniye önce|{n} saniye önce
+@plural	{n} minute ago|{n} minutes ago	{n} dakika önce|{n} dakika önce
+@plural	{n} hour ago|{n} hours ago	{n} saat önce|{n} saat önce
+@plural	{n} day ago|{n} days ago	{n} gün önce|{n} gün önce
+@plural	{n} week ago|{n} weeks ago	{n} hafta önce|{n} hafta önce
+@plural	{n} month ago|{n} months ago	{n} ay önce|{n} ay önce
+@plural	{n} year ago|{n} years ago	{n} yıl önce|{n} yıl önce

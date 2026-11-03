@@ -1,0 +1,48 @@
+# Serbian (Cyrillic) (sr) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Српски
+	Guide	Мени
+	YouCraft home	Почетна страница YouCraft-а
+	Search	Претрага
+	Sign in	Пријави се
+	Home	Почетна
+	Subscriptions	Претплате
+	You	Ви
+	History	Историја
+	Playlists	Плејлисте
+	Watch later	Погледај касније
+	Liked videos	Видео снимци који вам се свиђају
+	No videos yet.	Још нема видео снимака.
+	This page isn't available.	Ова страница није доступна.
+	Go to home	Иди на почетну
+	Sign in to see this page.	Пријавите се да бисте видели ову страницу.
+	You can't see this page.	Не можете да видите ову страницу.
+	Something went wrong. Try again later.	Нешто није у реду. Покушајте поново касније.
+	Up next	Следеће
+	This video isn't available yet.	Овај видео још није доступан.
+	Subscribe	Претплати се
+	Like	Свиђа ми се
+	Dislike	Не свиђа ми се
+	Share	Подели
+	Comments are turned off.	Коментари су искључени.
+@plural	{n} view|{n} views	{n} преглед|{n} прегледа|{n} прегледа
+@plural	{n} like|{n} likes	{n} свиђање|{n} свиђања|{n} свиђања
+@plural	{n} comment|{n} comments	{n} коментар|{n} коментара|{n} коментара
+@plural	{n} second ago|{n} seconds ago	пре {n} секунде|пре {n} секунде|пре {n} секунди
+@plural	{n} minute ago|{n} minutes ago	пре {n} минута|пре {n} минута|пре {n} минута
+@plural	{n} hour ago|{n} hours ago	пре {n} сата|пре {n} сата|пре {n} сати
+@plural	{n} day ago|{n} days ago	пре {n} дана|пре {n} дана|пре {n} дана
+@plural	{n} week ago|{n} weeks ago	пре {n} недеље|пре {n} недеље|пре {n} недеља
+@plural	{n} month ago|{n} months ago	пре {n} месеца|пре {n} месеца|пре {n} месеци
+@plural	{n} year ago|{n} years ago	пре {n} године|пре {n} године|пре {n} година

@@ -1,0 +1,48 @@
+# Russian (ru) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Русский
+	Guide	Меню
+	YouCraft home	Главная страница YouCraft
+	Search	Поиск
+	Sign in	Войти
+	Home	Главная
+	Subscriptions	Подписки
+	You	Вы
+	History	История
+	Playlists	Плейлисты
+	Watch later	Смотреть позже
+	Liked videos	Понравившиеся видео
+	No videos yet.	Видео пока нет.
+	This page isn't available.	Эта страница недоступна.
+	Go to home	На главную
+	Sign in to see this page.	Войдите, чтобы увидеть эту страницу.
+	You can't see this page.	Вы не можете просматривать эту страницу.
+	Something went wrong. Try again later.	Что-то пошло не так. Повторите попытку позже.
+	Up next	Далее
+	This video isn't available yet.	Это видео пока недоступно.
+	Subscribe	Подписаться
+	Like	Нравится
+	Dislike	Не нравится
+	Share	Поделиться
+	Comments are turned off.	Комментарии отключены.
+@plural	{n} view|{n} views	{n} просмотр|{n} просмотра|{n} просмотров
+@plural	{n} like|{n} likes	{n} лайк|{n} лайка|{n} лайков
+@plural	{n} comment|{n} comments	{n} комментарий|{n} комментария|{n} комментариев
+@plural	{n} second ago|{n} seconds ago	{n} секунду назад|{n} секунды назад|{n} секунд назад
+@plural	{n} minute ago|{n} minutes ago	{n} минуту назад|{n} минуты назад|{n} минут назад
+@plural	{n} hour ago|{n} hours ago	{n} час назад|{n} часа назад|{n} часов назад
+@plural	{n} day ago|{n} days ago	{n} день назад|{n} дня назад|{n} дней назад
+@plural	{n} week ago|{n} weeks ago	{n} неделю назад|{n} недели назад|{n} недель назад
+@plural	{n} month ago|{n} months ago	{n} месяц назад|{n} месяца назад|{n} месяцев назад
+@plural	{n} year ago|{n} years ago	{n} год назад|{n} года назад|{n} лет назад

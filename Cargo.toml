@@ -1,0 +1,61 @@
+[workspace]
+resolver = "3"
+members = ["crates/*", "xtask"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/dont-feed-the/youcraft"
+
+[workspace.dependencies]
+youcraft-api = { path = "crates/api" }
+youcraft-i18n = { path = "crates/i18n" }
+youcraft-recommend = { path = "crates/recommend" }
+youcraft-store = { path = "crates/store" }
+youcraft-ui = { path = "crates/ui" }
+
+axum = "0.8.9"
+console_error_panic_hook = "0.1.7"
+craft-i18n = { git = "https://github.com/storytold/craft-libs", rev = "c5a1cbfb5f9049f9270955caffb5bee5997aebf7" }
+js-sys = "0.3.107"
+leptos = "0.8.23"
+leptos_axum = "0.8.10"
+leptos_meta = "0.8.7"
+leptos_router = "0.8.17"
+listenfd = "1.0.2"
+rand = "0.10.3"
+rusqlite = { version = "0.41.1", features = ["bundled"] }
+schemars = "1.2.3"
+send_wrapper = { version = "0.6.0", features = ["futures"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+thiserror = "2.0.21"
+tokio = { version = "1.54.1", features = ["macros", "net", "rt-multi-thread", "signal", "sync", "time"] }
+tower-http = { version = "0.7.1", features = ["fs"] }
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+wasm-bindgen = "=0.2.130"
+wasm-bindgen-cli-support = "=0.2.130"
+wasm-bindgen-futures = "0.4.80"
+web-sys = "0.3.107"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+expect_used = "deny"
+indexing_slicing = "deny"
+panic = "deny"
+todo = "deny"
+unimplemented = "deny"
+unreachable = "deny"
+unwrap_used = "deny"
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

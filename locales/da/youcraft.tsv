@@ -1,0 +1,48 @@
+# Danish (da) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Dansk
+	Guide	Menu
+	YouCraft home	YouCrafts startside
+	Search	Søg
+	Sign in	Log ind
+	Home	Start
+	Subscriptions	Abonnementer
+	You	Dig
+	History	Historik
+	Playlists	Playlister
+	Watch later	Se senere
+	Liked videos	Videoer, du synes om
+	No videos yet.	Ingen videoer endnu.
+	This page isn't available.	Denne side er ikke tilgængelig.
+	Go to home	Gå til startsiden
+	Sign in to see this page.	Log ind for at se denne side.
+	You can't see this page.	Du kan ikke se denne side.
+	Something went wrong. Try again later.	Noget gik galt. Prøv igen senere.
+	Up next	Næste
+	This video isn't available yet.	Denne video er ikke tilgængelig endnu.
+	Subscribe	Abonner
+	Like	Synes godt om
+	Dislike	Synes ikke om
+	Share	Del
+	Comments are turned off.	Kommentarer er slået fra.
+@plural	{n} view|{n} views	{n} visning|{n} visninger
+@plural	{n} like|{n} likes	{n} synes godt om|{n} synes godt om
+@plural	{n} comment|{n} comments	{n} kommentar|{n} kommentarer
+@plural	{n} second ago|{n} seconds ago	for {n} sekund siden|for {n} sekunder siden
+@plural	{n} minute ago|{n} minutes ago	for {n} minut siden|for {n} minutter siden
+@plural	{n} hour ago|{n} hours ago	for {n} time siden|for {n} timer siden
+@plural	{n} day ago|{n} days ago	for {n} dag siden|for {n} dage siden
+@plural	{n} week ago|{n} weeks ago	for {n} uge siden|for {n} uger siden
+@plural	{n} month ago|{n} months ago	for {n} måned siden|for {n} måneder siden
+@plural	{n} year ago|{n} years ago	for {n} år siden|for {n} år siden

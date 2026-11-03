@@ -20,6 +20,8 @@ crates/
   transcode  uploads to renditions, thumbnails and storyboards, through FilmCraft's codecs
   server     the `youcraft` binary: pages, commands over HTTP, uploads, media, jobs, sign-in, CLI, MCP
 locales/     one catalog per language, in craft-i18n's TSV format
+xtask/       `cargo xtask site` builds the browser bundle; `cargo xtask serve` also runs the site
+scripts/     the hooks' checks, and `scripts/screenshot` to look at pages
 ```
 
 Dependencies point one way. `api`, `i18n` and `recommend` depend on nothing here; `player` on
@@ -80,10 +82,12 @@ if it needs some), and `scripts/check-wasm` builds it for `wasm32-unknown-unknow
   means adding a version beside the old one.
 
 ### Every string is translated
-- Everything people read comes from the catalogs in `locales/` (craft-i18n's TSV format); English
-  is the source. No user-visible literal in code.
-- A new or changed string is translated into every catalog in the same change. Plurals, numbers,
-  view counts, durations and relative dates go through `i18n`, never `format!`.
+- Everything people read comes from the catalogs in `locales/` (craft-i18n's TSV format), looked
+  up by its English: write it `tr("English")`, or as the `"{n} …"` pair of a count, never as a bare
+  literal in a page. English is the source and has no catalog.
+- A new or changed string is translated into every catalog in the same change; the i18n tests
+  fail on a string a catalog lacks and on one no code writes any more. Plurals, numbers, view
+  counts, durations and relative dates go through `i18n`, never `format!`.
 - The languages include Arabic, Hebrew and Persian: CSS uses logical properties only
   (`inline-start`, never `left`), and every page is checked right-to-left.
 
@@ -96,9 +100,11 @@ if it needs some), and `scripts/check-wasm` builds it for `wasm32-unknown-unknow
 - Nothing third-party loads in our pages: no script, font, image or tracker. Sign-in redirects to
   Google and back; no Google script runs here. wasm-bindgen's generated glue is the only
   JavaScript.
-- Look at what you changed: render the page with Playwright's Chromium, and its WebKit for Safari
-  (on rtx-home both are in `~/.cache/ms-playwright`), and open the PNGs. Compare with the same page
-  of YouTube observed live; keep those captures out of the repository.
+- Look at what you changed: `cargo xtask serve` (after `youcraft demo` fills an empty database),
+  then `scripts/screenshot http://127.0.0.1:3100 <out> / "/watch?v=…" --rtl`, which draws each
+  page in Playwright's Chromium (`--webkit` for Safari) at both sizes, both themes and right to
+  left; open the PNGs. Compare with the same page of YouTube observed live, and keep those captures
+  out of the repository.
 
 ### Media time is exact
 - Timestamps and durations are integers in a track's timescale, converted with exact rational

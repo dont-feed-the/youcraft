@@ -1,0 +1,48 @@
+# Estonian (et) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Eesti
+	Guide	Menüü
+	YouCraft home	YouCrafti avaleht
+	Search	Otsi
+	Sign in	Logi sisse
+	Home	Avaleht
+	Subscriptions	Tellimused
+	You	Sina
+	History	Ajalugu
+	Playlists	Esitusloendid
+	Watch later	Vaata hiljem
+	Liked videos	Meeldivad videod
+	No videos yet.	Videoid veel pole.
+	This page isn't available.	See leht pole saadaval.
+	Go to home	Mine avalehele
+	Sign in to see this page.	Selle lehe nägemiseks logi sisse.
+	You can't see this page.	Sa ei saa seda lehte näha.
+	Something went wrong. Try again later.	Midagi läks valesti. Proovi hiljem uuesti.
+	Up next	Järgmisena
+	This video isn't available yet.	See video pole veel saadaval.
+	Subscribe	Telli
+	Like	Meeldib
+	Dislike	Ei meeldi
+	Share	Jaga
+	Comments are turned off.	Kommentaarid on välja lülitatud.
+@plural	{n} view|{n} views	{n} vaatamine|{n} vaatamist
+@plural	{n} like|{n} likes	{n} meeldimine|{n} meeldimist
+@plural	{n} comment|{n} comments	{n} kommentaar|{n} kommentaari
+@plural	{n} second ago|{n} seconds ago	{n} sekund tagasi|{n} sekundit tagasi
+@plural	{n} minute ago|{n} minutes ago	{n} minut tagasi|{n} minutit tagasi
+@plural	{n} hour ago|{n} hours ago	{n} tund tagasi|{n} tundi tagasi
+@plural	{n} day ago|{n} days ago	{n} päev tagasi|{n} päeva tagasi
+@plural	{n} week ago|{n} weeks ago	{n} nädal tagasi|{n} nädalat tagasi
+@plural	{n} month ago|{n} months ago	{n} kuu tagasi|{n} kuud tagasi
+@plural	{n} year ago|{n} years ago	{n} aasta tagasi|{n} aastat tagasi

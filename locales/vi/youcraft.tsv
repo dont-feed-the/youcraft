@@ -1,0 +1,48 @@
+# Vietnamese (vi) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Tiếng Việt
+	Guide	Trình đơn
+	YouCraft home	Trang chủ YouCraft
+	Search	Tìm kiếm
+	Sign in	Đăng nhập
+	Home	Trang chủ
+	Subscriptions	Kênh đăng ký
+	You	Bạn
+	History	Nhật ký xem
+	Playlists	Danh sách phát
+	Watch later	Xem sau
+	Liked videos	Video đã thích
+	No videos yet.	Chưa có video nào.
+	This page isn't available.	Trang này không có sẵn.
+	Go to home	Về trang chủ
+	Sign in to see this page.	Đăng nhập để xem trang này.
+	You can't see this page.	Bạn không thể xem trang này.
+	Something went wrong. Try again later.	Đã xảy ra lỗi. Hãy thử lại sau.
+	Up next	Tiếp theo
+	This video isn't available yet.	Video này chưa có sẵn.
+	Subscribe	Đăng ký
+	Like	Thích
+	Dislike	Không thích
+	Share	Chia sẻ
+	Comments are turned off.	Bình luận đã bị tắt.
+@plural	{n} view|{n} views	{n} lượt xem
+@plural	{n} like|{n} likes	{n} lượt thích
+@plural	{n} comment|{n} comments	{n} bình luận
+@plural	{n} second ago|{n} seconds ago	{n} giây trước
+@plural	{n} minute ago|{n} minutes ago	{n} phút trước
+@plural	{n} hour ago|{n} hours ago	{n} giờ trước
+@plural	{n} day ago|{n} days ago	{n} ngày trước
+@plural	{n} week ago|{n} weeks ago	{n} tuần trước
+@plural	{n} month ago|{n} months ago	{n} tháng trước
+@plural	{n} year ago|{n} years ago	{n} năm trước

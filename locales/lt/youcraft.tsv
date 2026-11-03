@@ -1,0 +1,48 @@
+# Lithuanian (lt) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Lietuvių
+	Guide	Meniu
+	YouCraft home	YouCraft pagrindinis puslapis
+	Search	Ieškoti
+	Sign in	Prisijungti
+	Home	Pagrindinis
+	Subscriptions	Prenumeratos
+	You	Jūs
+	History	Istorija
+	Playlists	Grojaraščiai
+	Watch later	Žiūrėti vėliau
+	Liked videos	Patikę vaizdo įrašai
+	No videos yet.	Vaizdo įrašų dar nėra.
+	This page isn't available.	Šis puslapis nepasiekiamas.
+	Go to home	Eiti į pagrindinį puslapį
+	Sign in to see this page.	Prisijunkite, kad matytumėte šį puslapį.
+	You can't see this page.	Negalite matyti šio puslapio.
+	Something went wrong. Try again later.	Kažkas nepavyko. Bandykite vėliau.
+	Up next	Toliau
+	This video isn't available yet.	Šis vaizdo įrašas dar nepasiekiamas.
+	Subscribe	Prenumeruoti
+	Like	Patinka
+	Dislike	Nepatinka
+	Share	Bendrinti
+	Comments are turned off.	Komentarai išjungti.
+@plural	{n} view|{n} views	{n} peržiūra|{n} peržiūros|{n} peržiūrų
+@plural	{n} like|{n} likes	{n} patiktukas|{n} patiktukai|{n} patiktukų
+@plural	{n} comment|{n} comments	{n} komentaras|{n} komentarai|{n} komentarų
+@plural	{n} second ago|{n} seconds ago	prieš {n} sekundę|prieš {n} sekundes|prieš {n} sekundžių
+@plural	{n} minute ago|{n} minutes ago	prieš {n} minutę|prieš {n} minutes|prieš {n} minučių
+@plural	{n} hour ago|{n} hours ago	prieš {n} valandą|prieš {n} valandas|prieš {n} valandų
+@plural	{n} day ago|{n} days ago	prieš {n} dieną|prieš {n} dienas|prieš {n} dienų
+@plural	{n} week ago|{n} weeks ago	prieš {n} savaitę|prieš {n} savaites|prieš {n} savaičių
+@plural	{n} month ago|{n} months ago	prieš {n} mėnesį|prieš {n} mėnesius|prieš {n} mėnesių
+@plural	{n} year ago|{n} years ago	prieš {n} metus|prieš {n} metus|prieš {n} metų

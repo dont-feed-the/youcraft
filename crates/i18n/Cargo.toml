@@ -1,0 +1,22 @@
+[package]
+name = "youcraft-i18n"
+description = "YouCraft's interface in every language: the catalogs of locales/, lookup, plurals, relative times"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[package.metadata.youcraft]
+wasm = true
+
+[features]
+# Embed every catalog of locales/ in the binary, as the server needs; the browser instead installs
+# the one catalog its page carries.
+embed = []
+
+[dependencies]
+craft-i18n.workspace = true
+
+[lints]
+workspace = true

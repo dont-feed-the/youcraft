@@ -1,0 +1,79 @@
+/* Design tokens: every colour, size and radius the components use, for each theme. */
+:root {
+  color-scheme: light;
+  --accent: #0b8f8c;
+  --accent-light: #3fc1bd;
+  --accent-dark: #076866;
+  --bg: #ffffff;
+  --bg-raised: #f2f2f2;
+  --bg-hover: #e5e5e5;
+  --bg-strong: #0f0f0f;
+  --text: #0f0f0f;
+  --text-2: #606060;
+  --text-on-strong: #ffffff;
+  --border: #d9d9d9;
+  --badge-bg: rgba(0, 0, 0, 0.8);
+  --badge-text: #ffffff;
+  --focus: #1a73e8;
+  --player-bg: #000000;
+
+  --font: system-ui, -apple-system, "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --text-xxs: 10px;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --line: 1.4;
+  --line-title: 22px;
+  --line-title-sm: 20px;
+  --line-title-lg: 28px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-10: 40px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-guide: 10px;
+  --radius-field: 20px;
+  --radius-card: 12px;
+  --radius-pill: 18px;
+
+  --masthead-height: 56px;
+  --guide-width: 240px;
+  --mini-guide-width: 72px;
+  --tabbar-height: 48px;
+  --avatar: 36px;
+  --icon: 24px;
+  --compact-thumb: 168px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0f0f0f;
+    --bg-raised: #272727;
+    --bg-hover: #3f3f3f;
+    --bg-strong: #f1f1f1;
+    --text: #f1f1f1;
+    --text-2: #aaaaaa;
+    --text-on-strong: #0f0f0f;
+    --border: #3f3f3f;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f0f0f;
+  --bg-raised: #272727;
+  --bg-hover: #3f3f3f;
+  --bg-strong: #f1f1f1;
+  --text: #f1f1f1;
+  --text-2: #aaaaaa;
+  --text-on-strong: #0f0f0f;
+  --border: #3f3f3f;
+}

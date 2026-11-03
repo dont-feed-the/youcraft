@@ -1,0 +1,41 @@
+[package]
+name = "youcraft-ui"
+description = "Every page and component of YouCraft, rendered on the server and hydrated in the browser"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[package.metadata.youcraft]
+wasm = true
+wasm-features = ["hydrate"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+# Rendered by the server.
+ssr = ["leptos/ssr", "leptos/nonce", "leptos_meta/ssr", "leptos_router/ssr", "dep:http", "dep:leptos_axum"]
+# Hydrated in the browser, as `cargo xtask site` builds it.
+hydrate = ["leptos/hydrate", "dep:console_error_panic_hook", "dep:js-sys", "dep:wasm-bindgen", "dep:wasm-bindgen-futures", "dep:web-sys"]
+
+[dependencies]
+console_error_panic_hook = { workspace = true, optional = true }
+http = { version = "1.3.1", optional = true }
+js-sys = { workspace = true, optional = true }
+leptos.workspace = true
+leptos_axum = { workspace = true, optional = true }
+leptos_meta.workspace = true
+leptos_router.workspace = true
+send_wrapper.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+wasm-bindgen = { workspace = true, optional = true }
+wasm-bindgen-futures = { workspace = true, optional = true }
+web-sys = { workspace = true, optional = true, features = ["Document", "Element", "Headers", "HtmlElement", "Request", "RequestCredentials", "RequestInit", "Response", "Window"] }
+youcraft-api.workspace = true
+youcraft-i18n.workspace = true
+
+[lints]
+workspace = true

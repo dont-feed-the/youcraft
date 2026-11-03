@@ -1,0 +1,48 @@
+# Italian (it) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Italiano
+	Guide	Menu
+	YouCraft home	Home page di YouCraft
+	Search	Cerca
+	Sign in	Accedi
+	Home	Home
+	Subscriptions	Iscrizioni
+	You	Tu
+	History	Cronologia
+	Playlists	Playlist
+	Watch later	Guarda più tardi
+	Liked videos	Video che ti piacciono
+	No videos yet.	Ancora nessun video.
+	This page isn't available.	Questa pagina non è disponibile.
+	Go to home	Vai alla home
+	Sign in to see this page.	Accedi per vedere questa pagina.
+	You can't see this page.	Non puoi vedere questa pagina.
+	Something went wrong. Try again later.	Si è verificato un problema. Riprova più tardi.
+	Up next	Prossimi video
+	This video isn't available yet.	Questo video non è ancora disponibile.
+	Subscribe	Iscriviti
+	Like	Mi piace
+	Dislike	Non mi piace
+	Share	Condividi
+	Comments are turned off.	I commenti sono disattivati.
+@plural	{n} view|{n} views	{n} visualizzazione|{n} visualizzazioni
+@plural	{n} like|{n} likes	{n} Mi piace|{n} Mi piace
+@plural	{n} comment|{n} comments	{n} commento|{n} commenti
+@plural	{n} second ago|{n} seconds ago	{n} secondo fa|{n} secondi fa
+@plural	{n} minute ago|{n} minutes ago	{n} minuto fa|{n} minuti fa
+@plural	{n} hour ago|{n} hours ago	{n} ora fa|{n} ore fa
+@plural	{n} day ago|{n} days ago	{n} giorno fa|{n} giorni fa
+@plural	{n} week ago|{n} weeks ago	{n} settimana fa|{n} settimane fa
+@plural	{n} month ago|{n} months ago	{n} mese fa|{n} mesi fa
+@plural	{n} year ago|{n} years ago	{n} anno fa|{n} anni fa

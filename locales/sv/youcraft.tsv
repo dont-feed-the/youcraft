@@ -1,0 +1,48 @@
+# Swedish (sv) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Svenska
+	Guide	Meny
+	YouCraft home	YouCrafts startsida
+	Search	Sök
+	Sign in	Logga in
+	Home	Start
+	Subscriptions	Prenumerationer
+	You	Du
+	History	Historik
+	Playlists	Spellistor
+	Watch later	Titta senare
+	Liked videos	Gillade videor
+	No videos yet.	Inga videor ännu.
+	This page isn't available.	Den här sidan är inte tillgänglig.
+	Go to home	Till startsidan
+	Sign in to see this page.	Logga in för att se den här sidan.
+	You can't see this page.	Du kan inte se den här sidan.
+	Something went wrong. Try again later.	Något gick fel. Försök igen senare.
+	Up next	Nästa
+	This video isn't available yet.	Den här videon är inte tillgänglig än.
+	Subscribe	Prenumerera
+	Like	Gilla
+	Dislike	Ogilla
+	Share	Dela
+	Comments are turned off.	Kommentarer är avstängda.
+@plural	{n} view|{n} views	{n} visning|{n} visningar
+@plural	{n} like|{n} likes	{n} gillamarkering|{n} gillamarkeringar
+@plural	{n} comment|{n} comments	{n} kommentar|{n} kommentarer
+@plural	{n} second ago|{n} seconds ago	för {n} sekund sedan|för {n} sekunder sedan
+@plural	{n} minute ago|{n} minutes ago	för {n} minut sedan|för {n} minuter sedan
+@plural	{n} hour ago|{n} hours ago	för {n} timme sedan|för {n} timmar sedan
+@plural	{n} day ago|{n} days ago	för {n} dag sedan|för {n} dagar sedan
+@plural	{n} week ago|{n} weeks ago	för {n} vecka sedan|för {n} veckor sedan
+@plural	{n} month ago|{n} months ago	för {n} månad sedan|för {n} månader sedan
+@plural	{n} year ago|{n} years ago	för {n} år sedan|för {n} år sedan

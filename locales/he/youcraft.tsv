@@ -1,0 +1,48 @@
+# Hebrew (he) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	עברית
+	Guide	תפריט
+	YouCraft home	דף הבית של YouCraft
+	Search	חיפוש
+	Sign in	כניסה
+	Home	דף הבית
+	Subscriptions	מינויים
+	You	שלך
+	History	היסטוריה
+	Playlists	פלייליסטים
+	Watch later	לצפייה בהמשך
+	Liked videos	סרטונים שאהבתי
+	No videos yet.	אין עדיין סרטונים.
+	This page isn't available.	הדף הזה לא זמין.
+	Go to home	מעבר לדף הבית
+	Sign in to see this page.	יש להיכנס כדי לראות את הדף הזה.
+	You can't see this page.	אין לך הרשאה לראות את הדף הזה.
+	Something went wrong. Try again later.	משהו השתבש. כדאי לנסות שוב מאוחר יותר.
+	Up next	הסרטון הבא
+	This video isn't available yet.	הסרטון הזה עדיין לא זמין.
+	Subscribe	הרשמה למינוי
+	Like	אהבתי
+	Dislike	לא אהבתי
+	Share	שיתוף
+	Comments are turned off.	התגובות מושבתות.
+@plural	{n} view|{n} views	{n} צפייה|{n} צפיות|{n} צפיות
+@plural	{n} like|{n} likes	{n} לייק|{n} לייקים|{n} לייקים
+@plural	{n} comment|{n} comments	{n} תגובה|{n} תגובות|{n} תגובות
+@plural	{n} second ago|{n} seconds ago	לפני {n} שנייה|לפני {n} שניות|לפני {n} שניות
+@plural	{n} minute ago|{n} minutes ago	לפני {n} דקה|לפני {n} דקות|לפני {n} דקות
+@plural	{n} hour ago|{n} hours ago	לפני {n} שעה|לפני {n} שעות|לפני {n} שעות
+@plural	{n} day ago|{n} days ago	לפני {n} יום|לפני {n} ימים|לפני {n} ימים
+@plural	{n} week ago|{n} weeks ago	לפני {n} שבוע|לפני {n} שבועות|לפני {n} שבועות
+@plural	{n} month ago|{n} months ago	לפני {n} חודש|לפני {n} חודשים|לפני {n} חודשים
+@plural	{n} year ago|{n} years ago	לפני {n} שנה|לפני {n} שנים|לפני {n} שנים

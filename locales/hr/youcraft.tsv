@@ -1,0 +1,48 @@
+# Croatian (hr) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Hrvatski
+	Guide	Izbornik
+	YouCraft home	Početna stranica YouCrafta
+	Search	Pretraži
+	Sign in	Prijava
+	Home	Početna
+	Subscriptions	Pretplate
+	You	Vi
+	History	Povijest
+	Playlists	Popisi za reprodukciju
+	Watch later	Pogledaj kasnije
+	Liked videos	Videozapisi koji vam se sviđaju
+	No videos yet.	Još nema videozapisa.
+	This page isn't available.	Ova stranica nije dostupna.
+	Go to home	Idi na početnu
+	Sign in to see this page.	Prijavite se da biste vidjeli ovu stranicu.
+	You can't see this page.	Ne možete vidjeti ovu stranicu.
+	Something went wrong. Try again later.	Nešto nije u redu. Pokušajte ponovno kasnije.
+	Up next	Sljedeće
+	This video isn't available yet.	Ovaj videozapis još nije dostupan.
+	Subscribe	Pretplati se
+	Like	Sviđa mi se
+	Dislike	Ne sviđa mi se
+	Share	Podijeli
+	Comments are turned off.	Komentari su isključeni.
+@plural	{n} view|{n} views	{n} pregled|{n} pregleda|{n} pregleda
+@plural	{n} like|{n} likes	{n} sviđanje|{n} sviđanja|{n} sviđanja
+@plural	{n} comment|{n} comments	{n} komentar|{n} komentara|{n} komentara
+@plural	{n} second ago|{n} seconds ago	prije {n} sekundu|prije {n} sekunde|prije {n} sekundi
+@plural	{n} minute ago|{n} minutes ago	prije {n} minutu|prije {n} minute|prije {n} minuta
+@plural	{n} hour ago|{n} hours ago	prije {n} sat|prije {n} sata|prije {n} sati
+@plural	{n} day ago|{n} days ago	prije {n} dan|prije {n} dana|prije {n} dana
+@plural	{n} week ago|{n} weeks ago	prije {n} tjedan|prije {n} tjedna|prije {n} tjedana
+@plural	{n} month ago|{n} months ago	prije {n} mjesec|prije {n} mjeseca|prije {n} mjeseci
+@plural	{n} year ago|{n} years ago	prije {n} godinu|prije {n} godine|prije {n} godina

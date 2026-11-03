@@ -1,0 +1,48 @@
+# Bengali (bn) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	বাংলা
+	Guide	মেনু
+	YouCraft home	YouCraft হোম
+	Search	সার্চ করুন
+	Sign in	সাইন ইন করুন
+	Home	হোম
+	Subscriptions	সাবস্ক্রিপশন
+	You	আপনি
+	History	ইতিহাস
+	Playlists	প্লেলিস্ট
+	Watch later	পরে দেখুন
+	Liked videos	পছন্দ করা ভিডিও
+	No videos yet.	এখনও কোনো ভিডিও নেই।
+	This page isn't available.	এই পৃষ্ঠাটি উপলভ্য নয়।
+	Go to home	হোমে যান
+	Sign in to see this page.	এই পৃষ্ঠাটি দেখতে সাইন ইন করুন।
+	You can't see this page.	আপনি এই পৃষ্ঠাটি দেখতে পারবেন না।
+	Something went wrong. Try again later.	কিছু একটা সমস্যা হয়েছে। পরে আবার চেষ্টা করুন।
+	Up next	এরপর
+	This video isn't available yet.	এই ভিডিওটি এখনও উপলভ্য নয়।
+	Subscribe	সাবস্ক্রাইব করুন
+	Like	পছন্দ
+	Dislike	অপছন্দ
+	Share	শেয়ার করুন
+	Comments are turned off.	মন্তব্য বন্ধ আছে।
+@plural	{n} view|{n} views	{n} বার দেখা হয়েছে|{n} বার দেখা হয়েছে
+@plural	{n} like|{n} likes	{n}টি পছন্দ|{n}টি পছন্দ
+@plural	{n} comment|{n} comments	{n}টি মন্তব্য|{n}টি মন্তব্য
+@plural	{n} second ago|{n} seconds ago	{n} সেকেন্ড আগে|{n} সেকেন্ড আগে
+@plural	{n} minute ago|{n} minutes ago	{n} মিনিট আগে|{n} মিনিট আগে
+@plural	{n} hour ago|{n} hours ago	{n} ঘণ্টা আগে|{n} ঘণ্টা আগে
+@plural	{n} day ago|{n} days ago	{n} দিন আগে|{n} দিন আগে
+@plural	{n} week ago|{n} weeks ago	{n} সপ্তাহ আগে|{n} সপ্তাহ আগে
+@plural	{n} month ago|{n} months ago	{n} মাস আগে|{n} মাস আগে
+@plural	{n} year ago|{n} years ago	{n} বছর আগে|{n} বছর আগে

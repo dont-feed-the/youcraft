@@ -1,0 +1,48 @@
+# Dutch (nl) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Nederlands
+	Guide	Menu
+	YouCraft home	Startpagina van YouCraft
+	Search	Zoeken
+	Sign in	Inloggen
+	Home	Start
+	Subscriptions	Abonnementen
+	You	Jij
+	History	Geschiedenis
+	Playlists	Afspeellijsten
+	Watch later	Later bekijken
+	Liked videos	Video's die je leuk vindt
+	No videos yet.	Nog geen video's.
+	This page isn't available.	Deze pagina is niet beschikbaar.
+	Go to home	Naar de startpagina
+	Sign in to see this page.	Log in om deze pagina te bekijken.
+	You can't see this page.	Je kunt deze pagina niet bekijken.
+	Something went wrong. Try again later.	Er is iets misgegaan. Probeer het later opnieuw.
+	Up next	Hierna
+	This video isn't available yet.	Deze video is nog niet beschikbaar.
+	Subscribe	Abonneren
+	Like	Leuk
+	Dislike	Niet leuk
+	Share	Delen
+	Comments are turned off.	Reacties staan uit.
+@plural	{n} view|{n} views	{n} weergave|{n} weergaven
+@plural	{n} like|{n} likes	{n} like|{n} likes
+@plural	{n} comment|{n} comments	{n} reactie|{n} reacties
+@plural	{n} second ago|{n} seconds ago	{n} seconde geleden|{n} seconden geleden
+@plural	{n} minute ago|{n} minutes ago	{n} minuut geleden|{n} minuten geleden
+@plural	{n} hour ago|{n} hours ago	{n} uur geleden|{n} uur geleden
+@plural	{n} day ago|{n} days ago	{n} dag geleden|{n} dagen geleden
+@plural	{n} week ago|{n} weeks ago	{n} week geleden|{n} weken geleden
+@plural	{n} month ago|{n} months ago	{n} maand geleden|{n} maanden geleden
+@plural	{n} year ago|{n} years ago	{n} jaar geleden|{n} jaar geleden

@@ -1,0 +1,48 @@
+# Arabic (ar) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	العربية
+	Guide	القائمة
+	YouCraft home	الصفحة الرئيسية في YouCraft
+	Search	بحث
+	Sign in	تسجيل الدخول
+	Home	الرئيسية
+	Subscriptions	الاشتراكات
+	You	أنت
+	History	السجل
+	Playlists	قوائم التشغيل
+	Watch later	المشاهدة لاحقًا
+	Liked videos	الفيديوهات التي أعجبتك
+	No videos yet.	لا توجد فيديوهات بعد.
+	This page isn't available.	هذه الصفحة غير متاحة.
+	Go to home	الانتقال إلى الصفحة الرئيسية
+	Sign in to see this page.	سجّل الدخول لعرض هذه الصفحة.
+	You can't see this page.	لا يمكنك عرض هذه الصفحة.
+	Something went wrong. Try again later.	حدث خطأ ما. حاول مرة أخرى لاحقًا.
+	Up next	التالي
+	This video isn't available yet.	هذا الفيديو غير متاح بعد.
+	Subscribe	اشتراك
+	Like	إعجاب
+	Dislike	عدم إعجاب
+	Share	مشاركة
+	Comments are turned off.	التعليقات متوقفة.
+@plural	{n} view|{n} views	{n} مشاهدة|{n} مشاهدة|{n} مشاهدة|{n} مشاهدات|{n} مشاهدة|{n} مشاهدة
+@plural	{n} like|{n} likes	{n} إعجاب|{n} إعجاب|{n} إعجاب|{n} إعجابات|{n} إعجابًا|{n} إعجاب
+@plural	{n} comment|{n} comments	{n} تعليق|{n} تعليق|{n} تعليق|{n} تعليقات|{n} تعليقًا|{n} تعليق
+@plural	{n} second ago|{n} seconds ago	قبل {n} ثانية|قبل {n} ثانية|قبل {n} ثانية|قبل {n} ثوانٍ|قبل {n} ثانية|قبل {n} ثانية
+@plural	{n} minute ago|{n} minutes ago	قبل {n} دقيقة|قبل {n} دقيقة|قبل {n} دقيقة|قبل {n} دقائق|قبل {n} دقيقة|قبل {n} دقيقة
+@plural	{n} hour ago|{n} hours ago	قبل {n} ساعة|قبل {n} ساعة|قبل {n} ساعة|قبل {n} ساعات|قبل {n} ساعة|قبل {n} ساعة
+@plural	{n} day ago|{n} days ago	قبل {n} يوم|قبل {n} يوم|قبل {n} يوم|قبل {n} أيام|قبل {n} يومًا|قبل {n} يوم
+@plural	{n} week ago|{n} weeks ago	قبل {n} أسبوع|قبل {n} أسبوع|قبل {n} أسبوع|قبل {n} أسابيع|قبل {n} أسبوعًا|قبل {n} أسبوع
+@plural	{n} month ago|{n} months ago	قبل {n} شهر|قبل {n} شهر|قبل {n} شهر|قبل {n} أشهر|قبل {n} شهرًا|قبل {n} شهر
+@plural	{n} year ago|{n} years ago	قبل {n} سنة|قبل {n} سنة|قبل {n} سنة|قبل {n} سنوات|قبل {n} سنة|قبل {n} سنة

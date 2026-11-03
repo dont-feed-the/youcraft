@@ -1,0 +1,48 @@
+# Romanian (ro) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Română
+	Guide	Meniu
+	YouCraft home	Pagina de pornire YouCraft
+	Search	Căutare
+	Sign in	Conectează-te
+	Home	Acasă
+	Subscriptions	Abonamente
+	You	Tu
+	History	Istoric
+	Playlists	Playlisturi
+	Watch later	De vizionat mai târziu
+	Liked videos	Videoclipuri apreciate
+	No videos yet.	Încă nu există videoclipuri.
+	This page isn't available.	Această pagină nu este disponibilă.
+	Go to home	Mergi la pagina de pornire
+	Sign in to see this page.	Conectează-te pentru a vedea această pagină.
+	You can't see this page.	Nu poți vedea această pagină.
+	Something went wrong. Try again later.	A apărut o problemă. Încearcă din nou mai târziu.
+	Up next	Urmează
+	This video isn't available yet.	Acest videoclip nu este încă disponibil.
+	Subscribe	Abonează-te
+	Like	Îmi place
+	Dislike	Nu-mi place
+	Share	Distribuie
+	Comments are turned off.	Comentariile sunt dezactivate.
+@plural	{n} view|{n} views	{n} vizionare|{n} vizionări|{n} de vizionări
+@plural	{n} like|{n} likes	{n} apreciere|{n} aprecieri|{n} de aprecieri
+@plural	{n} comment|{n} comments	{n} comentariu|{n} comentarii|{n} de comentarii
+@plural	{n} second ago|{n} seconds ago	acum {n} secundă|acum {n} secunde|acum {n} de secunde
+@plural	{n} minute ago|{n} minutes ago	acum {n} minut|acum {n} minute|acum {n} de minute
+@plural	{n} hour ago|{n} hours ago	acum {n} oră|acum {n} ore|acum {n} de ore
+@plural	{n} day ago|{n} days ago	acum {n} zi|acum {n} zile|acum {n} de zile
+@plural	{n} week ago|{n} weeks ago	acum {n} săptămână|acum {n} săptămâni|acum {n} de săptămâni
+@plural	{n} month ago|{n} months ago	acum {n} lună|acum {n} luni|acum {n} de luni
+@plural	{n} year ago|{n} years ago	acum {n} an|acum {n} ani|acum {n} de ani

@@ -1,0 +1,48 @@
+# Georgian (ka) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	ქართული
+	Guide	მენიუ
+	YouCraft home	YouCraft-ის მთავარი გვერდი
+	Search	ძიება
+	Sign in	შესვლა
+	Home	მთავარი
+	Subscriptions	გამოწერები
+	You	თქვენ
+	History	ისტორია
+	Playlists	დასაკრავი სიები
+	Watch later	მოგვიანებით ნახვა
+	Liked videos	მოწონებული ვიდეოები
+	No videos yet.	ვიდეოები ჯერ არ არის.
+	This page isn't available.	ეს გვერდი მიუწვდომელია.
+	Go to home	მთავარ გვერდზე გადასვლა
+	Sign in to see this page.	ამ გვერდის სანახავად შედით სისტემაში.
+	You can't see this page.	ამ გვერდის ნახვა არ შეგიძლიათ.
+	Something went wrong. Try again later.	რაღაც შეცდომა მოხდა. სცადეთ მოგვიანებით.
+	Up next	შემდეგი
+	This video isn't available yet.	ეს ვიდეო ჯერ მიუწვდომელია.
+	Subscribe	გამოწერა
+	Like	მოწონება
+	Dislike	არ მომწონს
+	Share	გაზიარება
+	Comments are turned off.	კომენტარები გამორთულია.
+@plural	{n} view|{n} views	{n} ნახვა|{n} ნახვა
+@plural	{n} like|{n} likes	{n} მოწონება|{n} მოწონება
+@plural	{n} comment|{n} comments	{n} კომენტარი|{n} კომენტარი
+@plural	{n} second ago|{n} seconds ago	{n} წამის წინ|{n} წამის წინ
+@plural	{n} minute ago|{n} minutes ago	{n} წუთის წინ|{n} წუთის წინ
+@plural	{n} hour ago|{n} hours ago	{n} საათის წინ|{n} საათის წინ
+@plural	{n} day ago|{n} days ago	{n} დღის წინ|{n} დღის წინ
+@plural	{n} week ago|{n} weeks ago	{n} კვირის წინ|{n} კვირის წინ
+@plural	{n} month ago|{n} months ago	{n} თვის წინ|{n} თვის წინ
+@plural	{n} year ago|{n} years ago	{n} წლის წინ|{n} წლის წინ

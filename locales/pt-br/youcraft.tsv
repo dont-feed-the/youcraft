@@ -1,0 +1,48 @@
+# Portuguese (Brazil) (pt-br) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Português (Brasil)
+	Guide	Menu
+	YouCraft home	Página inicial do YouCraft
+	Search	Pesquisar
+	Sign in	Fazer login
+	Home	Início
+	Subscriptions	Inscrições
+	You	Você
+	History	Histórico
+	Playlists	Playlists
+	Watch later	Assistir mais tarde
+	Liked videos	Vídeos curtidos
+	No videos yet.	Ainda não há vídeos.
+	This page isn't available.	Esta página não está disponível.
+	Go to home	Ir para a página inicial
+	Sign in to see this page.	Faça login para ver esta página.
+	You can't see this page.	Você não pode ver esta página.
+	Something went wrong. Try again later.	Algo deu errado. Tente novamente mais tarde.
+	Up next	A seguir
+	This video isn't available yet.	Este vídeo ainda não está disponível.
+	Subscribe	Inscrever-se
+	Like	Curtir
+	Dislike	Não curtir
+	Share	Compartilhar
+	Comments are turned off.	Os comentários estão desativados.
+@plural	{n} view|{n} views	{n} visualização|{n} visualizações
+@plural	{n} like|{n} likes	{n} curtida|{n} curtidas
+@plural	{n} comment|{n} comments	{n} comentário|{n} comentários
+@plural	{n} second ago|{n} seconds ago	há {n} segundo|há {n} segundos
+@plural	{n} minute ago|{n} minutes ago	há {n} minuto|há {n} minutos
+@plural	{n} hour ago|{n} hours ago	há {n} hora|há {n} horas
+@plural	{n} day ago|{n} days ago	há {n} dia|há {n} dias
+@plural	{n} week ago|{n} weeks ago	há {n} semana|há {n} semanas
+@plural	{n} month ago|{n} months ago	há {n} mês|há {n} meses
+@plural	{n} year ago|{n} years ago	há {n} ano|há {n} anos

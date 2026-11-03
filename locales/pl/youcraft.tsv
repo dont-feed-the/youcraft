@@ -1,0 +1,48 @@
+# Polish (pl) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Polski
+	Guide	Menu
+	YouCraft home	Strona główna YouCraft
+	Search	Szukaj
+	Sign in	Zaloguj się
+	Home	Strona główna
+	Subscriptions	Subskrypcje
+	You	Ty
+	History	Historia
+	Playlists	Playlisty
+	Watch later	Do obejrzenia
+	Liked videos	Polubione filmy
+	No videos yet.	Nie ma jeszcze filmów.
+	This page isn't available.	Ta strona jest niedostępna.
+	Go to home	Przejdź do strony głównej
+	Sign in to see this page.	Zaloguj się, aby zobaczyć tę stronę.
+	You can't see this page.	Nie możesz zobaczyć tej strony.
+	Something went wrong. Try again later.	Coś poszło nie tak. Spróbuj ponownie później.
+	Up next	Następne
+	This video isn't available yet.	Ten film nie jest jeszcze dostępny.
+	Subscribe	Subskrybuj
+	Like	Lubię to
+	Dislike	Nie lubię tego
+	Share	Udostępnij
+	Comments are turned off.	Komentarze są wyłączone.
+@plural	{n} view|{n} views	{n} wyświetlenie|{n} wyświetlenia|{n} wyświetleń
+@plural	{n} like|{n} likes	{n} polubienie|{n} polubienia|{n} polubień
+@plural	{n} comment|{n} comments	{n} komentarz|{n} komentarze|{n} komentarzy
+@plural	{n} second ago|{n} seconds ago	{n} sekundę temu|{n} sekundy temu|{n} sekund temu
+@plural	{n} minute ago|{n} minutes ago	{n} minutę temu|{n} minuty temu|{n} minut temu
+@plural	{n} hour ago|{n} hours ago	{n} godzinę temu|{n} godziny temu|{n} godzin temu
+@plural	{n} day ago|{n} days ago	{n} dzień temu|{n} dni temu|{n} dni temu
+@plural	{n} week ago|{n} weeks ago	{n} tydzień temu|{n} tygodnie temu|{n} tygodni temu
+@plural	{n} month ago|{n} months ago	{n} miesiąc temu|{n} miesiące temu|{n} miesięcy temu
+@plural	{n} year ago|{n} years ago	{n} rok temu|{n} lata temu|{n} lat temu

@@ -1,0 +1,48 @@
+# Spanish (es) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Español
+	Guide	Menú
+	YouCraft home	Página principal de YouCraft
+	Search	Buscar
+	Sign in	Iniciar sesión
+	Home	Inicio
+	Subscriptions	Suscripciones
+	You	Tú
+	History	Historial
+	Playlists	Listas de reproducción
+	Watch later	Ver más tarde
+	Liked videos	Videos que te gustan
+	No videos yet.	Todavía no hay videos.
+	This page isn't available.	Esta página no está disponible.
+	Go to home	Ir a la página principal
+	Sign in to see this page.	Inicia sesión para ver esta página.
+	You can't see this page.	No puedes ver esta página.
+	Something went wrong. Try again later.	Algo salió mal. Vuelve a intentarlo más tarde.
+	Up next	A continuación
+	This video isn't available yet.	Este video aún no está disponible.
+	Subscribe	Suscribirse
+	Like	Me gusta
+	Dislike	No me gusta
+	Share	Compartir
+	Comments are turned off.	Los comentarios están desactivados.
+@plural	{n} view|{n} views	{n} visualización|{n} visualizaciones
+@plural	{n} like|{n} likes	{n} me gusta|{n} me gusta
+@plural	{n} comment|{n} comments	{n} comentario|{n} comentarios
+@plural	{n} second ago|{n} seconds ago	hace {n} segundo|hace {n} segundos
+@plural	{n} minute ago|{n} minutes ago	hace {n} minuto|hace {n} minutos
+@plural	{n} hour ago|{n} hours ago	hace {n} hora|hace {n} horas
+@plural	{n} day ago|{n} days ago	hace {n} día|hace {n} días
+@plural	{n} week ago|{n} weeks ago	hace {n} semana|hace {n} semanas
+@plural	{n} month ago|{n} months ago	hace {n} mes|hace {n} meses
+@plural	{n} year ago|{n} years ago	hace {n} año|hace {n} años

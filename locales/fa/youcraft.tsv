@@ -1,0 +1,48 @@
+# Persian (fa) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	فارسی
+	Guide	منو
+	YouCraft home	صفحهٔ اصلی YouCraft
+	Search	جستجو
+	Sign in	ورود
+	Home	خانه
+	Subscriptions	اشتراک‌ها
+	You	شما
+	History	سابقه
+	Playlists	فهرست‌های پخش
+	Watch later	تماشا در فرصتی دیگر
+	Liked videos	ویدیوهای پسندیده
+	No videos yet.	هنوز ویدیویی نیست.
+	This page isn't available.	این صفحه در دسترس نیست.
+	Go to home	رفتن به خانه
+	Sign in to see this page.	برای دیدن این صفحه وارد شوید.
+	You can't see this page.	نمی‌توانید این صفحه را ببینید.
+	Something went wrong. Try again later.	مشکلی پیش آمد. بعداً دوباره امتحان کنید.
+	Up next	بعدی
+	This video isn't available yet.	این ویدیو هنوز در دسترس نیست.
+	Subscribe	اشتراک
+	Like	پسندیدن
+	Dislike	نپسندیدن
+	Share	هم‌رسانی
+	Comments are turned off.	نظرها خاموش است.
+@plural	{n} view|{n} views	{n} بازدید|{n} بازدید
+@plural	{n} like|{n} likes	{n} پسند|{n} پسند
+@plural	{n} comment|{n} comments	{n} نظر|{n} نظر
+@plural	{n} second ago|{n} seconds ago	{n} ثانیه پیش|{n} ثانیه پیش
+@plural	{n} minute ago|{n} minutes ago	{n} دقیقه پیش|{n} دقیقه پیش
+@plural	{n} hour ago|{n} hours ago	{n} ساعت پیش|{n} ساعت پیش
+@plural	{n} day ago|{n} days ago	{n} روز پیش|{n} روز پیش
+@plural	{n} week ago|{n} weeks ago	{n} هفته پیش|{n} هفته پیش
+@plural	{n} month ago|{n} months ago	{n} ماه پیش|{n} ماه پیش
+@plural	{n} year ago|{n} years ago	{n} سال پیش|{n} سال پیش

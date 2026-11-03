@@ -1,0 +1,77 @@
+#!/usr/bin/env -S uv run --quiet --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["playwright==1.64.1"]
+# ///
+"""Render YouCraft pages to PNG with Playwright's browsers, to look at what a change did.
+
+Usage: scripts/screenshot BASE_URL OUT_DIR PATH... [--webkit] [--rtl] [--lang CODE]
+
+Each path is drawn at 1440x900 and 390x844, in light and dark, after the page settles (its
+WebAssembly loaded and hydrated). `--rtl` adds a right-to-left run (Arabic, or `--lang`), and
+`--webkit` uses WebKit, Safari's engine, instead of Chromium. Files are named
+`<path>-<width>-<theme>[-<lang>].png`. Playwright 1.64 matches the browsers already installed in
+`~/.cache/ms-playwright`; nothing is downloaded.
+"""
+
+import re
+import sys
+from pathlib import Path
+
+from playwright.sync_api import sync_playwright
+
+SIZES = [(1440, 900, 1), (390, 844, 2)]
+THEMES = ["light", "dark"]
+
+
+def name_of(path: str) -> str:
+    """A file name for the page at `path`."""
+    return re.sub(r"[^A-Za-z0-9]+", "_", path).strip("_") or "home"
+
+
+def main(argv: list[str]) -> int:
+    flags = [a for a in argv if a.startswith("--")]
+    rest = [a for a in argv if not a.startswith("--")]
+    lang = None
+    if "--lang" in argv:
+        index = argv.index("--lang")
+        lang = argv[index + 1] if index + 1 < len(argv) else None
+        rest = [a for a in rest if a != lang]
+    if len(rest) < 3:
+        print(__doc__, file=sys.stderr)
+        return 2
+    base, out, paths = rest[0].rstrip("/"), Path(rest[1]), rest[2:]
+    out.mkdir(parents=True, exist_ok=True)
+    languages = [None] + ([lang or "ar"] if "--rtl" in flags or lang else [])
+    with sync_playwright() as playwright:
+        engine = playwright.webkit if "--webkit" in flags else playwright.chromium
+        browser = engine.launch()
+        for language in languages:
+            for width, height, scale in SIZES:
+                for theme in THEMES:
+                    headers = {"Accept-Language": language} if language else {}
+                    context = browser.new_context(
+                        viewport={"width": width, "height": height},
+                        device_scale_factor=scale,
+                        color_scheme=theme,
+                        extra_http_headers=headers,
+                    )
+                    page = context.new_page()
+                    errors = []
+                    page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
+                    page.on("pageerror", lambda e: errors.append(str(e)))
+                    for path in paths:
+                        page.goto(base + path, wait_until="networkidle")
+                        suffix = f"-{language}" if language else ""
+                        file = out / f"{name_of(path)}-{width}-{theme}{suffix}.png"
+                        page.screenshot(path=str(file), full_page=False)
+                        print(file)
+                    for error in errors:
+                        print(f"console error: {error}", file=sys.stderr)
+                    context.close()
+        browser.close()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

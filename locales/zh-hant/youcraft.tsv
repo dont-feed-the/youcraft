@@ -1,0 +1,48 @@
+# Chinese (Traditional) (zh-hant) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	繁體中文
+	Guide	選單
+	YouCraft home	YouCraft 首頁
+	Search	搜尋
+	Sign in	登入
+	Home	首頁
+	Subscriptions	訂閱內容
+	You	我
+	History	觀看紀錄
+	Playlists	播放清單
+	Watch later	稍後觀看
+	Liked videos	喜歡的影片
+	No videos yet.	目前還沒有影片。
+	This page isn't available.	無法使用這個頁面。
+	Go to home	前往首頁
+	Sign in to see this page.	登入即可查看這個頁面。
+	You can't see this page.	你無法查看這個頁面。
+	Something went wrong. Try again later.	發生錯誤，請稍後再試。
+	Up next	接著播放
+	This video isn't available yet.	這部影片尚無法觀看。
+	Subscribe	訂閱
+	Like	喜歡
+	Dislike	不喜歡
+	Share	分享
+	Comments are turned off.	留言功能已關閉。
+@plural	{n} view|{n} views	觀看次數：{n} 次
+@plural	{n} like|{n} likes	{n} 個喜歡
+@plural	{n} comment|{n} comments	{n} 則留言
+@plural	{n} second ago|{n} seconds ago	{n} 秒前
+@plural	{n} minute ago|{n} minutes ago	{n} 分鐘前
+@plural	{n} hour ago|{n} hours ago	{n} 小時前
+@plural	{n} day ago|{n} days ago	{n} 天前
+@plural	{n} week ago|{n} weeks ago	{n} 週前
+@plural	{n} month ago|{n} months ago	{n} 個月前
+@plural	{n} year ago|{n} years ago	{n} 年前

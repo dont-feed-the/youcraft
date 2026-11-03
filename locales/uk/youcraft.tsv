@@ -1,0 +1,48 @@
+# Ukrainian (uk) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Українська
+	Guide	Меню
+	YouCraft home	Головна сторінка YouCraft
+	Search	Пошук
+	Sign in	Увійти
+	Home	Головна
+	Subscriptions	Підписки
+	You	Ви
+	History	Історія
+	Playlists	Плейлисти
+	Watch later	Переглянути пізніше
+	Liked videos	Вподобані відео
+	No videos yet.	Поки що немає відео.
+	This page isn't available.	Ця сторінка недоступна.
+	Go to home	На головну
+	Sign in to see this page.	Увійдіть, щоб побачити цю сторінку.
+	You can't see this page.	Ви не можете переглядати цю сторінку.
+	Something went wrong. Try again later.	Щось пішло не так. Спробуйте пізніше.
+	Up next	Далі
+	This video isn't available yet.	Це відео поки що недоступне.
+	Subscribe	Підписатися
+	Like	Подобається
+	Dislike	Не подобається
+	Share	Поділитися
+	Comments are turned off.	Коментарі вимкнено.
+@plural	{n} view|{n} views	{n} перегляд|{n} перегляди|{n} переглядів
+@plural	{n} like|{n} likes	{n} вподобання|{n} вподобання|{n} вподобань
+@plural	{n} comment|{n} comments	{n} коментар|{n} коментарі|{n} коментарів
+@plural	{n} second ago|{n} seconds ago	{n} секунду тому|{n} секунди тому|{n} секунд тому
+@plural	{n} minute ago|{n} minutes ago	{n} хвилину тому|{n} хвилини тому|{n} хвилин тому
+@plural	{n} hour ago|{n} hours ago	{n} годину тому|{n} години тому|{n} годин тому
+@plural	{n} day ago|{n} days ago	{n} день тому|{n} дні тому|{n} днів тому
+@plural	{n} week ago|{n} weeks ago	{n} тиждень тому|{n} тижні тому|{n} тижнів тому
+@plural	{n} month ago|{n} months ago	{n} місяць тому|{n} місяці тому|{n} місяців тому
+@plural	{n} year ago|{n} years ago	{n} рік тому|{n} роки тому|{n} років тому

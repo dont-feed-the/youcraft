@@ -1,0 +1,48 @@
+# Hungarian (hu) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Magyar
+	Guide	Menü
+	YouCraft home	YouCraft kezdőlap
+	Search	Keresés
+	Sign in	Bejelentkezés
+	Home	Kezdőlap
+	Subscriptions	Feliratkozások
+	You	Te
+	History	Előzmények
+	Playlists	Lejátszási listák
+	Watch later	Megnézendő
+	Liked videos	Kedvelt videók
+	No videos yet.	Még nincsenek videók.
+	This page isn't available.	Ez az oldal nem érhető el.
+	Go to home	Ugrás a kezdőlapra
+	Sign in to see this page.	Jelentkezz be az oldal megtekintéséhez.
+	You can't see this page.	Ezt az oldalt nem tekintheted meg.
+	Something went wrong. Try again later.	Hiba történt. Próbáld újra később.
+	Up next	Következő
+	This video isn't available yet.	Ez a videó még nem érhető el.
+	Subscribe	Feliratkozás
+	Like	Tetszik
+	Dislike	Nem tetszik
+	Share	Megosztás
+	Comments are turned off.	A hozzászólások ki vannak kapcsolva.
+@plural	{n} view|{n} views	{n} megtekintés|{n} megtekintés
+@plural	{n} like|{n} likes	{n} kedvelés|{n} kedvelés
+@plural	{n} comment|{n} comments	{n} hozzászólás|{n} hozzászólás
+@plural	{n} second ago|{n} seconds ago	{n} másodperce|{n} másodperce
+@plural	{n} minute ago|{n} minutes ago	{n} perce|{n} perce
+@plural	{n} hour ago|{n} hours ago	{n} órája|{n} órája
+@plural	{n} day ago|{n} days ago	{n} napja|{n} napja
+@plural	{n} week ago|{n} weeks ago	{n} hete|{n} hete
+@plural	{n} month ago|{n} months ago	{n} hónapja|{n} hónapja
+@plural	{n} year ago|{n} years ago	{n} éve|{n} éve

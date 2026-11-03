@@ -1,0 +1,48 @@
+# German (de) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Deutsch
+	Guide	Navigation
+	YouCraft home	YouCraft-Startseite
+	Search	Suchen
+	Sign in	Anmelden
+	Home	Startseite
+	Subscriptions	Abonnements
+	You	Du
+	History	Verlauf
+	Playlists	Playlists
+	Watch later	Später ansehen
+	Liked videos	Videos, die dir gefallen
+	No videos yet.	Noch keine Videos.
+	This page isn't available.	Diese Seite ist nicht verfügbar.
+	Go to home	Zur Startseite
+	Sign in to see this page.	Melde dich an, um diese Seite zu sehen.
+	You can't see this page.	Du kannst diese Seite nicht sehen.
+	Something went wrong. Try again later.	Etwas ist schiefgelaufen. Versuche es später noch einmal.
+	Up next	Als Nächstes
+	This video isn't available yet.	Dieses Video ist noch nicht verfügbar.
+	Subscribe	Abonnieren
+	Like	Mag ich
+	Dislike	Mag ich nicht
+	Share	Teilen
+	Comments are turned off.	Kommentare sind deaktiviert.
+@plural	{n} view|{n} views	{n} Aufruf|{n} Aufrufe
+@plural	{n} like|{n} likes	{n} Like|{n} Likes
+@plural	{n} comment|{n} comments	{n} Kommentar|{n} Kommentare
+@plural	{n} second ago|{n} seconds ago	vor {n} Sekunde|vor {n} Sekunden
+@plural	{n} minute ago|{n} minutes ago	vor {n} Minute|vor {n} Minuten
+@plural	{n} hour ago|{n} hours ago	vor {n} Stunde|vor {n} Stunden
+@plural	{n} day ago|{n} days ago	vor {n} Tag|vor {n} Tagen
+@plural	{n} week ago|{n} weeks ago	vor {n} Woche|vor {n} Wochen
+@plural	{n} month ago|{n} months ago	vor {n} Monat|vor {n} Monaten
+@plural	{n} year ago|{n} years ago	vor {n} Jahr|vor {n} Jahren

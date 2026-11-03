@@ -1,0 +1,48 @@
+# Telugu (te) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	తెలుగు
+	Guide	మెనూ
+	YouCraft home	YouCraft హోమ్
+	Search	వెతకండి
+	Sign in	సైన్ ఇన్ చేయండి
+	Home	హోమ్
+	Subscriptions	సబ్‌స్క్రిప్షన్‌లు
+	You	మీరు
+	History	చరిత్ర
+	Playlists	ప్లేలిస్ట్‌లు
+	Watch later	తర్వాత చూడండి
+	Liked videos	నచ్చిన వీడియోలు
+	No videos yet.	ఇంకా వీడియోలు లేవు.
+	This page isn't available.	ఈ పేజీ అందుబాటులో లేదు.
+	Go to home	హోమ్‌కు వెళ్లండి
+	Sign in to see this page.	ఈ పేజీని చూడటానికి సైన్ ఇన్ చేయండి.
+	You can't see this page.	మీరు ఈ పేజీని చూడలేరు.
+	Something went wrong. Try again later.	ఏదో తప్పు జరిగింది. తర్వాత మళ్లీ ప్రయత్నించండి.
+	Up next	తర్వాత
+	This video isn't available yet.	ఈ వీడియో ఇంకా అందుబాటులో లేదు.
+	Subscribe	సబ్‌స్క్రైబ్ చేయండి
+	Like	నచ్చింది
+	Dislike	నచ్చలేదు
+	Share	షేర్ చేయండి
+	Comments are turned off.	కామెంట్‌లు ఆఫ్ చేయబడ్డాయి.
+@plural	{n} view|{n} views	{n} వీక్షణ|{n} వీక్షణలు
+@plural	{n} like|{n} likes	{n} లైక్|{n} లైక్‌లు
+@plural	{n} comment|{n} comments	{n} కామెంట్|{n} కామెంట్‌లు
+@plural	{n} second ago|{n} seconds ago	{n} సెకను క్రితం|{n} సెకన్ల క్రితం
+@plural	{n} minute ago|{n} minutes ago	{n} నిమిషం క్రితం|{n} నిమిషాల క్రితం
+@plural	{n} hour ago|{n} hours ago	{n} గంట క్రితం|{n} గంటల క్రితం
+@plural	{n} day ago|{n} days ago	{n} రోజు క్రితం|{n} రోజుల క్రితం
+@plural	{n} week ago|{n} weeks ago	{n} వారం క్రితం|{n} వారాల క్రితం
+@plural	{n} month ago|{n} months ago	{n} నెల క్రితం|{n} నెలల క్రితం
+@plural	{n} year ago|{n} years ago	{n} సంవత్సరం క్రితం|{n} సంవత్సరాల క్రితం

@@ -1,0 +1,48 @@
+# Greek (el) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Ελληνικά
+	Guide	Μενού
+	YouCraft home	Αρχική σελίδα YouCraft
+	Search	Αναζήτηση
+	Sign in	Σύνδεση
+	Home	Αρχική
+	Subscriptions	Συνδρομές
+	You	Εσείς
+	History	Ιστορικό
+	Playlists	Λίστες αναπαραγωγής
+	Watch later	Παρακολούθηση αργότερα
+	Liked videos	Βίντεο που σας αρέσουν
+	No videos yet.	Δεν υπάρχουν ακόμη βίντεο.
+	This page isn't available.	Αυτή η σελίδα δεν είναι διαθέσιμη.
+	Go to home	Μετάβαση στην αρχική
+	Sign in to see this page.	Συνδεθείτε για να δείτε αυτή τη σελίδα.
+	You can't see this page.	Δεν μπορείτε να δείτε αυτή τη σελίδα.
+	Something went wrong. Try again later.	Κάτι πήγε στραβά. Δοκιμάστε ξανά αργότερα.
+	Up next	Επόμενο
+	This video isn't available yet.	Αυτό το βίντεο δεν είναι ακόμη διαθέσιμο.
+	Subscribe	Εγγραφή
+	Like	Μου αρέσει
+	Dislike	Δεν μου αρέσει
+	Share	Κοινοποίηση
+	Comments are turned off.	Τα σχόλια είναι απενεργοποιημένα.
+@plural	{n} view|{n} views	{n} προβολή|{n} προβολές
+@plural	{n} like|{n} likes	{n} «μου αρέσει»|{n} «μου αρέσει»
+@plural	{n} comment|{n} comments	{n} σχόλιο|{n} σχόλια
+@plural	{n} second ago|{n} seconds ago	πριν από {n} δευτερόλεπτο|πριν από {n} δευτερόλεπτα
+@plural	{n} minute ago|{n} minutes ago	πριν από {n} λεπτό|πριν από {n} λεπτά
+@plural	{n} hour ago|{n} hours ago	πριν από {n} ώρα|πριν από {n} ώρες
+@plural	{n} day ago|{n} days ago	πριν από {n} ημέρα|πριν από {n} ημέρες
+@plural	{n} week ago|{n} weeks ago	πριν από {n} εβδομάδα|πριν από {n} εβδομάδες
+@plural	{n} month ago|{n} months ago	πριν από {n} μήνα|πριν από {n} μήνες
+@plural	{n} year ago|{n} years ago	πριν από {n} έτος|πριν από {n} έτη

@@ -1,0 +1,16 @@
+[package]
+name = "youcraft-store"
+description = "YouCraft's database: one SQLite file, its schema, migrations, queries and search"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+rusqlite.workspace = true
+thiserror.workspace = true
+youcraft-api.workspace = true
+
+[lints]
+workspace = true

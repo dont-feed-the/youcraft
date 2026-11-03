@@ -1,0 +1,48 @@
+# Czech (cs) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Čeština
+	Guide	Nabídka
+	YouCraft home	Domovská stránka YouCraft
+	Search	Hledat
+	Sign in	Přihlásit se
+	Home	Domů
+	Subscriptions	Odběry
+	You	Vy
+	History	Historie
+	Playlists	Playlisty
+	Watch later	Přehrát později
+	Liked videos	Oblíbená videa
+	No videos yet.	Zatím žádná videa.
+	This page isn't available.	Tato stránka není dostupná.
+	Go to home	Přejít na domovskou stránku
+	Sign in to see this page.	Pro zobrazení této stránky se přihlaste.
+	You can't see this page.	Tuto stránku nemůžete zobrazit.
+	Something went wrong. Try again later.	Něco se pokazilo. Zkuste to později.
+	Up next	Další
+	This video isn't available yet.	Toto video zatím není dostupné.
+	Subscribe	Odebírat
+	Like	Líbí se mi
+	Dislike	Nelíbí se mi
+	Share	Sdílet
+	Comments are turned off.	Komentáře jsou vypnuté.
+@plural	{n} view|{n} views	{n} zhlédnutí|{n} zhlédnutí|{n} zhlédnutí
+@plural	{n} like|{n} likes	{n} lajk|{n} lajky|{n} lajků
+@plural	{n} comment|{n} comments	{n} komentář|{n} komentáře|{n} komentářů
+@plural	{n} second ago|{n} seconds ago	před {n} sekundou|před {n} sekundami|před {n} sekundami
+@plural	{n} minute ago|{n} minutes ago	před {n} minutou|před {n} minutami|před {n} minutami
+@plural	{n} hour ago|{n} hours ago	před {n} hodinou|před {n} hodinami|před {n} hodinami
+@plural	{n} day ago|{n} days ago	před {n} dnem|před {n} dny|před {n} dny
+@plural	{n} week ago|{n} weeks ago	před {n} týdnem|před {n} týdny|před {n} týdny
+@plural	{n} month ago|{n} months ago	před {n} měsícem|před {n} měsíci|před {n} měsíci
+@plural	{n} year ago|{n} years ago	před {n} rokem|před {n} lety|před {n} lety

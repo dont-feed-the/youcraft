@@ -1,0 +1,48 @@
+# Bulgarian (bg) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Български
+	Guide	Меню
+	YouCraft home	Начална страница на YouCraft
+	Search	Търсене
+	Sign in	Вход
+	Home	Начало
+	Subscriptions	Абонаменти
+	You	Вие
+	History	История
+	Playlists	Плейлисти
+	Watch later	Гледане по-късно
+	Liked videos	Харесани видеоклипове
+	No videos yet.	Още няма видеоклипове.
+	This page isn't available.	Тази страница не е налична.
+	Go to home	Към началната страница
+	Sign in to see this page.	Влезте, за да видите тази страница.
+	You can't see this page.	Не можете да видите тази страница.
+	Something went wrong. Try again later.	Нещо се обърка. Опитайте отново по-късно.
+	Up next	Следва
+	This video isn't available yet.	Този видеоклип още не е наличен.
+	Subscribe	Абониране
+	Like	Харесвам
+	Dislike	Не харесвам
+	Share	Споделяне
+	Comments are turned off.	Коментарите са изключени.
+@plural	{n} view|{n} views	{n} гледане|{n} гледания
+@plural	{n} like|{n} likes	{n} харесване|{n} харесвания
+@plural	{n} comment|{n} comments	{n} коментар|{n} коментара
+@plural	{n} second ago|{n} seconds ago	преди {n} секунда|преди {n} секунди
+@plural	{n} minute ago|{n} minutes ago	преди {n} минута|преди {n} минути
+@plural	{n} hour ago|{n} hours ago	преди {n} час|преди {n} часа
+@plural	{n} day ago|{n} days ago	преди {n} ден|преди {n} дни
+@plural	{n} week ago|{n} weeks ago	преди {n} седмица|преди {n} седмици
+@plural	{n} month ago|{n} months ago	преди {n} месец|преди {n} месеца
+@plural	{n} year ago|{n} years ago	преди {n} година|преди {n} години

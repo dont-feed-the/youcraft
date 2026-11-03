@@ -1,0 +1,48 @@
+# Japanese (ja) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	日本語
+	Guide	メニュー
+	YouCraft home	YouCraft ホーム
+	Search	検索
+	Sign in	ログイン
+	Home	ホーム
+	Subscriptions	登録チャンネル
+	You	マイページ
+	History	履歴
+	Playlists	再生リスト
+	Watch later	後で見る
+	Liked videos	いいねした動画
+	No videos yet.	まだ動画はありません。
+	This page isn't available.	このページは利用できません。
+	Go to home	ホームへ移動
+	Sign in to see this page.	このページを見るにはログインしてください。
+	You can't see this page.	このページは表示できません。
+	Something went wrong. Try again later.	問題が発生しました。しばらくしてからもう一度お試しください。
+	Up next	次の動画
+	This video isn't available yet.	この動画はまだ利用できません。
+	Subscribe	チャンネル登録
+	Like	いいね
+	Dislike	よくない
+	Share	共有
+	Comments are turned off.	コメントは無効になっています。
+@plural	{n} view|{n} views	{n} 回視聴
+@plural	{n} like|{n} likes	{n} 件のいいね
+@plural	{n} comment|{n} comments	{n} 件のコメント
+@plural	{n} second ago|{n} seconds ago	{n} 秒前
+@plural	{n} minute ago|{n} minutes ago	{n} 分前
+@plural	{n} hour ago|{n} hours ago	{n} 時間前
+@plural	{n} day ago|{n} days ago	{n} 日前
+@plural	{n} week ago|{n} weeks ago	{n} 週間前
+@plural	{n} month ago|{n} months ago	{n} か月前
+@plural	{n} year ago|{n} years ago	{n} 年前

@@ -1,0 +1,48 @@
+# Kazakh (kk) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Қазақ тілі
+	Guide	Мәзір
+	YouCraft home	YouCraft басты беті
+	Search	Іздеу
+	Sign in	Кіру
+	Home	Басты бет
+	Subscriptions	Жазылымдар
+	You	Сіз
+	History	Тарих
+	Playlists	Ойнату тізімдері
+	Watch later	Кейінірек көру
+	Liked videos	Ұнаған бейнелер
+	No videos yet.	Әзірге бейне жоқ.
+	This page isn't available.	Бұл бет қолжетімсіз.
+	Go to home	Басты бетке өту
+	Sign in to see this page.	Бұл бетті көру үшін кіріңіз.
+	You can't see this page.	Бұл бетті көре алмайсыз.
+	Something went wrong. Try again later.	Бірдеңе дұрыс болмады. Кейінірек қайталап көріңіз.
+	Up next	Келесі
+	This video isn't available yet.	Бұл бейне әлі қолжетімсіз.
+	Subscribe	Жазылу
+	Like	Ұнайды
+	Dislike	Ұнамайды
+	Share	Бөлісу
+	Comments are turned off.	Пікірлер өшірулі.
+@plural	{n} view|{n} views	{n} қаралым|{n} қаралым
+@plural	{n} like|{n} likes	{n} ұнату|{n} ұнату
+@plural	{n} comment|{n} comments	{n} пікір|{n} пікір
+@plural	{n} second ago|{n} seconds ago	{n} секунд бұрын|{n} секунд бұрын
+@plural	{n} minute ago|{n} minutes ago	{n} минут бұрын|{n} минут бұрын
+@plural	{n} hour ago|{n} hours ago	{n} сағат бұрын|{n} сағат бұрын
+@plural	{n} day ago|{n} days ago	{n} күн бұрын|{n} күн бұрын
+@plural	{n} week ago|{n} weeks ago	{n} апта бұрын|{n} апта бұрын
+@plural	{n} month ago|{n} months ago	{n} ай бұрын|{n} ай бұрын
+@plural	{n} year ago|{n} years ago	{n} жыл бұрын|{n} жыл бұрын

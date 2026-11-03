@@ -1,0 +1,48 @@
+# French (fr) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Français
+	Guide	Guide
+	YouCraft home	Accueil YouCraft
+	Search	Rechercher
+	Sign in	Se connecter
+	Home	Accueil
+	Subscriptions	Abonnements
+	You	Vous
+	History	Historique
+	Playlists	Playlists
+	Watch later	À regarder plus tard
+	Liked videos	Vidéos aimées
+	No videos yet.	Aucune vidéo pour l'instant.
+	This page isn't available.	Cette page n'est pas disponible.
+	Go to home	Aller à l'accueil
+	Sign in to see this page.	Connectez-vous pour voir cette page.
+	You can't see this page.	Vous ne pouvez pas voir cette page.
+	Something went wrong. Try again later.	Un problème est survenu. Réessayez plus tard.
+	Up next	À suivre
+	This video isn't available yet.	Cette vidéo n'est pas encore disponible.
+	Subscribe	S'abonner
+	Like	J'aime
+	Dislike	Je n'aime pas
+	Share	Partager
+	Comments are turned off.	Les commentaires sont désactivés.
+@plural	{n} view|{n} views	{n} vue|{n} vues
+@plural	{n} like|{n} likes	{n} j'aime|{n} j'aime
+@plural	{n} comment|{n} comments	{n} commentaire|{n} commentaires
+@plural	{n} second ago|{n} seconds ago	il y a {n} seconde|il y a {n} secondes
+@plural	{n} minute ago|{n} minutes ago	il y a {n} minute|il y a {n} minutes
+@plural	{n} hour ago|{n} hours ago	il y a {n} heure|il y a {n} heures
+@plural	{n} day ago|{n} days ago	il y a {n} jour|il y a {n} jours
+@plural	{n} week ago|{n} weeks ago	il y a {n} semaine|il y a {n} semaines
+@plural	{n} month ago|{n} months ago	il y a {n} mois|il y a {n} mois
+@plural	{n} year ago|{n} years ago	il y a {n} an|il y a {n} ans

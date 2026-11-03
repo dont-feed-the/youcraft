@@ -1,0 +1,48 @@
+# Slovenian (sl) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	Slovenščina
+	Guide	Meni
+	YouCraft home	Domača stran YouCraft
+	Search	Iskanje
+	Sign in	Prijava
+	Home	Domov
+	Subscriptions	Naročnine
+	You	Vi
+	History	Zgodovina
+	Playlists	Seznami predvajanja
+	Watch later	Ogled pozneje
+	Liked videos	Všečkani videoposnetki
+	No videos yet.	Še ni videoposnetkov.
+	This page isn't available.	Ta stran ni na voljo.
+	Go to home	Na domačo stran
+	Sign in to see this page.	Za ogled te strani se prijavite.
+	You can't see this page.	Te strani ne morete videti.
+	Something went wrong. Try again later.	Prišlo je do napake. Poskusite znova pozneje.
+	Up next	Naslednje
+	This video isn't available yet.	Ta videoposnetek še ni na voljo.
+	Subscribe	Naroči se
+	Like	Všeč mi je
+	Dislike	Ni mi všeč
+	Share	Deli
+	Comments are turned off.	Komentarji so izklopljeni.
+@plural	{n} view|{n} views	{n} ogled|{n} ogleda|{n} ogledi|{n} ogledov
+@plural	{n} like|{n} likes	{n} všeček|{n} všečka|{n} všečki|{n} všečkov
+@plural	{n} comment|{n} comments	{n} komentar|{n} komentarja|{n} komentarji|{n} komentarjev
+@plural	{n} second ago|{n} seconds ago	pred {n} sekundo|pred {n} sekundama|pred {n} sekundami|pred {n} sekundami
+@plural	{n} minute ago|{n} minutes ago	pred {n} minuto|pred {n} minutama|pred {n} minutami|pred {n} minutami
+@plural	{n} hour ago|{n} hours ago	pred {n} uro|pred {n} urama|pred {n} urami|pred {n} urami
+@plural	{n} day ago|{n} days ago	pred {n} dnem|pred {n} dnevoma|pred {n} dnevi|pred {n} dnevi
+@plural	{n} week ago|{n} weeks ago	pred {n} tednom|pred {n} tednoma|pred {n} tedni|pred {n} tedni
+@plural	{n} month ago|{n} months ago	pred {n} mesecem|pred {n} mesecema|pred {n} meseci|pred {n} meseci
+@plural	{n} year ago|{n} years ago	pred {n} letom|pred {n} letoma|pred {n} leti|pred {n} leti

@@ -1,0 +1,48 @@
+# Korean (ko) interface catalog for YouCraft.
+# Columns, separated by a TAB:  context <TAB> English source text <TAB> translation
+#   context  usually empty. `@plural`, `@id` and `@msg` mean something to the apps; any other
+#            word is a label that tells apart two meanings of the same English.
+#   escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns (in any
+#            order), and a trailing "…" in one needs one in the other.
+#   @plural  English `one|other`; the translation lists this language's plural forms, `|`-separated.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# Clean room: every entry was written from the plain meaning of the English text in ordinary
+# computing vocabulary. No other product's localisation, string table or translated UI was
+# consulted or copied; add entries the same way.
+
+@id	language.name	한국어
+	Guide	메뉴
+	YouCraft home	YouCraft 홈
+	Search	검색
+	Sign in	로그인
+	Home	홈
+	Subscriptions	구독
+	You	내 페이지
+	History	시청 기록
+	Playlists	재생목록
+	Watch later	나중에 볼 동영상
+	Liked videos	좋아요 표시한 동영상
+	No videos yet.	아직 동영상이 없습니다.
+	This page isn't available.	이 페이지를 사용할 수 없습니다.
+	Go to home	홈으로 이동
+	Sign in to see this page.	이 페이지를 보려면 로그인하세요.
+	You can't see this page.	이 페이지를 볼 수 없습니다.
+	Something went wrong. Try again later.	문제가 발생했습니다. 나중에 다시 시도하세요.
+	Up next	다음 동영상
+	This video isn't available yet.	이 동영상은 아직 사용할 수 없습니다.
+	Subscribe	구독
+	Like	좋아요
+	Dislike	싫어요
+	Share	공유
+	Comments are turned off.	댓글이 사용 중지되었습니다.
+@plural	{n} view|{n} views	조회수 {n}회
+@plural	{n} like|{n} likes	좋아요 {n}개
+@plural	{n} comment|{n} comments	댓글 {n}개
+@plural	{n} second ago|{n} seconds ago	{n}초 전
+@plural	{n} minute ago|{n} minutes ago	{n}분 전
+@plural	{n} hour ago|{n} hours ago	{n}시간 전
+@plural	{n} day ago|{n} days ago	{n}일 전
+@plural	{n} week ago|{n} weeks ago	{n}주 전
+@plural	{n} month ago|{n} months ago	{n}개월 전
+@plural	{n} year ago|{n} years ago	{n}년 전

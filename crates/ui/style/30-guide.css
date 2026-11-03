@@ -1,0 +1,30 @@
+/* The guide: a side column on wide screens, a narrow column of icons below 1313px, and a tab bar
+   along the bottom on phones. */
+.with-guide { display: flex; align-items: flex-start; }
+
+.guide { position: sticky; inset-block-start: var(--masthead-height); flex: none; inline-size: var(--guide-width); block-size: calc(100vh - var(--masthead-height)); overflow-y: auto; padding: var(--space-3); }
+
+.guide-section { display: grid; gap: 2px; padding-block-end: var(--space-3); margin-block-end: var(--space-3); border-block-end: 1px solid var(--border); }
+.guide-section:last-child { border: 0; }
+
+.guide-entry { display: flex; align-items: center; gap: var(--space-6); block-size: 40px; padding-inline: var(--space-3); border-radius: var(--radius-guide); }
+.guide-entry:hover { background: var(--bg-hover); }
+
+.guide-collapsed .guide, .mini .guide { inline-size: var(--mini-guide-width); padding: var(--space-1); }
+.guide-collapsed .guide-entry { flex-direction: column; justify-content: center; gap: var(--space-1); block-size: 74px; padding: 0; font-size: var(--text-xxs); }
+.guide-collapsed .guide-you .guide-entry:not(:first-child) { display: none; }
+.guide-collapsed .guide-section { border: 0; padding: 0; margin: 0; }
+
+@media (max-width: 1312px) {
+  .guide { inline-size: var(--mini-guide-width); padding: var(--space-1); }
+  .guide-entry { flex-direction: column; justify-content: center; gap: var(--space-1); block-size: 74px; padding: 0; font-size: var(--text-xxs); }
+  .guide-you .guide-entry:not(:first-child) { display: none; }
+  .guide-section { border: 0; padding: 0; margin: 0; }
+}
+
+@media (max-width: 656px) {
+  .with-guide { display: block; padding-block-end: var(--tabbar-height); }
+  .guide { position: fixed; inset-block: auto 0; inset-inline: 0; z-index: 3; display: flex; justify-content: space-around; inline-size: auto; block-size: var(--tabbar-height); padding: 0; overflow: hidden; background: var(--bg); border-block-start: 1px solid var(--border); }
+  .guide-section { display: contents; }
+  .guide-entry { flex: 1; block-size: var(--tabbar-height); border-radius: 0; }
+}
