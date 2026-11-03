@@ -542,6 +542,22 @@ pub mod tests {
         assert_eq!(ada_me["role"], "admin", "the floor lowers nobody");
         let (_, bob_me) = answer(&routes, "account.me", json!({}), &bob).await;
         assert_eq!(bob_me["role"], "creator", "{bob_me}");
+        let (_, policy) = answer(&routes, "site.policy", json!({}), "").await;
+        assert_eq!(policy["signed_in_role"], "creator");
+        let invite = |role: &str| json!({ "email": "eve@example.com", "role": role });
+        assert_eq!(
+            answer(&routes, "invite.create", invite("creator"), &ada)
+                .await
+                .0,
+            StatusCode::UNPROCESSABLE_ENTITY,
+            "everyone is a creator already"
+        );
+        assert_eq!(
+            answer(&routes, "invite.create", invite("admin"), &ada)
+                .await
+                .0,
+            StatusCode::OK
+        );
         let upload = json!({ "title": "Mine", "size": 5 });
         let (status, _) = answer(&routes, "upload.create", upload.clone(), &bob).await;
         assert_eq!(status, StatusCode::OK);

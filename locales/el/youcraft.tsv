@@ -55,6 +55,7 @@
 	Invitations	Προσκλήσεις
 	Invite	Πρόσκληση
 	Invited people become creators or administrators when they first sign in with Google.	Όσοι προσκαλούνται γίνονται δημιουργοί ή διαχειριστές όταν συνδεθούν για πρώτη φορά με Google.
+	Invited people become administrators when they first sign in with Google.	Όσοι προσκαλούνται γίνονται διαχειριστές όταν συνδεθούν για πρώτη φορά με Google.
 	Language	Γλώσσα
 	Language: {language}	Γλώσσα: {language}
 	Last used {when}	Τελευταία χρήση {when}

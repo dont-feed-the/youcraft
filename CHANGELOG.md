@@ -2,6 +2,18 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.11
+
+### Added
+
+- `site.policy` tells what the site grants every account: the least role of a signed-in one.
+
+### Changed
+
+- The settings page shows a role only above what every account has, and invites only to the
+  roles above it: while everyone publishes, invitations make administrators. `invite.create`
+  refuses a role every account has already.
+
 ## 0.1.10
 
 ### Fixed

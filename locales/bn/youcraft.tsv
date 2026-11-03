@@ -55,6 +55,7 @@
 	Invitations	আমন্ত্রণ
 	Invite	আমন্ত্রণ জানান
 	Invited people become creators or administrators when they first sign in with Google.	আমন্ত্রিতরা প্রথমবার Google দিয়ে সাইন ইন করলে ক্রিয়েটর বা অ্যাডমিনিস্ট্রেটর হয়ে যান।
+	Invited people become administrators when they first sign in with Google.	আমন্ত্রিতরা প্রথমবার Google দিয়ে সাইন ইন করলে অ্যাডমিনিস্ট্রেটর হয়ে যান।
 	Language	ভাষা
 	Language: {language}	ভাষা: {language}
 	Last used {when}	শেষ ব্যবহার {when}

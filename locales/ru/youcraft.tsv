@@ -55,6 +55,7 @@
 	Invitations	Приглашения
 	Invite	Пригласить
 	Invited people become creators or administrators when they first sign in with Google.	Приглашённые становятся авторами или администраторами при первом входе через Google.
+	Invited people become administrators when they first sign in with Google.	Приглашённые становятся администраторами при первом входе через Google.
 	Language	Язык
 	Language: {language}	Язык: {language}
 	Last used {when}	Последнее использование {when}

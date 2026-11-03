@@ -55,6 +55,7 @@
 	Invitations	招待
 	Invite	招待する
 	Invited people become creators or administrators when they first sign in with Google.	招待された人は、Google で初めてログインしたときにクリエイターまたは管理者になります。
+	Invited people become administrators when they first sign in with Google.	招待された人は、Google で初めてログインしたときに管理者になります。
 	Language	言語
 	Language: {language}	言語: {language}
 	Last used {when}	最終使用: {when}

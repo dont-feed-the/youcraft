@@ -55,6 +55,7 @@
 	Invitations	Invitationer
 	Invite	Inviter
 	Invited people become creators or administrators when they first sign in with Google.	Inviterede personer bliver skabere eller administratorer, første gang de logger ind med Google.
+	Invited people become administrators when they first sign in with Google.	Inviterede personer bliver administratorer, første gang de logger ind med Google.
 	Language	Sprog
 	Language: {language}	Sprog: {language}
 	Last used {when}	Sidst brugt {when}

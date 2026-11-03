@@ -55,6 +55,7 @@
 	Invitations	Lời mời
 	Invite	Mời
 	Invited people become creators or administrators when they first sign in with Google.	Người được mời sẽ trở thành nhà sáng tạo hoặc quản trị viên khi đăng nhập bằng Google lần đầu.
+	Invited people become administrators when they first sign in with Google.	Người được mời sẽ trở thành quản trị viên khi đăng nhập bằng Google lần đầu.
 	Language	Ngôn ngữ
 	Language: {language}	Ngôn ngữ: {language}
 	Last used {when}	Dùng lần cuối {when}

@@ -55,6 +55,7 @@
 	Invitations	Meghívások
 	Invite	Meghívás
 	Invited people become creators or administrators when they first sign in with Google.	A meghívott személyek alkotók vagy rendszergazdák lesznek, amikor először bejelentkeznek a Google-lel.
+	Invited people become administrators when they first sign in with Google.	A meghívott személyek rendszergazdák lesznek, amikor először bejelentkeznek a Google-lel.
 	Language	Nyelv
 	Language: {language}	Nyelv: {language}
 	Last used {when}	Utoljára használva: {when}

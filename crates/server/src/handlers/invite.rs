@@ -27,8 +27,14 @@ fn address(email: &str) -> Result<String, ApiError> {
 
 impl Handle<Create> for Site {
     async fn handle(&self, _: Caller, invitation: NewInvitation) -> Result<Invited, ApiError> {
-        if !matches!(invitation.role, Role::Creator | Role::Admin) {
-            return Err(ApiError::invalid("role", "creator or admin"));
+        // An invitation raises an account above what every account has; below or at it, it
+        // would mean nothing.
+        let floor = self.config().signed_in_role;
+        if invitation.role <= floor || !matches!(invitation.role, Role::Creator | Role::Admin) {
+            return Err(ApiError::invalid(
+                "role",
+                "creator or admin, above what every account has",
+            ));
         }
         let email = address(&invitation.email)?;
         let now = now();

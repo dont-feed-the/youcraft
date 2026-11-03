@@ -55,6 +55,7 @@
 	Invitations	Pozvánky
 	Invite	Pozvat
 	Invited people become creators or administrators when they first sign in with Google.	Pozvaní lidé se stanou tvůrci nebo správci, když se poprvé přihlásí přes Google.
+	Invited people become administrators when they first sign in with Google.	Pozvaní lidé se stanou správci, když se poprvé přihlásí přes Google.
 	Language	Jazyk
 	Language: {language}	Jazyk: {language}
 	Last used {when}	Naposledy použito {when}

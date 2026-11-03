@@ -55,6 +55,7 @@
 	Invitations	Шақырулар
 	Invite	Шақыру
 	Invited people become creators or administrators when they first sign in with Google.	Шақырылған адамдар Google арқылы алғаш кіргенде автор немесе әкімші болады.
+	Invited people become administrators when they first sign in with Google.	Шақырылған адамдар Google арқылы алғаш кіргенде әкімші болады.
 	Language	Тіл
 	Language: {language}	Тіл: {language}
 	Last used {when}	Соңғы рет қолданылды: {when}

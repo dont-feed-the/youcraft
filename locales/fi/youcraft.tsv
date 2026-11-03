@@ -55,6 +55,7 @@
 	Invitations	Kutsut
 	Invite	Kutsu
 	Invited people become creators or administrators when they first sign in with Google.	Kutsutuista tulee sisällöntuottajia tai järjestelmänvalvojia, kun he kirjautuvat ensimmäisen kerran Googlella.
+	Invited people become administrators when they first sign in with Google.	Kutsutuista tulee järjestelmänvalvojia, kun he kirjautuvat ensimmäisen kerran Googlella.
 	Language	Kieli
 	Language: {language}	Kieli: {language}
 	Last used {when}	Viimeksi käytetty {when}

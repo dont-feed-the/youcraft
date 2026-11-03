@@ -22,6 +22,7 @@ macro_rules! for_each_command {
     ($callback:ident) => {
         $callback! {
             $crate::commands::site::ListCommands,
+            $crate::commands::site::GetPolicy,
             $crate::commands::feed::Home,
             $crate::commands::video::Get,
             $crate::commands::video::Next,

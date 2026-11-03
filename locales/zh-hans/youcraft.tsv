@@ -55,6 +55,7 @@
 	Invitations	邀请
 	Invite	邀请
 	Invited people become creators or administrators when they first sign in with Google.	受邀者首次使用 Google 登录时即成为创作者或管理员。
+	Invited people become administrators when they first sign in with Google.	受邀者首次使用 Google 登录时即成为管理员。
 	Language	语言
 	Language: {language}	语言：{language}
 	Last used {when}	上次使用于{when}

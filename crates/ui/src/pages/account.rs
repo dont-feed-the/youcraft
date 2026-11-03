@@ -1,11 +1,13 @@
 //! The settings page, `/account`: the signed-in person's account, appearance, language and
 //! personal tokens, and for administrators the invitations waiting.
+//!
+//! A role is shown, and offered to invite with, only above what the site grants every account.
 
 use leptos::prelude::*;
 use leptos_meta::Title;
 use youcraft_api::commands::account::{Me, Theme};
 use youcraft_api::commands::invite::{self, Invitation};
-use youcraft_api::commands::site::Nothing;
+use youcraft_api::commands::site::{GetPolicy, Nothing};
 use youcraft_api::commands::token::{self, Token};
 use youcraft_api::{ApiError, Role, routes};
 
@@ -20,6 +22,7 @@ use crate::pages::not_found::Trouble;
 #[component]
 pub fn Account() -> impl IntoView {
     let me = SignedIn::resource();
+    let policy = Resource::new(|| (), |()| call::<GetPolicy>(Nothing {}));
     view! {
         <Title text=format!("{} - YouCraft", tr("Settings"))/>
         <main class="settings">
@@ -30,8 +33,10 @@ pub fn Account() -> impl IntoView {
                         Some(me) => me.await,
                         None => None,
                     };
+                    // Without the policy, every role counts as above the least one.
+                    let floor = policy.await.map_or(Role::Anyone, |policy| policy.signed_in_role);
                     match me {
-                        Some(me) => view! { <Sections me/> }.into_any(),
+                        Some(me) => view! { <Sections me floor/> }.into_any(),
                         None => view! { <Trouble error=ApiError::SignInRequired/> }.into_any(),
                     }
                 })}
@@ -49,9 +54,9 @@ fn role_name(role: Role) -> &'static str {
     }
 }
 
-/// Every section, for `me`.
+/// Every section, for `me`, on a site where every account has at least the role `floor`.
 #[component]
-fn Sections(me: Me) -> impl IntoView {
+fn Sections(me: Me, floor: Role) -> impl IntoView {
     let admin = me.role >= Role::Admin;
     let channel = routes::channel(&me.channel.handle);
     let blocked = me.blocked.then(|| {
@@ -67,7 +72,7 @@ fn Sections(me: Me) -> impl IntoView {
                     <span class="settings-account-name">{me.with_value(|me| me.channel.name.clone())}</span>
                     <span class="settings-hint">
                         <bdi>{me.with_value(|me| format!("@{}", me.channel.handle))}</bdi>
-                        {me.with_value(|me| format!(" · {}", role_name(me.role)))}
+                        {me.with_value(|me| (me.role > floor).then(|| format!(" · {}", role_name(me.role))))}
                     </span>
                     <a class="menu-link" href=channel>{tr("View your channel")}</a>
                 </div>
@@ -77,7 +82,7 @@ fn Sections(me: Me) -> impl IntoView {
         <AppearanceSection me/>
         <LanguageSection me/>
         <TokenSection/>
-        {admin.then(|| view! { <InvitationSection/> })}
+        {admin.then(|| view! { <InvitationSection floor/> })}
     }
 }
 
@@ -215,13 +220,24 @@ fn TokenRow(token: Token, version: RwSignal<u32>) -> impl IntoView {
     }
 }
 
-/// The invitations waiting, for administrators: made and withdrawn here.
+/// The invitations waiting, for administrators: made and withdrawn here, to the roles above
+/// `floor`.
 #[component]
-fn InvitationSection() -> impl IntoView {
+fn InvitationSection(floor: Role) -> impl IntoView {
+    let offered: Vec<Role> = [Role::Creator, Role::Admin]
+        .into_iter()
+        .filter(|role| *role > floor)
+        .collect();
+    let first = offered.first().copied().unwrap_or(Role::Admin);
+    let hint = if first == Role::Admin {
+        tr("Invited people become administrators when they first sign in with Google.")
+    } else {
+        tr("Invited people become creators or administrators when they first sign in with Google.")
+    };
     let version = RwSignal::new(0_u32);
     let waiting = Resource::new(move || version.get(), |_| call::<invite::List>(Nothing {}));
     let email = RwSignal::new(String::new());
-    let role = RwSignal::new(Role::Creator);
+    let role = RwSignal::new(first);
     let failed = RwSignal::new(false);
     let send = move |event: leptos::ev::SubmitEvent| {
         event.prevent_default();
@@ -239,21 +255,27 @@ fn InvitationSection() -> impl IntoView {
         });
     };
     let pick = move |event: leptos::ev::Event| {
-        let admin = event_target_value(&event) == Role::Admin.as_str();
-        role.set(if admin { Role::Admin } else { Role::Creator });
+        if let Some(picked) = Role::from_name(&event_target_value(&event)) {
+            role.set(picked);
+        }
     };
+    // One role to give needs no choice.
+    let choice = (offered.len() > 1).then(|| {
+        view! {
+            <select class="field" aria-label=tr("Role") on:change=pick>
+                {offered.iter().map(|role| view! { <option value=role.as_str()>{role_name(*role)}</option> }).collect_view()}
+            </select>
+        }
+    });
     view! {
         <section class="settings-section">
             <h2>{tr("Invitations")}</h2>
-            <p class="settings-hint">{tr("Invited people become creators or administrators when they first sign in with Google.")}</p>
+            <p class="settings-hint">{hint}</p>
             <form class="settings-form" on:submit=send>
                 <input class="field" type="email" required aria-label=tr("E-mail address")
                     placeholder=tr("E-mail address") prop:value=email
                     on:input=move |event| email.set(event_target_value(&event))/>
-                <select class="field" aria-label=tr("Role") on:change=pick>
-                    <option value=Role::Creator.as_str()>{role_name(Role::Creator)}</option>
-                    <option value=Role::Admin.as_str()>{role_name(Role::Admin)}</option>
-                </select>
+                {choice}
                 <button class="pill" type="submit">{tr("Invite")}</button>
             </form>
             {move || failed.get().then(|| view! { <p class="settings-notice">{tr("Something went wrong. Try again later.")}</p> })}

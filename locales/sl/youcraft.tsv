@@ -55,6 +55,7 @@
 	Invitations	Povabila
 	Invite	Povabi
 	Invited people become creators or administrators when they first sign in with Google.	Povabljeni postanejo ustvarjalci ali skrbniki, ko se prvič prijavijo z Googlom.
+	Invited people become administrators when they first sign in with Google.	Povabljeni postanejo skrbniki, ko se prvič prijavijo z Googlom.
 	Language	Jezik
 	Language: {language}	Jezik: {language}
 	Last used {when}	Nazadnje uporabljeno {when}

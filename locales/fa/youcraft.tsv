@@ -55,6 +55,7 @@
 	Invitations	دعوت‌ها
 	Invite	دعوت
 	Invited people become creators or administrators when they first sign in with Google.	افراد دعوت‌شده هنگام نخستین ورود با Google سازنده یا مدیر می‌شوند.
+	Invited people become administrators when they first sign in with Google.	افراد دعوت‌شده هنگام نخستین ورود با Google مدیر می‌شوند.
 	Language	زبان
 	Language: {language}	زبان: {language}
 	Last used {when}	آخرین استفاده {when}

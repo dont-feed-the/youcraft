@@ -55,6 +55,7 @@
 	Invitations	Kutsed
 	Invite	Kutsu
 	Invited people become creators or administrators when they first sign in with Google.	Kutsutud inimestest saavad loojad või administraatorid, kui nad esimest korda Google'iga sisse logivad.
+	Invited people become administrators when they first sign in with Google.	Kutsutud inimestest saavad administraatorid, kui nad esimest korda Google'iga sisse logivad.
 	Language	Keel
 	Language: {language}	Keel: {language}
 	Last used {when}	Viimati kasutatud {when}

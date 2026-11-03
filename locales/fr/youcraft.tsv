@@ -55,6 +55,7 @@
 	Invitations	Invitations
 	Invite	Inviter
 	Invited people become creators or administrators when they first sign in with Google.	Les personnes invitées deviennent créateurs ou administrateurs lors de leur première connexion avec Google.
+	Invited people become administrators when they first sign in with Google.	Les personnes invitées deviennent administrateurs lors de leur première connexion avec Google.
 	Language	Langue
 	Language: {language}	Langue : {language}
 	Last used {when}	Dernière utilisation {when}

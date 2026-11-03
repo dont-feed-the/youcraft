@@ -55,6 +55,7 @@
 	Invitations	Davetler
 	Invite	Davet et
 	Invited people become creators or administrators when they first sign in with Google.	Davet edilen kişiler Google ile ilk kez oturum açtıklarında içerik üreticisi veya yönetici olur.
+	Invited people become administrators when they first sign in with Google.	Davet edilen kişiler Google ile ilk kez oturum açtıklarında yönetici olur.
 	Language	Dil
 	Language: {language}	Dil: {language}
 	Last used {when}	Son kullanım: {when}

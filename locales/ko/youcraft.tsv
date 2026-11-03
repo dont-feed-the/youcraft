@@ -55,6 +55,7 @@
 	Invitations	초대
 	Invite	초대하기
 	Invited people become creators or administrators when they first sign in with Google.	초대받은 사람은 Google로 처음 로그인할 때 크리에이터 또는 관리자가 됩니다.
+	Invited people become administrators when they first sign in with Google.	초대받은 사람은 Google로 처음 로그인할 때 관리자가 됩니다.
 	Language	언어
 	Language: {language}	언어: {language}
 	Last used {when}	마지막 사용 {when}

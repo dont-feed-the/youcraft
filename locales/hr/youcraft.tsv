@@ -55,6 +55,7 @@
 	Invitations	Pozivnice
 	Invite	Pozovi
 	Invited people become creators or administrators when they first sign in with Google.	Pozvane osobe postaju autori ili administratori kad se prvi put prijave putem Googlea.
+	Invited people become administrators when they first sign in with Google.	Pozvane osobe postaju administratori kad se prvi put prijave putem Googlea.
 	Language	Jezik
 	Language: {language}	Jezik: {language}
 	Last used {when}	Zadnja upotreba {when}
