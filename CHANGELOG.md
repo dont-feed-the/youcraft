@@ -2,6 +2,13 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.10
+
+### Fixed
+
+- In the studio, a video's form stays open, with what was typed in it, while another video's
+  progress refreshes the list.
+
 ## 0.1.9
 
 ### Changed

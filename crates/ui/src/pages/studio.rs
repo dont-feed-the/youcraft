@@ -2,12 +2,12 @@
 //! and views, and a form to change or delete it.
 //!
 //! While a video is uploading or being processed, the list refreshes itself every few seconds,
-//! so its progress moves without a reload.
+//! so its progress moves without a reload; each row keeps its own state, an open form included.
 
 use leptos::prelude::*;
 use leptos_meta::Title;
 use youcraft_api::commands::{feed, studio, video};
-use youcraft_api::records::{Processing, StudioVideo, Visibility};
+use youcraft_api::records::{Processing, StudioPage, StudioVideo, Visibility};
 use youcraft_api::routes;
 
 use crate::call::call;
@@ -54,22 +54,36 @@ pub fn processing_text(processing: &Processing) -> Option<String> {
 }
 
 /// The studio page.
+///
+/// The first page of videos comes with the page; later pages, asked for while a video is on its
+/// way or after an edit, replace it in `latest`. The rows are keyed by video, so a newer page
+/// moves what each row shows without rebuilding it, and an open form stays open.
 #[component]
 pub fn Studio() -> impl IntoView {
-    let videos = Resource::new(|| (), |()| call::<studio::Videos>(feed::Page::default()));
-    let refresh = move || videos.refetch();
+    let first = Resource::new(|| (), |()| call::<studio::Videos>(feed::Page::default()));
+    let latest = RwSignal::new(None::<StudioPage>);
+    let refresh = move || {
+        leptos::task::spawn_local(async move {
+            if let Ok(page) = call::<studio::Videos>(feed::Page::default()).await {
+                latest.set(Some(page));
+            }
+        });
+    };
     Effect::new(move |_| {
-        let busy = videos.get().and_then(Result::ok).is_some_and(|page| {
+        let busy = |page: &StudioPage| {
             page.videos.iter().any(|v| {
                 matches!(
                     v.processing,
                     Processing::Uploading { .. } | Processing::Processing { .. }
                 )
             })
-        });
+        };
+        let shown = latest.with(|page| page.as_ref().map(busy));
+        let busy = shown
+            .unwrap_or_else(|| first.with(|page| matches!(page, Some(Ok(page)) if busy(page))));
         if busy {
             set_timeout(
-                move || videos.refetch(),
+                refresh,
                 std::time::Duration::from_millis(REFRESH_MILLISECONDS),
             );
         }
@@ -86,21 +100,11 @@ pub fn Studio() -> impl IntoView {
             </div>
             <Suspense fallback=|| ()>
                 {move || Suspend::new(async move {
-                    match videos.await {
-                        Ok(page) if page.videos.is_empty() => view! {
-                            <p class="empty">{tr("No videos yet.")}</p>
-                        }.into_any(),
-                        Ok(page) => view! {
-                            <div class="studio-table" role="table">
-                                <div class="studio-row studio-head" role="row">
-                                    <span role="columnheader">{tr("Video")}</span>
-                                    <span role="columnheader">{tr("Visibility")}</span>
-                                    <span role="columnheader">{tr("Date")}</span>
-                                    <span role="columnheader">{tr("Views")}</span>
-                                </div>
-                                {page.videos.into_iter().map(|video| view! { <Row video refresh/> }).collect_view()}
-                            </div>
-                        }.into_any(),
+                    match first.await {
+                        Ok(page) => {
+                            let page = Memo::new(move |_| latest.get().unwrap_or_else(|| page.clone()));
+                            view! { <Table page refresh/> }.into_any()
+                        }
                         Err(error) => view! { <Trouble error/> }.into_any(),
                     }
                 })}
@@ -109,41 +113,86 @@ pub fn Studio() -> impl IntoView {
     }
 }
 
-/// One video of the studio, and its form.
+/// The table of the studio's videos, one row per video for as long as it is listed.
 #[component]
-fn Row(video: StudioVideo, refresh: impl Fn() + Copy + Send + Sync + 'static) -> impl IntoView {
+fn Table(
+    page: Memo<StudioPage>,
+    refresh: impl Fn() + Copy + Send + Sync + 'static,
+) -> impl IntoView {
+    let ids = move || page.with(|page| page.videos.iter().map(|v| v.card.id).collect::<Vec<_>>());
+    view! {
+        <Show
+            when=move || page.with(|page| !page.videos.is_empty())
+            fallback=|| view! { <p class="empty">{tr("No videos yet.")}</p> }
+        >
+            <div class="studio-table" role="table">
+                <div class="studio-row studio-head" role="row">
+                    <span role="columnheader">{tr("Video")}</span>
+                    <span role="columnheader">{tr("Visibility")}</span>
+                    <span role="columnheader">{tr("Date")}</span>
+                    <span role="columnheader">{tr("Views")}</span>
+                </div>
+                <For each=ids key=|id| *id let:id>
+                    <Row
+                        video=Memo::new(move |_| {
+                            page.with(|page| page.videos.iter().find(|v| v.card.id == id).cloned())
+                        })
+                        refresh
+                    />
+                </For>
+            </div>
+        </Show>
+    }
+}
+
+/// One video of the studio, as the newest page shows it, and its form.
+#[component]
+fn Row(
+    video: Memo<Option<StudioVideo>>,
+    refresh: impl Fn() + Copy + Send + Sync + 'static,
+) -> impl IntoView {
     let editing = RwSignal::new(false);
-    let id = video.card.id;
-    let ready = video.processing == Processing::Ready;
-    let state = processing_text(&video.processing);
-    let date = youcraft_i18n::when::ago(
-        Language::current(),
-        video.card.published_at,
-        RenderTime::current(),
-    );
-    let views = count(video.card.views, "{n} view", "{n} views");
-    let thumbnail = ready.then(|| routes::thumbnail(id, 168));
-    let title = video.card.title.clone();
+    let shown = move |pick: fn(&StudioVideo) -> String| {
+        video.with(|v| v.as_ref().map(pick).unwrap_or_default())
+    };
+    let watch = move || shown(|v| routes::watch(v.card.id));
+    let thumbnail = move || {
+        video.with(|v| {
+            v.as_ref()
+                .filter(|v| v.processing == Processing::Ready)
+                .map(|v| routes::thumbnail(v.card.id, 168))
+        })
+    };
+    let state = move || video.with(|v| v.as_ref().and_then(|v| processing_text(&v.processing)));
+    let date = move || {
+        shown(|v| {
+            youcraft_i18n::when::ago(
+                Language::current(),
+                v.card.published_at,
+                RenderTime::current(),
+            )
+        })
+    };
     view! {
         <div class="studio-row" role="row">
             <div class="studio-video" role="cell">
-                <a class="thumbnail studio-thumb" href=routes::watch(id) tabindex="-1" aria-hidden="true">
-                    {thumbnail.map(|src| view! { <img src=src alt="" loading="lazy"/> })}
+                <a class="thumbnail studio-thumb" href=watch tabindex="-1" aria-hidden="true">
+                    {move || thumbnail().map(|src| view! { <img src=src alt="" loading="lazy"/> })}
                 </a>
                 <div class="meta">
-                    <a class="title" href=routes::watch(id)>{title}</a>
-                    {state.map(|text| view! { <p class="byline studio-state">{text}</p> })}
+                    <a class="title" href=watch>{move || shown(|v| v.card.title.clone())}</a>
+                    {move || state().map(|text| view! { <p class="byline studio-state">{text}</p> })}
                     <button class="text-button" type="button" on:click=move |_| editing.update(|e| *e = !*e)>
                         {tr("Edit")}
                     </button>
                 </div>
             </div>
-            <span role="cell">{visibility_name(video.visibility)}</span>
+            <span role="cell">{move || shown(|v| visibility_name(v.visibility).to_owned())}</span>
             <span role="cell">{date}</span>
-            <span role="cell">{views}</span>
+            <span role="cell">{move || shown(|v| count(v.card.views, "{n} view", "{n} views"))}</span>
         </div>
         <Show when=move || editing.get()>
-            <Editor video=video.clone() refresh/>
+            {move || video.get_untracked().map(|video| view! { <Editor video refresh/> })}
         </Show>
     }
 }
