@@ -106,8 +106,8 @@ pub struct Player {
     pub renditions: RwSignal<Vec<u32>>,
     /// The height of the rendition playing.
     pub height: RwSignal<Option<u32>>,
-    /// Whether the page shows the player in theatre mode.
-    pub theatre: RwSignal<bool>,
+    /// Whether the page shows the player in theatre mode; `None` on a page that has none.
+    pub theatre: Option<RwSignal<bool>>,
     /// Whether the player fills the screen.
     pub full_screen: RwSignal<bool>,
     /// Whether the controls show.
@@ -128,7 +128,7 @@ pub struct Player {
 
 impl Player {
     /// A player of a video lasting `duration` seconds, shown in theatre mode as `theatre` says.
-    pub fn new(duration: f64, theatre: RwSignal<bool>) -> Player {
+    pub fn new(duration: f64, theatre: Option<RwSignal<bool>>) -> Player {
         Player {
             video: NodeRef::new(),
             root: NodeRef::new(),
@@ -209,7 +209,11 @@ impl Player {
                 self.flash(Notice::Volume(shown));
             }
             Action::ToggleFullScreen => self.toggle_full_screen(),
-            Action::ToggleTheatre => self.theatre.update(|on| *on = !*on),
+            Action::ToggleTheatre => {
+                if let Some(theatre) = self.theatre {
+                    theatre.update(|on| *on = !*on);
+                }
+            }
             Action::Speed(steps) => {
                 let speed = step_speed(self.speed.get_untracked(), steps);
                 self.set_speed(speed);

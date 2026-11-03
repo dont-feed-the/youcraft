@@ -456,6 +456,22 @@ pub mod tests {
     }
 
     #[tokio::test]
+    async fn only_the_embedded_player_may_be_framed_by_other_sites() {
+        let (_, routes) = site();
+        let video = youcraft_api::VideoId::from_bits(42);
+        for (path, framers) in [
+            (routes::embed(video), "frame-ancestors *"),
+            (routes::watch(video), "frame-ancestors 'self'"),
+            (routes::HOME.to_owned(), "frame-ancestors 'self'"),
+        ] {
+            let page = Request::get(&path).body(Body::empty()).unwrap();
+            let (_, headers, _) = send(&routes, page).await;
+            let policy = headers[header::CONTENT_SECURITY_POLICY].to_str().unwrap();
+            assert!(policy.ends_with(framers), "{path}: {policy}");
+        }
+    }
+
+    #[tokio::test]
     async fn a_personal_token_acts_as_its_owner_from_anywhere() {
         let (_, routes) = site();
         let cookie = sign_in(&routes, "ada").await;

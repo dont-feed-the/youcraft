@@ -2,6 +2,13 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.13
+
+### Added
+
+- `/embed/<id>` plays a video alone, with its title linking to its watch page, and any site may
+  show it in a frame, as YouTube's embedded player.
+
 ## 0.1.12
 
 ### Added

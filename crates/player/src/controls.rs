@@ -130,15 +130,17 @@ pub fn Controls(player: Player, glance: Glance) -> impl IntoView {
                     >
                         <Glyph icon=Icon::Settings/>
                     </button>
-                    <button
-                        class="player-button player-theatre"
-                        type="button"
-                        data-tip=move || if player.theatre.get() { tr("Default view") } else { tr("Theatre mode") }
-                        aria-label=move || if player.theatre.get() { tr("Default view") } else { tr("Theatre mode") }
-                        on:click=move |_| player.theatre.update(|on| *on = !*on)
-                    >
-                        {move || view! { <Glyph icon=if player.theatre.get() { Icon::DefaultView } else { Icon::Theatre }/> }}
-                    </button>
+                    {player.theatre.map(|theatre| view! {
+                        <button
+                            class="player-button player-theatre"
+                            type="button"
+                            data-tip=move || if theatre.get() { tr("Default view") } else { tr("Theatre mode") }
+                            aria-label=move || if theatre.get() { tr("Default view") } else { tr("Theatre mode") }
+                            on:click=move |_| theatre.update(|on| *on = !*on)
+                        >
+                            {move || view! { <Glyph icon=if theatre.get() { Icon::DefaultView } else { Icon::Theatre }/> }}
+                        </button>
+                    })}
                     <button
                         class="player-button"
                         type="button"

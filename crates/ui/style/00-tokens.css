@@ -35,6 +35,7 @@
   --player-buffered: rgba(255, 255, 255, 0.45);
   --player-hovered: rgba(255, 255, 255, 0.6);
   --player-scrim: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+  --player-scrim-top: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
   --player-shade: rgba(0, 0, 0, 0.45);
   --player-control: 40px;
   --player-chrome-height: 48px;

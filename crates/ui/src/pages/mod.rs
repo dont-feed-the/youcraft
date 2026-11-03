@@ -2,6 +2,7 @@
 
 pub mod account;
 pub mod channel;
+pub mod embed;
 pub mod history;
 pub mod home;
 pub mod not_found;

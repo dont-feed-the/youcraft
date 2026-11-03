@@ -1,8 +1,9 @@
-//! The application: the masthead on every page, and the router that picks the page.
+//! The application: the router that picks the page, and the masthead around every page but the
+//! embedded player.
 
 use leptos::prelude::*;
 use leptos_meta::{Title, provide_meta_context};
-use leptos_router::components::{Route, Router, Routes};
+use leptos_router::components::{Outlet, ParentRoute, Route, Router, Routes};
 use leptos_router::path;
 
 use crate::account::{Shown, SignedIn};
@@ -10,6 +11,7 @@ use crate::components::masthead::Masthead;
 use crate::lang::theme;
 use crate::pages::account::Account;
 use crate::pages::channel::{Channel, Tab};
+use crate::pages::embed::Embed;
 use crate::pages::history::History;
 use crate::pages::home::Home;
 use crate::pages::not_found::NotFound;
@@ -37,9 +39,9 @@ pub fn App() -> impl IntoView {
     view! {
         <Title text="YouCraft"/>
         <Router>
-            <div class="app" class:guide-collapsed=move || !guide.0.get()>
-                <Masthead/>
-                <Routes fallback=|| view! { <NotFound/> }>
+            <Routes fallback=move || view! { <Site guide><NotFound/></Site> }>
+                <Route path=path!("/embed/:v") view=Embed/>
+                <ParentRoute path=path!("") view=move || view! { <Site guide><Outlet/></Site> }>
                     <Route path=path!("") view=Home/>
                     <Route path=path!("/watch") view=Watch/>
                     <Route path=path!("/account") view=Account/>
@@ -54,8 +56,19 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/:handle") view=|| view! { <Channel tab=Tab::Home/> }/>
                     <Route path=path!("/:handle/videos") view=|| view! { <Channel tab=Tab::Videos/> }/>
                     <Route path=path!("/:handle/playlists") view=|| view! { <Channel tab=Tab::Playlists/> }/>
-                </Routes>
-            </div>
+                </ParentRoute>
+            </Routes>
         </Router>
+    }
+}
+
+/// The site around a page: the masthead, and the guide, open as `guide` says.
+#[component]
+fn Site(guide: GuideOpen, children: Children) -> impl IntoView {
+    view! {
+        <div class="app" class:guide-collapsed=move || !guide.0.get()>
+            <Masthead/>
+            {children()}
+        </div>
     }
 }

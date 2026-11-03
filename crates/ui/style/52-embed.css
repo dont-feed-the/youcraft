@@ -1,0 +1,7 @@
+/* The embedded player: the video fills the frame, its title over the top while the controls show. */
+html:has(.embed), html:has(.embed) body { block-size: 100%; overflow: hidden; background: var(--player-bg); }
+.embed { position: relative; block-size: 100vh; }
+.embed .player { block-size: 100%; }
+.embed-title { position: absolute; inset-inline: 0; inset-block-start: 0; padding: var(--space-3); background: var(--player-scrim-top); color: var(--player-text); font-size: var(--text-md); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.embed:has(.player.active) .embed-title, .embed:has(.player.unstarted) .embed-title, .embed-title:focus-visible { opacity: 1; pointer-events: auto; }
+.embed-title:hover { text-decoration: underline; }

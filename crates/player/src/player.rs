@@ -23,14 +23,15 @@ use crate::state::{Notice, Player};
 const DOUBLE_TAP: f64 = 300.0;
 
 /// The player of `video`, which lasts `duration`, written in `lang`; `theatre` is the page's
-/// theatre mode, which the player toggles; `started` runs when the video first starts playing.
+/// theatre mode, which the player toggles, and a page without one offers none; `started` runs
+/// when the video first starts playing.
 #[component]
 pub fn VideoPlayer(
     video: VideoId,
     duration: MediaDuration,
     poster: String,
     lang: Lang,
-    theatre: RwSignal<bool>,
+    #[prop(optional)] theatre: Option<RwSignal<bool>>,
     #[prop(optional)] started: Option<Callback<()>>,
 ) -> impl IntoView {
     provide_context(PlayerLanguage(lang));

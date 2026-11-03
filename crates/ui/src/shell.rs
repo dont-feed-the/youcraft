@@ -44,7 +44,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
 }
 
 /// Send the content security policy: our own origin only, scripts by this request's nonce, and
-/// WebAssembly compiled from our own files.
+/// WebAssembly compiled from our own files; only an embedded player may be framed elsewhere.
 #[cfg(feature = "ssr")]
 fn send_security_policy() {
     use http::header::{CONTENT_SECURITY_POLICY, HeaderValue};
@@ -53,10 +53,13 @@ fn send_security_policy() {
     let nonce = use_nonce()
         .map(|nonce| format!(" 'nonce-{nonce}'"))
         .unwrap_or_default();
+    let framers = use_context::<http::request::Parts>()
+        .filter(|parts| youcraft_api::routes::is_embed(parts.uri.path()))
+        .map_or("'self'", |_| "*");
     let policy = format!(
         "default-src 'self'; script-src 'self'{nonce} 'wasm-unsafe-eval'; style-src 'self'; \
          img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; font-src 'self'; \
-         object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'self'"
+         object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors {framers}"
     );
     if let (Some(response), Ok(value)) = (
         use_context::<leptos_axum::ResponseOptions>(),

@@ -58,6 +58,21 @@ pub fn watch(video: VideoId) -> String {
     format!("/watch?v={video}")
 }
 
+/// Where every embedded player lives: [`embed`] adds the video.
+pub const EMBED: &str = "/embed";
+
+/// The player of `video` alone, which any site may show in a frame, as YouTube's
+/// `/embed/<id>`.
+pub fn embed(video: VideoId) -> String {
+    format!("{EMBED}/{video}")
+}
+
+/// Whether `path` is an embedded player's, which other sites may frame.
+pub fn is_embed(path: &str) -> bool {
+    path.strip_prefix(EMBED)
+        .is_some_and(|rest| rest.starts_with('/'))
+}
+
 /// The page of the channel whose handle is `handle`.
 pub fn channel(handle: &str) -> String {
     format!("/@{}", encode_component(handle))
@@ -164,6 +179,9 @@ mod tests {
     fn addresses_are_youtubes() {
         let video = VideoId::from_bits(0);
         assert_eq!(watch(video), "/watch?v=AAAAAAAAAAA");
+        assert_eq!(embed(video), "/embed/AAAAAAAAAAA");
+        assert!(is_embed(&embed(video)));
+        assert!(!is_embed("/embedded") && !is_embed(&watch(video)));
         assert_eq!(channel("youcraft"), "/@youcraft");
         assert_eq!(
             results("chat noir & blanc"),
