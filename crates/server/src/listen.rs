@@ -6,7 +6,7 @@ use listenfd::ListenFd;
 
 /// A listening socket of either kind.
 pub enum Listener {
-    /// Handed over by systemd (`LISTEN_FDS`), as rtx-home's units do.
+    /// Handed over by systemd (`LISTEN_FDS`), as a socket unit does.
     Unix(tokio::net::UnixListener),
     /// Bound here.
     Tcp(tokio::net::TcpListener),

@@ -1,7 +1,7 @@
 # AGENTS.md: instructions for agents
 
 YouCraft is an open-source video site written from scratch in Rust, with YouTube's layout and
-behaviour under its own name, logo and colour. It runs https://youcraft.tube from rtx-home; the
+behaviour under its own name, logo and colour. It runs https://youcraft.tube from a home server; the
 repository is https://github.com/dont-feed-the/youcraft. The product name is written **YouCraft**
 in everything people read (pages, titles, docs prose); machine names stay lowercase (crates
 `youcraft-*`, the binary `youcraft`, files, ids). [`SOUL.md`](SOUL.md) is the authority on product
@@ -146,9 +146,8 @@ merge, and never skip or weaken a hook to get a commit through.
 
 ## 5. The live site
 
-- youcraft.tube is served by rtx-home's `geiger` account, set up in `~/git/geiger-server` (read its
-  `README.md`). Caddy proxies to the container `youcraft`, which has no network and mounts only its
-  data, `~geiger/data/youcraft/`, and Google's public keys, `~geiger/data/google-keys/`.
-- Deploy with `./deploy youcraft` in `~/git/geiger-server`, then check that
-  `https://youcraft.tube/health` answers 200.
+- youcraft.tube is served from a home server whose setup lives outside this repository, where its
+  operator's notes say how to deploy. It runs the `youcraft` binary and bundle of one commit of
+  `main`, in a container with no network that mounts only its data and Google's public keys.
+- After a deploy, check that `https://youcraft.tube/health` answers 200.
 - Live data never leaves the server; back up the database before any migration runs on it.
