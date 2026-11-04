@@ -2,6 +2,16 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.14
+
+### Changed
+
+- A release bundle (`cargo xtask site --release`) is shrunk by binaryen's wasm-opt 116 exactly
+  (`cargo install wasm-opt --version 0.116.1 --locked`), and any other version, or none, stops the
+  build, so one commit always makes the same bundle; the bundle's directory is made afresh.
+- GitHub runs the repository's hooks on every push to `main` and every pull request, on the Rust
+  that `rust-version` names.
+
 ## 0.1.13
 
 ### Added

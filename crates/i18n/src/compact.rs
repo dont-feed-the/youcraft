@@ -193,6 +193,22 @@ mod tests {
     }
 
     #[test]
+    fn every_language_has_its_compact_patterns_and_no_other_does() {
+        let i18n = crate::i18n();
+        let offered: Vec<&str> = i18n.languages().into_iter().map(crate::code).collect();
+        assert!(offered.len() > 41, "English and the 41 catalogs");
+        for code in &offered {
+            assert!(
+                PATTERNS.iter().any(|(c, _)| c == code),
+                "{code}: no compact patterns; run scripts/generate-compact-patterns"
+            );
+        }
+        for (code, _) in PATTERNS {
+            assert!(offered.contains(code), "{code}: patterns of no language");
+        }
+    }
+
+    #[test]
     fn compact_numbers_never_overstate() {
         for (n, text, shown) in [
             (999, "999", 999),

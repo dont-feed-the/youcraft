@@ -1,3 +1,6 @@
+# The cargo hooks run whenever a commit changes a file cargo reads to build or test the workspace:
+# Rust sources, manifests, the lock file, catalogs (embedded and checked against the code),
+# migrations (included in the store) and cargo's and clippy's own settings.
 repos:
   - repo: local
     hooks:
@@ -17,17 +20,17 @@ repos:
         name: cargo clippy
         entry: cargo clippy --workspace --all-targets --locked -- -D warnings
         language: system
-        files: (\.rs|Cargo\.toml|Cargo\.lock)$
+        files: &build-inputs (\.(rs|sql|tsv)|(^|/)Cargo\.(toml|lock)|^(\.cargo/config\.toml|clippy\.toml))$
         pass_filenames: false
       - id: cargo-test
         name: cargo test
         entry: cargo test --workspace --locked
         language: system
-        files: (\.rs|Cargo\.toml|Cargo\.lock)$
+        files: *build-inputs
         pass_filenames: false
       - id: check-wasm
-        name: check wasm
+        name: check and lint wasm
         entry: scripts/check-wasm
         language: script
-        files: (\.rs|Cargo\.toml|Cargo\.lock)$
+        files: (\.(rs|sql|tsv)|(^|/)Cargo\.(toml|lock)|^(\.cargo/config\.toml|clippy\.toml|scripts/check-wasm))$
         pass_filenames: false

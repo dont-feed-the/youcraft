@@ -4,13 +4,18 @@
 //! The server embeds every catalog of `locales/` (feature `embed`) and picks each request's
 //! language from the person's choice or their browser; the browser installs the one catalog its
 //! page carries, so it hydrates with the same words. A missing translation shows the English.
+//! With the feature `leptos`, `page` gives components the language of the page they render in.
 
 mod catalogs {
     include!(concat!(env!("OUT_DIR"), "/catalogs.rs"));
 }
 
+#[cfg(test)]
+mod catalog_checks;
 mod compact;
 mod compact_data;
+#[cfg(feature = "leptos")]
+pub mod page;
 pub mod when;
 
 use std::sync::OnceLock;
@@ -235,151 +240,5 @@ mod tests {
     fn english_answers_when_nothing_matches() {
         assert_eq!(code(negotiate(None, "")), "en");
         assert_eq!(code(negotiate(Some("tlh"), "x-klingon;q=0.9")), "en");
-    }
-}
-
-#[cfg(test)]
-mod catalogs_tests {
-    //! The catalogs of `locales/` against each other and against the code: each parses cleanly,
-    //! and each translates every string the interface writes. A string the interface writes is
-    //! `tr("…")`, or the `"{n} …"` pair of a count.
-
-    use std::collections::BTreeSet;
-    use std::path::{Path, PathBuf};
-
-    use craft_i18n::I18n;
-
-    fn workspace() -> PathBuf {
-        Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")
-    }
-
-    /// Every catalog: (locale, text).
-    fn catalogs() -> Vec<(String, String)> {
-        let mut found: Vec<(String, String)> = std::fs::read_dir(workspace().join("locales"))
-            .unwrap()
-            .map(|entry| entry.unwrap().path())
-            .filter_map(|dir| {
-                let text = std::fs::read_to_string(dir.join("youcraft.tsv")).ok()?;
-                Some((dir.file_name()?.to_string_lossy().into_owned(), text))
-            })
-            .collect();
-        found.sort();
-        found
-    }
-
-    fn rust_files(dir: &Path, into: &mut Vec<PathBuf>) {
-        for entry in std::fs::read_dir(dir).unwrap() {
-            let path = entry.unwrap().path();
-            if path.is_dir() {
-                rust_files(&path, into);
-            } else if path.extension().is_some_and(|e| e == "rs") {
-                into.push(path);
-            }
-        }
-    }
-
-    /// The string literal that opens `text`, unescaped, and what follows it.
-    fn literal(text: &str) -> Option<(String, &str)> {
-        let mut chars = text.strip_prefix('"')?.char_indices();
-        let mut value = String::new();
-        while let Some((at, c)) = chars.next() {
-            match c {
-                '"' => return Some((value, &text[at + 2..])),
-                '\\' => value.push(match chars.next()?.1 {
-                    'n' => '\n',
-                    other => other,
-                }),
-                c => value.push(c),
-            }
-        }
-        None
-    }
-
-    /// Every (context, source) the code outside comments writes: `tr("…")` as plain rows, and
-    /// `"{n} …", "{n} …"` pairs as `@plural` rows.
-    fn written() -> BTreeSet<(String, String)> {
-        let mut files = Vec::new();
-        rust_files(&workspace().join("crates"), &mut files);
-        let mut strings = BTreeSet::new();
-        for file in files {
-            let text = std::fs::read_to_string(&file).unwrap();
-            let code: String = text
-                .lines()
-                .filter(|line| !line.trim_start().starts_with("//"))
-                .flat_map(|line| [line, "\n"])
-                .collect();
-            for (at, _) in code.match_indices("tr(\"") {
-                let before = code[..at].chars().next_back();
-                if before.is_some_and(|c| c.is_alphanumeric() || c == '_') {
-                    continue;
-                }
-                if let Some((source, _)) = literal(&code[at + 3..]) {
-                    strings.insert((String::new(), source));
-                }
-            }
-            for (at, _) in code.match_indices("\"{n}") {
-                let Some((one, rest)) = literal(&code[at..]) else {
-                    continue;
-                };
-                let rest = rest.trim_start().strip_prefix(',').map(str::trim_start);
-                if let Some((other, _)) =
-                    rest.and_then(|rest| rest.starts_with("\"{n}").then(|| literal(rest)).flatten())
-                {
-                    strings.insert(("@plural".to_owned(), format!("{one}|{other}")));
-                }
-            }
-        }
-        strings
-    }
-
-    #[test]
-    fn every_catalog_parses_cleanly() {
-        let all = catalogs();
-        assert!(all.len() >= 41, "the 41 languages of the Craft apps");
-        let embedded: Vec<(&'static str, &'static str, &'static str)> = all
-            .iter()
-            .map(|(code, text)| (super::leak(code), "", super::leak(text)))
-            .collect();
-        let embedded: &'static [(&'static str, &'static str, &'static str)] =
-            Box::leak(embedded.into_boxed_slice());
-        let offered: Vec<&str> = embedded.iter().map(|(code, _, _)| *code).collect();
-        let (i18n, problems) = I18n::new(embedded, &offered);
-        assert!(problems.is_empty(), "{problems:#?}");
-        let problems = i18n.check_all();
-        assert!(problems.is_empty(), "{problems:#?}");
-        for lang in i18n.languages() {
-            assert_ne!(
-                i18n.name(lang),
-                i18n.code(lang),
-                "{}: no language.name",
-                i18n.code(lang)
-            );
-        }
-    }
-
-    #[test]
-    fn every_catalog_translates_every_string_the_code_writes() {
-        let written = written();
-        assert!(written.len() > 20, "the scan finds the interface's strings");
-        for (code, text) in catalogs() {
-            let rows: BTreeSet<(String, String)> = text
-                .lines()
-                .filter(|line| !line.starts_with('#') && !line.trim().is_empty())
-                .filter_map(|line| {
-                    let mut columns = line.split('\t');
-                    Some((columns.next()?.to_owned(), columns.next()?.to_owned()))
-                })
-                .collect();
-            let missing: Vec<_> = written.difference(&rows).collect();
-            assert!(missing.is_empty(), "{code} lacks {missing:#?}");
-            let unused: Vec<_> = rows
-                .iter()
-                .filter(|row| row.0 != "@id" && !written.contains(*row))
-                .collect();
-            assert!(
-                unused.is_empty(),
-                "{code} translates strings the code no longer writes: {unused:#?}"
-            );
-        }
     }
 }

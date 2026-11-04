@@ -14,6 +14,10 @@ cargo run -p youcraft-server -- demo   # example channels, and videos made in co
 cargo xtask serve                      # http://127.0.0.1:3100
 ```
 
+A release bundle (`cargo xtask site --release`, as the live site is built) is shrunk by binaryen's
+wasm-opt, version 116 exactly, so that one commit always makes the same bundle:
+`cargo install wasm-opt --version 0.116.1 --locked`.
+
 `YOUCRAFT_ADDRESS`, `YOUCRAFT_DATA` and `YOUCRAFT_SITE` change where it listens, keeps its data and
 finds the browser bundle; `YOUCRAFT_ORIGIN` is the address people reach it at
 (`http://localhost:3100` by default). Every command of the site answers at `POST /api/v1/<id>`;

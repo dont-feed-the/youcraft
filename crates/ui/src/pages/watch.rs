@@ -84,7 +84,6 @@ fn Stage(page: VideoPage, theatre: RwSignal<bool>) -> impl IntoView {
                         video=card.id
                         duration=card.duration
                         poster=routes::thumbnail(card.id, 720)
-                        lang=Language::current()
                         theatre
                         started
                     />

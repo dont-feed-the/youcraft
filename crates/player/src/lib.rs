@@ -13,7 +13,6 @@ mod controls;
 mod engine;
 mod icons;
 pub mod keys;
-mod lang;
 mod menu;
 mod player;
 pub mod playlist;

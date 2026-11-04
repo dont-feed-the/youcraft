@@ -11,7 +11,7 @@ use youcraft_player::VideoPlayer;
 
 use crate::act::act;
 use crate::call::call;
-use crate::lang::{Language, tr};
+use crate::lang::tr;
 
 /// The video the address names.
 fn chosen() -> Memo<Option<VideoId>> {
@@ -68,7 +68,6 @@ fn Embedded(page: VideoPage) -> impl IntoView {
                     video
                     duration=card.duration
                     poster=routes::thumbnail(video, 720)
-                    lang=Language::current()
                     started
                 />
             }

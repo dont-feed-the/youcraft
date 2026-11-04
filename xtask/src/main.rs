@@ -1,9 +1,10 @@
 //! YouCraft's build tasks, run as `cargo xtask <task> [--release]`.
 //!
-//! `site` builds the browser half into `<target>/site/`: the `ui` crate compiled to wasm32 with
-//! its `hydrate` feature, bound by wasm-bindgen (the library, pinned to the crate's exact version
-//! in the workspace, so the bindings always match), shrunk by wasm-opt in release when it is
-//! installed, the stylesheets of every crate's `style/` concatenated in name order, and the files of
+//! `site` builds the browser half afresh into `<target>/site/`: the `ui` crate compiled to wasm32
+//! with its `hydrate` feature, bound by wasm-bindgen (the library, pinned to the crate's exact
+//! version in the workspace, so the bindings always match), shrunk in release by the wasm-opt of
+//! binaryen's version [`WASM_OPT`] ([`WASM_OPT_INSTALL`]; any other version, or none, fails the
+//! build, so that one commit makes one bundle), the stylesheets of every crate's `style/` concatenated in name order, and the files of
 //! `crates/ui/assets/` copied beside them. `serve` builds the site and runs the server on it.
 
 use std::path::{Path, PathBuf};
@@ -11,6 +12,12 @@ use std::process::{Command, ExitCode};
 
 /// The name of the bundle's files: `pkg/youcraft.js`, `pkg/youcraft_bg.wasm`, `pkg/youcraft.css`.
 const BUNDLE: &str = "youcraft";
+
+/// The binaryen version whose wasm-opt shrinks a release bundle, as `wasm-opt --version` names it.
+const WASM_OPT: &str = "116";
+
+/// How to install that wasm-opt.
+const WASM_OPT_INSTALL: &str = "cargo install wasm-opt --version 0.116.1 --locked";
 
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().skip(1).collect();
@@ -42,11 +49,15 @@ fn target_dir() -> PathBuf {
 
 /// Build the browser bundle and return the site directory.
 fn site(release: bool) -> Result<PathBuf, String> {
+    if release {
+        wasm_opt_is_pinned()?;
+    }
     let profile = if release { "wasm-release" } else { "dev" };
     run(Command::new(env!("CARGO"))
         .current_dir(root())
         .args([
             "build",
+            "--locked",
             "--package",
             "youcraft-ui",
             "--lib",
@@ -60,6 +71,9 @@ fn site(release: bool) -> Result<PathBuf, String> {
         .join(profile_dir)
         .join("youcraft_ui.wasm");
     let site = target_dir().join("site");
+    if site.exists() {
+        std::fs::remove_dir_all(&site).map_err(|e| format!("{}: {e}", site.display()))?;
+    }
     let pkg = site.join("pkg");
     std::fs::create_dir_all(&pkg).map_err(|e| format!("{}: {e}", pkg.display()))?;
 
@@ -77,7 +91,7 @@ fn site(release: bool) -> Result<PathBuf, String> {
         .map_err(|e| format!("wasm-bindgen: {e}"))?;
 
     let bound = pkg.join(format!("{BUNDLE}_bg.wasm"));
-    if release && which("wasm-opt") {
+    if release {
         run(Command::new("wasm-opt")
             .arg("-Oz")
             .arg("--all-features")
@@ -95,7 +109,7 @@ fn serve(site: &Path, release: bool) -> Result<(), String> {
     let mut command = Command::new(env!("CARGO"));
     command
         .current_dir(root())
-        .args(["run", "--package", "youcraft-server"]);
+        .args(["run", "--locked", "--package", "youcraft-server"]);
     if release {
         command.arg("--release");
     }
@@ -151,11 +165,19 @@ fn copy_tree(from: &Path, to: &Path) -> Result<(), String> {
     Ok(())
 }
 
-fn which(program: &str) -> bool {
-    Command::new(program)
+/// Whether the installed wasm-opt is binaryen's [`WASM_OPT`]; why not, if it is not.
+fn wasm_opt_is_pinned() -> Result<(), String> {
+    let install = format!("a release bundle is shrunk by wasm-opt {WASM_OPT}: {WASM_OPT_INSTALL}");
+    let output = Command::new("wasm-opt")
         .arg("--version")
         .output()
-        .is_ok_and(|out| out.status.success())
+        .map_err(|e| format!("wasm-opt: {e}; {install}"))?;
+    let version = String::from_utf8_lossy(&output.stdout);
+    // `wasm-opt version 116 (version_116)`
+    match version.split_whitespace().nth(2) {
+        Some(found) if output.status.success() && found == WASM_OPT => Ok(()),
+        _ => Err(format!("wasm-opt is {:?}; {install}", version.trim())),
+    }
 }
 
 fn run(command: &mut Command) -> Result<(), String> {

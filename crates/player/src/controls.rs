@@ -11,10 +11,10 @@ use leptos::html::Div;
 use leptos::prelude::*;
 use youcraft_api::records::Storyboard;
 use youcraft_api::{VideoId, routes};
+use youcraft_i18n::page::tr;
 use youcraft_i18n::when::clock;
 
 use crate::icons::{Glyph, Icon};
-use crate::lang::tr;
 use crate::state::{Menu, Player};
 
 /// What the seek bar previews under the pointer: the storyboard of the video, once loaded.

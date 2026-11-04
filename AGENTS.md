@@ -28,7 +28,7 @@ Dependencies point one way. `api`, `i18n` and `recommend` depend on nothing here
 `api` and `i18n`; `ui` on those and `player`; `store` and `transcode` on `api`; `server` on all.
 Only `store`, `transcode` and `server` touch files, the database, processes or the network. A crate
 that runs in the browser declares `[package.metadata.youcraft] wasm = true` (with `wasm-features`
-if it needs some), and `scripts/check-wasm` builds it for `wasm32-unknown-unknown`.
+if it needs some), and `scripts/check-wasm` builds and lints it for `wasm32-unknown-unknown`.
 
 ## 2. Golden rules
 
@@ -127,7 +127,9 @@ if it needs some), and `scripts/check-wasm` builds it for `wasm32-unknown-unknow
 Install the hooks once with `pre-commit install`. They run on every commit: file length and header
 (`scripts/check-file-length-and-header`), `cargo fmt --check`, `cargo clippy --all-targets -- -D
 warnings`, `cargo test` and `scripts/check-wasm`. Run `pre-commit run --all-files` before you
-merge, and never skip or weaken a hook to get a commit through.
+merge, and never skip or weaken a hook to get a commit through. GitHub runs the same hooks on every
+push to `main` and every pull request (`.github/workflows/checks.yml`), on the Rust that
+`rust-version` names; each crate's tests also pass on their own (`cargo test -p <crate>`).
 
 ## 4. Landing a change
 

@@ -9,14 +9,18 @@ repository.workspace = true
 
 [package.metadata.youcraft]
 wasm = true
+wasm-features = ["leptos"]
 
 [features]
 # Embed every catalog of locales/ in the binary, as the server needs; the browser instead installs
 # the one catalog its page carries.
 embed = []
+# The language of the page as a Leptos context, for the components of `player` and `ui`.
+leptos = ["dep:leptos"]
 
 [dependencies]
 craft-i18n.workspace = true
+leptos = { workspace = true, optional = true }
 
 [lints]
 workspace = true
@@ -26,3 +30,9 @@ workspace = true
 # CLDR data, in the ICU4X minor version craft-i18n is on.
 icu_decimal = { version = "~2.3", default-features = false, features = ["compiled_data", "unstable"] }
 icu_locale_core = { version = "~2.3", default-features = false }
+# The catalog checks read the code as Rust tokens, and string literals as the compiler does.
+proc-macro2 = { version = "1.0.107", default-features = false }
+syn = { version = "2.0.119", default-features = false }
+# The tests read every catalog, as the server embeds them, even when nothing else in the build
+# turns `embed` on (`cargo test -p youcraft-i18n`).
+youcraft-i18n = { path = ".", features = ["embed"] }

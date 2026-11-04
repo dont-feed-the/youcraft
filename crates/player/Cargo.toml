@@ -49,7 +49,7 @@ web-sys = { workspace = true, optional = true, features = [
   "Window",
 ] }
 youcraft-api.workspace = true
-youcraft-i18n.workspace = true
+youcraft-i18n = { workspace = true, features = ["leptos"] }
 
 [lints]
 workspace = true

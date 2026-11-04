@@ -2,9 +2,9 @@
 //! main panel, as on youtube.com. Its text runs in the page's direction.
 
 use leptos::prelude::*;
+use youcraft_i18n::page::{Language, tr};
 
 use crate::icons::{Glyph, Icon};
-use crate::lang::{current, tr};
 use crate::state::{Menu, NORMAL, Player, Quality, SPEEDS};
 
 /// How a speed of `hundredths` of normal reads: "Normal", or the factor, "1.25".
@@ -17,7 +17,7 @@ pub fn speed_label(hundredths: u32) -> String {
         rest if rest % 10 == 0 => 1,
         _ => 2,
     };
-    youcraft_i18n::decimal(current(), f64::from(hundredths) / 100.0, places)
+    youcraft_i18n::decimal(Language::current(), f64::from(hundredths) / 100.0, places)
 }
 
 /// How a rendition `height` pixels tall reads: "720p".

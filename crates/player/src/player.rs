@@ -11,30 +11,28 @@ use leptos::prelude::*;
 use youcraft_api::VideoId;
 use youcraft_api::records::Storyboard;
 use youcraft_api::time::MediaDuration;
-use youcraft_i18n::Lang;
+use youcraft_i18n::page::{Language, count, tr};
 
 use crate::controls::{Controls, Glance};
 use crate::icons::{Glyph, Icon};
-use crate::lang::{PlayerLanguage, count, tr};
 use crate::menu::Settings;
 use crate::state::{Notice, Player};
 
 /// Milliseconds within which a second tap makes a double tap.
 const DOUBLE_TAP: f64 = 300.0;
 
-/// The player of `video`, which lasts `duration`, written in `lang`; `theatre` is the page's
-/// theatre mode, which the player toggles, and a page without one offers none; `started` runs
-/// when the video first starts playing.
+/// The player of `video`, which lasts `duration`, written in its page's language; `theatre` is
+/// the page's theatre mode, which the player toggles, and a page without one offers none;
+/// `started` runs when the video first starts playing.
 #[component]
 pub fn VideoPlayer(
     video: VideoId,
     duration: MediaDuration,
     poster: String,
-    lang: Lang,
     #[prop(optional)] theatre: Option<RwSignal<bool>>,
     #[prop(optional)] started: Option<Callback<()>>,
 ) -> impl IntoView {
-    provide_context(PlayerLanguage(lang));
+    let lang = Language::current();
     let seconds = if duration.timescale == 0 {
         0.0
     } else {
@@ -217,7 +215,7 @@ fn is_full_screen() -> bool {
 
 /// What flashes over the picture for `notice`.
 fn flash(notice: Notice) -> impl IntoView {
-    let lang = crate::lang::current();
+    let lang = Language::current();
     match notice {
         Notice::Play => view! { <div class="player-bezel"><Glyph icon=Icon::Play/></div> }.into_any(),
         Notice::Pause => view! { <div class="player-bezel"><Glyph icon=Icon::Pause/></div> }.into_any(),
