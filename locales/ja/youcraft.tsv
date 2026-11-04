@@ -176,6 +176,7 @@
 	Auto	自動
 	Auto ({quality})	自動 ({quality})
 	This video can't be played in this browser.	このブラウザではこの動画を再生できません。
+	This video could not be loaded. Try again later.	この動画を読み込めませんでした。しばらくしてからもう一度お試しください。
 @plural	{n} second|{n} seconds	{n} 秒
 @plural	{n} reply|{n} replies	{n} 件の返信
 @plural	{n} subscriber|{n} subscribers	チャンネル登録者数 {n} 人

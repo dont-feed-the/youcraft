@@ -176,6 +176,7 @@
 	Auto	Automatique
 	Auto ({quality})	Automatique ({quality})
 	This video can't be played in this browser.	Cette vidéo ne peut pas être lue dans ce navigateur.
+	This video could not be loaded. Try again later.	Impossible de charger cette vidéo. Réessayez plus tard.
 @plural	{n} second|{n} seconds	{n} seconde|{n} secondes
 @plural	{n} reply|{n} replies	{n} réponse|{n} réponses
 @plural	{n} subscriber|{n} subscribers	{n} abonné|{n} abonnés

@@ -176,6 +176,7 @@
 	Auto	স্বয়ংক্রিয়
 	Auto ({quality})	স্বয়ংক্রিয় ({quality})
 	This video can't be played in this browser.	এই ব্রাউজারে ভিডিওটি চালানো যাচ্ছে না।
+	This video could not be loaded. Try again later.	ভিডিওটি লোড করা যায়নি। পরে আবার চেষ্টা করুন।
 @plural	{n} second|{n} seconds	{n} সেকেন্ড|{n} সেকেন্ড
 @plural	{n} reply|{n} replies	{n}টি উত্তর|{n}টি উত্তর
 @plural	{n} subscriber|{n} subscribers	{n} জন সাবস্ক্রাইবার|{n} জন সাবস্ক্রাইবার

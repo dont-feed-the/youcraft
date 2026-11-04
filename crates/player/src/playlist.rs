@@ -7,9 +7,11 @@
 //! hostile, so every count is bounded and every malformed line is an error naming it.
 
 use std::fmt;
+use std::num::NonZeroU32;
 
-/// Ticks per second of every playlist time: nanoseconds, exact for any decimal of nine places.
-pub const NANOS: u64 = 1_000_000_000;
+use youcraft_api::time::MediaDuration;
+
+pub use crate::time::NANOS;
 
 /// The most lines a playlist may have.
 const MAX_LINES: usize = 200_000;
@@ -95,6 +97,9 @@ pub struct Variant {
     pub width: u32,
     /// Its height in pixels; 0 if the playlist does not say.
     pub height: u32,
+    /// How long a frame lasts, as its `FRAME-RATE` says: exact for what it writes, which may
+    /// be a rounding of the true rate (`29.970`).
+    pub frame: Option<MediaDuration>,
     /// Its codecs, as `CODECS` lists them: `avc1.64001f,mp4a.40.2`.
     pub codecs: String,
     /// Its media playlist.
@@ -102,6 +107,11 @@ pub struct Variant {
 }
 
 impl Variant {
+    /// The lines it is known by, as "720p" counts them; see [`picture_lines`].
+    pub fn lines(&self) -> u32 {
+        picture_lines(self.width, self.height)
+    }
+
     /// The codecs of its pictures, as a MIME `codecs` parameter.
     pub fn video_codecs(&self) -> String {
         self.codecs_where(true)
@@ -120,6 +130,16 @@ impl Variant {
             .filter(|codec| !codec.is_empty() && is_video_codec(codec) == video)
             .collect();
         chosen.join(",")
+    }
+}
+
+/// The lines a picture `width × height` is known by, as "720p" counts them: its shorter side,
+/// which is its height unless it stands upright; its height when its width is unknown (0).
+pub fn picture_lines(width: u32, height: u32) -> u32 {
+    if width == 0 {
+        height
+    } else {
+        width.min(height)
     }
 }
 
@@ -233,10 +253,15 @@ pub fn parse_master(text: &str, base: &str) -> Result<Master, PlaylistError> {
                 None => (0, 0),
             };
             let codecs = attribute(&attributes, "CODECS").unwrap_or_default();
+            let frame = match attribute(&attributes, "FRAME-RATE") {
+                Some(rate) => Some(frame_of_rate(rate).ok_or(bad.clone())?),
+                None => None,
+            };
             pending = Some(Variant {
                 bandwidth,
                 width,
                 height,
+                frame,
                 codecs: codecs.to_owned(),
                 uri: String::new(),
             });
@@ -345,6 +370,27 @@ pub fn nanos(seconds: &str) -> Option<u64> {
     whole.checked_mul(NANOS)?.checked_add(fraction)
 }
 
+/// How long a frame lasts at `rate` frames a second, a decimal such as `29.970`: exactly the
+/// inverse of that decimal, in lowest terms.
+fn frame_of_rate(rate: &str) -> Option<MediaDuration> {
+    // `rate` frames a second are rate × 10⁹ frames in 10⁹ seconds.
+    let frames = nanos(rate)?;
+    let common = gcd(frames, NANOS);
+    let timescale = NonZeroU32::new(u32::try_from(frames.checked_div(common)?).ok()?)?;
+    Some(MediaDuration {
+        ticks: NANOS / common,
+        timescale,
+    })
+}
+
+/// The greatest common divisor of `a` and `b`.
+fn gcd(mut a: u64, mut b: u64) -> u64 {
+    while b != 0 {
+        (a, b) = (b, a % b);
+    }
+    a
+}
+
 /// `<length>[@<offset>]`.
 fn byte_range(value: &str) -> Option<(u64, Option<u64>)> {
     let (length, offset) = match value.split_once('@') {
@@ -439,6 +485,41 @@ mod tests {
         assert_eq!(low.bandwidth, 1_500_000);
         assert_eq!(low.video_codecs(), "avc1.64001e");
         assert_eq!(low.audio_codecs(), "mp4a.40.2");
+        assert_eq!(low.frame, None);
+        assert_eq!(low.lines(), 360);
+        let high = &master.variants[1];
+        assert_eq!(
+            high.frame,
+            Some(MediaDuration {
+                ticks: 100,
+                timescale: NonZeroU32::new(2997).unwrap()
+            })
+        );
+    }
+
+    #[test]
+    fn renditions_are_known_by_their_shorter_side() {
+        let upright =
+            "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1,RESOLUTION=1080x1920,FRAME-RATE=60\nu.m3u8\n";
+        let master = parse_master(upright, "/").unwrap();
+        assert_eq!(
+            (master.variants[0].height, master.variants[0].lines()),
+            (1920, 1080)
+        );
+        assert_eq!(
+            master.variants[0].frame,
+            Some(MediaDuration {
+                ticks: 1,
+                timescale: NonZeroU32::new(60).unwrap()
+            })
+        );
+        let no_size = "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1\nu.m3u8\n";
+        assert_eq!(parse_master(no_size, "/").unwrap().variants[0].lines(), 0);
+        let still = "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1,FRAME-RATE=0\nu.m3u8\n";
+        assert_eq!(
+            parse_master(still, "/"),
+            Err(PlaylistError::Malformed { line: 2 })
+        );
     }
 
     #[test]

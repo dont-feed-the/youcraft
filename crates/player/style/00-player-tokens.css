@@ -1,0 +1,36 @@
+/* The player's design tokens: its colours over the picture, which stay dark in every theme, and
+   its sizes. Spacing, radii and type come from the site's own tokens. */
+:root {
+  --player-bg: #000000;
+  --player-text: #ffffff;
+  --player-pill: rgba(0, 0, 0, 0.35);
+  --player-pill-hover: rgba(255, 255, 255, 0.12);
+  --player-menu: rgba(28, 28, 28, 0.92);
+  --player-rule: rgba(255, 255, 255, 0.2);
+  --player-track: rgba(255, 255, 255, 0.25);
+  --player-buffered: rgba(255, 255, 255, 0.45);
+  --player-hovered: rgba(255, 255, 255, 0.6);
+  --player-scrim: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+  --player-scrim-top: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+  --player-shade: rgba(0, 0, 0, 0.45);
+
+  --player-control: 40px;
+  --player-chrome-height: 48px;
+  --player-scrim-height: 140px;
+  --player-big: 64px;
+  --player-big-icon: 36px;
+  --player-bezel: 52px;
+  --player-menu-width: 260px;
+  --player-rule-width: 1px;
+  --player-volume-width: 64px;
+  --player-slider-track: 4px;
+  --player-slider-thumb: 12px;
+  --player-seek-height: 16px;
+  --player-seek-track: 3px;
+  --player-seek-track-hover: 5px;
+  --player-seek-thumb: 13px;
+  --player-preview-width: 160px;
+  --player-frame-border: 2px;
+  --player-time-padding: 2px;
+  --player-spinner-border: 4px;
+}

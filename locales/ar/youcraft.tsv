@@ -176,6 +176,7 @@
 	Auto	تلقائية
 	Auto ({quality})	تلقائية ({quality})
 	This video can't be played in this browser.	لا يمكن تشغيل هذا الفيديو في هذا المتصفح.
+	This video could not be loaded. Try again later.	تعذّر تحميل هذا الفيديو. حاول مرة أخرى لاحقًا.
 @plural	{n} second|{n} seconds	{n} ثانية|{n} ثانية|{n} ثانية|{n} ثوانٍ|{n} ثانية|{n} ثانية
 @plural	{n} reply|{n} replies	{n} رد|{n} رد|{n} رد|{n} ردود|{n} ردًا|{n} رد
 @plural	{n} subscriber|{n} subscribers	{n} مشترك|{n} مشترك|{n} مشترك|{n} مشتركين|{n} مشتركًا|{n} مشترك

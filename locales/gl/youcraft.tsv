@@ -176,6 +176,7 @@
 	Auto	Automática
 	Auto ({quality})	Automática ({quality})
 	This video can't be played in this browser.	Este vídeo non se pode reproducir neste navegador.
+	This video could not be loaded. Try again later.	Non se puido cargar este vídeo. Téntao de novo máis tarde.
 @plural	{n} second|{n} seconds	{n} segundo|{n} segundos
 @plural	{n} reply|{n} replies	{n} resposta|{n} respostas
 @plural	{n} subscriber|{n} subscribers	{n} subscritor|{n} subscritores

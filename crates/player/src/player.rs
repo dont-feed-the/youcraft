@@ -17,6 +17,7 @@ use crate::controls::{Controls, Glance};
 use crate::icons::{Glyph, Icon};
 use crate::menu::Settings;
 use crate::state::{Notice, Player};
+use crate::time;
 
 /// Milliseconds within which a second tap makes a double tap.
 const DOUBLE_TAP: f64 = 300.0;
@@ -33,8 +34,7 @@ pub fn VideoPlayer(
     #[prop(optional)] started: Option<Callback<()>>,
 ) -> impl IntoView {
     let lang = Language::current();
-    let seconds = duration.ticks as f64 / f64::from(duration.timescale.get());
-    let player = Player::new(seconds, theatre);
+    let player = Player::new(time::of(duration), theatre);
     let storyboard = RwSignal::new(None::<Storyboard>);
     let page_dir = if youcraft_i18n::rtl(lang) {
         "rtl"
@@ -69,8 +69,8 @@ pub fn VideoPlayer(
         });
         last_tap.set_value(Some((now, side)));
         match (double, side) {
-            (true, Side::Start) => player.jump(-10.0),
-            (true, Side::End) => player.jump(10.0),
+            (true, Side::Start) => player.jump(-10),
+            (true, Side::End) => player.jump(10),
             _ if player.active.get_untracked() && player.playing.get_untracked() => {
                 player.active.set(false)
             }
@@ -120,6 +120,8 @@ pub fn VideoPlayer(
                 on:durationchange=move |_| player.sync()
                 on:volumechange=move |_| player.sync()
                 on:ratechange=move |_| player.sync()
+                on:loadedmetadata=move |_| player.sync_picture()
+                on:resize=move |_| player.sync_picture()
                 on:waiting=move |_| player.waiting.set(true)
                 on:playing=move |_| player.waiting.set(false)
                 on:canplay=move |_| player.waiting.set(false)
@@ -143,17 +145,13 @@ pub fn VideoPlayer(
                 aria-label=move || if player.playing.get() { tr("Pause") } else { tr("Play") }
                 on:click=move |_| player.toggle_play()
             >
-                {move || {
-                    let icon = match (player.playing.get(), player.ended.get()) {
-                        (true, _) => Icon::Pause,
-                        (false, true) => Icon::Replay,
-                        (false, false) => Icon::Play,
-                    };
-                    view! { <Glyph icon/> }
-                }}
+                {move || view! { <Glyph icon=Icon::playback(player.playing.get(), player.ended.get())/> }}
             </button>
             <Show when=move || player.unplayable.get()>
-                <p class="player-unplayable" dir=page_dir>{tr("This video can't be played in this browser.")}</p>
+                <p class="player-message" dir=page_dir>{tr("This video can't be played in this browser.")}</p>
+            </Show>
+            <Show when=move || player.failed.get() && !player.unplayable.get()>
+                <p class="player-message" dir=page_dir role="alert">{tr("This video could not be loaded. Try again later.")}</p>
             </Show>
             <div class="player-scrim" aria-hidden="true"></div>
             <Settings player page_dir/>
@@ -176,11 +174,11 @@ fn side_of(event: &ev::PointerEvent) -> Side {
     #[cfg(feature = "hydrate")]
     {
         use wasm_bindgen::JsCast;
-        let width = event
+        let bounds = event
             .current_target()
             .and_then(|target| target.dyn_into::<web_sys::Element>().ok())
             .map(|element| element.get_bounding_client_rect());
-        if let Some(rect) = width
+        if let Some(rect) = bounds
             && rect.width() > 0.0
         {
             let x = (f64::from(event.client_x()) - rect.left()) / rect.width();
@@ -225,12 +223,7 @@ fn flash(notice: Notice) -> impl IntoView {
         .into_any(),
         Notice::Volume(points) => {
             let text = youcraft_i18n::percent(lang, f64::from(points) / 100.0);
-            let icon = match points {
-                0 => Icon::Muted,
-                1..=50 => Icon::VolumeLow,
-                _ => Icon::VolumeHigh,
-            };
-            view! { <div class="player-tag"><Glyph icon/><span>{text}</span></div> }.into_any()
+            view! { <div class="player-tag"><Glyph icon=Icon::volume(points)/><span>{text}</span></div> }.into_any()
         }
         Notice::Speed(hundredths) => {
             let text = crate::menu::speed_label(hundredths);
@@ -249,7 +242,9 @@ fn start(player: Player, video: VideoId, storyboard: RwSignal<Option<Storyboard>
     Effect::new(move |_| {
         player.start(routes::playlist_of_renditions(video));
         wasm_bindgen_futures::spawn_local(async move {
-            let text = crate::web::fetch_text(&routes::storyboard(video)).await;
+            let text =
+                crate::web::fetch_text(&routes::storyboard(video), crate::web::SMALL_DEADLINE)
+                    .await;
             if let Some(found) = text.ok().and_then(|text| serde_json::from_str(&text).ok()) {
                 storyboard.set(Some(found));
             }
@@ -258,15 +253,15 @@ fn start(player: Player, video: VideoId, storyboard: RwSignal<Option<Storyboard>
     let keys = window_event_listener(ev::keydown, move |event| {
         let target = event
             .target()
-            .and_then(|target| target.dyn_into::<web_sys::Element>().ok());
+            .and_then(|target| target.dyn_into::<web_sys::HtmlElement>().ok());
         let tag = target
             .as_ref()
             .map(|element| element.tag_name())
             .unwrap_or_default();
+        // Typing in text, wherever it is editable, is left alone.
         let editable = target
             .as_ref()
-            .and_then(|element| element.get_attribute("contenteditable"))
-            .is_some();
+            .is_some_and(|element| element.is_content_editable());
         if editable || matches!(tag.as_str(), "INPUT" | "TEXTAREA" | "SELECT") {
             return;
         }

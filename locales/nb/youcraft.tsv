@@ -176,6 +176,7 @@
 	Auto	Automatisk
 	Auto ({quality})	Automatisk ({quality})
 	This video can't be played in this browser.	Denne videoen kan ikke spilles av i denne nettleseren.
+	This video could not be loaded. Try again later.	Kunne ikke laste inn videoen. Prøv igjen senere.
 @plural	{n} second|{n} seconds	{n} sekund|{n} sekunder
 @plural	{n} reply|{n} replies	{n} svar|{n} svar
 @plural	{n} subscriber|{n} subscribers	{n} abonnent|{n} abonnenter

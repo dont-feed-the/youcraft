@@ -176,6 +176,7 @@
 	Auto	ავტომატური
 	Auto ({quality})	ავტომატური ({quality})
 	This video can't be played in this browser.	ამ ბრაუზერში ამ ვიდეოს დაკვრა შეუძლებელია.
+	This video could not be loaded. Try again later.	ამ ვიდეოს ჩატვირთვა ვერ მოხერხდა. სცადეთ მოგვიანებით.
 @plural	{n} second|{n} seconds	{n} წამი|{n} წამი
 @plural	{n} reply|{n} replies	{n} პასუხი|{n} პასუხი
 @plural	{n} subscriber|{n} subscribers	{n} გამომწერი|{n} გამომწერი

@@ -176,6 +176,7 @@
 	Auto	Otomatik
 	Auto ({quality})	Otomatik ({quality})
 	This video can't be played in this browser.	Bu video bu tarayıcıda oynatılamıyor.
+	This video could not be loaded. Try again later.	Bu video yüklenemedi. Daha sonra tekrar deneyin.
 @plural	{n} second|{n} seconds	{n} saniye|{n} saniye
 @plural	{n} reply|{n} replies	{n} yanıt|{n} yanıt
 @plural	{n} subscriber|{n} subscribers	{n} abone|{n} abone

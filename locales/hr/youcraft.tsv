@@ -176,6 +176,7 @@
 	Auto	Automatski
 	Auto ({quality})	Automatski ({quality})
 	This video can't be played in this browser.	Ovaj se videozapis ne može reproducirati u ovom pregledniku.
+	This video could not be loaded. Try again later.	Ovaj videozapis nije moguće učitati. Pokušajte ponovno kasnije.
 @plural	{n} second|{n} seconds	{n} sekunda|{n} sekunde|{n} sekundi
 @plural	{n} reply|{n} replies	{n} odgovor|{n} odgovora|{n} odgovora
 @plural	{n} subscriber|{n} subscribers	{n} pretplatnik|{n} pretplatnika|{n} pretplatnika

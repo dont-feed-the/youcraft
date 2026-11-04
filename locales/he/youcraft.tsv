@@ -176,6 +176,7 @@
 	Auto	אוטומטית
 	Auto ({quality})	אוטומטית ({quality})
 	This video can't be played in this browser.	לא ניתן להפעיל את הסרטון בדפדפן הזה.
+	This video could not be loaded. Try again later.	לא ניתן היה לטעון את הסרטון. יש לנסות שוב מאוחר יותר.
 @plural	{n} second|{n} seconds	{n} שנייה|{n} שניות|{n} שניות
 @plural	{n} reply|{n} replies	{n} תשובה|{n} תשובות|{n} תשובות
 @plural	{n} subscriber|{n} subscribers	{n} מנוי|{n} מנויים|{n} מנויים

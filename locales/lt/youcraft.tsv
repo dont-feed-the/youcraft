@@ -176,6 +176,7 @@
 	Auto	Automatinė
 	Auto ({quality})	Automatinė ({quality})
 	This video can't be played in this browser.	Šio vaizdo įrašo negalima paleisti šioje naršyklėje.
+	This video could not be loaded. Try again later.	Šio vaizdo įrašo įkelti nepavyko. Bandykite dar kartą vėliau.
 @plural	{n} second|{n} seconds	{n} sekundė|{n} sekundės|{n} sekundžių
 @plural	{n} reply|{n} replies	{n} atsakymas|{n} atsakymai|{n} atsakymų
 @plural	{n} subscriber|{n} subscribers	{n} prenumeratorius|{n} prenumeratoriai|{n} prenumeratorių

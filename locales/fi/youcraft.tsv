@@ -176,6 +176,7 @@
 	Auto	Automaattinen
 	Auto ({quality})	Automaattinen ({quality})
 	This video can't be played in this browser.	Tätä videota ei voi toistaa tässä selaimessa.
+	This video could not be loaded. Try again later.	Videota ei voitu ladata. Yritä myöhemmin uudelleen.
 @plural	{n} second|{n} seconds	{n} sekunti|{n} sekuntia
 @plural	{n} reply|{n} replies	{n} vastaus|{n} vastausta
 @plural	{n} subscriber|{n} subscribers	{n} tilaaja|{n} tilaajaa

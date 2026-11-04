@@ -176,6 +176,7 @@
 	Auto	Automaatne
 	Auto ({quality})	Automaatne ({quality})
 	This video can't be played in this browser.	Seda videot ei saa selles brauseris esitada.
+	This video could not be loaded. Try again later.	Seda videot ei õnnestunud laadida. Proovi hiljem uuesti.
 @plural	{n} second|{n} seconds	{n} sekund|{n} sekundit
 @plural	{n} reply|{n} replies	{n} vastus|{n} vastust
 @plural	{n} subscriber|{n} subscribers	{n} tellija|{n} tellijat

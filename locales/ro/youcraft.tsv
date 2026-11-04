@@ -176,6 +176,7 @@
 	Auto	Automată
 	Auto ({quality})	Automată ({quality})
 	This video can't be played in this browser.	Acest videoclip nu poate fi redat în acest browser.
+	This video could not be loaded. Try again later.	Acest videoclip nu a putut fi încărcat. Încearcă din nou mai târziu.
 @plural	{n} second|{n} seconds	{n} secundă|{n} secunde|{n} de secunde
 @plural	{n} reply|{n} replies	{n} răspuns|{n} răspunsuri|{n} de răspunsuri
 @plural	{n} subscriber|{n} subscribers	{n} abonat|{n} abonați|{n} de abonați

@@ -5,7 +5,11 @@
 //! network does and rises only once it has held. Each download weighs as long as it took, so many
 //! small fetches do not outvote one large one. The choice starts at the lowest rendition, climbs
 //! only with seconds of video already buffered, and never fetches pictures much larger than the
-//! player shows.
+//! player shows them: a picture fits the player's box whole, so a wide one shown in a box of
+//! another shape is shown smaller than the box.
+
+use crate::playlist::Variant;
+use crate::time::NANOS;
 
 /// How long, in seconds, until a sample counts half as much in the quick average.
 const QUICK_HALF_LIFE: f64 = 2.0;
@@ -15,10 +19,10 @@ const SLOW_HALF_LIFE: f64 = 8.0;
 const MIN_BYTES: u64 = 128 * 1024;
 /// Downloads smaller than this are mostly latency, and are not measured.
 const MIN_SAMPLE_BYTES: u64 = 16 * 1024;
-/// Seconds of buffered video below which only a safe margin of the bandwidth is used.
-const LOW_BUFFER: f64 = 10.0;
-/// Seconds of buffered video needed before choosing a higher rendition.
-const CLIMB_BUFFER: f64 = 6.0;
+/// Nanoseconds of buffered video below which only a safe margin of the bandwidth is used.
+const LOW_BUFFER: u64 = 10 * NANOS;
+/// Nanoseconds of buffered video needed before choosing a higher rendition.
+const CLIMB_BUFFER: u64 = 6 * NANOS;
 
 /// An exponentially weighted average whose weights halve every `half_life` seconds of samples.
 #[derive(Clone, Copy, Debug)]
@@ -94,17 +98,17 @@ impl Estimator {
 pub struct Conditions {
     /// The bandwidth estimate, in bits per second.
     pub bandwidth: Option<f64>,
-    /// Seconds of video buffered ahead of the playhead.
-    pub buffered: f64,
-    /// The height, in device pixels, the player shows pictures at.
-    pub shown_height: u32,
+    /// Nanoseconds of video buffered ahead of the playhead.
+    pub buffered: u64,
+    /// The player's box, width and height in device pixels; zero when unknown.
+    pub shown: (u32, u32),
     /// The rendition being fetched now.
     pub current: usize,
 }
 
-/// The rendition to fetch next, among renditions of `bandwidths` and `heights` (lowest bit rate
-/// first, as [`crate::playlist::Master`] orders them).
-pub fn choose(bandwidths: &[u64], heights: &[u32], conditions: Conditions) -> usize {
+/// The rendition to fetch next among `variants`, lowest bit rate first as
+/// [`crate::playlist::Master`] orders them.
+pub fn choose(variants: &[Variant], conditions: Conditions) -> usize {
     let Some(bandwidth) = conditions.bandwidth else {
         return 0;
     };
@@ -113,44 +117,77 @@ pub fn choose(bandwidths: &[u64], heights: &[u32], conditions: Conditions) -> us
     } else {
         0.85
     };
-    let ceiling = height_ceiling(heights, conditions.shown_height);
-    let affordable = bandwidths
+    let ceiling = height_ceiling(variants, conditions.shown);
+    let affordable = variants
         .iter()
-        .zip(heights)
         .enumerate()
-        .filter(|(_, (rate, height))| {
-            **rate as f64 <= bandwidth * margin && ceiling.is_none_or(|top| **height <= top)
+        .filter(|(_, variant)| {
+            variant.bandwidth as f64 <= bandwidth * margin
+                && ceiling.is_none_or(|top| variant.height <= top)
         })
         .map(|(index, _)| index)
         .next_back()
         .unwrap_or(0);
     if affordable > conditions.current && conditions.buffered < CLIMB_BUFFER {
-        return conditions.current.min(bandwidths.len().saturating_sub(1));
+        return conditions.current.min(variants.len().saturating_sub(1));
     }
     affordable
 }
 
-/// The tallest rendition worth fetching for a player `shown` device pixels tall: the smallest
-/// that covers it, so that nothing is fetched only to be scaled down; `None` lets any be.
-fn height_ceiling(heights: &[u32], shown: u32) -> Option<u32> {
-    if shown == 0 {
+/// How many device pixels tall a picture of `variant`'s shape shows in a box `shown`: the box's
+/// height, or less when the picture is wider than the box and fits its width.
+fn shown_height(variant: &Variant, (width, height): (u32, u32)) -> u32 {
+    let fitted = (u64::from(width) * u64::from(variant.height))
+        .checked_div(u64::from(variant.width))
+        .map_or(height, |fitted| u32::try_from(fitted).unwrap_or(u32::MAX));
+    height.min(fitted)
+}
+
+/// The tallest rendition worth fetching for a player box `shown`: the smallest that covers the
+/// picture as it shows, so that nothing is fetched only to be scaled down; `None` lets any be.
+fn height_ceiling(variants: &[Variant], shown: (u32, u32)) -> Option<u32> {
+    if shown.1 == 0 {
         return None;
     }
-    heights.iter().copied().filter(|h| *h >= shown).min()
+    variants
+        .iter()
+        .filter(|variant| variant.height >= shown_height(variant, shown))
+        .map(|variant| variant.height)
+        .min()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const RATES: [u64; 3] = [1_000_000, 2_500_000, 5_000_000];
-    const HEIGHTS: [u32; 3] = [360, 720, 1080];
+    /// Renditions of `(bandwidth, width, height)`, lowest first.
+    fn ladder(rungs: &[(u64, u32, u32)]) -> Vec<Variant> {
+        rungs
+            .iter()
+            .map(|&(bandwidth, width, height)| Variant {
+                bandwidth,
+                width,
+                height,
+                frame: None,
+                codecs: String::new(),
+                uri: String::new(),
+            })
+            .collect()
+    }
 
-    fn conditions(bandwidth: f64, buffered: f64, current: usize) -> Conditions {
+    fn wide() -> Vec<Variant> {
+        ladder(&[
+            (1_000_000, 640, 360),
+            (2_500_000, 1280, 720),
+            (5_000_000, 1920, 1080),
+        ])
+    }
+
+    fn conditions(bandwidth: f64, buffered: u64, current: usize) -> Conditions {
         Conditions {
             bandwidth: Some(bandwidth),
-            buffered,
-            shown_height: 2000,
+            buffered: buffered * NANOS,
+            shown: (4000, 2000),
             current,
         }
     }
@@ -161,11 +198,11 @@ mod tests {
         assert_eq!(estimator.estimate(), None);
         let first = Conditions {
             bandwidth: estimator.estimate(),
-            buffered: 0.0,
-            shown_height: 1080,
+            buffered: 0,
+            shown: (1920, 1080),
             current: 0,
         };
-        assert_eq!(choose(&RATES, &HEIGHTS, first), 0);
+        assert_eq!(choose(&wide(), first), 0);
     }
 
     #[test]
@@ -194,28 +231,60 @@ mod tests {
 
     #[test]
     fn quality_climbs_with_bandwidth_and_buffer_only() {
+        let wide = wide();
         // Enough bandwidth for 1080p with a full buffer.
-        assert_eq!(choose(&RATES, &HEIGHTS, conditions(8e6, 20.0, 0)), 2);
+        assert_eq!(choose(&wide, conditions(8e6, 20, 0)), 2);
         // Too little buffer to climb: stay.
-        assert_eq!(choose(&RATES, &HEIGHTS, conditions(8e6, 2.0, 0)), 0);
+        assert_eq!(choose(&wide, conditions(8e6, 2, 0)), 0);
         // But falling never waits.
-        assert_eq!(choose(&RATES, &HEIGHTS, conditions(1.5e6, 2.0, 2)), 0);
+        assert_eq!(choose(&wide, conditions(1.5e6, 2, 2)), 0);
         // A low buffer keeps a wider margin: 2.5 Mbit/s needs 3.6 Mbit/s.
-        assert_eq!(choose(&RATES, &HEIGHTS, conditions(3.4e6, 8.0, 1)), 0);
-        assert_eq!(choose(&RATES, &HEIGHTS, conditions(3.4e6, 12.0, 1)), 1);
+        assert_eq!(choose(&wide, conditions(3.4e6, 8, 1)), 0);
+        assert_eq!(choose(&wide, conditions(3.4e6, 12, 1)), 1);
     }
 
     #[test]
     fn small_players_fetch_small_pictures() {
+        let wide = wide();
         let small = Conditions {
-            shown_height: 400,
-            ..conditions(1e9, 30.0, 0)
+            shown: (711, 400),
+            ..conditions(1e9, 30, 0)
         };
-        assert_eq!(choose(&RATES, &HEIGHTS, small), 1);
+        assert_eq!(choose(&wide, small), 1);
         let tiny = Conditions {
-            shown_height: 200,
+            shown: (356, 200),
             ..small
         };
-        assert_eq!(choose(&RATES, &HEIGHTS, tiny), 0);
+        assert_eq!(choose(&wide, tiny), 0);
+    }
+
+    #[test]
+    fn a_picture_wider_than_the_box_is_shown_shorter_than_it() {
+        // 2.39:1 in a 16:9 box 1440 pixels tall shows 1071 pixels tall: 1080 lines suffice,
+        // where the box alone would ask for 1440.
+        let scope = ladder(&[
+            (1_000_000, 860, 360),
+            (2_500_000, 1720, 720),
+            (5_000_000, 2580, 1080),
+            (9_000_000, 3440, 1440),
+        ]);
+        let shown = Conditions {
+            shown: (2560, 1440),
+            ..conditions(1e9, 30, 0)
+        };
+        assert_eq!(choose(&scope, shown), 2);
+        // In a box wider still, it shows 1190 pixels tall: more than 1080.
+        let wider = Conditions {
+            shown: (2844, 1600),
+            ..shown
+        };
+        assert_eq!(choose(&scope, wider), 3);
+        // An upright picture in a wide box is as tall as the box.
+        let upright = ladder(&[(1_000_000, 360, 640), (2_500_000, 720, 1280)]);
+        let landscape_box = Conditions {
+            shown: (1920, 600),
+            ..shown
+        };
+        assert_eq!(choose(&upright, landscape_box), 0);
     }
 }

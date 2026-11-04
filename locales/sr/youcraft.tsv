@@ -176,6 +176,7 @@
 	Auto	Аутоматски
 	Auto ({quality})	Аутоматски ({quality})
 	This video can't be played in this browser.	Овај видео не може да се пусти у овом прегледачу.
+	This video could not be loaded. Try again later.	Овај видео није могуће учитати. Покушајте поново касније.
 @plural	{n} second|{n} seconds	{n} секунда|{n} секунде|{n} секунди
 @plural	{n} reply|{n} replies	{n} одговор|{n} одговора|{n} одговора
 @plural	{n} subscriber|{n} subscribers	{n} претплатник|{n} претплатника|{n} претплатника

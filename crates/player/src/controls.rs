@@ -16,6 +16,7 @@ use youcraft_i18n::when::clock;
 
 use crate::icons::{Glyph, Icon};
 use crate::state::{Menu, Player};
+use crate::time;
 
 /// What the seek bar previews under the pointer: the storyboard of the video, once loaded.
 #[derive(Clone, Copy)]
@@ -61,13 +62,18 @@ fn capture(event: &ev::PointerEvent) {
 }
 
 /// `part` of `whole`, from 0 to 1, as a CSS number.
-fn share(part: f64, whole: f64) -> String {
-    let ratio = if whole > 0.0 {
-        (part / whole).clamp(0.0, 1.0)
+fn share(part: u64, whole: u64) -> String {
+    let ratio = if whole > 0 {
+        (part as f64 / whole as f64).clamp(0.0, 1.0)
     } else {
         0.0
     };
     ratio.to_string()
+}
+
+/// `nanos` as a clock shows it: `12:34`.
+fn clock_of(nanos: u64) -> String {
+    clock(time::whole_seconds(nanos))
 }
 
 /// Keep the custom property `name` of `node` at `value`, set by script once the page is live.
@@ -89,9 +95,23 @@ pub fn Controls(player: Player, glance: Glance) -> impl IntoView {
     let time_text = move || {
         format!(
             "{} / {}",
-            clock(player.time.get().max(0.0) as u64),
-            clock(player.duration.get().max(0.0) as u64)
+            clock_of(player.time.get()),
+            clock_of(player.duration.get())
         )
+    };
+    let play_label = move || {
+        if player.playing.get() {
+            tr("Pause")
+        } else {
+            tr("Play")
+        }
+    };
+    let screen_label = move || {
+        if player.full_screen.get() {
+            tr("Exit full screen")
+        } else {
+            tr("Full screen")
+        }
     };
     view! {
         <div class="player-chrome">
@@ -101,18 +121,11 @@ pub fn Controls(player: Player, glance: Glance) -> impl IntoView {
                     <button
                         class="player-button player-play"
                         type="button"
-                        data-tip=move || if player.playing.get() { tr("Pause") } else { tr("Play") }
-                        aria-label=move || if player.playing.get() { tr("Pause") } else { tr("Play") }
+                        data-tip=play_label
+                        aria-label=play_label
                         on:click=move |_| player.toggle_play()
                     >
-                        {move || {
-                            let icon = match (player.playing.get(), player.ended.get()) {
-                                (true, _) => Icon::Pause,
-                                (false, true) => Icon::Replay,
-                                (false, false) => Icon::Play,
-                            };
-                            view! { <Glyph icon/> }
-                        }}
+                        {move || view! { <Glyph icon=Icon::playback(player.playing.get(), player.ended.get())/> }}
                     </button>
                     <Volume player/>
                     <span class="player-time">{time_text}</span>
@@ -130,22 +143,31 @@ pub fn Controls(player: Player, glance: Glance) -> impl IntoView {
                     >
                         <Glyph icon=Icon::Settings/>
                     </button>
-                    {player.theatre.map(|theatre| view! {
-                        <button
-                            class="player-button player-theatre"
-                            type="button"
-                            data-tip=move || if theatre.get() { tr("Default view") } else { tr("Theatre mode") }
-                            aria-label=move || if theatre.get() { tr("Default view") } else { tr("Theatre mode") }
-                            on:click=move |_| theatre.update(|on| *on = !*on)
-                        >
-                            {move || view! { <Glyph icon=if theatre.get() { Icon::DefaultView } else { Icon::Theatre }/> }}
-                        </button>
+                    {player.theatre.map(|theatre| {
+                        let theatre_label = move || {
+                            if theatre.get() {
+                                tr("Default view")
+                            } else {
+                                tr("Theatre mode")
+                            }
+                        };
+                        view! {
+                            <button
+                                class="player-button player-theatre"
+                                type="button"
+                                data-tip=theatre_label
+                                aria-label=theatre_label
+                                on:click=move |_| theatre.update(|on| *on = !*on)
+                            >
+                                {move || view! { <Glyph icon=if theatre.get() { Icon::DefaultView } else { Icon::Theatre }/> }}
+                            </button>
+                        }
                     })}
                     <button
                         class="player-button"
                         type="button"
-                        data-tip=move || if player.full_screen.get() { tr("Exit full screen") } else { tr("Full screen") }
-                        aria-label=move || if player.full_screen.get() { tr("Exit full screen") } else { tr("Full screen") }
+                        data-tip=screen_label
+                        aria-label=screen_label
                         on:click=move |_| player.toggle_full_screen()
                     >
                         {move || view! { <Glyph icon=if player.full_screen.get() { Icon::ExitFullScreen } else { Icon::FullScreen }/> }}
@@ -173,25 +195,25 @@ fn Volume(player: Player) -> impl IntoView {
             player.set_volume((fraction * 100.0).round() as u32);
         }
     };
+    let mute_label = move || {
+        if shown() == 0 {
+            tr("Unmute")
+        } else {
+            tr("Mute")
+        }
+    };
     let slider = NodeRef::<Div>::new();
-    bind(slider, "--level", move || share(f64::from(shown()), 100.0));
+    bind(slider, "--level", move || share(u64::from(shown()), 100));
     view! {
         <div class="player-volume" class:dragging=move || dragging.get()>
             <button
                 class="player-button"
                 type="button"
-                data-tip=move || if shown() == 0 { tr("Unmute") } else { tr("Mute") }
-                aria-label=move || if shown() == 0 { tr("Unmute") } else { tr("Mute") }
+                data-tip=mute_label
+                aria-label=mute_label
                 on:click=move |_| player.toggle_mute()
             >
-                {move || {
-                    let icon = match shown() {
-                        0 => Icon::Muted,
-                        1..=50 => Icon::VolumeLow,
-                        _ => Icon::VolumeHigh,
-                    };
-                    view! { <Glyph icon/> }
-                }}
+                {move || view! { <Glyph icon=Icon::volume(shown())/> }}
             </button>
             <div
                 class="player-slider"
@@ -236,7 +258,14 @@ fn SeekBar(player: Player, glance: Glance) -> impl IntoView {
         share(player.buffered.get(), player.duration.get())
     });
     bind(bar, "--hovered", move || {
-        share(hover.get().unwrap_or(0.0), 1.0)
+        hover.get().unwrap_or(0.0).to_string()
+    });
+    // The preview is as wide as the storyboard's tiles; without them, as the stylesheet says.
+    bind(bar, "--preview-width", move || {
+        glance
+            .storyboard
+            .get()
+            .map_or_else(String::new, |board| format!("{}px", board.tile_width))
     });
     let at = move |event: &ev::PointerEvent| {
         let fraction = along(event);
@@ -250,11 +279,11 @@ fn SeekBar(player: Player, glance: Glance) -> impl IntoView {
     let preview = move || {
         let fraction = hover.get()?;
         let duration = player.duration.get();
-        let seconds = fraction * duration;
+        let at = (fraction * duration as f64) as u64;
         let tile = glance
             .storyboard
             .get()
-            .and_then(|board| tile(glance.video, &board, seconds, duration));
+            .and_then(|board| tile(glance.video, &board, at, duration));
         let left = format!(
             "clamp(var(--preview-half), {}%, calc(100% - var(--preview-half)))",
             fraction * 100.0
@@ -270,7 +299,7 @@ fn SeekBar(player: Player, glance: Glance) -> impl IntoView {
                         style:block-size=format!("{height}px")
                     ></div>
                 })}
-                <span class="seek-time">{clock(seconds.max(0.0) as u64)}</span>
+                <span class="seek-time">{clock_of(at)}</span>
             </div>
         })
     };
@@ -283,16 +312,13 @@ fn SeekBar(player: Player, glance: Glance) -> impl IntoView {
             tabindex="0"
             aria-label=tr("Seek")
             aria-valuemin="0"
-            aria-valuemax=move || (player.duration.get().max(0.0) as u64).to_string()
-            aria-valuenow=move || (player.time.get().max(0.0) as u64).to_string()
-            aria-valuetext=move || clock(player.time.get().max(0.0) as u64)
+            aria-valuemax=move || time::whole_seconds(player.duration.get()).to_string()
+            aria-valuenow=move || time::whole_seconds(player.time.get()).to_string()
+            aria-valuetext=move || clock_of(player.time.get())
             on:pointerdown=move |event: ev::PointerEvent| {
                 scrubbing.set(true);
                 capture(&event);
                 at(&event);
-                if let Some(fraction) = hover.get_untracked() {
-                    player.seek_fraction(fraction);
-                }
             }
             on:pointermove=move |event: ev::PointerEvent| at(&event)
             on:pointerup=move |_| scrubbing.set(false)
@@ -315,26 +341,21 @@ fn SeekBar(player: Player, glance: Glance) -> impl IntoView {
     .into_any()
 }
 
-/// The storyboard tile showing `seconds` of a video lasting `duration` seconds: its sheet's
-/// address, its offset in the sheet and its size, all in pixels; `None` for a storyboard that is
-/// empty or malformed. Tile `i` shows `i × interval`, so the video has `⌈duration / interval⌉`.
+/// The storyboard tile showing the moment `at` of a video lasting `duration`, both in
+/// nanoseconds: its sheet's address, its offset in the sheet and its size, all in pixels; `None`
+/// for a storyboard that is empty or malformed. Tile `i` shows `i × interval`, so the tile at
+/// `at` is `⌊at / interval⌋` and the video has `⌈duration / interval⌉`, counted exactly.
 pub fn tile(
     video: VideoId,
     board: &Storyboard,
-    seconds: f64,
-    duration: f64,
+    at: u64,
+    duration: u64,
 ) -> Option<(String, u32, u32, u32, u32)> {
     let per_sheet = board.columns.checked_mul(board.rows).filter(|n| *n > 0)?;
-    if board.interval.ticks == 0 {
-        return None;
-    }
-    let tiles_of = |seconds: f64| {
-        seconds.max(0.0) * f64::from(board.interval.timescale.get()) / board.interval.ticks as f64
-    };
     let in_sheets = u64::from(per_sheet).checked_mul(u64::from(board.sheets))?;
-    let in_video = tiles_of(duration).ceil() as u64;
+    let in_video = time::periods_covering(duration, board.interval)?;
     let last = in_sheets.min(in_video).checked_sub(1)?;
-    let index = u32::try_from((tiles_of(seconds) as u64).min(last)).ok()?;
+    let index = u32::try_from(time::periods(at, board.interval)?.min(last)).ok()?;
     let sheet = index / per_sheet;
     let within = index % per_sheet;
     let (column, row) = (within % board.columns, within / board.columns);
@@ -350,6 +371,7 @@ pub fn tile(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::time::NANOS;
     use youcraft_api::time::MediaDuration;
 
     #[test]
@@ -366,32 +388,46 @@ mod tests {
             rows: 10,
             sheets: 2,
         };
-        let (sheet, x, y, ..) = tile(video, &board, 0.0, 400.0).unwrap();
+        let s = NANOS;
+        let (sheet, x, y, ..) = tile(video, &board, 0, 400 * s).unwrap();
         assert_eq!(
             (sheet.as_str(), x, y),
             ("/media/AAAAAAAAAAA/storyboard/0.jpg", 0, 0)
         );
         // 25 s is tile 12: second row, third column.
         assert_eq!(
-            tile(video, &board, 25.0, 400.0).map(|t| (t.1, t.2)),
+            tile(video, &board, 25 * s, 400 * s).map(|t| (t.1, t.2)),
             Some((320, 90))
         );
         // 200 s is tile 100, the first of the second sheet; past the end stays on the last.
         assert_eq!(
-            tile(video, &board, 200.0, 400.0).unwrap().0,
+            tile(video, &board, 200 * s, 400 * s).unwrap().0,
             "/media/AAAAAAAAAAA/storyboard/1.jpg"
         );
         assert_eq!(
-            tile(video, &board, 1e9, 1e9).map(|t| (t.1, t.2)),
+            tile(video, &board, u64::MAX, u64::MAX).map(|t| (t.1, t.2)),
             Some((1440, 810))
         );
         let empty = Storyboard { sheets: 0, ..board };
-        assert_eq!(tile(video, &empty, 1.0, 10.0), None);
+        assert_eq!(tile(video, &empty, s, 10 * s), None);
         // A video of 24 s has tiles 0 to 11; its end shows the last of them.
         assert_eq!(
-            tile(video, &board, 24.0, 24.0).map(|t| (t.1, t.2)),
+            tile(video, &board, 24 * s, 24 * s).map(|t| (t.1, t.2)),
             Some((160, 90))
         );
-        assert_eq!(tile(video, &board, 1.0, 0.0), None);
+        // One nanosecond past 24 s needs a thirteenth tile.
+        assert_eq!(
+            tile(video, &board, 24 * s + 1, 24 * s + 1).map(|t| (t.1, t.2)),
+            Some((320, 90))
+        );
+        assert_eq!(tile(video, &board, s, 0), None);
+        let still = Storyboard {
+            interval: MediaDuration {
+                ticks: 0,
+                timescale: std::num::NonZeroU32::MIN,
+            },
+            ..board
+        };
+        assert_eq!(tile(video, &still, s, 10 * s), None);
     }
 }

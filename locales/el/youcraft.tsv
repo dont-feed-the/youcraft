@@ -176,6 +176,7 @@
 	Auto	Αυτόματη
 	Auto ({quality})	Αυτόματη ({quality})
 	This video can't be played in this browser.	Αυτό το βίντεο δεν μπορεί να αναπαραχθεί σε αυτό το πρόγραμμα περιήγησης.
+	This video could not be loaded. Try again later.	Δεν ήταν δυνατή η φόρτωση αυτού του βίντεο. Δοκιμάστε ξανά αργότερα.
 @plural	{n} second|{n} seconds	{n} δευτερόλεπτο|{n} δευτερόλεπτα
 @plural	{n} reply|{n} replies	{n} απάντηση|{n} απαντήσεις
 @plural	{n} subscriber|{n} subscribers	{n} συνδρομητής|{n} συνδρομητές

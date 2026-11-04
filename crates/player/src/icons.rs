@@ -41,6 +41,24 @@ pub enum Icon {
 }
 
 impl Icon {
+    /// What the play button shows: pause while playing, replay at the end, play otherwise.
+    pub fn playback(playing: bool, ended: bool) -> Icon {
+        match (playing, ended) {
+            (true, _) => Icon::Pause,
+            (false, true) => Icon::Replay,
+            (false, false) => Icon::Play,
+        }
+    }
+
+    /// What shows a volume of `points` out of 100: crossed at 0, one wave up to half, two above.
+    pub fn volume(points: u32) -> Icon {
+        match points {
+            0 => Icon::Muted,
+            1..=50 => Icon::VolumeLow,
+            _ => Icon::VolumeHigh,
+        }
+    }
+
     /// Whether it points along the line of text, and so mirrors right to left. Media icons point
     /// along time, which runs left to right everywhere.
     fn directional(self) -> bool {

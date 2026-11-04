@@ -176,6 +176,7 @@
 	Auto	Automaticky
 	Auto ({quality})	Automaticky ({quality})
 	This video can't be played in this browser.	Toto video nelze v tomto prohlížeči přehrát.
+	This video could not be loaded. Try again later.	Toto video se nepodařilo načíst. Zkuste to znovu později.
 @plural	{n} second|{n} seconds	{n} sekunda|{n} sekundy|{n} sekund
 @plural	{n} reply|{n} replies	{n} odpověď|{n} odpovědi|{n} odpovědí
 @plural	{n} subscriber|{n} subscribers	{n} odběratel|{n} odběratelé|{n} odběratelů

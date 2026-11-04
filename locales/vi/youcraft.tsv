@@ -176,6 +176,7 @@
 	Auto	Tự động
 	Auto ({quality})	Tự động ({quality})
 	This video can't be played in this browser.	Không thể phát video này trên trình duyệt này.
+	This video could not be loaded. Try again later.	Không thể tải video này. Vui lòng thử lại sau.
 @plural	{n} second|{n} seconds	{n} giây
 @plural	{n} reply|{n} replies	{n} phản hồi
 @plural	{n} subscriber|{n} subscribers	{n} người đăng ký

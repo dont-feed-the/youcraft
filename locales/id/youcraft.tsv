@@ -176,6 +176,7 @@
 	Auto	Otomatis
 	Auto ({quality})	Otomatis ({quality})
 	This video can't be played in this browser.	Video ini tidak dapat diputar di browser ini.
+	This video could not be loaded. Try again later.	Video ini tidak dapat dimuat. Coba lagi nanti.
 @plural	{n} second|{n} seconds	{n} detik
 @plural	{n} reply|{n} replies	{n} balasan
 @plural	{n} subscriber|{n} subscribers	{n} subscriber

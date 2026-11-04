@@ -176,6 +176,7 @@
 	Auto	خودکار
 	Auto ({quality})	خودکار ({quality})
 	This video can't be played in this browser.	این ویدیو در این مرورگر پخش نمی‌شود.
+	This video could not be loaded. Try again later.	این ویدیو بارگیری نشد. بعداً دوباره امتحان کنید.
 @plural	{n} second|{n} seconds	{n} ثانیه|{n} ثانیه
 @plural	{n} reply|{n} replies	{n} پاسخ|{n} پاسخ
 @plural	{n} subscriber|{n} subscribers	{n} مشترک|{n} مشترک

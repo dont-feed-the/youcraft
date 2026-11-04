@@ -2,18 +2,23 @@
 //! seek bar all act through [`Player`], which drives the `<video>` element and the engine.
 //!
 //! The state follows the element: actions ask the element, and its events write the signals the
-//! controls show, so that what is shown is what the element does. On the server, which only
-//! renders the markup, actions do nothing.
+//! controls show, each only when its value changes, so that what is shown is what the element
+//! does and nothing is drawn again for nothing. Times are nanoseconds, as [`crate::time`] counts
+//! them. On the server, which only renders the markup, actions do nothing.
 
-// Actions come only from the browser; the server renders the markup and never acts.
+// Actions come only from the browser: the server renders the markup and never acts, so what
+// only actions use is dead there, and checked where it lives, in the `hydrate` build.
 #![cfg_attr(not(feature = "hydrate"), allow(dead_code))]
 
 use leptos::html::{Div, Video};
 use leptos::prelude::*;
+use youcraft_api::time::MediaDuration;
 
 #[cfg(feature = "hydrate")]
 use crate::engine::Engine;
+#[cfg(feature = "hydrate")]
 use crate::keys::Action;
+use crate::time::NANOS;
 
 /// The speeds offered, in hundredths of normal.
 pub const SPEEDS: [u32; 8] = [25, 50, 75, 100, 125, 150, 175, 200];
@@ -23,17 +28,20 @@ pub const NORMAL: u32 = 100;
 #[cfg(feature = "hydrate")]
 const LINGER: u64 = 3000;
 
-/// The speed `steps` choices away from `speed` among [`SPEEDS`], kept within them.
+/// The speed `steps` choices away from `speed` among [`SPEEDS`]: the `steps`-th choice above
+/// it, or below it when `steps` is negative, kept within the choices; `speed` itself for none.
 pub fn step_speed(speed: u32, steps: i32) -> u32 {
-    let at = SPEEDS
-        .iter()
-        .position(|s| *s >= speed)
-        .unwrap_or(SPEEDS.len() - 1);
     let last = SPEEDS.len() - 1;
-    let to = if steps < 0 {
-        at.saturating_sub(steps.unsigned_abs() as usize)
-    } else {
-        at.saturating_add(steps.unsigned_abs() as usize).min(last)
+    let count = steps.unsigned_abs() as usize;
+    let to = match steps.signum() {
+        0 => return speed,
+        1 => SPEEDS
+            .partition_point(|choice| *choice <= speed)
+            .saturating_add(count - 1)
+            .min(last),
+        _ => SPEEDS
+            .partition_point(|choice| *choice < speed)
+            .saturating_sub(count),
     };
     SPEEDS.get(to).copied().unwrap_or(NORMAL)
 }
@@ -43,8 +51,8 @@ pub fn step_speed(speed: u32, steps: i32) -> u32 {
 pub enum Quality {
     /// Whichever the bandwidth and the player's size allow.
     Auto,
-    /// The rendition this many pixels tall, or the tallest below it.
-    Height(u32),
+    /// The rendition of this many lines, as "720p" counts them, or the largest below it.
+    Lines(u32),
 }
 
 /// The panel of the settings menu that is open.
@@ -75,6 +83,17 @@ pub enum Notice {
     Speed(u32),
 }
 
+/// Write `value` into `signal` only when it differs, so that nothing is drawn again for nothing.
+fn put<T: PartialEq + Send + Sync + 'static>(signal: RwSignal<T>, value: T) {
+    signal.maybe_update(|old| {
+        let changed = *old != value;
+        if changed {
+            *old = value;
+        }
+        changed
+    });
+}
+
 /// One player's state; cheap to copy into every handler.
 #[derive(Clone, Copy)]
 pub struct Player {
@@ -88,12 +107,14 @@ pub struct Player {
     pub started: RwSignal<bool>,
     /// Whether it reached the end.
     pub ended: RwSignal<bool>,
-    /// The playhead, in seconds.
-    pub time: RwSignal<f64>,
-    /// The length, in seconds.
-    pub duration: RwSignal<f64>,
-    /// The end of the media buffered from the playhead on, in seconds.
-    pub buffered: RwSignal<f64>,
+    /// The playhead, in nanoseconds.
+    pub time: RwSignal<u64>,
+    /// The length, in nanoseconds.
+    pub duration: RwSignal<u64>,
+    /// The end of the media buffered from the playhead on, in nanoseconds.
+    pub buffered: RwSignal<u64>,
+    /// How long a frame lasts, once known.
+    pub frame: RwSignal<Option<MediaDuration>>,
     /// The volume, in points out of 100.
     pub volume: RwSignal<u32>,
     /// Whether it is muted.
@@ -102,10 +123,10 @@ pub struct Player {
     pub speed: RwSignal<u32>,
     /// The quality asked for.
     pub quality: RwSignal<Quality>,
-    /// The heights of the renditions the browser plays.
+    /// The lines of the renditions the browser plays, as "720p" counts them, lowest first.
     pub renditions: RwSignal<Vec<u32>>,
-    /// The height of the rendition playing.
-    pub height: RwSignal<Option<u32>>,
+    /// The lines of the picture playing, once known.
+    pub lines: RwSignal<Option<u32>>,
     /// Whether the page shows the player in theatre mode; `None` on a page that has none.
     pub theatre: Option<RwSignal<bool>>,
     /// Whether the player fills the screen.
@@ -120,6 +141,8 @@ pub struct Player {
     pub waiting: RwSignal<bool>,
     /// Whether nothing here can play it.
     pub unplayable: RwSignal<bool>,
+    /// Whether its playlists could not be had.
+    pub failed: RwSignal<bool>,
     /// Counts pointer moves, so that only the last one hides the controls.
     moves: StoredValue<u32>,
     #[cfg(feature = "hydrate")]
@@ -127,23 +150,25 @@ pub struct Player {
 }
 
 impl Player {
-    /// A player of a video lasting `duration` seconds, shown in theatre mode as `theatre` says.
-    pub fn new(duration: f64, theatre: Option<RwSignal<bool>>) -> Player {
+    /// A player of a video lasting `duration` nanoseconds, shown in theatre mode as `theatre`
+    /// says.
+    pub fn new(duration: u64, theatre: Option<RwSignal<bool>>) -> Player {
         Player {
             video: NodeRef::new(),
             root: NodeRef::new(),
             playing: RwSignal::new(false),
             started: RwSignal::new(false),
             ended: RwSignal::new(false),
-            time: RwSignal::new(0.0),
+            time: RwSignal::new(0),
             duration: RwSignal::new(duration),
-            buffered: RwSignal::new(0.0),
+            buffered: RwSignal::new(0),
+            frame: RwSignal::new(None),
             volume: RwSignal::new(100),
             muted: RwSignal::new(false),
             speed: RwSignal::new(NORMAL),
             quality: RwSignal::new(Quality::Auto),
             renditions: RwSignal::new(Vec::new()),
-            height: RwSignal::new(None),
+            lines: RwSignal::new(None),
             theatre,
             full_screen: RwSignal::new(false),
             active: RwSignal::new(true),
@@ -151,6 +176,7 @@ impl Player {
             notice: RwSignal::new(None),
             waiting: RwSignal::new(false),
             unplayable: RwSignal::new(false),
+            failed: RwSignal::new(false),
             moves: StoredValue::new(0),
             #[cfg(feature = "hydrate")]
             engine: StoredValue::new_local(None),
@@ -187,12 +213,16 @@ impl Player {
     }
 
     /// Do what a key asked.
+    #[cfg(feature = "hydrate")]
     pub fn act(&self, action: Action) {
         match action {
             Action::TogglePlay => self.toggle_play(),
-            Action::Jump(seconds) => self.jump(f64::from(seconds)),
-            Action::JumpToTenth(tenth) => self.seek_fraction(f64::from(tenth) / 10.0),
-            Action::JumpToStart => self.seek(0.0),
+            Action::Jump(seconds) => self.jump(seconds),
+            Action::JumpToTenth(tenth) => {
+                let to = u128::from(self.duration.get_untracked()) * u128::from(tenth) / 10;
+                self.seek(u64::try_from(to).unwrap_or(u64::MAX));
+            }
+            Action::JumpToStart => self.seek(0),
             Action::JumpToEnd => self.seek(self.duration.get_untracked()),
             Action::Volume(points) => {
                 let volume = i64::from(self.shown_volume()) + i64::from(points);
@@ -201,12 +231,7 @@ impl Player {
             }
             Action::ToggleMute => {
                 self.toggle_mute();
-                let shown = if self.muted.get_untracked() {
-                    0
-                } else {
-                    self.volume.get_untracked()
-                };
-                self.flash(Notice::Volume(shown));
+                self.flash(Notice::Volume(self.shown_volume()));
             }
             Action::ToggleFullScreen => self.toggle_full_screen(),
             Action::ToggleTheatre => {
@@ -220,8 +245,13 @@ impl Player {
                 self.flash(Notice::Speed(speed));
             }
             Action::Frame(frames) => {
-                if !self.playing.get_untracked() {
-                    self.seek(self.time.get_untracked() + f64::from(frames) / 30.0);
+                let to = self.frame.get_untracked().and_then(|frame| {
+                    crate::time::step_frames(self.time.get_untracked(), frames, frame)
+                });
+                if let Some(to) = to
+                    && !self.playing.get_untracked()
+                {
+                    self.seek(to);
                 }
             }
         }
@@ -238,19 +268,24 @@ impl Player {
     }
 
     /// Jump `seconds` ahead (or back, when negative), and say so.
-    pub fn jump(&self, seconds: f64) {
-        self.seek(self.time.get_untracked() + seconds);
-        let whole = seconds.abs().round() as u32;
-        self.flash(if seconds < 0.0 {
-            Notice::Back(whole)
+    pub fn jump(&self, seconds: i32) {
+        let (now, by) = (
+            self.time.get_untracked(),
+            u64::from(seconds.unsigned_abs()) * NANOS,
+        );
+        if seconds < 0 {
+            self.seek(now.saturating_sub(by));
+            self.flash(Notice::Back(seconds.unsigned_abs()));
         } else {
-            Notice::Ahead(whole)
-        });
+            self.seek(now.saturating_add(by));
+            self.flash(Notice::Ahead(seconds.unsigned_abs()));
+        }
     }
 
-    /// Move the playhead to `fraction` of the video.
+    /// Move the playhead to `fraction` of the video, as a pointer along the seek bar asks.
     pub fn seek_fraction(&self, fraction: f64) {
-        self.seek(fraction.clamp(0.0, 1.0) * self.duration.get_untracked());
+        let duration = self.duration.get_untracked();
+        self.seek((fraction.clamp(0.0, 1.0) * duration as f64) as u64);
     }
 
     /// Ask the engine for `quality`.
@@ -272,11 +307,17 @@ mod browser {
     use leptos::prelude::*;
     use web_sys::HtmlVideoElement;
 
-    use super::{Notice, Player};
+    use super::{Notice, Player, put};
     use crate::engine::{Engine, Report};
+    use crate::playlist::picture_lines;
+    use crate::schedule::range_at;
+    use crate::time;
     use crate::web;
 
+    /// Where the volume is kept, in points out of 100.
     const VOLUME_KEY: &str = "youcraft.volume";
+    /// Where whether it is muted is kept: `1` or `0`.
+    const MUTED_KEY: &str = "youcraft.muted";
 
     impl Player {
         fn element(&self) -> Option<HtmlVideoElement> {
@@ -288,12 +329,13 @@ mod browser {
             let Some(video) = self.element() else {
                 return;
             };
-            self.restore_volume(&video);
+            Self::restore_volume(&video);
             let player = *self;
             let engine = Engine::start(video.clone(), master, move |report| match report {
-                Report::Renditions(heights) => player.renditions.set(heights),
-                Report::Height(height) => player.height.set(Some(height)),
+                Report::Renditions(lines) => put(player.renditions, lines),
+                Report::Frame(frame) => put(player.frame, Some(frame)),
                 Report::Unplayable => player.unplayable.set(true),
+                Report::Failed => player.failed.set(true),
             });
             self.engine.set_value(Some(engine));
             self.play(&video);
@@ -334,13 +376,12 @@ mod browser {
             }
         }
 
-        /// Move the playhead to `seconds`, kept within the video.
-        pub fn seek(&self, seconds: f64) {
+        /// Move the playhead to `nanos`, kept within the video.
+        pub fn seek(&self, nanos: u64) {
             if let Some(video) = self.element() {
-                let end = self.duration.get_untracked().max(0.0);
-                let to = seconds.clamp(0.0, end);
-                video.set_current_time(to);
-                self.time.set(to);
+                let to = nanos.min(self.duration.get_untracked());
+                video.set_current_time(time::seconds(to));
+                put(self.time, to);
             }
         }
 
@@ -349,7 +390,6 @@ mod browser {
             if let Some(video) = self.element() {
                 video.set_volume(f64::from(points.min(100)) / 100.0);
                 video.set_muted(points == 0);
-                self.save_volume(points);
             }
         }
 
@@ -389,49 +429,65 @@ mod browser {
             }
         }
 
-        /// Read what the element now does into the signals.
+        /// Read what the element now does into the signals, and keep the volume it was left at.
         pub fn sync(&self) {
             let Some(video) = self.element() else {
                 return;
             };
-            let time = video.current_time();
-            self.time.set(time);
+            let now = time::from_seconds(video.current_time());
+            put(self.time, now);
             let duration = video.duration();
             if duration.is_finite() && duration > 0.0 {
-                self.duration.set(duration);
+                put(self.duration, time::from_seconds(duration));
             }
-            let ranges = video.buffered();
-            let end = (0..ranges.length())
-                .filter_map(|i| Some((ranges.start(i).ok()?, ranges.end(i).ok()?)))
-                .find(|(start, end)| *start - 0.1 <= time && time <= *end + 0.1)
-                .map_or(time, |(_, end)| end);
-            self.buffered.set(end);
-            self.playing.set(!video.paused() && !video.ended());
-            self.ended.set(video.ended());
-            self.muted.set(video.muted());
-            self.volume.set((video.volume() * 100.0).round() as u32);
-            self.speed
-                .set((video.playback_rate() * 100.0).round() as u32);
+            let buffered =
+                range_at(&web::ranges(&video.buffered()), now).map_or(now, |(_, end)| end);
+            put(self.buffered, buffered);
+            put(self.playing, !video.paused() && !video.ended());
+            put(self.ended, video.ended());
+            let (muted, volume) = (video.muted(), (video.volume() * 100.0).round() as u32);
+            if (muted, volume) != (self.muted.get_untracked(), self.volume.get_untracked()) {
+                put(self.muted, muted);
+                put(self.volume, volume);
+                Self::save_volume(volume, muted);
+            }
+            put(self.speed, (video.playback_rate() * 100.0).round() as u32);
+        }
+
+        /// Read the size of the picture playing into the lines it is known by.
+        pub fn sync_picture(&self) {
+            if let Some(video) = self.element() {
+                let (width, height) = (video.video_width(), video.video_height());
+                put(
+                    self.lines,
+                    (height > 0).then(|| picture_lines(width, height)),
+                );
+            }
         }
 
         fn storage() -> Option<web_sys::Storage> {
             web::window().ok()?.local_storage().ok()?
         }
 
-        fn save_volume(&self, points: u32) {
+        fn save_volume(points: u32, muted: bool) {
             if let Some(storage) = Self::storage() {
                 let _ = storage.set_item(VOLUME_KEY, &points.to_string());
+                let _ = storage.set_item(MUTED_KEY, if muted { "1" } else { "0" });
             }
         }
 
-        fn restore_volume(&self, video: &HtmlVideoElement) {
-            let saved = Self::storage()
-                .and_then(|storage| storage.get_item(VOLUME_KEY).ok().flatten())
-                .and_then(|text| text.parse::<u32>().ok());
-            if let Some(points) = saved {
+        fn restore_volume(video: &HtmlVideoElement) {
+            let Some(storage) = Self::storage() else {
+                return;
+            };
+            let read = |key| storage.get_item(key).ok().flatten();
+            let points = read(VOLUME_KEY).and_then(|text| text.parse::<u32>().ok());
+            if let Some(points) = points {
                 video.set_volume(f64::from(points.min(100)) / 100.0);
-                video.set_muted(points == 0);
             }
+            // Before mute was kept, a volume of 0 meant muted.
+            let muted = read(MUTED_KEY).map_or(points == Some(0), |text| text == "1");
+            video.set_muted(muted);
         }
     }
 }
@@ -441,7 +497,7 @@ impl Player {
     /// Play if paused, pause if playing; nothing on the server.
     pub fn toggle_play(&self) {}
     /// Move the playhead; nothing on the server.
-    pub fn seek(&self, _seconds: f64) {}
+    pub fn seek(&self, _nanos: u64) {}
     /// Set the volume; nothing on the server.
     pub fn set_volume(&self, _points: u32) {}
     /// Mute or unmute; nothing on the server.
@@ -452,19 +508,53 @@ impl Player {
     pub fn toggle_full_screen(&self) {}
     /// Read the element; nothing on the server.
     pub fn sync(&self) {}
+    /// Read the picture's size; nothing on the server.
+    pub fn sync_picture(&self) {}
 }
 
 #[cfg(test)]
 mod tests {
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicU32, Ordering};
+
     use super::*;
 
     #[test]
-    fn speeds_step_within_the_choices() {
+    fn signals_are_written_only_when_their_value_changes() {
+        // Every timeupdate writes about ten signals; what reads one that did not change, such
+        // as the open settings menu reading the speed, must not run again.
+        Owner::new().with(|| {
+            let speed = RwSignal::new(NORMAL);
+            let runs = Arc::new(AtomicU32::new(0));
+            let counted = Arc::clone(&runs);
+            let label = Memo::new(move |_| {
+                counted.fetch_add(1, Ordering::SeqCst);
+                speed.get()
+            });
+            assert_eq!(label.get(), NORMAL);
+            put(speed, NORMAL);
+            assert_eq!(label.get(), NORMAL);
+            assert_eq!(runs.load(Ordering::SeqCst), 1);
+            put(speed, 125);
+            assert_eq!(label.get(), 125);
+            assert_eq!(runs.load(Ordering::SeqCst), 2);
+        });
+    }
+
+    #[test]
+    fn speeds_step_to_the_next_choices() {
         assert_eq!(step_speed(100, 1), 125);
         assert_eq!(step_speed(100, -1), 75);
+        assert_eq!(step_speed(100, 2), 150);
         assert_eq!(step_speed(200, 1), 200);
         assert_eq!(step_speed(25, -3), 25);
-        assert_eq!(step_speed(110, 0), 125);
-        assert_eq!(step_speed(900, -1), 175);
+        // A speed between the choices steps to the nearest one on that side; no step keeps it.
+        assert_eq!(step_speed(110, 1), 125);
+        assert_eq!(step_speed(110, -1), 100);
+        assert_eq!(step_speed(110, 0), 110);
+        assert_eq!(step_speed(900, -1), 200);
+        assert_eq!(step_speed(10, 1), 25);
+        assert_eq!(step_speed(100, i32::MIN), 25);
+        assert_eq!(step_speed(100, i32::MAX), 200);
     }
 }

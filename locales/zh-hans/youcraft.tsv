@@ -176,6 +176,7 @@
 	Auto	自动
 	Auto ({quality})	自动 ({quality})
 	This video can't be played in this browser.	此浏览器无法播放该视频。
+	This video could not be loaded. Try again later.	无法加载此视频，请稍后重试。
 @plural	{n} second|{n} seconds	{n} 秒
 @plural	{n} reply|{n} replies	{n} 条回复
 @plural	{n} subscriber|{n} subscribers	{n} 位订阅者

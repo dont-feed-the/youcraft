@@ -176,6 +176,7 @@
 	Auto	자동
 	Auto ({quality})	자동 ({quality})
 	This video can't be played in this browser.	이 브라우저에서는 이 동영상을 재생할 수 없습니다.
+	This video could not be loaded. Try again later.	동영상을 불러올 수 없습니다. 나중에 다시 시도해 주세요.
 @plural	{n} second|{n} seconds	{n}초
 @plural	{n} reply|{n} replies	답글 {n}개
 @plural	{n} subscriber|{n} subscribers	구독자 {n}명

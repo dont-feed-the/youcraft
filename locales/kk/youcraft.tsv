@@ -176,6 +176,7 @@
 	Auto	Автоматты
 	Auto ({quality})	Автоматты ({quality})
 	This video can't be played in this browser.	Бұл бейнені осы браузерде ойнату мүмкін емес.
+	This video could not be loaded. Try again later.	Бұл бейнені жүктеу мүмкін болмады. Кейінірек қайталап көріңіз.
 @plural	{n} second|{n} seconds	{n} секунд|{n} секунд
 @plural	{n} reply|{n} replies	{n} жауап|{n} жауап
 @plural	{n} subscriber|{n} subscribers	{n} жазылушы|{n} жазылушы

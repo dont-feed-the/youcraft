@@ -176,6 +176,7 @@
 	Auto	Automatikus
 	Auto ({quality})	Automatikus ({quality})
 	This video can't be played in this browser.	Ez a videó nem játszható le ebben a böngészőben.
+	This video could not be loaded. Try again later.	A videót nem sikerült betölteni. Próbáld újra később.
 @plural	{n} second|{n} seconds	{n} másodperc|{n} másodperc
 @plural	{n} reply|{n} replies	{n} válasz|{n} válasz
 @plural	{n} subscriber|{n} subscribers	{n} feliratkozó|{n} feliratkozó

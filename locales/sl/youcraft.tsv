@@ -176,6 +176,7 @@
 	Auto	Samodejno
 	Auto ({quality})	Samodejno ({quality})
 	This video can't be played in this browser.	Tega videoposnetka v tem brskalniku ni mogoče predvajati.
+	This video could not be loaded. Try again later.	Tega videoposnetka ni bilo mogoče naložiti. Poskusite znova pozneje.
 @plural	{n} second|{n} seconds	{n} sekunda|{n} sekundi|{n} sekunde|{n} sekund
 @plural	{n} reply|{n} replies	{n} odgovor|{n} odgovora|{n} odgovori|{n} odgovorov
 @plural	{n} subscriber|{n} subscribers	{n} naročnik|{n} naročnika|{n} naročniki|{n} naročnikov

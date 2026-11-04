@@ -2,6 +2,35 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.3.2
+
+### Fixed
+
+- In right-to-left languages, the player's settings menu opens over its button, at the end of
+  the bar, rather than at the bar's other end.
+- A download that stalls is abandoned at a deadline in proportion to the media it brings, and the
+  estimate of the network learns from it; a seek or a choice of quality abandons at once the
+  download it leaves unwanted, and a seek or a stall makes the player look again at once.
+- When a video's playlists cannot be had, the player says so, in every language, instead of
+  showing its poster for ever; a failure that may pass is tried three more times first.
+- A gap just before a buffered stretch, such as a seek back into a trimmed moment leaves, is
+  fetched instead of stalling the video.
+- A browser out of room for video gets room behind the playhead first, then a smaller target
+  ahead, instead of being sent the same bytes for ever; a buffer that fails to drop media no
+  longer stops the stream.
+- `,` and `.` step exactly one frame at any frame rate, to the middle of the frame, as the stream
+  itself says how long a frame lasts.
+- "Auto (720p)" names the quality that plays, not the one being downloaded, and an upright video's
+  qualities are named by their shorter side (1080p, not 1920p).
+- Muting is remembered from one visit to the next, as the volume is.
+- Choosing the quality that already plays no longer throws away what is buffered.
+- `<` and `>` from a speed between the choices go to the nearest choice on that side.
+
+### Changed
+
+- A picture wider than the player's box is fetched no taller than it shows there, so wide videos
+  in a 16:9 player use less bandwidth.
+
 ## 0.3.1
 
 ### Fixed
