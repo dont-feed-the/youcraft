@@ -24,10 +24,7 @@
 	Watch later	Katso myöhemmin
 	Liked videos	Tykätyt videot
 	No videos yet.	Ei vielä videoita.
-	This page isn't available.	Tämä sivu ei ole saatavilla.
 	Go to home	Siirry etusivulle
-	Sign in to see this page.	Kirjaudu sisään nähdäksesi tämän sivun.
-	You can't see this page.	Et voi nähdä tätä sivua.
 	Something went wrong. Try again later.	Jokin meni vikaan. Yritä myöhemmin uudelleen.
 	Up next	Seuraavaksi
 	This video isn't available yet.	Tämä video ei ole vielä saatavilla.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Käsittely epäonnistui. Lataa video uudelleen.
 	This video is longer than YouCraft accepts.	Tämä video on pidempi kuin YouCraft hyväksyy.
 	This video needs more than YouCraft allows. Try a smaller file.	Tämä video vaatii enemmän kuin YouCraft sallii. Kokeile pienempää tiedostoa.
-	Upload failed. Try again.	Lataus epäonnistui. Yritä uudelleen.
-	The file is too large.	Tiedosto on liian suuri.
 	This can't be empty.	Tämä ei voi olla tyhjä.
 	This must fit on one line.	Tämän on mahduttava yhdelle riville.
 	This holds characters that aren't allowed.	Tässä on merkkejä, jotka eivät ole sallittuja.
@@ -203,3 +198,8 @@
 	Unblock	Poista esto
 	Your channel	Oma kanava
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Kuvasi näkyy kanavasi ja kommenttiesi vieressä. Valitse enintään 5 Mt:n JPEG-, PNG- tai WebP-tiedosto; sen keskikohta rajataan neliöksi.
+	Sign in first.	Kirjaudu ensin sisään.
+	This isn't open to your account.	Tämä ei ole avoinna tilillesi.
+	This isn't available.	Tämä ei ole saatavilla.
+	This is larger than YouCraft accepts.	Tämä on suurempi kuin YouCraft hyväksyy.
+	This conflicts with what is already there.	Tämä on ristiriidassa jo olemassa olevan kanssa.

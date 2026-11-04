@@ -13,6 +13,8 @@ use youcraft_api::commands::site::{GetPolicy, Nothing};
 use youcraft_api::{ApiError, ChannelId, Grant, routes};
 
 use crate::account::SignedIn;
+use crate::act::{Optimistic, act};
+use crate::app::titled;
 use crate::browser;
 use crate::call::call;
 use crate::components::avatar::{Face, Size};
@@ -36,7 +38,7 @@ pub fn Admin() -> impl IntoView {
     let me = SignedIn::resource();
     let policy = Resource::new(|| (), |()| call::<GetPolicy>(Nothing {}));
     view! {
-        <Title text=format!("{} - YouCraft", tr("Administration"))/>
+        <Title text=titled(tr("Administration"))/>
         <main class="settings">
             <h1 class="settings-title">{tr("Administration")}</h1>
             <Suspense fallback=|| ()>
@@ -79,16 +81,13 @@ fn InvitationSection(floor: Option<Grant>) -> impl IntoView {
     let waiting = Resource::new(move || version.get(), |_| call::<invite::List>(Nothing {}));
     let email = RwSignal::new(String::new());
     let role = RwSignal::new(first);
-    let failed = RwSignal::new(false);
     let send = move |event: leptos::ev::SubmitEvent| {
         event.prevent_default();
         let invitation = invite::NewInvitation {
             email: email.get_untracked(),
             role: role.get_untracked(),
         };
-        leptos::task::spawn_local(async move {
-            let sent = call::<invite::Create>(invitation).await;
-            failed.set(sent.is_err());
+        act::<invite::Create>(invitation, move |sent| {
             if sent.is_ok() {
                 email.set(String::new());
             }
@@ -119,7 +118,6 @@ fn InvitationSection(floor: Option<Grant>) -> impl IntoView {
                 {choice}
                 <button class="pill" type="submit">{tr("Invite")}</button>
             </form>
-            {move || failed.get().then(|| view! { <p class="settings-notice">{tr("Something went wrong. Try again later.")}</p> })}
             <Suspense fallback=|| ()>
                 {move || Suspend::new(async move {
                     let waiting = waiting.await.unwrap_or_default();
@@ -140,9 +138,7 @@ fn InvitationRow(invitation: Invitation, version: RwSignal<u32>) -> impl IntoVie
         email: invitation.email.clone(),
     };
     let withdraw = move |_| {
-        let address = address.clone();
-        leptos::task::spawn_local(async move {
-            let _ = call::<invite::Revoke>(address).await;
+        act::<invite::Revoke>(address.clone(), move |_| {
             version.update(|v| *v += 1);
         });
     };
@@ -184,7 +180,7 @@ fn AccountsSection(own: ChannelId) -> impl IntoView {
                 {move || Suspend::new(async move {
                     match first.await {
                         Ok(page) => {
-                            let pages = Pages::new(page.accounts, page.next);
+                            let pages: Pages<AccountRow> = Pages::new(page.accounts, page.next);
                             let more = Callback::new(move |()| {
                                 let query = searched.get_untracked();
                                 pages.read_next::<admin::Accounts>(
@@ -198,7 +194,7 @@ fn AccountsSection(own: ChannelId) -> impl IntoView {
                                         <AccountEntry own=row.channel.id == own row/>
                                     </For>
                                 </ul>
-                                <ShowMore next=pages.next more/>
+                                <ShowMore pages more/>
                             }.into_any()
                         }
                         Err(error) => view! { <Trouble error/> }.into_any(),
@@ -210,80 +206,76 @@ fn AccountsSection(own: ChannelId) -> impl IntoView {
 }
 
 /// One account and what an administrator does to it; `own` when it is theirs, whose role and
-/// blocking they cannot change.
+/// blocking they cannot change. Its role and blocking show the change at once, and what the site
+/// last confirmed if the change fails.
 #[component]
 fn AccountEntry(row: AccountRow, own: bool) -> impl IntoView {
-    let row = RwSignal::new(row);
-    let handle = move || row.with(|row| row.channel.handle.clone());
+    let role = Optimistic::new(row.role);
+    let blocked = Optimistic::new(row.blocked);
+    let channel = RwSignal::new(row.channel);
+    let handle = move || channel.with(|channel| channel.handle.clone());
     let pick = move |event: leptos::ev::Event| {
-        let Some(role) = Grant::from_name(&event_target_value(&event)) else {
+        let Some(wanted) = Grant::from_name(&event_target_value(&event)) else {
             return;
         };
         let change = admin::NewRole {
             handle: handle(),
-            role,
+            role: wanted,
         };
-        leptos::task::spawn_local(async move {
-            if call::<admin::SetRole>(change).await.is_ok() {
-                row.update(|row| row.role = role);
-            }
-        });
+        role.change::<admin::SetRole>(wanted, change, move |_| wanted);
     };
     let block = move |_| {
-        let blocked = !row.with_untracked(|row| row.blocked);
+        let wanted = !blocked.shown.get_untracked();
         let change = admin::Blocking {
             handle: handle(),
-            blocked,
+            blocked: wanted,
         };
-        leptos::task::spawn_local(async move {
-            if call::<admin::Block>(change).await.is_ok() {
-                row.update(|row| row.blocked = blocked);
-            }
-        });
+        blocked.change::<admin::Block>(wanted, change, move |_| wanted);
     };
     let remove_photo = move |_| {
-        let channel = Handle { handle: handle() };
-        leptos::task::spawn_local(async move {
-            if let Ok(profile) = call::<admin::RemovePhoto>(channel).await {
-                row.update(|row| row.channel = profile.card);
+        act::<admin::RemovePhoto>(Handle { handle: handle() }, move |answer| {
+            if let Ok(profile) = answer {
+                channel.set(profile.card);
             }
         });
     };
     let reset_name = move |_| {
-        let channel = Handle { handle: handle() };
-        leptos::task::spawn_local(async move {
-            if let Ok(profile) = call::<admin::ResetName>(channel).await {
-                row.update(|row| row.channel = profile.card);
+        act::<admin::ResetName>(Handle { handle: handle() }, move |answer| {
+            if let Ok(profile) = answer {
+                channel.set(profile.card);
             }
         });
     };
     view! {
         <li class="settings-row admin-account">
             <a class="avatar" href=move || routes::channel(&handle()) aria-hidden="true" tabindex="-1">
-                {move || view! { <Face channel=row.with(|row| row.channel.clone()) size=Size::Regular/> }}
+                {move || view! { <Face channel=channel.get() size=Size::Regular/> }}
             </a>
             <div class="settings-row-text">
-                <a href=move || routes::channel(&handle())>{move || row.with(|row| row.channel.name.clone())}</a>
+                <a href=move || routes::channel(&handle()) dir="auto">{move || channel.with(|channel| channel.name.clone())}</a>
                 <span class="settings-hint">
                     <bdi>{move || format!("@{}", handle())}</bdi>
-                    {move || row.with(|row| row.blocked).then(|| format!(" · {}", tr("Blocked")))}
+                    {move || blocked.shown.get().then(|| format!(" · {}", tr("Blocked")))}
                 </span>
             </div>
             <div class="admin-actions">
                 {(!own).then(|| view! {
                     <select class="field" aria-label=tr("Role") on:change=pick>
-                        {Grant::ALL.map(|role| view! {
-                            <option value=role.as_str() selected=move || row.with(|row| row.role == role)>{role_name(role)}</option>
+                        {Grant::ALL.map(|choice| view! {
+                            <option value=choice.as_str() selected=role.shown.get_untracked() == choice
+                                prop:selected=move || role.shown.get() == choice>
+                                {role_name(choice)}
+                            </option>
                         }).collect_view()}
                     </select>
                     <button class="pill" type="button" on:click=block>
-                        {move || if row.with(|row| row.blocked) { tr("Unblock") } else { tr("Block") }}
+                        {move || if blocked.shown.get() { tr("Unblock") } else { tr("Block") }}
                     </button>
                 })}
-                <Show when=move || row.with(|row| row.channel.photo.is_some())>
+                <Show when=move || channel.with(|channel| channel.photo.is_some())>
                     <button class="pill" type="button" on:click=remove_photo>{tr("Remove picture")}</button>
                 </Show>
-                <Show when=move || row.with(|row| row.channel.name != row.channel.handle)>
+                <Show when=move || channel.with(|channel| channel.name != channel.handle)>
                     <button class="pill" type="button" on:click=reset_name>{tr("Reset name")}</button>
                 </Show>
             </div>

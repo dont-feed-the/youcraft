@@ -11,3 +11,4 @@ pub mod project;
 pub mod save;
 pub mod subscribe;
 pub mod video_actions;
+pub mod visibility;

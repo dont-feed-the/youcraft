@@ -6,6 +6,7 @@ use leptos_meta::Title;
 use leptos_router::hooks::use_query_map;
 use youcraft_api::routes;
 
+use crate::app::titled;
 use crate::lang::tr;
 
 /// The page.
@@ -25,7 +26,7 @@ pub fn SignInFailed() -> impl IntoView {
         _ => tr("Google did not confirm who you are, or signing in was cancelled."),
     };
     view! {
-        <Title text=format!("{} - YouCraft", tr("Sign-in did not work"))/>
+        <Title text=titled(tr("Sign-in did not work"))/>
         <main class="trouble">
             <h1>{tr("Sign-in did not work")}</h1>
             <p>{text}</p>

@@ -24,10 +24,7 @@
 	Watch later	მოგვიანებით ნახვა
 	Liked videos	მოწონებული ვიდეოები
 	No videos yet.	ვიდეოები ჯერ არ არის.
-	This page isn't available.	ეს გვერდი მიუწვდომელია.
 	Go to home	მთავარ გვერდზე გადასვლა
-	Sign in to see this page.	ამ გვერდის სანახავად შედით სისტემაში.
-	You can't see this page.	ამ გვერდის ნახვა არ შეგიძლიათ.
 	Something went wrong. Try again later.	რაღაც შეცდომა მოხდა. სცადეთ მოგვიანებით.
 	Up next	შემდეგი
 	This video isn't available yet.	ეს ვიდეო ჯერ მიუწვდომელია.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	დამუშავება ვერ მოხერხდა. ატვირთეთ ვიდეო ხელახლა.
 	This video is longer than YouCraft accepts.	ეს ვიდეო უფრო გრძელია, ვიდრე YouCraft იღებს.
 	This video needs more than YouCraft allows. Try a smaller file.	ამ ვიდეოს იმაზე მეტი სჭირდება, ვიდრე YouCraft იძლევა. სცადეთ უფრო პატარა ფაილი.
-	Upload failed. Try again.	ატვირთვა ვერ მოხერხდა. სცადეთ ხელახლა.
-	The file is too large.	ფაილი ძალიან დიდია.
 	This can't be empty.	ეს არ შეიძლება იყოს ცარიელი.
 	This must fit on one line.	ეს ერთ ხაზზე უნდა ეტეოდეს.
 	This holds characters that aren't allowed.	აქ დაუშვებელი სიმბოლოებია.
@@ -203,3 +198,8 @@
 	Unblock	განბლოკვა
 	Your channel	თქვენი არხი
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	თქვენი სურათი ჩანს თქვენი არხისა და კომენტარების გვერდით. აირჩიეთ მაქსიმუმ 5 MB ზომის JPEG, PNG ან WebP ფაილი; მისი ცენტრი კვადრატად ამოიჭრება.
+	Sign in first.	ჯერ შედით სისტემაში.
+	This isn't open to your account.	ეს თქვენი ანგარიშისთვის ხელმისაწვდომი არ არის.
+	This isn't available.	ეს მიუწვდომელია.
+	This is larger than YouCraft accepts.	ეს იმაზე დიდია, რასაც YouCraft იღებს.
+	This conflicts with what is already there.	ეს ეწინააღმდეგება უკვე არსებულს.

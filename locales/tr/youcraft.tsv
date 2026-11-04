@@ -24,10 +24,7 @@
 	Watch later	Daha sonra izle
 	Liked videos	Beğenilen videolar
 	No videos yet.	Henüz video yok.
-	This page isn't available.	Bu sayfa kullanılamıyor.
 	Go to home	Ana sayfaya git
-	Sign in to see this page.	Bu sayfayı görmek için oturum açın.
-	You can't see this page.	Bu sayfayı göremezsiniz.
 	Something went wrong. Try again later.	Bir sorun oluştu. Daha sonra tekrar deneyin.
 	Up next	Sıradaki
 	This video isn't available yet.	Bu video henüz kullanılamıyor.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	İşleme başarısız oldu. Videoyu yeniden yükleyin.
 	This video is longer than YouCraft accepts.	Bu video, YouCraft'ın kabul ettiğinden daha uzun.
 	This video needs more than YouCraft allows. Try a smaller file.	Bu video, YouCraft'ın izin verdiğinden fazlasını gerektiriyor. Daha küçük bir dosya deneyin.
-	Upload failed. Try again.	Yükleme başarısız oldu. Tekrar deneyin.
-	The file is too large.	Dosya çok büyük.
 	This can't be empty.	Bu boş bırakılamaz.
 	This must fit on one line.	Bu tek satıra sığmalı.
 	This holds characters that aren't allowed.	Bu, izin verilmeyen karakterler içeriyor.
@@ -203,3 +198,8 @@
 	Unblock	Engeli kaldır
 	Your channel	Kanalınız
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Resminiz kanalınızın ve yorumlarınızın yanında görünür. En fazla 5 MB boyutunda bir JPEG, PNG veya WebP dosyası seçin; ortası kare şeklinde kırpılır.
+	Sign in first.	Önce oturum açın.
+	This isn't open to your account.	Bu, hesabınıza açık değil.
+	This isn't available.	Bu kullanılamıyor.
+	This is larger than YouCraft accepts.	Bu, YouCraft'ın kabul ettiğinden büyük.
+	This conflicts with what is already there.	Bu, zaten var olan bir şeyle çakışıyor.

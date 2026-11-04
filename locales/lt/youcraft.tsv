@@ -24,10 +24,7 @@
 	Watch later	Žiūrėti vėliau
 	Liked videos	Patikę vaizdo įrašai
 	No videos yet.	Vaizdo įrašų dar nėra.
-	This page isn't available.	Šis puslapis nepasiekiamas.
 	Go to home	Eiti į pagrindinį puslapį
-	Sign in to see this page.	Prisijunkite, kad matytumėte šį puslapį.
-	You can't see this page.	Negalite matyti šio puslapio.
 	Something went wrong. Try again later.	Kažkas nepavyko. Bandykite vėliau.
 	Up next	Toliau
 	This video isn't available yet.	Šis vaizdo įrašas dar nepasiekiamas.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Apdoroti nepavyko. Įkelkite vaizdo įrašą dar kartą.
 	This video is longer than YouCraft accepts.	Šis vaizdo įrašas ilgesnis, nei priima YouCraft.
 	This video needs more than YouCraft allows. Try a smaller file.	Šiam vaizdo įrašui reikia daugiau, nei leidžia YouCraft. Bandykite mažesnį failą.
-	Upload failed. Try again.	Įkelti nepavyko. Bandykite dar kartą.
-	The file is too large.	Failas per didelis.
 	This can't be empty.	Tai negali būti tuščia.
 	This must fit on one line.	Tai turi tilpti vienoje eilutėje.
 	This holds characters that aren't allowed.	Čia yra neleistinų simbolių.
@@ -203,3 +198,8 @@
 	Unblock	Atblokuoti
 	Your channel	Jūsų kanalas
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Jūsų nuotrauka rodoma šalia jūsų kanalo ir komentarų. Pasirinkite ne didesnį nei 5 MB JPEG, PNG arba WebP failą; jo vidurys apkerpamas kvadratu.
+	Sign in first.	Pirmiausia prisijunkite.
+	This isn't open to your account.	Jūsų paskyrai tai neprieinama.
+	This isn't available.	Tai nepasiekiama.
+	This is larger than YouCraft accepts.	Tai daugiau, nei priima YouCraft.
+	This conflicts with what is already there.	Tai prieštarauja tam, kas jau yra.

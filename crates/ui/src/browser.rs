@@ -1,6 +1,9 @@
 //! What a page asks of the browser it runs in: the document's theme, its cookies, a reload,
-//! another address, the clipboard, the text of a field. On the server there is no browser, and
-//! each does nothing: these only run from events, which happen in the browser.
+//! another address, the clipboard, the text of a field, a timer. On the server there is no
+//! browser, and each does nothing: these only run from events and effects, which happen in the
+//! browser.
+
+use leptos::prelude::*;
 
 #[cfg(all(feature = "hydrate", not(feature = "ssr")))]
 mod inside {
@@ -73,6 +76,17 @@ mod inside {
             let _ = js_sys::Reflect::set(&field, &"value".into(), &text.into());
         }
     }
+
+    pub fn wait(
+        time: std::time::Duration,
+        then: impl FnOnce() + 'static,
+    ) -> Option<leptos::prelude::TimeoutHandle> {
+        leptos::prelude::set_timeout_with_handle(then, time).ok()
+    }
+
+    pub fn cancel(handle: leptos::prelude::TimeoutHandle) {
+        handle.clear();
+    }
 }
 
 #[cfg(feature = "ssr")]
@@ -98,13 +112,22 @@ mod inside {
     pub fn copy(_: &str) {}
 
     pub fn show(_: &leptos::ev::Event, _: &str) {}
+
+    pub fn wait(
+        _: std::time::Duration,
+        _: impl FnOnce() + 'static,
+    ) -> Option<leptos::prelude::TimeoutHandle> {
+        None
+    }
+
+    pub fn cancel(_: leptos::prelude::TimeoutHandle) {}
 }
 
 /// The text of the field `event` came from, cut to `limit` characters, which the field then
 /// shows. Characters are counted as the server counts every limit, as Unicode scalar values;
 /// the browser's own `maxlength` counts UTF-16 units, and would stop a title of emoji halfway.
 pub fn clipped(event: &leptos::ev::Event, limit: usize) -> String {
-    let text = leptos::prelude::event_target_value(event);
+    let text = event_target_value(event);
     match text.char_indices().nth(limit) {
         Some((end, _)) => {
             let cut = text.get(..end).unwrap_or_default().to_owned();
@@ -129,3 +152,42 @@ pub use inside::origin;
 pub use inside::reload;
 /// Keep `value` in the cookie `name`, which the server reads to render the next pages.
 pub use inside::remember;
+
+/// One timer of a part of the page: each wait it starts replaces the one it started before, and
+/// it stops when that part of the page goes, so a page never runs two of its loops at once, nor
+/// one after it is gone.
+#[derive(Clone, Copy)]
+pub struct Timer(StoredValue<Option<TimeoutHandle>>);
+
+impl Default for Timer {
+    fn default() -> Timer {
+        Timer::new()
+    }
+}
+
+impl Timer {
+    /// A timer that waits for nothing yet, for the part of the page being built.
+    pub fn new() -> Timer {
+        let timer = Timer(StoredValue::new(None));
+        on_cleanup(move || timer.stop());
+        timer
+    }
+
+    /// Run `then` once `time` has passed, instead of what the timer was waiting to run.
+    pub fn after(self, time: std::time::Duration, then: impl FnOnce() + 'static) {
+        self.stop();
+        if self.0.try_get_value().is_none() {
+            // Its part of the page is gone.
+            return;
+        }
+        let handle = inside::wait(time, then);
+        let _ = self.0.try_update_value(|waiting| *waiting = handle);
+    }
+
+    /// Run nothing of what the timer was waiting to run.
+    pub fn stop(self) {
+        if let Some(Some(handle)) = self.0.try_update_value(Option::take) {
+            inside::cancel(handle);
+        }
+    }
+}

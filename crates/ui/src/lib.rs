@@ -20,6 +20,7 @@ pub mod call;
 pub mod components;
 pub mod icons;
 pub mod lang;
+pub mod notice;
 pub mod pages;
 pub mod shell;
 #[cfg(feature = "hydrate")]

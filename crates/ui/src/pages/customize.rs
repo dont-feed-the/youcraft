@@ -11,32 +11,22 @@ use youcraft_api::records::ChannelCard;
 use youcraft_api::{ApiError, routes};
 
 use crate::account::SignedIn;
+use crate::act::{Scope, act};
+use crate::app::titled;
 use crate::browser;
 use crate::call::call;
 use crate::components::avatar::{Face, Size};
 use crate::lang::tr;
-use crate::pages::not_found::{Trouble, describe_rule};
+use crate::notice::Notices;
+use crate::pages::not_found::Trouble;
 use crate::pages::studio::{StudioTab, StudioTabs};
-
-/// What a failed change means to the person.
-fn failure(error: &ApiError) -> String {
-    match error {
-        ApiError::TooLarge { .. } => tr("The file is too large.").to_owned(),
-        ApiError::Invalid { field, .. } if field == "image" => {
-            tr("This picture can't be read. Choose a JPEG, PNG or WebP file.").to_owned()
-        }
-        ApiError::Invalid { rule, .. } => describe_rule(rule),
-        ApiError::Forbidden => tr("You can't see this page.").to_owned(),
-        _ => tr("Something went wrong. Try again later.").to_owned(),
-    }
-}
 
 /// The Customization tab.
 #[component]
 pub fn Customize() -> impl IntoView {
     let me = SignedIn::resource();
     view! {
-        <Title text=tr("Customization")/>
+        <Title text=titled(tr("Customization"))/>
         <main class="studio">
             <StudioTabs current=StudioTab::Customization/>
             <Suspense fallback=|| ()>
@@ -77,21 +67,27 @@ fn Loaded(handle: String) -> impl IntoView {
     }
 }
 
-/// The photo, then the name and description.
+/// The photo, then the name and description; what each change did is said in the page's
+/// live region.
 #[component]
 fn Forms(page: ChannelPage) -> impl IntoView {
     let card = RwSignal::new(page.card.clone());
     let name = RwSignal::new(page.card.name.clone());
     let description = RwSignal::new(page.description.clone());
-    let notice = RwSignal::new(None::<String>);
     let busy = RwSignal::new(false);
-    // what the masthead shows changes with the channel; the context is read here, where the
-    // component's owner is, since the answers come back outside it
+    // read here, where the component's owner is, since the answers come back outside it: what
+    // the masthead shows changes with the channel, and the notes go to the site's live region
     let me = SignedIn::resource();
+    let notices = use_context::<Notices>();
     let shown = move |profile: Profile| {
         card.set(profile.card);
         if let Some(me) = me {
             me.refetch();
+        }
+    };
+    let saved = move || {
+        if let Some(notices) = notices {
+            notices.say(tr("Saved.").to_owned());
         }
     };
     let save = move |event: leptos::ev::SubmitEvent| {
@@ -101,50 +97,50 @@ fn Forms(page: ChannelPage) -> impl IntoView {
             description: Some(description.get_untracked()),
         };
         busy.set(true);
-        leptos::task::spawn_local(async move {
-            let answer = call::<profile::Update>(change).await;
+        act::<profile::Update>(change, move |answer| {
             busy.set(false);
-            match answer {
-                Ok(profile) => {
-                    name.set(profile.card.name.clone());
-                    description.set(profile.description.clone());
-                    shown(profile);
-                    notice.set(Some(tr("Saved.").to_owned()));
-                }
-                Err(error) => notice.set(Some(failure(&error))),
+            if let Ok(profile) = answer {
+                name.set(profile.card.name.clone());
+                description.set(profile.description.clone());
+                shown(profile);
+                saved();
             }
         });
     };
+    let scope = Scope::current();
     let choose = move |event: leptos::ev::Event| {
         #[cfg(feature = "hydrate")]
         if let Some(file) = crate::transfer::chosen_file(&event) {
             busy.set(true);
+            let scope = scope.clone();
             leptos::task::spawn_local(async move {
-                let sent = match crate::transfer::base64_of(&file, profile::PHOTO_BYTES).await {
-                    Ok(image) => call::<profile::SetPhoto>(profile::NewPhoto { image }).await,
-                    Err(error) => Err(error),
-                };
-                busy.set(false);
-                match sent {
-                    Ok(profile) => {
-                        shown(profile);
-                        notice.set(Some(tr("Saved.").to_owned()));
+                let image = crate::transfer::base64_of(&file, profile::PHOTO_BYTES).await;
+                scope.within(move || match image {
+                    Ok(image) => {
+                        act::<profile::SetPhoto>(profile::NewPhoto { image }, move |sent| {
+                            busy.set(false);
+                            if let Ok(profile) = sent {
+                                shown(profile);
+                                saved();
+                            }
+                        })
                     }
-                    Err(error) => notice.set(Some(failure(&error))),
-                }
+                    Err(error) => {
+                        busy.set(false);
+                        Notices::say_here(crate::notice::describe(&error));
+                    }
+                });
             });
         }
         #[cfg(not(feature = "hydrate"))]
-        let _ = event;
+        let _ = (event, &scope);
     };
     let remove = move |_| {
         busy.set(true);
-        leptos::task::spawn_local(async move {
-            let answer = call::<profile::RemovePhoto>(Nothing {}).await;
+        act::<profile::RemovePhoto>(Nothing {}, move |answer| {
             busy.set(false);
-            match answer {
-                Ok(profile) => shown(profile),
-                Err(error) => notice.set(Some(failure(&error))),
+            if let Ok(profile) = answer {
+                shown(profile);
             }
         });
     };
@@ -173,17 +169,16 @@ fn Forms(page: ChannelPage) -> impl IntoView {
         <form class="editor customize-form" on:submit=save>
             <label class="labelled">
                 <span>{tr("Name")}</span>
-                <input class="field" type="text" required prop:value=name
+                <input class="field" type="text" dir="auto" required prop:value=name
                     on:input=move |event| name.set(browser::clipped(&event, NAME_LIMIT))/>
             </label>
             <p class="settings-hint"><bdi>{routes::channel(&page.card.handle)}</bdi></p>
             <label class="labelled">
                 <span>{tr("Description")}</span>
-                <textarea class="field" rows="5" prop:value=description
+                <textarea class="field" rows="5" dir="auto" prop:value=description
                     on:input=move |event| description.set(browser::clipped(&event, DESCRIPTION_LIMIT))></textarea>
             </label>
             <div class="editor-actions">
-                {move || notice.get().map(|text| view! { <p class="settings-hint" aria-live="polite">{text}</p> })}
                 <button class="pill accent" type="submit" disabled=move || busy.get()>{tr("Save")}</button>
             </div>
         </form>

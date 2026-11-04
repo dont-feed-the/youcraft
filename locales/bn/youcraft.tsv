@@ -24,10 +24,7 @@
 	Watch later	পরে দেখুন
 	Liked videos	পছন্দ করা ভিডিও
 	No videos yet.	এখনও কোনো ভিডিও নেই।
-	This page isn't available.	এই পৃষ্ঠাটি উপলভ্য নয়।
 	Go to home	হোমে যান
-	Sign in to see this page.	এই পৃষ্ঠাটি দেখতে সাইন ইন করুন।
-	You can't see this page.	আপনি এই পৃষ্ঠাটি দেখতে পারবেন না।
 	Something went wrong. Try again later.	কিছু একটা সমস্যা হয়েছে। পরে আবার চেষ্টা করুন।
 	Up next	এরপর
 	This video isn't available yet.	এই ভিডিওটি এখনও উপলভ্য নয়।
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	প্রক্রিয়াকরণ ব্যর্থ হয়েছে। ভিডিওটি আবার আপলোড করুন।
 	This video is longer than YouCraft accepts.	এই ভিডিওটি YouCraft যতটা গ্রহণ করে তার চেয়ে দীর্ঘ।
 	This video needs more than YouCraft allows. Try a smaller file.	এই ভিডিওটির জন্য YouCraft যতটা অনুমতি দেয় তার চেয়ে বেশি লাগে। আরও ছোট একটি ফাইল চেষ্টা করুন।
-	Upload failed. Try again.	আপলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।
-	The file is too large.	ফাইলটি খুব বড়।
 	This can't be empty.	এটি খালি রাখা যাবে না।
 	This must fit on one line.	এটি এক লাইনে হতে হবে।
 	This holds characters that aren't allowed.	এতে অননুমোদিত অক্ষর আছে।
@@ -203,3 +198,8 @@
 	Unblock	আনব্লক করুন
 	Your channel	আপনার চ্যানেল
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	আপনার ছবি আপনার চ্যানেল ও মন্তব্যের পাশে দেখা যায়। সর্বোচ্চ 5 MB-এর একটি JPEG, PNG বা WebP ফাইল বেছে নিন; এর মাঝখান বর্গাকারে কাটা হয়।
+	Sign in first.	আগে সাইন ইন করুন।
+	This isn't open to your account.	এটি আপনার অ্যাকাউন্টের জন্য খোলা নয়।
+	This isn't available.	এটি উপলভ্য নয়।
+	This is larger than YouCraft accepts.	এটি YouCraft যতটা গ্রহণ করে তার চেয়ে বড়।
+	This conflicts with what is already there.	এটি ইতিমধ্যে থাকা কিছুর সঙ্গে সাংঘর্ষিক।

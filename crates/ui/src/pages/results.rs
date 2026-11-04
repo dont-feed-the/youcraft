@@ -9,12 +9,13 @@ use youcraft_api::commands::search::{Found, Query, Search};
 use youcraft_api::records::VideoCard;
 use youcraft_api::routes;
 
+use crate::app::titled;
 use crate::call::call;
 use crate::components::avatar::{Face, Size};
 use crate::components::card::RowCard;
 use crate::components::guide::Guide;
 use crate::components::more::{Pages, ShowMore};
-use crate::components::subscribe::SubscribeButton;
+use crate::components::subscribe::{SubscribeButton, subscription};
 use crate::lang::{compact_count, tr};
 use crate::pages::not_found::Trouble;
 
@@ -42,7 +43,7 @@ pub fn Results() -> impl IntoView {
         },
     );
     view! {
-        <Title text=move || format!("{} - YouCraft", searched.get())/>
+        <Title text=move || titled(&searched.get())/>
         <div class="with-guide">
             <Guide/>
             <main class="browse results">
@@ -79,7 +80,7 @@ fn Found(found: Found, query: String) -> impl IntoView {
             <For each=move || pages.items.get() key=|card| card.id let:card>
                 <RowCard card/>
             </For>
-            <ShowMore next=pages.next more/>
+            <ShowMore pages more/>
         </div>
     }
 }
@@ -88,7 +89,7 @@ fn Found(found: Found, query: String) -> impl IntoView {
 #[component]
 pub fn ChannelRow(channel: ChannelPage) -> impl IntoView {
     let address = routes::channel(&channel.card.handle);
-    let subscribers = RwSignal::new(channel.subscribers);
+    let state = subscription(channel.subscribed, channel.subscribers);
     view! {
         <article class="channel-row">
             <a class="channel-row-avatar" href=address.clone() tabindex="-1" aria-hidden="true">
@@ -99,11 +100,11 @@ pub fn ChannelRow(channel: ChannelPage) -> impl IntoView {
                 <p class="byline">
                     <bdi>{format!("@{}", channel.card.handle)}</bdi>
                     " • "
-                    {move || compact_count(subscribers.get(), "{n} subscriber", "{n} subscribers")}
+                    {move || compact_count(state.shown.get().subscribers, "{n} subscriber", "{n} subscribers")}
                 </p>
                 <p class="byline description-line">{channel.description.clone()}</p>
             </div>
-            <SubscribeButton channel=channel.card.id subscribed=channel.subscribed subscribers owned=channel.owned/>
+            <SubscribeButton channel=channel.card.id state owned=channel.owned/>
         </article>
     }
 }

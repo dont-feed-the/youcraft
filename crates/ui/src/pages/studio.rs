@@ -1,50 +1,55 @@
 //! The studio, open to every signed-in account, in two tabs: Content, a channel's videos in every
-//! state, each with its visibility, processing, date and views, and a form to change or delete
-//! it, with the way to upload for those who may publish (the others read that publishing is by
-//! invitation); and Customization, in `customize`.
+//! state, page after page, each with its visibility, processing, date and views, and a form to
+//! change or delete it, with the way to upload for those who may publish (the others read that
+//! publishing is by invitation); and Customization, in `customize`.
 //!
-//! While a video is uploading or being processed, the list refreshes itself every few seconds,
-//! so its progress moves without a reload; each row keeps its own state, an open form included.
+//! While a video is uploading or being processed, the studio asks the site again every few
+//! seconds how far it has come, so its progress moves without a reload; each row keeps its own
+//! state, an open form included.
 
 use leptos::prelude::*;
 use leptos_meta::Title;
 use youcraft_api::commands::{feed, studio, video};
 use youcraft_api::records::{Failure, Processing, StudioPage, StudioVideo, Visibility};
-use youcraft_api::{Grant, routes};
+use youcraft_api::{Grant, VideoId, routes};
 
 use crate::account::SignedIn;
-use crate::browser;
+use crate::act::act;
+use crate::app::titled;
+use crate::browser::{self, Timer};
 use crate::call::call;
+use crate::components::more::{Pages, ShowMore};
+use crate::components::visibility::{VisibilityChoice, visibility_name};
 use crate::icons::{Glyph, Icon};
-use crate::lang::{Language, RenderTime, count, tr};
+use crate::lang::{Language, RenderTime, count, fill, tr};
 use crate::pages::not_found::Trouble;
 
-/// How often the list refreshes while a video is on its way.
-const REFRESH_MILLISECONDS: u64 = 3000;
+/// How long the studio waits before it asks again how far a video has come.
+const FOLLOW_EVERY: std::time::Duration = std::time::Duration::from_secs(3);
 
-/// What `visibility` is called.
-pub fn visibility_name(visibility: Visibility) -> &'static str {
-    match visibility {
-        Visibility::Public => tr("Public"),
-        Visibility::Unlisted => tr("Unlisted"),
-        Visibility::Private => tr("Private"),
-    }
+/// Whether a video in `processing` is still on its way to playing.
+pub fn on_its_way(processing: &Processing) -> bool {
+    matches!(
+        processing,
+        Processing::Uploading { .. } | Processing::Processing { .. }
+    )
 }
 
 /// Where a video is on its way, in words; `None` once it plays.
 pub fn processing_text(processing: &Processing) -> Option<String> {
     let percent = |part: u64, whole: u64| {
-        (part.saturating_mul(100) / whole.max(1))
-            .min(100)
-            .to_string()
+        let whole_percent = (part.saturating_mul(100) / whole.max(1)).min(100);
+        youcraft_i18n::number(Language::current(), whole_percent)
     };
     match processing {
-        Processing::Uploading { received, size } => {
-            Some(tr("Uploading {n}%").replace("{n}", &percent(*received, *size)))
-        }
-        Processing::Processing { permille } => {
-            Some(tr("Processing {n}%").replace("{n}", &percent(u64::from(*permille), 1000)))
-        }
+        Processing::Uploading { received, size } => Some(fill(
+            tr("Uploading {n}%"),
+            &[("n", &percent(*received, *size))],
+        )),
+        Processing::Processing { permille } => Some(fill(
+            tr("Processing {n}%"),
+            &[("n", &percent(u64::from(*permille), 1000))],
+        )),
         Processing::Ready => None,
         Processing::Failed { reason } => Some(failure_text(*reason).to_owned()),
     }
@@ -62,43 +67,12 @@ fn failure_text(reason: Failure) -> &'static str {
 }
 
 /// The studio page.
-///
-/// The first page of videos comes with the page; later pages, asked for while a video is on its
-/// way or after an edit, replace it in `latest`. The rows are keyed by video, so a newer page
-/// moves what each row shows without rebuilding it, and an open form stays open.
 #[component]
 pub fn Studio() -> impl IntoView {
     let me = SignedIn::resource();
     let first = Resource::new(|| (), |()| call::<studio::Videos>(feed::Page::default()));
-    let latest = RwSignal::new(None::<StudioPage>);
-    let refresh = move || {
-        leptos::task::spawn_local(async move {
-            if let Ok(page) = call::<studio::Videos>(feed::Page::default()).await {
-                latest.set(Some(page));
-            }
-        });
-    };
-    Effect::new(move |_| {
-        let busy = |page: &StudioPage| {
-            page.videos.iter().any(|v| {
-                matches!(
-                    v.processing,
-                    Processing::Uploading { .. } | Processing::Processing { .. }
-                )
-            })
-        };
-        let shown = latest.with(|page| page.as_ref().map(busy));
-        let busy = shown
-            .unwrap_or_else(|| first.with(|page| matches!(page, Some(Ok(page)) if busy(page))));
-        if busy {
-            set_timeout(
-                refresh,
-                std::time::Duration::from_millis(REFRESH_MILLISECONDS),
-            );
-        }
-    });
     view! {
-        <Title text=tr("Channel content")/>
+        <Title text=titled(tr("Channel content"))/>
         <main class="studio">
             <StudioTabs current=StudioTab::Content/>
             <Suspense fallback=|| ()>
@@ -113,7 +87,6 @@ pub fn Studio() -> impl IntoView {
                     match first.await {
                         Ok(page) => {
                             let held = !page.videos.is_empty();
-                            let page = Memo::new(move |_| latest.get().unwrap_or_else(|| page.clone()));
                             view! {
                                 {publishes.then(|| view! {
                                     <div class="studio-actions">
@@ -126,7 +99,7 @@ pub fn Studio() -> impl IntoView {
                                 {(!publishes && invited).then(|| view! {
                                     <p class="empty">{tr("Publishing on YouCraft is by invitation.")}</p>
                                 })}
-                                {(publishes || held).then(|| view! { <Table page refresh/> })}
+                                {(publishes || held).then(|| view! { <Table first=page/> })}
                             }.into_any()
                         }
                         Err(error) => view! { <Trouble error/> }.into_any(),
@@ -164,16 +137,47 @@ pub fn StudioTabs(current: StudioTab) -> impl IntoView {
     }
 }
 
-/// The table of the studio's videos, one row per video for as long as it is listed.
+/// The table of the studio's videos, one row per video for as long as it is listed, starting
+/// with the `first` page.
+///
+/// The rows are keyed by video, so a video read again moves what its row shows without
+/// rebuilding it, and an open form stays open.
 #[component]
-fn Table(
-    page: Memo<StudioPage>,
-    refresh: impl Fn() + Copy + Send + Sync + 'static,
-) -> impl IntoView {
-    let ids = move || page.with(|page| page.videos.iter().map(|v| v.card.id).collect::<Vec<_>>());
+fn Table(first: StudioPage) -> impl IntoView {
+    let pages: Pages<StudioVideo> = Pages::new(first.videos, first.next);
+    let more = Callback::new(move |()| {
+        pages.read_next::<studio::Videos>(
+            |after| feed::Page { after },
+            |page| (page.videos, page.next),
+        );
+    });
+    let follow = Timer::new();
+    Effect::new(move |_| {
+        let busy: Vec<VideoId> = pages.items.with(|videos| {
+            videos
+                .iter()
+                .filter(|v| on_its_way(&v.processing))
+                .map(|v| v.card.id)
+                .collect()
+        });
+        if busy.is_empty() {
+            follow.stop();
+            return;
+        }
+        follow.after(FOLLOW_EVERY, move || {
+            for video in busy {
+                pages.read_again::<studio::Video>(video::Which { video }, |found| found);
+            }
+        });
+    });
+    let ids = move || {
+        pages
+            .items
+            .with(|videos| videos.iter().map(|v| v.card.id).collect::<Vec<_>>())
+    };
     view! {
         <Show
-            when=move || page.with(|page| !page.videos.is_empty())
+            when=move || pages.items.with(|videos| !videos.is_empty())
             fallback=|| view! { <p class="empty">{tr("No videos yet.")}</p> }
         >
             <div class="studio-table" role="table">
@@ -186,22 +190,20 @@ fn Table(
                 <For each=ids key=|id| *id let:id>
                     <Row
                         video=Memo::new(move |_| {
-                            page.with(|page| page.videos.iter().find(|v| v.card.id == id).cloned())
+                            pages.items.with(|videos| videos.iter().find(|v| v.card.id == id).cloned())
                         })
-                        refresh
+                        pages
                     />
                 </For>
             </div>
         </Show>
+        <ShowMore pages more/>
     }
 }
 
-/// One video of the studio, as the newest page shows it, and its form.
+/// One video of the studio, as it was last read, and its form.
 #[component]
-fn Row(
-    video: Memo<Option<StudioVideo>>,
-    refresh: impl Fn() + Copy + Send + Sync + 'static,
-) -> impl IntoView {
+fn Row(video: Memo<Option<StudioVideo>>, pages: Pages<StudioVideo>) -> impl IntoView {
     let editing = RwSignal::new(false);
     let shown = move |pick: fn(&StudioVideo) -> String| {
         video.with(|v| v.as_ref().map(pick).unwrap_or_default())
@@ -243,84 +245,107 @@ fn Row(
             <span role="cell">{move || shown(|v| count(v.card.views, "{n} view", "{n} views"))}</span>
         </div>
         <Show when=move || editing.get()>
-            {move || video.get_untracked().map(|video| view! { <Editor video refresh/> })}
+            {move || video.get_untracked().map(|video| view! { <Editor video pages/> })}
         </Show>
     }
 }
 
-/// The value a `<select>` gives `visibility`.
-fn visibility_value(visibility: Visibility) -> String {
-    visibility.as_str().to_owned()
+/// The fields of a video's details: its title, description and visibility.
+#[component]
+pub fn DetailFields(
+    title: RwSignal<String>,
+    description: RwSignal<String>,
+    visibility: RwSignal<Visibility>,
+) -> impl IntoView {
+    view! {
+        <label class="labelled">
+            <span>{tr("Title")}</span>
+            <input class="field" type="text" dir="auto" required prop:value=move || title.get()
+                on:input=move |event| title.set(browser::clipped(&event, video::TITLE_LIMIT))/>
+        </label>
+        <label class="labelled">
+            <span>{tr("Description")}</span>
+            <textarea class="field" rows="4" dir="auto" prop:value=move || description.get()
+                on:input=move |event| description.set(browser::clipped(&event, video::DESCRIPTION_LIMIT))></textarea>
+        </label>
+        <label class="labelled">
+            <span>{tr("Visibility")}</span>
+            <VisibilityChoice chosen=visibility/>
+        </label>
+    }
 }
 
-/// The form that changes a video's details, or deletes it.
+/// The form that changes a video's details, or deletes it; the studio's list shows the outcome.
 #[component]
-pub fn Editor(
-    video: StudioVideo,
-    refresh: impl Fn() + Copy + Send + Sync + 'static,
-) -> impl IntoView {
+fn Editor(video: StudioVideo, pages: Pages<StudioVideo>) -> impl IntoView {
     let id = video.card.id;
     let title = RwSignal::new(video.card.title.clone());
     let description = RwSignal::new(video.description.clone());
-    let visibility = RwSignal::new(visibility_value(video.visibility));
+    let visibility = RwSignal::new(video.visibility);
     let comments = RwSignal::new(video.comments_enabled);
-    let save = Action::new(move |(): &()| {
+    let saving = RwSignal::new(false);
+    let save = move |event: leptos::ev::SubmitEvent| {
+        event.prevent_default();
+        if saving.get_untracked() {
+            return;
+        }
         let edit = video::Edit {
             video: id,
             title: Some(title.get_untracked()),
             description: Some(description.get_untracked()),
-            visibility: Visibility::from_name(&visibility.get_untracked()),
+            visibility: Some(visibility.get_untracked()),
             comments_enabled: Some(comments.get_untracked()),
         };
-        async move { call::<video::Update>(edit).await.map(|_| ()) }
-    });
-    let delete = Action::new(move |(): &()| async move {
-        call::<video::Delete>(video::Which { video: id }).await
-    });
-    Effect::new(move |_| {
-        if save.value().get().is_some_and(|done| done.is_ok())
-            || delete.value().get().is_some_and(|done| done.is_ok())
-        {
-            refresh();
-        }
-    });
-    let ask_delete = move |_| {
+        saving.set(true);
+        act::<video::Update>(edit, move |answer| {
+            saving.set(false);
+            if answer.is_ok() {
+                pages.read_again::<studio::Video>(video::Which { video: id }, |found| found);
+            }
+        });
+    };
+    let delete = move |_| {
         #[cfg(feature = "hydrate")]
         if crate::transfer::confirm(tr("Delete this video for good?")) {
-            delete.dispatch(());
+            act::<video::Delete>(video::Which { video: id }, move |answer| {
+                if answer.is_ok() {
+                    pages.remove(&id);
+                }
+            });
         }
     };
-    let options = [
-        Visibility::Public,
-        Visibility::Unlisted,
-        Visibility::Private,
-    ];
     view! {
-        <form class="editor" on:submit=move |event| { event.prevent_default(); save.dispatch(()); }>
-            <label class="labelled">
-                <span>{tr("Title")}</span>
-                <input class="field" type="text" required prop:value=move || title.get()
-                    on:input=move |event| title.set(browser::clipped(&event, video::TITLE_LIMIT))/>
-            </label>
-            <label class="labelled">
-                <span>{tr("Description")}</span>
-                <textarea class="field" rows="4" prop:value=move || description.get()
-                    on:input=move |event| description.set(browser::clipped(&event, video::DESCRIPTION_LIMIT))></textarea>
-            </label>
-            <label class="labelled">
-                <span>{tr("Visibility")}</span>
-                <select class="field" bind:value=visibility>
-                    {options.map(|v| view! { <option value=visibility_value(v)>{visibility_name(v)}</option> }).collect_view()}
-                </select>
-            </label>
+        <form class="editor" on:submit=save>
+            <DetailFields title description visibility/>
             <label class="check">
                 <input type="checkbox" bind:checked=comments/>
                 <span>{tr("Allow comments")}</span>
             </label>
             <div class="editor-actions">
-                <button class="pill danger" type="button" on:click=ask_delete>{tr("Delete")}</button>
-                <button class="pill accent" type="submit" disabled=move || save.pending().get()>{tr("Save")}</button>
+                <button class="pill danger" type="button" on:click=delete>{tr("Delete")}</button>
+                <button class="pill accent" type="submit" disabled=move || saving.get()>{tr("Save")}</button>
             </div>
         </form>
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn progress_is_a_whole_percentage_never_above_a_hundred() {
+        let uploading = |received, size| processing_text(&Processing::Uploading { received, size });
+        assert_eq!(uploading(0, 1000).as_deref(), Some("Uploading 0%"));
+        assert_eq!(uploading(999, 1000).as_deref(), Some("Uploading 99%"));
+        assert_eq!(uploading(1000, 1000).as_deref(), Some("Uploading 100%"));
+        assert_eq!(uploading(5, 0).as_deref(), Some("Uploading 100%"));
+        assert_eq!(uploading(u64::MAX, 2).as_deref(), Some("Uploading 100%"));
+        let processing = |permille| processing_text(&Processing::Processing { permille });
+        assert_eq!(processing(500).as_deref(), Some("Processing 50%"));
+        assert_eq!(processing(2000).as_deref(), Some("Processing 100%"));
+        assert_eq!(processing_text(&Processing::Ready), None);
+        assert!(on_its_way(&Processing::Processing { permille: 0 }));
+        assert!(!on_its_way(&Processing::Ready));
     }
 }

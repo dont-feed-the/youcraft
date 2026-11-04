@@ -14,6 +14,7 @@ use youcraft_api::{ApiError, Grant, routes};
 
 use crate::account::{Shown, SignedIn, choose_language, choose_theme};
 use crate::act::act;
+use crate::app::titled;
 use crate::browser;
 use crate::call::call;
 use crate::components::avatar::{Face, Size};
@@ -28,7 +29,7 @@ pub fn Account() -> impl IntoView {
     let me = SignedIn::resource();
     let policy = Resource::new(|| (), |()| call::<GetPolicy>(Nothing {}));
     view! {
-        <Title text=format!("{} - YouCraft", tr("Settings"))/>
+        <Title text=titled(tr("Settings"))/>
         <main class="settings">
             <h1 class="settings-title">{tr("Settings")}</h1>
             <Suspense fallback=|| ()>
@@ -167,8 +168,8 @@ fn TokenSection() -> impl IntoView {
         let naming = token::Naming {
             name: name.get_untracked(),
         };
-        leptos::task::spawn_local(async move {
-            if let Ok(created) = call::<token::Create>(naming).await {
+        act::<token::Create>(naming, move |answer| {
+            if let Ok(created) = answer {
                 secret.set(Some(created.secret));
                 name.set(String::new());
                 version.update(|v| *v += 1);
@@ -225,8 +226,7 @@ fn TokenRow(token: Token, version: RwSignal<u32>) -> impl IntoView {
     });
     let id = token.id;
     let revoke = move |_| {
-        leptos::task::spawn_local(async move {
-            let _ = call::<token::Revoke>(token::Which { token: id }).await;
+        act::<token::Revoke>(token::Which { token: id }, move |_| {
             version.update(|v| *v += 1);
         });
     };

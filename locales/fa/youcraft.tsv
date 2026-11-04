@@ -24,10 +24,7 @@
 	Watch later	تماشا در فرصتی دیگر
 	Liked videos	ویدیوهای پسندیده
 	No videos yet.	هنوز ویدیویی نیست.
-	This page isn't available.	این صفحه در دسترس نیست.
 	Go to home	رفتن به خانه
-	Sign in to see this page.	برای دیدن این صفحه وارد شوید.
-	You can't see this page.	نمی‌توانید این صفحه را ببینید.
 	Something went wrong. Try again later.	مشکلی پیش آمد. بعداً دوباره امتحان کنید.
 	Up next	بعدی
 	This video isn't available yet.	این ویدیو هنوز در دسترس نیست.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	پردازش ناموفق بود. ویدیو را دوباره بارگذاری کنید.
 	This video is longer than YouCraft accepts.	این ویدیو طولانی‌تر از حدی است که YouCraft می‌پذیرد.
 	This video needs more than YouCraft allows. Try a smaller file.	این ویدیو بیش از آنچه YouCraft اجازه می‌دهد نیاز دارد. فایل کوچک‌تری را امتحان کنید.
-	Upload failed. Try again.	بارگذاری ناموفق بود. دوباره امتحان کنید.
-	The file is too large.	فایل خیلی بزرگ است.
 	This can't be empty.	این نمی‌تواند خالی باشد.
 	This must fit on one line.	این باید در یک خط باشد.
 	This holds characters that aren't allowed.	این نویسه‌هایی دارد که مجاز نیستند.
@@ -203,3 +198,8 @@
 	Unblock	رفع مسدودیت
 	Your channel	کانال شما
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	تصویر شما کنار کانال و دیدگاه‌هایتان نمایش داده می‌شود. یک فایل JPEG، PNG یا WebP حداکثر ۵ مگابایتی انتخاب کنید؛ مرکز آن به شکل مربع بریده می‌شود.
+	Sign in first.	اول وارد شوید.
+	This isn't open to your account.	این برای حساب شما باز نیست.
+	This isn't available.	این در دسترس نیست.
+	This is larger than YouCraft accepts.	این بزرگ‌تر از حدی است که YouCraft می‌پذیرد.
+	This conflicts with what is already there.	این با چیزی که از قبل وجود دارد تداخل دارد.

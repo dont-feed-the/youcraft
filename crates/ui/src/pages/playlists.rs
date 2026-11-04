@@ -4,6 +4,7 @@ use leptos::prelude::*;
 use leptos_meta::Title;
 use youcraft_api::commands::playlist::{Lists, Mine};
 
+use crate::app::titled;
 use crate::call::call;
 use crate::components::card::PlaylistGridCard;
 use crate::components::guide::Guide;
@@ -15,7 +16,7 @@ use crate::pages::not_found::Trouble;
 pub fn Playlists() -> impl IntoView {
     let lists = Resource::new(|| (), |()| call::<Lists>(Mine::default()));
     view! {
-        <Title text=format!("{} - YouCraft", tr("Playlists"))/>
+        <Title text=titled(tr("Playlists"))/>
         <div class="with-guide">
             <Guide/>
             <main class="browse">

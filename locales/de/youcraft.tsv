@@ -24,10 +24,7 @@
 	Watch later	Später ansehen
 	Liked videos	Videos, die dir gefallen
 	No videos yet.	Noch keine Videos.
-	This page isn't available.	Diese Seite ist nicht verfügbar.
 	Go to home	Zur Startseite
-	Sign in to see this page.	Melde dich an, um diese Seite zu sehen.
-	You can't see this page.	Du kannst diese Seite nicht sehen.
 	Something went wrong. Try again later.	Etwas ist schiefgelaufen. Versuche es später noch einmal.
 	Up next	Als Nächstes
 	This video isn't available yet.	Dieses Video ist noch nicht verfügbar.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Die Verarbeitung ist fehlgeschlagen. Lade das Video erneut hoch.
 	This video is longer than YouCraft accepts.	Dieses Video ist länger, als YouCraft annimmt.
 	This video needs more than YouCraft allows. Try a smaller file.	Dieses Video braucht mehr, als YouCraft zulässt. Versuche es mit einer kleineren Datei.
-	Upload failed. Try again.	Das Hochladen ist fehlgeschlagen. Versuche es noch einmal.
-	The file is too large.	Die Datei ist zu groß.
 	This can't be empty.	Das darf nicht leer sein.
 	This must fit on one line.	Das muss in eine Zeile passen.
 	This holds characters that aren't allowed.	Das enthält Zeichen, die nicht erlaubt sind.
@@ -203,3 +198,8 @@
 	Unblock	Entsperren
 	Your channel	Dein Kanal
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Dein Bild erscheint neben deinem Kanal und deinen Kommentaren. Wähle eine JPEG-, PNG- oder WebP-Datei von höchstens 5 MB; ihre Mitte wird quadratisch zugeschnitten.
+	Sign in first.	Melde dich zuerst an.
+	This isn't open to your account.	Das steht deinem Konto nicht offen.
+	This isn't available.	Das ist nicht verfügbar.
+	This is larger than YouCraft accepts.	Das ist größer, als YouCraft annimmt.
+	This conflicts with what is already there.	Das steht im Widerspruch zu etwas, das es schon gibt.

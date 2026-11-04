@@ -24,10 +24,7 @@
 	Watch later	Later bekijken
 	Liked videos	Video's die je leuk vindt
 	No videos yet.	Nog geen video's.
-	This page isn't available.	Deze pagina is niet beschikbaar.
 	Go to home	Naar de startpagina
-	Sign in to see this page.	Log in om deze pagina te bekijken.
-	You can't see this page.	Je kunt deze pagina niet bekijken.
 	Something went wrong. Try again later.	Er is iets misgegaan. Probeer het later opnieuw.
 	Up next	Hierna
 	This video isn't available yet.	Deze video is nog niet beschikbaar.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Verwerken mislukt. Upload de video opnieuw.
 	This video is longer than YouCraft accepts.	Deze video is langer dan YouCraft accepteert.
 	This video needs more than YouCraft allows. Try a smaller file.	Deze video vraagt meer dan YouCraft toestaat. Probeer een kleiner bestand.
-	Upload failed. Try again.	Uploaden mislukt. Probeer het opnieuw.
-	The file is too large.	Het bestand is te groot.
 	This can't be empty.	Dit mag niet leeg zijn.
 	This must fit on one line.	Dit moet op één regel passen.
 	This holds characters that aren't allowed.	Dit bevat tekens die niet zijn toegestaan.
@@ -203,3 +198,8 @@
 	Unblock	Deblokkeren
 	Your channel	Je kanaal
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Je afbeelding staat naast je kanaal en je reacties. Kies een JPEG-, PNG- of WebP-bestand van maximaal 5 MB; het midden wordt vierkant bijgesneden.
+	Sign in first.	Log eerst in.
+	This isn't open to your account.	Dit staat niet open voor je account.
+	This isn't available.	Dit is niet beschikbaar.
+	This is larger than YouCraft accepts.	Dit is groter dan YouCraft accepteert.
+	This conflicts with what is already there.	Dit botst met iets wat al bestaat.

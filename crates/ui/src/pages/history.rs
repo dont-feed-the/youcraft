@@ -9,6 +9,7 @@ use youcraft_api::commands::site::Nothing;
 use youcraft_api::commands::video::Which;
 
 use crate::act::act;
+use crate::app::titled;
 use crate::call::call;
 use crate::components::card::RowCard;
 use crate::components::guide::Guide;
@@ -22,7 +23,7 @@ use crate::pages::not_found::Trouble;
 pub fn History() -> impl IntoView {
     let first = Resource::new(|| (), |()| call::<history::List>(Page::default()));
     view! {
-        <Title text=format!("{} - YouCraft", tr("History"))/>
+        <Title text=titled(tr("History"))/>
         <div class="with-guide">
             <Guide/>
             <main class="browse">
@@ -76,7 +77,7 @@ fn Watches(history: history::History) -> impl IntoView {
                 <For each=move || pages.items.get() key=|watched| watched.card.id let:watched>
                     <Entry watched pages/>
                 </For>
-                <ShowMore next=pages.next more/>
+                <ShowMore pages more/>
             </div>
             <aside class="history-controls">
                 <button class="menu-entry" type="button" on:click=clear>
@@ -101,9 +102,7 @@ fn Entry(watched: Watched, pages: Pages<Watched>) -> impl IntoView {
     let remove = move |_| {
         act::<history::Remove>(Which { video }, move |answer| {
             if answer.is_ok() {
-                pages
-                    .items
-                    .update(|items| items.retain(|w| w.card.id != video));
+                pages.remove(&video);
             }
         });
     };

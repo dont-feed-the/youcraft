@@ -24,10 +24,7 @@
 	Watch later	後で見る
 	Liked videos	いいねした動画
 	No videos yet.	まだ動画はありません。
-	This page isn't available.	このページは利用できません。
 	Go to home	ホームへ移動
-	Sign in to see this page.	このページを見るにはログインしてください。
-	You can't see this page.	このページは表示できません。
 	Something went wrong. Try again later.	問題が発生しました。しばらくしてからもう一度お試しください。
 	Up next	次の動画
 	This video isn't available yet.	この動画はまだ利用できません。
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	処理に失敗しました。動画をもう一度アップロードしてください。
 	This video is longer than YouCraft accepts.	この動画は YouCraft が受け付ける長さを超えています。
 	This video needs more than YouCraft allows. Try a smaller file.	この動画には YouCraft が許可する以上のリソースが必要です。もっと小さいファイルをお試しください。
-	Upload failed. Try again.	アップロードに失敗しました。もう一度お試しください。
-	The file is too large.	ファイルが大きすぎます。
 	This can't be empty.	空にはできません。
 	This must fit on one line.	1 行に収めてください。
 	This holds characters that aren't allowed.	使用できない文字が含まれています。
@@ -203,3 +198,8 @@
 	Unblock	ブロックを解除
 	Your channel	あなたのチャンネル
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	画像はチャンネルとコメントの横に表示されます。5 MB 以下の JPEG、PNG、WebP ファイルを選んでください。中央が正方形に切り抜かれます。
+	Sign in first.	先にログインしてください。
+	This isn't open to your account.	このアカウントでは利用できません。
+	This isn't available.	これは利用できません。
+	This is larger than YouCraft accepts.	YouCraft が受け付けられるサイズを超えています。
+	This conflicts with what is already there.	すでにあるものと競合しています。

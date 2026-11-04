@@ -138,6 +138,13 @@ pub enum Visibility {
 }
 
 impl Visibility {
+    /// Every visibility, from the widest, in the order a menu lists them.
+    pub const ALL: [Visibility; 3] = [
+        Visibility::Public,
+        Visibility::Unlisted,
+        Visibility::Private,
+    ];
+
     /// Its name in the database and in the API.
     pub fn as_str(self) -> &'static str {
         match self {
@@ -149,13 +156,7 @@ impl Visibility {
 
     /// The visibility named `name`.
     pub fn from_name(name: &str) -> Option<Visibility> {
-        [
-            Visibility::Public,
-            Visibility::Unlisted,
-            Visibility::Private,
-        ]
-        .into_iter()
-        .find(|v| v.as_str() == name)
+        Visibility::ALL.into_iter().find(|v| v.as_str() == name)
     }
 }
 

@@ -24,10 +24,7 @@
 	Watch later	Do obejrzenia
 	Liked videos	Polubione filmy
 	No videos yet.	Nie ma jeszcze filmów.
-	This page isn't available.	Ta strona jest niedostępna.
 	Go to home	Przejdź do strony głównej
-	Sign in to see this page.	Zaloguj się, aby zobaczyć tę stronę.
-	You can't see this page.	Nie możesz zobaczyć tej strony.
 	Something went wrong. Try again later.	Coś poszło nie tak. Spróbuj ponownie później.
 	Up next	Następne
 	This video isn't available yet.	Ten film nie jest jeszcze dostępny.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Przetwarzanie nie powiodło się. Prześlij film ponownie.
 	This video is longer than YouCraft accepts.	Ten film jest dłuższy, niż akceptuje YouCraft.
 	This video needs more than YouCraft allows. Try a smaller file.	Ten film wymaga więcej, niż pozwala YouCraft. Spróbuj mniejszego pliku.
-	Upload failed. Try again.	Przesyłanie nie powiodło się. Spróbuj ponownie.
-	The file is too large.	Plik jest za duży.
 	This can't be empty.	To nie może być puste.
 	This must fit on one line.	To musi zmieścić się w jednym wierszu.
 	This holds characters that aren't allowed.	Zawiera niedozwolone znaki.
@@ -203,3 +198,8 @@
 	Unblock	Odblokuj
 	Your channel	Twój kanał
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Twoje zdjęcie widać obok Twojego kanału i komentarzy. Wybierz plik JPEG, PNG lub WebP o rozmiarze do 5 MB; jego środek zostanie przycięty do kwadratu.
+	Sign in first.	Najpierw się zaloguj.
+	This isn't open to your account.	To nie jest dostępne dla twojego konta.
+	This isn't available.	To jest niedostępne.
+	This is larger than YouCraft accepts.	To więcej, niż przyjmuje YouCraft.
+	This conflicts with what is already there.	To koliduje z czymś, co już istnieje.

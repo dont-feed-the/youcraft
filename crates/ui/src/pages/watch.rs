@@ -10,7 +10,8 @@ use youcraft_api::records::VideoPage;
 use youcraft_api::{ApiError, VideoId, routes};
 use youcraft_player::VideoPlayer;
 
-use crate::act::act;
+use crate::act::ask;
+use crate::app::titled;
 use crate::call::call;
 use crate::components::card::CompactCard;
 use crate::components::comments::CommentSection;
@@ -75,7 +76,7 @@ pub fn Watch() -> impl IntoView {
 fn Stage(page: VideoPage, theatre: RwSignal<bool>) -> impl IntoView {
     let card = page.card;
     let video = card.id;
-    let started = Callback::new(move |()| act::<video::View>(video::Which { video }, |_| ()));
+    let started = Callback::new(move |()| ask::<video::View>(video::Which { video }, |_| ()));
     view! {
         <div class="stage">
             {if page.playable {
@@ -107,7 +108,7 @@ fn Primary(page: VideoPage) -> impl IntoView {
         RenderTime::current(),
     );
     view! {
-        <Title text=format!("{} - YouCraft", card.title)/>
+        <Title text=titled(&card.title)/>
         <div class="primary">
             <h1 class="watch-title" dir="auto">{card.title.clone()}</h1>
             <OwnerRow page=page.clone()/>

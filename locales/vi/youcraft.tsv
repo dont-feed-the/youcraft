@@ -24,10 +24,7 @@
 	Watch later	Xem sau
 	Liked videos	Video đã thích
 	No videos yet.	Chưa có video nào.
-	This page isn't available.	Trang này không có sẵn.
 	Go to home	Về trang chủ
-	Sign in to see this page.	Đăng nhập để xem trang này.
-	You can't see this page.	Bạn không thể xem trang này.
 	Something went wrong. Try again later.	Đã xảy ra lỗi. Hãy thử lại sau.
 	Up next	Tiếp theo
 	This video isn't available yet.	Video này chưa có sẵn.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Xử lý không thành công. Hãy tải video lên lại.
 	This video is longer than YouCraft accepts.	Video này dài hơn mức YouCraft chấp nhận.
 	This video needs more than YouCraft allows. Try a smaller file.	Video này cần nhiều hơn mức YouCraft cho phép. Hãy thử một tệp nhỏ hơn.
-	Upload failed. Try again.	Tải lên không thành công. Hãy thử lại.
-	The file is too large.	Tệp quá lớn.
 	This can't be empty.	Không được để trống mục này.
 	This must fit on one line.	Nội dung này phải nằm trên một dòng.
 	This holds characters that aren't allowed.	Có ký tự không được phép.
@@ -203,3 +198,8 @@
 	Unblock	Bỏ chặn
 	Your channel	Kênh của bạn
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Ảnh của bạn hiển thị bên cạnh kênh và bình luận của bạn. Hãy chọn tệp JPEG, PNG hoặc WebP tối đa 5 MB; phần giữa sẽ được cắt thành hình vuông.
+	Sign in first.	Hãy đăng nhập trước.
+	This isn't open to your account.	Tài khoản của bạn không dùng được mục này.
+	This isn't available.	Mục này không có sẵn.
+	This is larger than YouCraft accepts.	Nội dung này lớn hơn mức YouCraft chấp nhận.
+	This conflicts with what is already there.	Điều này xung đột với nội dung đã có.

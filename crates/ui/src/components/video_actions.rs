@@ -2,24 +2,25 @@
 //! video's actions: like and dislike, share, save to a list.
 
 use leptos::prelude::*;
-use youcraft_api::commands::video::{Rate, SetRating};
+use youcraft_api::commands::video::{Rate, Rated, SetRating};
 use youcraft_api::records::{Rating, VideoPage};
 use youcraft_api::{VideoId, routes};
 
-use crate::act::act;
+use crate::act::Optimistic;
 use crate::browser;
 use crate::components::avatar::{Face, Size};
 use crate::components::save::SaveDialog;
-use crate::components::subscribe::SubscribeButton;
+use crate::components::subscribe::{SubscribeButton, subscription};
 use crate::icons::{Glyph, Icon};
 use crate::lang::{compact, compact_count, tr};
+use crate::notice::Notices;
 
 /// The row.
 #[component]
 pub fn OwnerRow(page: VideoPage) -> AnyView {
     let card = page.card;
     let channel = routes::channel(&card.channel.handle);
-    let subscribers = RwSignal::new(page.subscribers);
+    let state = subscription(page.subscribed, page.subscribers);
     view! {
         <div class="owner-row">
             <div class="owner">
@@ -27,10 +28,10 @@ pub fn OwnerRow(page: VideoPage) -> AnyView {
                 <div class="owner-names">
                     <a class="owner-name" href=channel>{card.channel.name.clone()}</a>
                     <span class="owner-subscribers">
-                        {move || compact_count(subscribers.get(), "{n} subscriber", "{n} subscribers")}
+                        {move || compact_count(state.shown.get().subscribers, "{n} subscriber", "{n} subscribers")}
                     </span>
                 </div>
-                <SubscribeButton channel=card.channel.id subscribed=page.subscribed subscribers owned=page.owned/>
+                <SubscribeButton channel=card.channel.id state owned=page.owned/>
             </div>
             <div class="actions">
                 <RatingButtons video=card.id likes=page.likes rating=page.rating/>
@@ -59,36 +60,29 @@ fn likes_after(likes: u64, before: Rating, after: Rating) -> u64 {
 /// The like and dislike buttons, joined in one pill; pressing the pressed one takes it back.
 #[component]
 fn RatingButtons(video: VideoId, likes: u64, rating: Rating) -> impl IntoView {
-    let likes = RwSignal::new(likes);
-    let rating = RwSignal::new(rating);
+    let state = Optimistic::new(Rated { likes, rating });
     let rate = move |pressed: Rating| {
-        let (before, before_likes) = (rating.get_untracked(), likes.get_untracked());
-        let after = if before == pressed {
+        let now = state.shown.get_untracked();
+        let after = if now.rating == pressed {
             Rating::None
         } else {
             pressed
         };
-        rating.set(after);
-        likes.set(likes_after(before_likes, before, after));
-        act::<SetRating>(
+        let wanted = Rated {
+            rating: after,
+            likes: likes_after(now.likes, now.rating, after),
+        };
+        state.change::<SetRating>(
+            wanted,
             Rate {
                 video,
                 rating: after,
             },
-            move |answer| match answer {
-                Ok(rated) => {
-                    rating.set(rated.rating);
-                    likes.set(rated.likes);
-                }
-                Err(_) => {
-                    rating.set(before);
-                    likes.set(before_likes);
-                }
-            },
+            |rated| rated,
         );
     };
     let pressed = move |which: Rating| {
-        if rating.get() == which {
+        if state.shown.get().rating == which {
             "true"
         } else {
             "false"
@@ -98,7 +92,7 @@ fn RatingButtons(video: VideoId, likes: u64, rating: Rating) -> impl IntoView {
         <span class="pill like-pill">
             <button class="pill-part" type="button" aria-label=tr("Like")
                 aria-pressed=move || pressed(Rating::Like) on:click=move |_| rate(Rating::Like)>
-                <Glyph icon=Icon::Like/><span>{move || compact(likes.get())}</span>
+                <Glyph icon=Icon::Like/><span>{move || compact(state.shown.get().likes)}</span>
             </button>
             <button class="pill-part" type="button" aria-label=tr("Dislike")
                 aria-pressed=move || pressed(Rating::Dislike) on:click=move |_| rate(Rating::Dislike)>
@@ -111,17 +105,12 @@ fn RatingButtons(video: VideoId, likes: u64, rating: Rating) -> impl IntoView {
 /// Share: the video's address goes to the clipboard, and a note says so.
 #[component]
 fn ShareButton(video: VideoId) -> impl IntoView {
-    let copied = RwSignal::new(false);
     let share = move |_| {
         browser::copy(&format!("{}{}", browser::origin(), routes::watch(video)));
-        copied.set(true);
-        set_timeout(move || copied.set(false), std::time::Duration::from_secs(3));
+        Notices::say_here(tr("Link copied").to_owned());
     };
     view! {
         <button class="pill" type="button" on:click=share><Glyph icon=Icon::Share/><span>{tr("Share")}</span></button>
-        <Show when=move || copied.get()>
-            <p class="toast" role="status">{tr("Link copied")}</p>
-        </Show>
     }
 }
 

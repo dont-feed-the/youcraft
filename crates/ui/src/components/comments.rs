@@ -2,30 +2,26 @@
 //! one, then the comments, each with its likes, a way to reply, its replies one level deep, and
 //! a menu to edit, delete, or keep its author from commenting on the creator's videos.
 //!
-//! Comments load in the browser once the page is shown, page after page, as YouTube's do.
+//! Comments load in the browser once the page is shown, page after page, as YouTube's do. The
+//! count is the site's: every comment and every reply, so it moves by one for each written and
+//! by a whole thread when one goes.
 
 use leptos::prelude::*;
 use youcraft_api::commands::channel::{self, Barring};
 use youcraft_api::commands::comment::{
-    self, BODY_LIMIT, Comment, Comments, Edit, Liking, NewComment, OfComment, OfVideo, Order, Which,
+    self, BODY_LIMIT, Comment, Edit, Liked, Liking, NewComment, OfComment, OfVideo, Order, Which,
 };
 use youcraft_api::{ApiError, CommentId, VideoId, routes};
 
-use crate::act::act;
+use crate::act::{Optimistic, act};
 use crate::browser;
-use crate::call::call;
 use crate::components::avatar::{Face, Size};
-use crate::components::more::ShowMore;
+use crate::components::more::{Pages, ShowMore};
 use crate::icons::{Glyph, Icon};
 use crate::lang::{Language, RenderTime, compact, count, tr};
 
-/// Add `page` to `items`, and keep where the next one starts.
-fn extend(items: RwSignal<Vec<Comment>>, next: RwSignal<Option<String>>, page: Comments) {
-    items.update(|items| items.extend(page.comments));
-    next.set(page.next);
-}
-
-/// The section, for `video` with `total` comments; `owned` when the reader made the video.
+/// The section, for `video` with `total` comments and replies; `owned` when the reader made the
+/// video.
 #[component]
 pub fn CommentSection(video: VideoId, total: u64, enabled: bool, owned: bool) -> impl IntoView {
     if !enabled {
@@ -35,46 +31,37 @@ pub fn CommentSection(video: VideoId, total: u64, enabled: bool, owned: bool) ->
         .into_any();
     }
     let order = RwSignal::new(Order::Top);
-    let items = RwSignal::new(Vec::<Comment>::new());
-    let next = RwSignal::new(None::<String>);
+    let comments: Pages<Comment> = Pages::new(Vec::new(), None);
     let total = RwSignal::new(total);
     Effect::new(move |_| {
         let order = order.get();
-        leptos::task::spawn_local(async move {
-            let first = OfVideo {
+        comments.read_first::<comment::List>(
+            OfVideo {
                 video,
                 order,
                 after: None,
-            };
-            if let Ok(page) = call::<comment::List>(first).await {
-                items.set(Vec::new());
-                extend(items, next, page);
-            }
-        });
+            },
+            |page| (page.comments, page.next),
+        );
     });
     let more = Callback::new(move |()| {
-        let after = next.get_untracked();
         let order = order.get_untracked();
-        act::<comment::List>(
-            OfVideo {
+        comments.read_next::<comment::List>(
+            |after| OfVideo {
                 video,
                 order,
                 after,
             },
-            move |page| {
-                if let Ok(page) = page {
-                    extend(items, next, page);
-                }
-            },
+            |page| (page.comments, page.next),
         );
     });
     let posted = Callback::new(move |comment: Comment| {
-        items.update(|items| items.insert(0, comment));
+        comments.put_first(comment);
         total.update(|n| *n = n.saturating_add(1));
     });
-    let removed = Callback::new(move |id: CommentId| {
-        items.update(|items| items.retain(|c| c.id != id));
-        total.update(|n| *n = n.saturating_sub(1));
+    let removed = Callback::new(move |(id, counted): (CommentId, u64)| {
+        comments.remove(&id);
+        total.update(|n| *n = n.saturating_sub(counted));
     });
     view! {
         <section class="comments">
@@ -83,10 +70,10 @@ pub fn CommentSection(video: VideoId, total: u64, enabled: bool, owned: bool) ->
                 <SortMenu order/>
             </div>
             <Composer video parent=None posted cancel=None/>
-            <For each=move || items.get() key=|comment| comment.id let:comment>
-                <CommentView comment owned removed thread=None/>
+            <For each=move || comments.items.get() key=|comment| comment.id let:comment>
+                <CommentView comment owned total removed thread=None/>
             </For>
-            <ShowMore next more/>
+            <ShowMore pages=comments more/>
         </section>
     }
     .into_any()
@@ -195,12 +182,14 @@ fn Composer(
 }
 
 /// One comment, with its replies if it has any; a reply's `thread` takes the replies written to
-/// it, which join its comment's.
+/// it, which join its comment's. `total` counts the video's comments and replies; `removed`
+/// hears which comment went, and how many it counted for with its replies.
 #[component]
 fn CommentView(
     comment: Comment,
     owned: bool,
-    removed: Callback<CommentId>,
+    total: RwSignal<u64>,
+    removed: Callback<(CommentId, u64)>,
     thread: Option<Callback<Comment>>,
 ) -> AnyView {
     let id = comment.id;
@@ -210,8 +199,8 @@ fn CommentView(
     let edited = RwSignal::new(comment.edited);
     let editing = RwSignal::new(false);
     let replying = RwSignal::new(false);
-    let replies = RwSignal::new(Vec::<Comment>::new());
-    let replies_next = RwSignal::new(None::<String>);
+    let replies: Pages<Comment> = Pages::new(Vec::new(), None);
+    let read = StoredValue::new(false);
     let replies_shown = RwSignal::new(false);
     let reply_count = RwSignal::new(comment.replies);
     let channel = routes::channel(&comment.author.handle);
@@ -220,33 +209,53 @@ fn CommentView(
         comment.created_at,
         RenderTime::current(),
     );
-    let load_replies = move |after: Option<String>| {
-        act::<comment::Replies>(OfComment { comment: id, after }, move |page| {
-            if let Ok(page) = page {
-                extend(replies, replies_next, page);
-            }
-        });
+    let read_replies = move || {
+        read.set_value(true);
+        replies.read_first::<comment::Replies>(
+            OfComment {
+                comment: id,
+                after: None,
+            },
+            |page| (page.comments, page.next),
+        );
     };
+    let more_replies = Callback::new(move |()| {
+        replies.read_next::<comment::Replies>(
+            |after| OfComment { comment: id, after },
+            |page| (page.comments, page.next),
+        );
+    });
     let toggle_replies = move |_| {
         let shown = !replies_shown.get_untracked();
         replies_shown.set(shown);
-        if shown && replies.with_untracked(Vec::is_empty) {
-            load_replies(None);
+        if shown && !read.get_value() {
+            read_replies();
         }
     };
     let reply_parent = comment.parent.unwrap_or(id);
     let into_thread = Callback::new(move |reply: Comment| {
-        replies_shown.set(true);
-        replies.update(|replies| replies.push(reply));
         reply_count.update(|n| *n = n.saturating_add(1));
+        total.update(|n| *n = n.saturating_add(1));
+        replies_shown.set(true);
+        if read.get_value() {
+            replies.put_last(reply);
+        } else {
+            read_replies();
+        }
     });
     let reply_posted = Callback::new(move |reply: Comment| {
         replying.set(false);
         thread.unwrap_or(into_thread).run(reply);
     });
-    let reply_removed = Callback::new(move |gone: CommentId| {
-        replies.update(|replies| replies.retain(|c| c.id != gone));
-        reply_count.update(|n| *n = n.saturating_sub(1));
+    let reply_removed = Callback::new(move |(reply, counted): (CommentId, u64)| {
+        replies.remove(&reply);
+        reply_count.update(|n| *n = n.saturating_sub(counted));
+        total.update(|n| *n = n.saturating_sub(counted));
+    });
+    // A comment takes its replies with it; a reply has none.
+    let gone = Callback::new(move |()| {
+        let with_replies = if top { reply_count.get_untracked() } else { 0 };
+        removed.run((id, with_replies.saturating_add(1)));
     });
     let author = comment.author.clone();
     let by_creator = comment.by_creator;
@@ -271,7 +280,7 @@ fn CommentView(
                 <div class="comment-toolbar">
                     <LikeButton id likes=comment.likes liked=comment.liked/>
                     <button class="pill quiet small" type="button" on:click=move |_| replying.set(true)>{tr("Reply")}</button>
-                    <CommentMenu comment=comment.clone() owned editing removed/>
+                    <CommentMenu comment=comment.clone() owned editing gone/>
                 </div>
                 <Show when=move || replying.get()>
                     <Composer video parent=Some(reply_parent) posted=reply_posted
@@ -287,15 +296,10 @@ fn CommentView(
                     </Show>
                     <Show when=move || replies_shown.get()>
                         <div class="replies">
-                            <For each=move || replies.get() key=|reply| reply.id let:reply>
-                                <CommentView comment=reply owned removed=reply_removed thread=Some(into_thread)/>
+                            <For each=move || replies.items.get() key=|reply| reply.id let:reply>
+                                <CommentView comment=reply owned total removed=reply_removed thread=Some(into_thread)/>
                             </For>
-                            <Show when=move || replies_next.get().is_some()>
-                                <button class="pill quiet small" type="button"
-                                    on:click=move |_| load_replies(replies_next.get_untracked())>
-                                    {tr("Show more replies")}
-                                </button>
-                            </Show>
+                            <ShowMore pages=replies more=more_replies label=tr("Show more replies") small=true/>
                         </div>
                     </Show>
                 }.into_any())}
@@ -343,39 +347,31 @@ fn EditForm(
 /// A comment's like button and its count.
 #[component]
 fn LikeButton(id: CommentId, likes: u64, liked: bool) -> impl IntoView {
-    let likes = RwSignal::new(likes);
-    let liked = RwSignal::new(liked);
+    let state = Optimistic::new(Liked { likes, liked });
     let toggle = move |_| {
-        let (before, before_likes) = (liked.get_untracked(), likes.get_untracked());
-        liked.set(!before);
-        likes.set(if before {
-            before_likes.saturating_sub(1)
-        } else {
-            before_likes.saturating_add(1)
-        });
-        act::<comment::Like>(
-            Liking {
-                comment: id,
-                liked: !before,
+        let now = state.shown.get_untracked();
+        let wanted = Liked {
+            liked: !now.liked,
+            likes: if now.liked {
+                now.likes.saturating_sub(1)
+            } else {
+                now.likes.saturating_add(1)
             },
-            move |answer| match answer {
-                Ok(now) => {
-                    liked.set(now.liked);
-                    likes.set(now.likes);
-                }
-                Err(_) => {
-                    liked.set(before);
-                    likes.set(before_likes);
-                }
-            },
-        );
+        };
+        let liking = Liking {
+            comment: id,
+            liked: wanted.liked,
+        };
+        state.change::<comment::Like>(wanted, liking, |liked| liked);
     };
+    let liked = move || state.shown.get().liked;
+    let likes = move || state.shown.get().likes;
     view! {
         <button class="icon-button small" type="button" aria-label=tr("Like")
-            aria-pressed=move || if liked.get() { "true" } else { "false" } on:click=toggle>
+            aria-pressed=move || if liked() { "true" } else { "false" } on:click=toggle>
             <Glyph icon=Icon::Like/>
         </button>
-        <span class="comment-likes">{move || (likes.get() > 0).then(|| compact(likes.get()))}</span>
+        <span class="comment-likes">{move || (likes() > 0).then(|| compact(likes()))}</span>
     }
 }
 
@@ -385,7 +381,7 @@ fn CommentMenu(
     comment: Comment,
     owned: bool,
     editing: RwSignal<bool>,
-    removed: Callback<CommentId>,
+    gone: Callback<()>,
 ) -> impl IntoView {
     let open = RwSignal::new(false);
     let (id, handle) = (comment.id, comment.author.handle.clone());
@@ -397,7 +393,7 @@ fn CommentMenu(
         open.set(false);
         act::<comment::Delete>(Which { comment: id }, move |answer| {
             if answer.is_ok() || answer == Err(ApiError::NotFound) {
-                removed.run(id);
+                gone.run(());
             }
         });
     };
@@ -409,7 +405,7 @@ fn CommentMenu(
         };
         act::<channel::Block>(barring, move |answer| {
             if answer.is_ok() {
-                removed.run(id);
+                gone.run(());
             }
         });
     };

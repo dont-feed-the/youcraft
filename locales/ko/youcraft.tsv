@@ -24,10 +24,7 @@
 	Watch later	나중에 볼 동영상
 	Liked videos	좋아요 표시한 동영상
 	No videos yet.	아직 동영상이 없습니다.
-	This page isn't available.	이 페이지를 사용할 수 없습니다.
 	Go to home	홈으로 이동
-	Sign in to see this page.	이 페이지를 보려면 로그인하세요.
-	You can't see this page.	이 페이지를 볼 수 없습니다.
 	Something went wrong. Try again later.	문제가 발생했습니다. 나중에 다시 시도하세요.
 	Up next	다음 동영상
 	This video isn't available yet.	이 동영상은 아직 사용할 수 없습니다.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	처리하지 못했습니다. 동영상을 다시 업로드하세요.
 	This video is longer than YouCraft accepts.	이 동영상은 YouCraft에서 받을 수 있는 길이보다 깁니다.
 	This video needs more than YouCraft allows. Try a smaller file.	이 동영상에는 YouCraft에서 허용하는 것보다 더 많은 자원이 필요합니다. 더 작은 파일로 시도해 보세요.
-	Upload failed. Try again.	업로드하지 못했습니다. 다시 시도하세요.
-	The file is too large.	파일이 너무 큽니다.
 	This can't be empty.	비워 둘 수 없습니다.
 	This must fit on one line.	한 줄로 입력해야 합니다.
 	This holds characters that aren't allowed.	허용되지 않는 문자가 포함되어 있습니다.
@@ -203,3 +198,8 @@
 	Unblock	차단 해제
 	Your channel	내 채널
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	사진은 채널과 댓글 옆에 표시됩니다. 5MB 이하의 JPEG, PNG 또는 WebP 파일을 선택하세요. 가운데가 정사각형으로 잘립니다.
+	Sign in first.	먼저 로그인하세요.
+	This isn't open to your account.	내 계정으로는 사용할 수 없습니다.
+	This isn't available.	사용할 수 없습니다.
+	This is larger than YouCraft accepts.	YouCraft에서 받을 수 있는 크기보다 큽니다.
+	This conflicts with what is already there.	이미 있는 항목과 충돌합니다.

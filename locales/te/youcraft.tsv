@@ -24,10 +24,7 @@
 	Watch later	తర్వాత చూడండి
 	Liked videos	నచ్చిన వీడియోలు
 	No videos yet.	ఇంకా వీడియోలు లేవు.
-	This page isn't available.	ఈ పేజీ అందుబాటులో లేదు.
 	Go to home	హోమ్‌కు వెళ్లండి
-	Sign in to see this page.	ఈ పేజీని చూడటానికి సైన్ ఇన్ చేయండి.
-	You can't see this page.	మీరు ఈ పేజీని చూడలేరు.
 	Something went wrong. Try again later.	ఏదో తప్పు జరిగింది. తర్వాత మళ్లీ ప్రయత్నించండి.
 	Up next	తర్వాత
 	This video isn't available yet.	ఈ వీడియో ఇంకా అందుబాటులో లేదు.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	ప్రాసెసింగ్ విఫలమైంది. వీడియోను మళ్లీ అప్‌లోడ్ చేయండి.
 	This video is longer than YouCraft accepts.	ఈ వీడియో YouCraft అంగీకరించే దానికంటే పొడవుగా ఉంది.
 	This video needs more than YouCraft allows. Try a smaller file.	ఈ వీడియోకు YouCraft అనుమతించే దానికంటే ఎక్కువ అవసరం. చిన్న ఫైల్‌ను ప్రయత్నించండి.
-	Upload failed. Try again.	అప్‌లోడ్ విఫలమైంది. మళ్లీ ప్రయత్నించండి.
-	The file is too large.	ఫైల్ చాలా పెద్దదిగా ఉంది.
 	This can't be empty.	ఇది ఖాళీగా ఉండకూడదు.
 	This must fit on one line.	ఇది ఒకే లైన్‌లో ఉండాలి.
 	This holds characters that aren't allowed.	ఇందులో అనుమతి లేని అక్షరాలు ఉన్నాయి.
@@ -203,3 +198,8 @@
 	Unblock	అన్‌బ్లాక్ చేయండి
 	Your channel	మీ ఛానెల్
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	మీ చిత్రం మీ ఛానెల్ మరియు వ్యాఖ్యల పక్కన కనిపిస్తుంది. గరిష్టంగా 5 MB ఉన్న JPEG, PNG లేదా WebP ఫైల్‌ను ఎంచుకోండి; దాని మధ్యభాగం చతురస్రంగా కత్తిరించబడుతుంది.
+	Sign in first.	ముందుగా సైన్ ఇన్ చేయండి.
+	This isn't open to your account.	ఇది మీ ఖాతాకు అందుబాటులో లేదు.
+	This isn't available.	ఇది అందుబాటులో లేదు.
+	This is larger than YouCraft accepts.	ఇది YouCraft అంగీకరించే దానికంటే పెద్దది.
+	This conflicts with what is already there.	ఇది ఇప్పటికే ఉన్నదానితో విభేదిస్తుంది.

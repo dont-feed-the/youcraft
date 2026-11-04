@@ -7,6 +7,10 @@
 //! socket it is handed (socket activation); otherwise it listens on `YOUCRAFT_ADDRESS`. It stops
 //! on SIGTERM or Ctrl-C after the requests in flight are answered, as PID 1 of a container must.
 
+// The server renders the pages of `youcraft_ui`, whose view types run deeper than the compiler's
+// default limit allows, as that crate says.
+#![recursion_limit = "256"]
+
 mod cli;
 mod client;
 mod config;
@@ -20,6 +24,8 @@ mod jobs;
 mod listen;
 mod mcp;
 mod media;
+#[cfg(test)]
+mod page_tests;
 mod photo;
 mod rate;
 mod secrets;

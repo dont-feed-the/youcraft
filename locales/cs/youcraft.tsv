@@ -24,10 +24,7 @@
 	Watch later	Přehrát později
 	Liked videos	Oblíbená videa
 	No videos yet.	Zatím žádná videa.
-	This page isn't available.	Tato stránka není dostupná.
 	Go to home	Přejít na domovskou stránku
-	Sign in to see this page.	Pro zobrazení této stránky se přihlaste.
-	You can't see this page.	Tuto stránku nemůžete zobrazit.
 	Something went wrong. Try again later.	Něco se pokazilo. Zkuste to později.
 	Up next	Další
 	This video isn't available yet.	Toto video zatím není dostupné.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Zpracování se nezdařilo. Nahrajte video znovu.
 	This video is longer than YouCraft accepts.	Toto video je delší, než YouCraft přijímá.
 	This video needs more than YouCraft allows. Try a smaller file.	Toto video vyžaduje víc, než YouCraft dovoluje. Zkuste menší soubor.
-	Upload failed. Try again.	Nahrání se nezdařilo. Zkuste to znovu.
-	The file is too large.	Soubor je příliš velký.
 	This can't be empty.	Toto nesmí být prázdné.
 	This must fit on one line.	Toto se musí vejít na jeden řádek.
 	This holds characters that aren't allowed.	Obsahuje nepovolené znaky.
@@ -203,3 +198,8 @@
 	Unblock	Odblokovat
 	Your channel	Váš kanál
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Váš obrázek se zobrazuje u vašeho kanálu a komentářů. Vyberte soubor JPEG, PNG nebo WebP o velikosti nejvýše 5 MB; jeho střed se ořízne na čtverec.
+	Sign in first.	Nejdřív se přihlaste.
+	This isn't open to your account.	Pro váš účet to není dostupné.
+	This isn't available.	Toto není dostupné.
+	This is larger than YouCraft accepts.	Je to víc, než YouCraft přijímá.
+	This conflicts with what is already there.	Je to v rozporu s tím, co už existuje.

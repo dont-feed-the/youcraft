@@ -24,10 +24,7 @@
 	Watch later	Ogled pozneje
 	Liked videos	Všečkani videoposnetki
 	No videos yet.	Še ni videoposnetkov.
-	This page isn't available.	Ta stran ni na voljo.
 	Go to home	Na domačo stran
-	Sign in to see this page.	Za ogled te strani se prijavite.
-	You can't see this page.	Te strani ne morete videti.
 	Something went wrong. Try again later.	Prišlo je do napake. Poskusite znova pozneje.
 	Up next	Naslednje
 	This video isn't available yet.	Ta videoposnetek še ni na voljo.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Obdelava ni uspela. Znova naložite videoposnetek.
 	This video is longer than YouCraft accepts.	Ta videoposnetek je daljši, kot ga YouCraft sprejme.
 	This video needs more than YouCraft allows. Try a smaller file.	Ta videoposnetek zahteva več, kot dovoli YouCraft. Poskusite z manjšo datoteko.
-	Upload failed. Try again.	Nalaganje ni uspelo. Poskusite znova.
-	The file is too large.	Datoteka je prevelika.
 	This can't be empty.	To ne sme biti prazno.
 	This must fit on one line.	To mora biti v eni vrstici.
 	This holds characters that aren't allowed.	Vsebuje nedovoljene znake.
@@ -203,3 +198,8 @@
 	Unblock	Odblokiraj
 	Your channel	Vaš kanal
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Vaša slika je prikazana ob vašem kanalu in komentarjih. Izberite datoteko JPEG, PNG ali WebP velikosti največ 5 MB; njeno središče se obreže v kvadrat.
+	Sign in first.	Najprej se prijavite.
+	This isn't open to your account.	To ni na voljo za vaš račun.
+	This isn't available.	To ni na voljo.
+	This is larger than YouCraft accepts.	To je več, kot YouCraft sprejme.
+	This conflicts with what is already there.	To je v nasprotju z nečim, kar že obstaja.

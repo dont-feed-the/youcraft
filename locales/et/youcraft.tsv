@@ -24,10 +24,7 @@
 	Watch later	Vaata hiljem
 	Liked videos	Meeldivad videod
 	No videos yet.	Videoid veel pole.
-	This page isn't available.	See leht pole saadaval.
 	Go to home	Mine avalehele
-	Sign in to see this page.	Selle lehe nägemiseks logi sisse.
-	You can't see this page.	Sa ei saa seda lehte näha.
 	Something went wrong. Try again later.	Midagi läks valesti. Proovi hiljem uuesti.
 	Up next	Järgmisena
 	This video isn't available yet.	See video pole veel saadaval.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Töötlemine ebaõnnestus. Laadi video uuesti üles.
 	This video is longer than YouCraft accepts.	See video on pikem, kui YouCraft vastu võtab.
 	This video needs more than YouCraft allows. Try a smaller file.	See video nõuab rohkem, kui YouCraft lubab. Proovi väiksemat faili.
-	Upload failed. Try again.	Üleslaadimine ebaõnnestus. Proovi uuesti.
-	The file is too large.	Fail on liiga suur.
 	This can't be empty.	See ei tohi olla tühi.
 	This must fit on one line.	See peab mahtuma ühele reale.
 	This holds characters that aren't allowed.	Selles on lubamatuid märke.
@@ -203,3 +198,8 @@
 	Unblock	Eemalda blokeering
 	Your channel	Sinu kanal
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Sinu pilt kuvatakse sinu kanali ja kommentaaride kõrval. Vali kuni 5 MB suurune JPEG-, PNG- või WebP-fail; selle keskosa lõigatakse ruuduks.
+	Sign in first.	Logi kõigepealt sisse.
+	This isn't open to your account.	See pole sinu kontole avatud.
+	This isn't available.	See pole saadaval.
+	This is larger than YouCraft accepts.	See on suurem, kui YouCraft vastu võtab.
+	This conflicts with what is already there.	See on vastuolus juba olemasolevaga.

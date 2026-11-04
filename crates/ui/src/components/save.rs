@@ -8,9 +8,10 @@ use youcraft_api::commands::playlist::{
 use youcraft_api::records::Visibility;
 use youcraft_api::{ApiError, List, VideoId, routes};
 
-use crate::act::act;
+use crate::act::{Optimistic, act};
 use crate::browser;
 use crate::call::call;
+use crate::components::visibility::VisibilityChoice;
 use crate::icons::{Glyph, Icon};
 use crate::lang::tr;
 
@@ -20,15 +21,6 @@ pub fn list_name(card: &PlaylistCard) -> String {
         List::WatchLater => tr("Watch later").to_owned(),
         List::Liked => tr("Liked videos").to_owned(),
         List::Playlist(_) => card.title.clone(),
-    }
-}
-
-/// The name of a visibility.
-pub fn visibility_name(visibility: Visibility) -> &'static str {
-    match visibility {
-        Visibility::Public => tr("Public"),
-        Visibility::Unlisted => tr("Unlisted"),
-        Visibility::Private => tr("Private"),
     }
 }
 
@@ -83,26 +75,22 @@ pub fn SaveDialog(video: VideoId, open: RwSignal<bool>) -> impl IntoView {
 /// One list, ticked if it holds the video.
 #[component]
 fn ListTick(video: VideoId, card: PlaylistCard) -> impl IntoView {
-    let held = RwSignal::new(card.contains);
+    let held = Optimistic::new(card.contains);
     let list = card.list;
     let toggle = move |_| {
-        let wanted = !held.get_untracked();
-        held.set(wanted);
+        let wanted = !held.shown.get_untracked();
         let item = Item { list, video };
-        let undo = move |answer: Result<PlaylistCard, ApiError>| match answer {
-            Ok(card) => held.set(card.contains),
-            Err(_) => held.set(!wanted),
-        };
+        let contains = |card: PlaylistCard| card.contains;
         if wanted {
-            act::<Add>(item, undo);
+            held.change::<Add>(wanted, item, contains);
         } else {
-            act::<Remove>(item, undo);
+            held.change::<Remove>(wanted, item, contains);
         }
     };
     let private = card.visibility == Visibility::Private;
     view! {
         <label class="dialog-entry">
-            <input type="checkbox" prop:checked=move || held.get() on:change=toggle/>
+            <input type="checkbox" prop:checked=move || held.shown.get() on:change=toggle/>
             <span class="dialog-entry-name">{list_name(&card)}</span>
             {private.then(|| view! { <span class="dialog-entry-mark" title=tr("Private")><Glyph icon=Icon::Lock/></span> })}
         </label>
@@ -130,13 +118,6 @@ fn NewPlaylistForm(video: VideoId, version: RwSignal<u32>) -> impl IntoView {
             }
         });
     };
-    let choose = move |event: leptos::ev::Event| {
-        let chosen = Visibility::from_name(&event_target_value(&event)).unwrap_or_default();
-        visibility.set(chosen);
-    };
-    let options = [Visibility::Public, Visibility::Unlisted, Visibility::Private].map(|v| {
-        view! { <option value=v.as_str() selected=v == Visibility::Private>{visibility_name(v)}</option> }
-    });
     view! {
         <Show when=move || making.get() fallback=move || view! {
             <button class="dialog-new" type="button" on:click=move |_| making.set(true)>
@@ -147,9 +128,7 @@ fn NewPlaylistForm(video: VideoId, version: RwSignal<u32>) -> impl IntoView {
                 <input class="field" type="text" required placeholder=tr("Choose a title")
                     aria-label=tr("Title") prop:value=move || title.get()
                     on:input=move |event| title.set(browser::clipped(&event, TITLE_LIMIT))/>
-                <select class="field" aria-label=tr("Visibility") on:change=choose>
-                    {options.clone().into_iter().collect_view()}
-                </select>
+                <VisibilityChoice chosen=visibility/>
                 <div class="dialog-buttons">
                     <button class="pill quiet" type="button" on:click=move |_| making.set(false)>{tr("Cancel")}</button>
                     <button class="pill primary" type="submit">{tr("Create")}</button>

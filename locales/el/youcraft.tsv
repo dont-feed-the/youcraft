@@ -24,10 +24,7 @@
 	Watch later	Παρακολούθηση αργότερα
 	Liked videos	Βίντεο που σας αρέσουν
 	No videos yet.	Δεν υπάρχουν ακόμη βίντεο.
-	This page isn't available.	Αυτή η σελίδα δεν είναι διαθέσιμη.
 	Go to home	Μετάβαση στην αρχική
-	Sign in to see this page.	Συνδεθείτε για να δείτε αυτή τη σελίδα.
-	You can't see this page.	Δεν μπορείτε να δείτε αυτή τη σελίδα.
 	Something went wrong. Try again later.	Κάτι πήγε στραβά. Δοκιμάστε ξανά αργότερα.
 	Up next	Επόμενο
 	This video isn't available yet.	Αυτό το βίντεο δεν είναι ακόμη διαθέσιμο.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Η επεξεργασία απέτυχε. Μεταφορτώστε ξανά το βίντεο.
 	This video is longer than YouCraft accepts.	Αυτό το βίντεο είναι μεγαλύτερο από όσο δέχεται το YouCraft.
 	This video needs more than YouCraft allows. Try a smaller file.	Αυτό το βίντεο χρειάζεται περισσότερα από όσα επιτρέπει το YouCraft. Δοκιμάστε ένα μικρότερο αρχείο.
-	Upload failed. Try again.	Η μεταφόρτωση απέτυχε. Δοκιμάστε ξανά.
-	The file is too large.	Το αρχείο είναι πολύ μεγάλο.
 	This can't be empty.	Αυτό δεν μπορεί να είναι κενό.
 	This must fit on one line.	Αυτό πρέπει να χωράει σε μία γραμμή.
 	This holds characters that aren't allowed.	Αυτό περιέχει χαρακτήρες που δεν επιτρέπονται.
@@ -203,3 +198,8 @@
 	Unblock	Άρση αποκλεισμού
 	Your channel	Το κανάλι σας
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Η εικόνα σας εμφανίζεται δίπλα στο κανάλι και στα σχόλιά σας. Επιλέξτε αρχείο JPEG, PNG ή WebP έως 5 MB· το κέντρο του κόβεται τετράγωνο.
+	Sign in first.	Συνδεθείτε πρώτα.
+	This isn't open to your account.	Αυτό δεν είναι διαθέσιμο για τον λογαριασμό σας.
+	This isn't available.	Αυτό δεν είναι διαθέσιμο.
+	This is larger than YouCraft accepts.	Αυτό είναι μεγαλύτερο από όσο δέχεται το YouCraft.
+	This conflicts with what is already there.	Αυτό συγκρούεται με κάτι που υπάρχει ήδη.

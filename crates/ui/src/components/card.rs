@@ -7,7 +7,8 @@ use youcraft_api::records::VideoCard;
 use youcraft_api::routes;
 
 use crate::components::avatar::{Face, Size};
-use crate::components::save::{list_name, visibility_name};
+use crate::components::save::list_name;
+use crate::components::visibility::visibility_name;
 use crate::icons::{Glyph, Icon};
 use crate::lang::{Language, RenderTime, compact_count, tr};
 

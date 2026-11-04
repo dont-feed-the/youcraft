@@ -3,7 +3,9 @@
 //!
 //! The video is created the moment the file is chosen, so the details can be saved while the
 //! bytes travel; when the last piece has arrived, the details are saved once more and the file is
-//! handed over to be made playable, and the page follows it until it plays.
+//! handed over to be made playable, and the page follows it until it plays. The sending outlives
+//! the page: a person who goes elsewhere meanwhile still gets their video, with the details as
+//! they last stood, and the studio shows how far it has come.
 
 use leptos::prelude::*;
 use leptos_meta::Title;
@@ -11,15 +13,16 @@ use youcraft_api::commands::video;
 use youcraft_api::records::{Processing, Visibility};
 use youcraft_api::{VideoId, routes};
 
-use crate::browser;
-use crate::call::call;
+use crate::act::{Scope, act};
+use crate::app::titled;
+use crate::browser::Timer;
 use crate::icons::{Glyph, Icon};
 use crate::lang::tr;
-use crate::pages::studio::{processing_text, visibility_name};
+use crate::pages::studio::{DetailFields, processing_text};
 
 /// Where the upload is; only the browser moves it past [`Stage::Choosing`].
 #[cfg_attr(not(feature = "hydrate"), allow(dead_code))]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 enum Stage {
     /// No file yet.
     Choosing,
@@ -28,70 +31,80 @@ enum Stage {
     /// All of it arrived; it is on its way to playing, as the page's `processing` says.
     Processing,
     /// It failed, for the reason shown.
-    Failed(&'static str),
+    Failed(String),
 }
 
-/// What a failed command means to the person uploading.
-#[cfg(feature = "hydrate")]
-fn failure(error: &youcraft_api::ApiError) -> &'static str {
-    use youcraft_api::ApiError;
-    match error {
-        ApiError::TooLarge { .. } => tr("The file is too large."),
-        ApiError::SignInRequired => tr("Sign in to see this page."),
-        ApiError::Forbidden => tr("You can't see this page."),
-        ApiError::TooOften { .. } => tr("Too many attempts. Wait a moment and try again."),
-        _ => tr("Upload failed. Try again."),
+/// What the page shows of an upload, and the details the person gives it.
+#[derive(Clone, Copy)]
+struct Upload {
+    stage: RwSignal<Stage>,
+    processing: RwSignal<Processing>,
+    video: RwSignal<Option<VideoId>>,
+    title: RwSignal<String>,
+    description: RwSignal<String>,
+    visibility: RwSignal<Visibility>,
+}
+
+impl Upload {
+    /// The details as the page has them, for `video`; `None` once the page is gone.
+    fn edit(self, video: VideoId) -> Option<video::Edit> {
+        Some(video::Edit {
+            video,
+            title: Some(self.title.try_get_untracked()?),
+            description: Some(self.description.try_get_untracked()?),
+            visibility: Some(self.visibility.try_get_untracked()?),
+            comments_enabled: None,
+        })
     }
 }
+
+/// How long the page waits before it asks again how far a handed-over video has come.
+#[cfg(feature = "hydrate")]
+const FOLLOW_EVERY: std::time::Duration = std::time::Duration::from_secs(3);
 
 /// The upload page.
 #[component]
 pub fn UploadPage() -> impl IntoView {
-    let stage = RwSignal::new(Stage::Choosing);
-    let processing = RwSignal::new(Processing::Processing { permille: 0 });
-    let video = RwSignal::new(None::<VideoId>);
-    let title = RwSignal::new(String::new());
-    let description = RwSignal::new(String::new());
-    let visibility = RwSignal::new(Visibility::Private.as_str().to_owned());
-    let edit = move |video: VideoId| video::Edit {
-        video,
-        title: Some(title.get_untracked()),
-        description: Some(description.get_untracked()),
-        visibility: Visibility::from_name(&visibility.get_untracked()),
-        comments_enabled: None,
+    let upload = Upload {
+        stage: RwSignal::new(Stage::Choosing),
+        processing: RwSignal::new(Processing::Processing { permille: 0 }),
+        video: RwSignal::new(None),
+        title: RwSignal::new(String::new()),
+        description: RwSignal::new(String::new()),
+        visibility: RwSignal::new(Visibility::Private),
     };
-    let save = Action::new(move |(): &()| {
-        let change = video.get_untracked().map(edit);
-        async move {
-            match change {
-                Some(change) => call::<video::Update>(change).await.map(|_| ()),
-                None => Ok(()),
-            }
+    let Upload {
+        stage,
+        processing,
+        video,
+        title,
+        description,
+        visibility,
+    } = upload;
+    let saving = RwSignal::new(false);
+    let save = move |event: leptos::ev::SubmitEvent| {
+        event.prevent_default();
+        let Some(edit) = video.get_untracked().and_then(|video| upload.edit(video)) else {
+            return;
+        };
+        if saving.get_untracked() {
+            return;
         }
-    });
+        saving.set(true);
+        act::<video::Update>(edit, move |_| saving.set(false));
+    };
+    let follow = Timer::new();
+    let scope = Scope::current();
     let choose = move |event: leptos::ev::Event| {
         #[cfg(feature = "hydrate")]
         if let Some(file) = crate::transfer::chosen_file(&event) {
-            let signals = Signals {
-                stage,
-                processing,
-                video,
-                title,
-                description,
-                visibility,
-            };
-            start(file, signals, edit);
+            start(file, upload, follow, scope.clone());
         }
         #[cfg(not(feature = "hydrate"))]
-        let _ = event;
+        let _ = (event, follow, &scope);
     };
-    let options = [
-        Visibility::Public,
-        Visibility::Unlisted,
-        Visibility::Private,
-    ];
     view! {
-        <Title text=tr("Upload video")/>
+        <Title text=titled(tr("Upload video"))/>
         <main class="upload">
             <h1>{tr("Upload video")}</h1>
             <Show when=move || stage.get() == Stage::Choosing>
@@ -99,14 +112,14 @@ pub fn UploadPage() -> impl IntoView {
                     <Glyph icon=Icon::Upload/>
                     <span>{tr("Choose a video file to upload.")}</span>
                     <span class="pill accent">{tr("Select file")}</span>
-                    <input class="file" type="file" accept="video/*" on:change=choose/>
+                    <input class="file" type="file" accept="video/*" on:change=choose.clone()/>
                 </label>
             </Show>
             <Show when=move || stage.get() != Stage::Choosing>
                 <div class="upload-progress" aria-live="polite">
                     {move || match stage.get() {
                         Stage::Sending { sent, size } => {
-                            let text = processing_text(&youcraft_api::records::Processing::Uploading { received: sent, size });
+                            let text = processing_text(&Processing::Uploading { received: sent, size });
                             view! {
                                 <progress max=size as f64 value=sent as f64></progress>
                                 <p>{text}</p>
@@ -129,25 +142,10 @@ pub fn UploadPage() -> impl IntoView {
                         Stage::Choosing => ().into_any(),
                     }}
                 </div>
-                <form class="editor" on:submit=move |event| { event.prevent_default(); save.dispatch(()); }>
-                    <label class="labelled">
-                        <span>{tr("Title")}</span>
-                        <input class="field" type="text" required prop:value=move || title.get()
-                            on:input=move |event| title.set(browser::clipped(&event, video::TITLE_LIMIT))/>
-                    </label>
-                    <label class="labelled">
-                        <span>{tr("Description")}</span>
-                        <textarea class="field" rows="5" prop:value=move || description.get()
-                            on:input=move |event| description.set(browser::clipped(&event, video::DESCRIPTION_LIMIT))></textarea>
-                    </label>
-                    <label class="labelled">
-                        <span>{tr("Visibility")}</span>
-                        <select class="field" bind:value=visibility>
-                            {options.map(|v| view! { <option value=v.as_str()>{visibility_name(v)}</option> }).collect_view()}
-                        </select>
-                    </label>
+                <form class="editor" on:submit=save>
+                    <DetailFields title description visibility/>
                     <div class="editor-actions">
-                        <button class="pill accent" type="submit" disabled=move || video.get().is_none() || save.pending().get()>
+                        <button class="pill accent" type="submit" disabled=move || video.get().is_none() || saving.get()>
                             {tr("Save")}
                         </button>
                     </div>
@@ -157,97 +155,81 @@ pub fn UploadPage() -> impl IntoView {
     }
 }
 
-/// The page's signals that an upload moves.
+/// Create the video for `file`, send its bytes, save the details, hand it over, and follow it
+/// with `follow` for as long as the page is shown.
+///
+/// The sending is no part of the page: it runs to its end even if the person leaves, and reads
+/// the page's signals only with the `try_` methods, which find nothing once the page is gone.
 #[cfg(feature = "hydrate")]
-#[derive(Clone, Copy)]
-struct Signals {
-    stage: RwSignal<Stage>,
-    processing: RwSignal<Processing>,
-    video: RwSignal<Option<VideoId>>,
-    title: RwSignal<String>,
-    description: RwSignal<String>,
-    visibility: RwSignal<String>,
-}
+fn start(file: web_sys::File, upload: Upload, follow: Timer, scope: Scope) {
+    use youcraft_api::commands::upload as uploading;
 
-/// How often the page asks how far a handed-over video has come.
-#[cfg(feature = "hydrate")]
-const FOLLOW_MILLISECONDS: u64 = 3000;
+    use crate::call::call;
+    use crate::notice::describe;
 
-/// Create the video for `file`, send its bytes, save the details, hand it over and follow it.
-#[cfg(feature = "hydrate")]
-fn start(file: web_sys::File, signals: Signals, edit: impl Fn(VideoId) -> video::Edit + 'static) {
-    use youcraft_api::commands::upload;
-
-    let Signals {
-        stage,
-        processing,
-        video,
-        title,
-        description,
-        visibility,
-    } = signals;
-    if title.get_untracked().trim().is_empty() {
+    if upload.title.get_untracked().trim().is_empty() {
         let name = file.name();
         let stem = name
             .rsplit_once('.')
             .map_or(name.as_str(), |(stem, _)| stem);
-        title.set(stem.chars().take(video::TITLE_LIMIT).collect());
+        upload
+            .title
+            .set(stem.chars().take(video::TITLE_LIMIT).collect());
     }
     let size = file.size() as u64;
-    stage.set(Stage::Sending { sent: 0, size });
+    upload.stage.set(Stage::Sending { sent: 0, size });
+    let request = uploading::NewUpload {
+        title: upload.title.get_untracked(),
+        description: upload.description.get_untracked(),
+        visibility: upload.visibility.get_untracked(),
+        size,
+    };
     leptos::task::spawn_local(async move {
-        let request = upload::NewUpload {
-            title: title.get_untracked(),
-            description: description.get_untracked(),
-            visibility: Visibility::from_name(&visibility.get_untracked()).unwrap_or_default(),
-            size,
-        };
         let done = async {
-            let created = call::<upload::Create>(request).await?;
-            video.set(Some(created.video));
+            let created = call::<uploading::Create>(request).await?;
+            upload.video.set(Some(created.video));
             crate::transfer::send(&file, &created, |sent| {
-                stage.set(Stage::Sending { sent, size })
+                upload.stage.set(Stage::Sending { sent, size })
             })
             .await?;
-            call::<video::Update>(edit(created.video)).await?;
-            call::<upload::Finish>(video::Which {
+            if let Some(edit) = upload.edit(created.video) {
+                call::<video::Update>(edit).await?;
+            }
+            call::<uploading::Finish>(video::Which {
                 video: created.video,
             })
-            .await
+            .await?;
+            Ok(created.video)
         };
         match done.await {
-            Ok(_) => {
-                stage.set(Stage::Processing);
-                if let Some(id) = video.get_untracked() {
-                    follow(id, processing);
-                }
+            Ok(video) => {
+                upload.stage.set(Stage::Processing);
+                follow_progress(video, upload.processing, follow, scope);
             }
-            Err(error) => stage.set(Stage::Failed(failure(&error))),
+            Err(error) => upload.stage.set(Stage::Failed(describe(&error))),
         }
     });
 }
 
-/// Ask, every few seconds, how far `video` has come, until it plays or fails; a failed question
-/// ends the following, and the studio's list still shows the rest.
+/// Ask, every few seconds and only while the page is shown, how far `video` has come, until it
+/// plays or fails; a failed question ends the following, and the studio's list still shows the
+/// rest.
 #[cfg(feature = "hydrate")]
-fn follow(video: VideoId, processing: RwSignal<Processing>) {
+fn follow_progress(video: VideoId, processing: RwSignal<Processing>, follow: Timer, scope: Scope) {
     use youcraft_api::commands::studio;
 
-    set_timeout(
-        move || {
-            leptos::task::spawn_local(async move {
-                if let Ok(found) = call::<studio::Video>(video::Which { video }).await {
-                    let on_its_way = matches!(
-                        found.processing,
-                        Processing::Uploading { .. } | Processing::Processing { .. }
-                    );
-                    processing.set(found.processing);
-                    if on_its_way {
-                        follow(video, processing);
-                    }
+    use crate::pages::studio::on_its_way;
+
+    follow.after(FOLLOW_EVERY, move || {
+        let again = scope.clone();
+        scope.ask::<studio::Video>(video::Which { video }, move |answer| {
+            if let Ok(found) = answer {
+                let following = on_its_way(&found.processing);
+                processing.set(found.processing);
+                if following {
+                    follow_progress(video, processing, follow, again);
                 }
-            });
-        },
-        std::time::Duration::from_millis(FOLLOW_MILLISECONDS),
-    );
+            }
+        });
+    });
 }

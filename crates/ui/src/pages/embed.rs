@@ -9,9 +9,12 @@ use youcraft_api::records::VideoPage;
 use youcraft_api::{ApiError, VideoId, routes};
 use youcraft_player::VideoPlayer;
 
-use crate::act::act;
+use crate::act::ask;
+use crate::app::titled;
 use crate::call::call;
 use crate::lang::tr;
+use crate::notice::describe;
+use crate::pages::not_found::answer_with_status_of;
 
 /// The video the address names.
 fn chosen() -> Memo<Option<VideoId>> {
@@ -38,10 +41,13 @@ pub fn Embed() -> impl IntoView {
                 {move || Suspend::new(async move {
                     match page.await {
                         Ok(page) => view! { <Embedded page/> }.into_any(),
-                        Err(_) => view! {
-                            <div class="player"><p class="unavailable">{tr("This page isn't available.")}</p></div>
+                        Err(error) => {
+                            answer_with_status_of(&error);
+                            view! {
+                                <div class="player"><p class="unavailable">{describe(&error)}</p></div>
+                            }
+                            .into_any()
                         }
-                        .into_any(),
                     }
                 })}
             </Suspense>
@@ -54,14 +60,14 @@ pub fn Embed() -> impl IntoView {
 fn Embedded(page: VideoPage) -> impl IntoView {
     let card = page.card;
     let video = card.id;
-    let started = Callback::new(move |()| act::<video::View>(video::Which { video }, |_| ()));
+    let started = Callback::new(move |()| ask::<video::View>(video::Which { video }, |_| ()));
     let title = view! {
         <a class="embed-title" href=routes::watch(video) target="_blank" rel="noopener" dir="auto">
             {card.title.clone()}
         </a>
     };
     view! {
-        <Title text=format!("{} - YouCraft", card.title)/>
+        <Title text=titled(&card.title)/>
         {if page.playable {
             view! {
                 <VideoPlayer

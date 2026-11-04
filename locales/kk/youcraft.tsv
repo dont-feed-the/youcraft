@@ -24,10 +24,7 @@
 	Watch later	Кейінірек көру
 	Liked videos	Ұнаған бейнелер
 	No videos yet.	Әзірге бейне жоқ.
-	This page isn't available.	Бұл бет қолжетімсіз.
 	Go to home	Басты бетке өту
-	Sign in to see this page.	Бұл бетті көру үшін кіріңіз.
-	You can't see this page.	Бұл бетті көре алмайсыз.
 	Something went wrong. Try again later.	Бірдеңе дұрыс болмады. Кейінірек қайталап көріңіз.
 	Up next	Келесі
 	This video isn't available yet.	Бұл бейне әлі қолжетімсіз.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Өңдеу сәтсіз аяқталды. Бейнені қайта жүктеңіз.
 	This video is longer than YouCraft accepts.	Бұл бейне YouCraft қабылдайтыннан ұзағырақ.
 	This video needs more than YouCraft allows. Try a smaller file.	Бұл бейне YouCraft рұқсат ететіннен көбірек қажет етеді. Кішірек файлды көріңіз.
-	Upload failed. Try again.	Жүктеу сәтсіз аяқталды. Қайталап көріңіз.
-	The file is too large.	Файл тым үлкен.
 	This can't be empty.	Бұл бос болмауы керек.
 	This must fit on one line.	Бұл бір жолға сыюы керек.
 	This holds characters that aren't allowed.	Мұнда рұқсат етілмеген таңбалар бар.
@@ -203,3 +198,8 @@
 	Unblock	Бұғаттан шығару
 	Your channel	Сіздің арнаңыз
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Суретіңіз арнаңыз бен пікірлеріңіздің жанында көрінеді. Көлемі 5 МБ-тан аспайтын JPEG, PNG немесе WebP файлын таңдаңыз; оның ортасы шаршы етіп қиылады.
+	Sign in first.	Алдымен кіріңіз.
+	This isn't open to your account.	Бұл сіздің аккаунтыңыз үшін ашық емес.
+	This isn't available.	Бұл қолжетімсіз.
+	This is larger than YouCraft accepts.	Бұл YouCraft қабылдайтыннан үлкен.
+	This conflicts with what is already there.	Бұл бұрыннан бар нәрсеге қайшы келеді.

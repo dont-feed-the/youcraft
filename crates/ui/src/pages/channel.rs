@@ -9,12 +9,13 @@ use youcraft_api::commands::playlist::PlaylistCard;
 use youcraft_api::records::VideoCard;
 use youcraft_api::{ApiError, ChannelId, routes};
 
+use crate::app::titled;
 use crate::call::call;
 use crate::components::avatar::{Face, Size};
 use crate::components::card::{GridCard, PlaylistGridCard};
 use crate::components::guide::Guide;
 use crate::components::more::{Pages, ShowMore};
-use crate::components::subscribe::SubscribeButton;
+use crate::components::subscribe::{SubscribeButton, subscription};
 use crate::lang::{compact_count, tr};
 use crate::pages::not_found::Trouble;
 
@@ -61,7 +62,6 @@ pub fn Channel(tab: Tab) -> impl IntoView {
                     {move || Suspend::new(async move {
                         match page.await {
                             Ok(page) => view! { <Heading page=page.clone()/><Tabs page tab/> }.into_any(),
-                            Err(ApiError::NotFound) => view! { <crate::pages::not_found::NotFound/> }.into_any(),
                             Err(error) => view! { <Trouble error/> }.into_any(),
                         }
                     })}
@@ -74,10 +74,10 @@ pub fn Channel(tab: Tab) -> impl IntoView {
 /// The top of the page.
 #[component]
 fn Heading(page: ChannelPage) -> impl IntoView {
-    let subscribers = RwSignal::new(page.subscribers);
+    let state = subscription(page.subscribed, page.subscribers);
     let videos = compact_count(page.videos, "{n} video", "{n} videos");
     view! {
-        <Title text=format!("{} - YouCraft", page.card.name)/>
+        <Title text=titled(&page.card.name)/>
         <header class="channel-heading">
             <span class="avatar avatar-channel" aria-hidden="true"><Face channel=page.card.clone() size=Size::Huge/></span>
             <div class="channel-names">
@@ -85,7 +85,7 @@ fn Heading(page: ChannelPage) -> impl IntoView {
                 <p class="byline">
                     <bdi class="channel-handle">{format!("@{}", page.card.handle)}</bdi>
                     " • "
-                    {move || compact_count(subscribers.get(), "{n} subscriber", "{n} subscribers")}
+                    {move || compact_count(state.shown.get().subscribers, "{n} subscriber", "{n} subscribers")}
                     " • "
                     {videos}
                 </p>
@@ -93,7 +93,7 @@ fn Heading(page: ChannelPage) -> impl IntoView {
                     <p class="byline description-line">{page.description.clone()}</p>
                 })}
                 <div class="channel-buttons">
-                    <SubscribeButton channel=page.card.id subscribed=page.subscribed subscribers owned=page.owned/>
+                    <SubscribeButton channel=page.card.id state owned=page.owned/>
                     {page.owned.then(|| view! {
                         <a class="pill" href=routes::STUDIO_CUSTOMIZE>{tr("Customize channel")}</a>
                         <a class="pill" href=routes::STUDIO>{tr("Manage videos")}</a>
@@ -163,7 +163,7 @@ fn VideoShelf(channel: ChannelId, full: bool) -> impl IntoView {
                                     <GridCard card/>
                                 </For>
                             </div>
-                            <ShowMore next=pages.next more/>
+                            <ShowMore pages more/>
                         }.into_any()
                     }
                     Err(error) => view! { <Trouble error/> }.into_any(),
@@ -204,7 +204,7 @@ fn PlaylistShelf(channel: ChannelId) -> impl IntoView {
                                     <PlaylistGridCard card/>
                                 </For>
                             </div>
-                            <ShowMore next=pages.next more/>
+                            <ShowMore pages more/>
                         }.into_any()
                     }
                     Err(error) => view! { <Trouble error/> }.into_any(),

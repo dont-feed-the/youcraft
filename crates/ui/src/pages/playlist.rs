@@ -11,12 +11,14 @@ use youcraft_api::records::{VideoCard, Visibility};
 use youcraft_api::{ApiError, List, VideoId, routes};
 
 use crate::act::act;
+use crate::app::titled;
 use crate::browser;
 use crate::call::call;
 use crate::components::card::RowCard;
 use crate::components::guide::Guide;
 use crate::components::more::{Pages, ShowMore};
-use crate::components::save::{list_name, visibility_name};
+use crate::components::save::list_name;
+use crate::components::visibility::{VisibilityChoice, visibility_name};
 use crate::icons::{Glyph, Icon};
 use crate::lang::{count, tr};
 use crate::pages::not_found::Trouble;
@@ -77,7 +79,7 @@ fn ListView(page: PlaylistPage) -> AnyView {
     let owner = page.card.owner;
     let editing = RwSignal::new(false);
     view! {
-        <Title text=move || format!("{} - YouCraft", title.get())/>
+        <Title text=move || titled(&title.get())/>
         <div class="playlist">
             <aside class="playlist-panel">
                 <div class="playlist-poster">
@@ -106,7 +108,7 @@ fn ListView(page: PlaylistPage) -> AnyView {
                 <For each=move || pages.items.get() key=|card| card.id let:card>
                     <Entry card list editable pages held/>
                 </For>
-                <ShowMore next=pages.next more/>
+                <ShowMore pages more/>
             </div>
         </div>
     }
@@ -175,9 +177,6 @@ fn EditForm(
             }
         });
     };
-    let options = [Visibility::Public, Visibility::Unlisted, Visibility::Private].map(|v| {
-        view! { <option value=v.as_str() selected=v == draft_visibility.get_untracked()>{visibility_name(v)}</option> }
-    });
     view! {
         <form class="dialog-form" on:submit=save>
             <input class="field" type="text" required aria-label=tr("Title")
@@ -185,10 +184,7 @@ fn EditForm(
             <textarea class="field" rows="4" aria-label=tr("Description")
                 placeholder=tr("Description") prop:value=move || draft_description.get()
                 on:input=move |event| draft_description.set(browser::clipped(&event, DESCRIPTION_LIMIT))></textarea>
-            <select class="field" aria-label=tr("Visibility")
-                on:change=move |event| draft_visibility.set(Visibility::from_name(&event_target_value(&event)).unwrap_or_default())>
-                {options.into_iter().collect_view()}
-            </select>
+            <VisibilityChoice chosen=draft_visibility/>
             <div class="dialog-buttons">
                 <button class="pill quiet" type="button" on:click=move |_| editing.set(false)>{tr("Cancel")}</button>
                 <button class="pill primary" type="submit">{tr("Save")}</button>
@@ -229,7 +225,7 @@ fn Entry(
         act::<playlist::Remove>(Item { list, video }, move |answer| {
             if let Ok(card) = answer {
                 held.set(card.videos);
-                pages.items.update(|items| items.retain(|c| c.id != video));
+                pages.remove(&video);
             }
         });
     };

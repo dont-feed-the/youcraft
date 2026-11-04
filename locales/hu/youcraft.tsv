@@ -24,10 +24,7 @@
 	Watch later	Megnézendő
 	Liked videos	Kedvelt videók
 	No videos yet.	Még nincsenek videók.
-	This page isn't available.	Ez az oldal nem érhető el.
 	Go to home	Ugrás a kezdőlapra
-	Sign in to see this page.	Jelentkezz be az oldal megtekintéséhez.
-	You can't see this page.	Ezt az oldalt nem tekintheted meg.
 	Something went wrong. Try again later.	Hiba történt. Próbáld újra később.
 	Up next	Következő
 	This video isn't available yet.	Ez a videó még nem érhető el.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	A feldolgozás nem sikerült. Töltsd fel újra a videót.
 	This video is longer than YouCraft accepts.	Ez a videó hosszabb annál, amit a YouCraft elfogad.
 	This video needs more than YouCraft allows. Try a smaller file.	Ehhez a videóhoz több kell, mint amennyit a YouCraft megenged. Próbálkozzon kisebb fájllal.
-	Upload failed. Try again.	A feltöltés nem sikerült. Próbáld újra.
-	The file is too large.	A fájl túl nagy.
 	This can't be empty.	Ez nem lehet üres.
 	This must fit on one line.	Ennek egy sorba kell férnie.
 	This holds characters that aren't allowed.	Ez nem engedélyezett karaktereket tartalmaz.
@@ -203,3 +198,8 @@
 	Unblock	Letiltás feloldása
 	Your channel	Az Ön csatornája
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	A képe a csatornája és a hozzászólásai mellett jelenik meg. Válasszon legfeljebb 5 MB-os JPEG-, PNG- vagy WebP-fájlt; a közepéből egy négyzetet vágunk ki.
+	Sign in first.	Előbb jelentkezz be.
+	This isn't open to your account.	Ez nem érhető el a fiókod számára.
+	This isn't available.	Ez nem érhető el.
+	This is larger than YouCraft accepts.	Ez nagyobb, mint amit a YouCraft elfogad.
+	This conflicts with what is already there.	Ez ütközik valamivel, ami már létezik.

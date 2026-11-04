@@ -24,10 +24,7 @@
 	Watch later	לצפייה בהמשך
 	Liked videos	סרטונים שאהבתי
 	No videos yet.	אין עדיין סרטונים.
-	This page isn't available.	הדף הזה לא זמין.
 	Go to home	מעבר לדף הבית
-	Sign in to see this page.	יש להיכנס כדי לראות את הדף הזה.
-	You can't see this page.	אין לך הרשאה לראות את הדף הזה.
 	Something went wrong. Try again later.	משהו השתבש. כדאי לנסות שוב מאוחר יותר.
 	Up next	הסרטון הבא
 	This video isn't available yet.	הסרטון הזה עדיין לא זמין.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	העיבוד נכשל. יש להעלות את הסרטון שוב.
 	This video is longer than YouCraft accepts.	הסרטון הזה ארוך ממה ש-YouCraft מקבל.
 	This video needs more than YouCraft allows. Try a smaller file.	הסרטון הזה דורש יותר ממה ש-YouCraft מאפשר. נסו קובץ קטן יותר.
-	Upload failed. Try again.	ההעלאה נכשלה. כדאי לנסות שוב.
-	The file is too large.	הקובץ גדול מדי.
 	This can't be empty.	זה לא יכול להיות ריק.
 	This must fit on one line.	זה חייב להיכנס בשורה אחת.
 	This holds characters that aren't allowed.	יש כאן תווים שאינם מותרים.
@@ -203,3 +198,8 @@
 	Unblock	ביטול החסימה
 	Your channel	הערוץ שלך
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	התמונה שלך מוצגת לצד הערוץ והתגובות שלך. יש לבחור קובץ JPEG,‏ PNG או WebP בגודל של עד 5 MB; מרכזו נחתך לריבוע.
+	Sign in first.	יש להיכנס קודם.
+	This isn't open to your account.	זה לא פתוח לחשבון שלך.
+	This isn't available.	זה לא זמין.
+	This is larger than YouCraft accepts.	זה גדול ממה ש-YouCraft מקבל.
+	This conflicts with what is already there.	זה מתנגש במשהו שכבר קיים.

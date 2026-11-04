@@ -24,10 +24,7 @@
 	Watch later	稍后观看
 	Liked videos	赞过的视频
 	No videos yet.	还没有视频。
-	This page isn't available.	此页面不可用。
 	Go to home	前往首页
-	Sign in to see this page.	登录后即可查看此页面。
-	You can't see this page.	你无法查看此页面。
 	Something went wrong. Try again later.	出了点问题，请稍后重试。
 	Up next	接下来播放
 	This video isn't available yet.	此视频暂不可用。
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	处理失败，请重新上传视频。
 	This video is longer than YouCraft accepts.	此视频超过了 YouCraft 接受的时长。
 	This video needs more than YouCraft allows. Try a smaller file.	此视频所需的资源超出了 YouCraft 的允许范围。请尝试更小的文件。
-	Upload failed. Try again.	上传失败，请重试。
-	The file is too large.	文件太大。
 	This can't be empty.	此项不能为空。
 	This must fit on one line.	此项必须在一行内。
 	This holds characters that aren't allowed.	包含不允许使用的字符。
@@ -203,3 +198,8 @@
 	Unblock	取消屏蔽
 	Your channel	你的频道
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	你的图片显示在你的频道和评论旁。请选择不超过 5 MB 的 JPEG、PNG 或 WebP 文件；其中央会被裁成正方形。
+	Sign in first.	请先登录。
+	This isn't open to your account.	你的账号无法使用此功能。
+	This isn't available.	此内容不可用。
+	This is larger than YouCraft accepts.	超出了 YouCraft 接受的大小。
+	This conflicts with what is already there.	与已有内容冲突。

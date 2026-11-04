@@ -24,10 +24,7 @@
 	Watch later	Смотреть позже
 	Liked videos	Понравившиеся видео
 	No videos yet.	Видео пока нет.
-	This page isn't available.	Эта страница недоступна.
 	Go to home	На главную
-	Sign in to see this page.	Войдите, чтобы увидеть эту страницу.
-	You can't see this page.	Вы не можете просматривать эту страницу.
 	Something went wrong. Try again later.	Что-то пошло не так. Повторите попытку позже.
 	Up next	Далее
 	This video isn't available yet.	Это видео пока недоступно.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Не удалось обработать видео. Загрузите его ещё раз.
 	This video is longer than YouCraft accepts.	Это видео длиннее, чем принимает YouCraft.
 	This video needs more than YouCraft allows. Try a smaller file.	Этому видео нужно больше, чем позволяет YouCraft. Попробуйте файл поменьше.
-	Upload failed. Try again.	Не удалось загрузить. Повторите попытку.
-	The file is too large.	Файл слишком большой.
 	This can't be empty.	Это не может быть пустым.
 	This must fit on one line.	Это должно уместиться в одну строку.
 	This holds characters that aren't allowed.	Здесь есть недопустимые символы.
@@ -203,3 +198,8 @@
 	Unblock	Разблокировать
 	Your channel	Ваш канал
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Ваше фото показывается рядом с вашим каналом и комментариями. Выберите файл JPEG, PNG или WebP размером не более 5 МБ; его центр обрезается квадратом.
+	Sign in first.	Сначала войдите.
+	This isn't open to your account.	Это недоступно для вашего аккаунта.
+	This isn't available.	Это недоступно.
+	This is larger than YouCraft accepts.	Это больше, чем принимает YouCraft.
+	This conflicts with what is already there.	Это противоречит тому, что уже существует.

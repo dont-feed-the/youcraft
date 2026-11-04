@@ -6,6 +6,7 @@ use leptos_meta::Title;
 use youcraft_api::commands::feed::{self, Page};
 use youcraft_api::records::VideoCard;
 
+use crate::app::titled;
 use crate::call::call;
 use crate::components::card::GridCard;
 use crate::components::guide::Guide;
@@ -18,7 +19,7 @@ use crate::pages::not_found::Trouble;
 pub fn Subscriptions() -> impl IntoView {
     let first = Resource::new(|| (), |()| call::<feed::Subscriptions>(Page::default()));
     view! {
-        <Title text=format!("{} - YouCraft", tr("Subscriptions"))/>
+        <Title text=titled(tr("Subscriptions"))/>
         <div class="with-guide">
             <Guide/>
             <main class="browse">
@@ -41,7 +42,7 @@ pub fn Subscriptions() -> impl IntoView {
                                             <GridCard card/>
                                         </For>
                                     </div>
-                                    <ShowMore next=pages.next more/>
+                                    <ShowMore pages more/>
                                 }.into_any()
                             }
                             Err(error) => view! { <Trouble error/> }.into_any(),

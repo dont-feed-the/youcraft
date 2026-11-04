@@ -2,6 +2,29 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.3.4
+
+### Fixed
+
+- A missing or malformed video, channel, list or embedded video answers 404, and a page that needs
+  signing in answers 401, instead of 200; each page's title is in the HTML it is served with.
+- Leaving a page while a comment, a like, a subscription, a list change or an upload is on its way
+  no longer breaks the page, and the upload still finishes.
+- An upload tries a piece again after a growing wait, gives up when the site stops taking it, and
+  ends with the site's own reason when refused.
+- The studio lists every video, not only the first 30; videos being processed are followed by one
+  timer per page, and saving or deleting a video changes only its row.
+- The visibility of a new list in the Save dialog shows what will be sent.
+- The comment count includes replies, and comments load one page at a time.
+- A failure of commenting, lists, tokens, invitations, the studio, the administration, the
+  history or Show more is said in one announced note instead of passing silently, as is what a
+  change to the channel's customization did; a view that could not be counted stays quiet.
+- In the administration, a change of role or blocking that fails shows the account as it was.
+
+### Changed
+
+- Progress percentages are written in the digits of the page's language.
+
 ## 0.3.3
 
 ### Added

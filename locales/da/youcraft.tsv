@@ -24,10 +24,7 @@
 	Watch later	Se senere
 	Liked videos	Videoer, du synes om
 	No videos yet.	Ingen videoer endnu.
-	This page isn't available.	Denne side er ikke tilgængelig.
 	Go to home	Gå til startsiden
-	Sign in to see this page.	Log ind for at se denne side.
-	You can't see this page.	Du kan ikke se denne side.
 	Something went wrong. Try again later.	Noget gik galt. Prøv igen senere.
 	Up next	Næste
 	This video isn't available yet.	Denne video er ikke tilgængelig endnu.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Behandlingen mislykkedes. Upload videoen igen.
 	This video is longer than YouCraft accepts.	Denne video er længere, end YouCraft accepterer.
 	This video needs more than YouCraft allows. Try a smaller file.	Denne video kræver mere, end YouCraft tillader. Prøv en mindre fil.
-	Upload failed. Try again.	Upload mislykkedes. Prøv igen.
-	The file is too large.	Filen er for stor.
 	This can't be empty.	Dette må ikke være tomt.
 	This must fit on one line.	Dette skal stå på én linje.
 	This holds characters that aren't allowed.	Dette indeholder tegn, der ikke er tilladt.
@@ -203,3 +198,8 @@
 	Unblock	Fjern blokering
 	Your channel	Din kanal
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Dit billede vises ved din kanal og dine kommentarer. Vælg en JPEG-, PNG- eller WebP-fil på højst 5 MB; midten beskæres kvadratisk.
+	Sign in first.	Log ind først.
+	This isn't open to your account.	Det er ikke åbent for din konto.
+	This isn't available.	Det er ikke tilgængeligt.
+	This is larger than YouCraft accepts.	Det er større, end YouCraft accepterer.
+	This conflicts with what is already there.	Det strider mod noget, der allerede findes.

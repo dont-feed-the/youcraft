@@ -24,10 +24,7 @@
 	Watch later	De vizionat mai târziu
 	Liked videos	Videoclipuri apreciate
 	No videos yet.	Încă nu există videoclipuri.
-	This page isn't available.	Această pagină nu este disponibilă.
 	Go to home	Mergi la pagina de pornire
-	Sign in to see this page.	Conectează-te pentru a vedea această pagină.
-	You can't see this page.	Nu poți vedea această pagină.
 	Something went wrong. Try again later.	A apărut o problemă. Încearcă din nou mai târziu.
 	Up next	Urmează
 	This video isn't available yet.	Acest videoclip nu este încă disponibil.
@@ -101,8 +98,6 @@
 	Processing failed. Upload the video again.	Procesarea a eșuat. Încarcă din nou videoclipul.
 	This video is longer than YouCraft accepts.	Acest videoclip este mai lung decât acceptă YouCraft.
 	This video needs more than YouCraft allows. Try a smaller file.	Acest videoclip cere mai mult decât permite YouCraft. Încercați un fișier mai mic.
-	Upload failed. Try again.	Încărcarea a eșuat. Încearcă din nou.
-	The file is too large.	Fișierul este prea mare.
 	This can't be empty.	Nu poate fi gol.
 	This must fit on one line.	Trebuie să încapă pe un singur rând.
 	This holds characters that aren't allowed.	Conține caractere nepermise.
@@ -203,3 +198,8 @@
 	Unblock	Deblochează
 	Your channel	Canalul tău
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Imaginea ta apare lângă canalul și comentariile tale. Alege un fișier JPEG, PNG sau WebP de cel mult 5 MB; centrul lui se decupează pătrat.
+	Sign in first.	Conectează-te mai întâi.
+	This isn't open to your account.	Acest lucru nu este disponibil pentru contul tău.
+	This isn't available.	Acest lucru nu este disponibil.
+	This is larger than YouCraft accepts.	Este mai mare decât acceptă YouCraft.
+	This conflicts with what is already there.	Intră în conflict cu ceva ce există deja.
