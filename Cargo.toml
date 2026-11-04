@@ -21,6 +21,7 @@ youcraft-ui = { path = "crates/ui" }
 axum = "0.8.9"
 base64 = "0.22.1"
 console_error_panic_hook = "0.1.7"
+craft-i18n = { git = "https://github.com/storytold/craft-libs", rev = "c5a1cbfb5f9049f9270955caffb5bee5997aebf7" }
 filmcraft-aac = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
 filmcraft-codecs = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
 filmcraft-frame = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
@@ -28,8 +29,12 @@ filmcraft-h264enc = { git = "https://github.com/storytold/filmcraft", rev = "57d
 filmcraft-isobmff = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
 filmcraft-media = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
 filmcraft-time = { git = "https://github.com/storytold/filmcraft", rev = "57dc82ea2046c2ec479ab4d4d8167d90e5500b49" }
-craft-i18n = { git = "https://github.com/storytold/craft-libs", rev = "c5a1cbfb5f9049f9270955caffb5bee5997aebf7" }
+futures-util = { version = "0.3.34", default-features = false }
+http = "1.3.1"
 http-body-util = "0.1.3"
+# In the ICU4X minor version craft-i18n is on, as an outside oracle for its compact numbers.
+icu_decimal = { version = "~2.3", default-features = false, features = ["compiled_data", "unstable"] }
+icu_locale_core = { version = "~2.3", default-features = false }
 image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp"] }
 js-sys = "0.3.107"
 leptos = "0.8.23"
@@ -37,15 +42,17 @@ leptos_axum = "0.8.10"
 leptos_meta = "0.8.7"
 leptos_router = "0.8.17"
 listenfd = "1.0.2"
+proc-macro2 = { version = "1.0.107", default-features = false }
 rand = "0.10.3"
-rsa = { version = "0.9.10", default-features = false, features = ["std", "u64_digit"] }
 rlimit = "0.11.0"
+rsa = { version = "0.9.10", default-features = false, features = ["std", "u64_digit"] }
 rusqlite = { version = "0.41.1", features = ["bundled"] }
 schemars = "1.2.3"
 send_wrapper = { version = "0.6.0", features = ["futures"] }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"
 sha2 = { version = "0.10.9", features = ["oid"] }
+syn = { version = "2.0.119", default-features = false }
 thiserror = "2.0.21"
 tokio = { version = "1.54.1", features = ["fs", "io-util", "macros", "net", "process", "rt-multi-thread", "signal", "sync", "time"] }
 tower = { version = "0.5.3", features = ["util"] }

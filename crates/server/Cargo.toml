@@ -39,9 +39,9 @@ youcraft-transcode.workspace = true
 youcraft-ui = { workspace = true, features = ["ssr"] }
 
 [dev-dependencies]
-rusqlite.workspace = true
-futures-util = { version = "0.3.34", default-features = false }
+futures-util.workspace = true
 rsa = { workspace = true, features = ["getrandom"] }
+rusqlite.workspace = true
 
 [lints]
 workspace = true

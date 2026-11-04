@@ -16,14 +16,30 @@ crate-type = ["cdylib", "rlib"]
 
 [features]
 # Rendered by the server.
-ssr = ["leptos/ssr", "leptos/nonce", "leptos_meta/ssr", "leptos_router/ssr", "dep:http", "dep:leptos_axum"]
+ssr = [
+  "leptos/ssr",
+  "leptos/nonce",
+  "leptos_meta/ssr",
+  "leptos_router/ssr",
+  "dep:http",
+  "dep:leptos_axum",
+]
 # Hydrated in the browser, as `cargo xtask site` builds it.
-hydrate = ["leptos/hydrate", "youcraft-player/hydrate", "dep:base64", "dep:console_error_panic_hook", "dep:js-sys", "dep:wasm-bindgen", "dep:wasm-bindgen-futures", "dep:web-sys"]
+hydrate = [
+  "leptos/hydrate",
+  "youcraft-player/hydrate",
+  "dep:base64",
+  "dep:console_error_panic_hook",
+  "dep:js-sys",
+  "dep:wasm-bindgen",
+  "dep:wasm-bindgen-futures",
+  "dep:web-sys",
+]
 
 [dependencies]
 base64 = { workspace = true, optional = true }
 console_error_panic_hook = { workspace = true, optional = true }
-http = { version = "1.3.1", optional = true }
+http = { workspace = true, optional = true }
 js-sys = { workspace = true, optional = true }
 leptos.workspace = true
 leptos_axum = { workspace = true, optional = true }
@@ -34,7 +50,27 @@ serde.workspace = true
 serde_json.workspace = true
 wasm-bindgen = { workspace = true, optional = true }
 wasm-bindgen-futures = { workspace = true, optional = true }
-web-sys = { workspace = true, optional = true, features = ["Blob", "Clipboard", "Document", "Element", "Event", "EventTarget", "File", "FileList", "Headers", "HtmlDocument", "HtmlElement", "HtmlInputElement", "Location", "Navigator", "Request", "RequestCredentials", "RequestInit", "Response", "Window"] }
+web-sys = { workspace = true, optional = true, features = [
+  "Blob",
+  "Clipboard",
+  "Document",
+  "Element",
+  "Event",
+  "EventTarget",
+  "File",
+  "FileList",
+  "Headers",
+  "HtmlDocument",
+  "HtmlElement",
+  "HtmlInputElement",
+  "Location",
+  "Navigator",
+  "Request",
+  "RequestCredentials",
+  "RequestInit",
+  "Response",
+  "Window",
+] }
 youcraft-api.workspace = true
 youcraft-i18n = { workspace = true, features = ["leptos"] }
 youcraft-player.workspace = true

@@ -22,17 +22,17 @@ leptos = ["dep:leptos"]
 craft-i18n.workspace = true
 leptos = { workspace = true, optional = true }
 
-[lints]
-workspace = true
-
 [dev-dependencies]
 # An outside oracle for the compact numbers: ICU4X's own compact formatter, over its compiled
-# CLDR data, in the ICU4X minor version craft-i18n is on.
-icu_decimal = { version = "~2.3", default-features = false, features = ["compiled_data", "unstable"] }
-icu_locale_core = { version = "~2.3", default-features = false }
+# CLDR data.
+icu_decimal.workspace = true
+icu_locale_core.workspace = true
 # The catalog checks read the code as Rust tokens, and string literals as the compiler does.
-proc-macro2 = { version = "1.0.107", default-features = false }
-syn = { version = "2.0.119", default-features = false }
+proc-macro2.workspace = true
+syn.workspace = true
 # The tests read every catalog, as the server embeds them, even when nothing else in the build
 # turns `embed` on (`cargo test -p youcraft-i18n`).
 youcraft-i18n = { path = ".", features = ["embed"] }
+
+[lints]
+workspace = true

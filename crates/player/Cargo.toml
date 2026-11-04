@@ -14,7 +14,14 @@ wasm-features = ["hydrate"]
 [features]
 # Runs in the browser: streams media and answers the controls. Without it the player only renders
 # its markup, as the server does.
-hydrate = ["leptos/hydrate", "dep:js-sys", "dep:wasm-bindgen", "dep:wasm-bindgen-futures", "dep:web-sys", "dep:serde_json"]
+hydrate = [
+  "leptos/hydrate",
+  "dep:js-sys",
+  "dep:serde_json",
+  "dep:wasm-bindgen",
+  "dep:wasm-bindgen-futures",
+  "dep:web-sys",
+]
 
 [dependencies]
 js-sys = { workspace = true, optional = true }
