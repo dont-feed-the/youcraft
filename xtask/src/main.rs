@@ -4,8 +4,12 @@
 //! with its `hydrate` feature, bound by wasm-bindgen (the library, pinned to the crate's exact
 //! version in the workspace, so the bindings always match), shrunk in release by the wasm-opt of
 //! binaryen's version [`WASM_OPT`] ([`WASM_OPT_INSTALL`]; any other version, or none, fails the
-//! build, so that one commit makes one bundle), the stylesheets of every crate's `style/` concatenated in name order, and the files of
-//! `crates/ui/assets/` copied beside them. `serve` builds the site and runs the server on it.
+//! build, so that one commit makes one bundle), the stylesheets of every crate's `style/`
+//! concatenated in name order, and the files of `crates/ui/assets/` copied beside them. `serve`
+//! builds the site and runs the server on it.
+//!
+//! The workspace and the cargo it builds with are those of the `cargo xtask` that runs it, read
+//! when it runs: checkouts that share a target directory share this binary too.
 
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitCode};
@@ -22,11 +26,11 @@ const WASM_OPT_INSTALL: &str = "cargo install wasm-opt --version 0.116.1 --locke
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().skip(1).collect();
     let release = args.iter().any(|arg| arg == "--release");
-    let result = match args.first().map(String::as_str) {
-        Some("site") => site(release).map(drop),
-        Some("serve") => site(release).and_then(|site| serve(&site, release)),
+    let result = Cargo::of_this_run().and_then(|cargo| match args.first().map(String::as_str) {
+        Some("site") => site(&cargo, release).map(drop),
+        Some("serve") => site(&cargo, release).and_then(|site| serve(&cargo, &site, release)),
         _ => Err("usage: cargo xtask site|serve [--release]".to_owned()),
-    };
+    });
     match result {
         Ok(()) => ExitCode::SUCCESS,
         Err(message) => {
@@ -36,25 +40,51 @@ fn main() -> ExitCode {
     }
 }
 
-/// The workspace root, which holds this crate.
-fn root() -> PathBuf {
-    let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
-    manifest.parent().unwrap_or(manifest).to_path_buf()
+/// The cargo that runs this task and the workspace it runs in.
+struct Cargo {
+    /// The cargo executable.
+    program: PathBuf,
+    /// The workspace root, which holds this crate.
+    root: PathBuf,
 }
 
-/// Cargo's target directory, as `CARGO_TARGET_DIR` sets it for parallel agents.
-fn target_dir() -> PathBuf {
-    std::env::var_os("CARGO_TARGET_DIR").map_or_else(|| root().join("target"), PathBuf::from)
+impl Cargo {
+    /// The cargo and workspace of `cargo xtask`, as cargo tells the program it runs.
+    fn of_this_run() -> Result<Self, String> {
+        let var = |name: &str| {
+            std::env::var_os(name)
+                .map(PathBuf::from)
+                .ok_or_else(|| format!("{name} is not set: run this as `cargo xtask`"))
+        };
+        let manifest = var("CARGO_MANIFEST_DIR")?;
+        let root = manifest.parent().unwrap_or(&manifest).to_path_buf();
+        Ok(Self {
+            program: var("CARGO")?,
+            root,
+        })
+    }
+
+    /// A cargo command in the workspace root.
+    fn command(&self) -> Command {
+        let mut command = Command::new(&self.program);
+        command.current_dir(&self.root);
+        command
+    }
+
+    /// Cargo's target directory, as `CARGO_TARGET_DIR` sets it for parallel agents.
+    fn target_dir(&self) -> PathBuf {
+        std::env::var_os("CARGO_TARGET_DIR").map_or_else(|| self.root.join("target"), PathBuf::from)
+    }
 }
 
 /// Build the browser bundle and return the site directory.
-fn site(release: bool) -> Result<PathBuf, String> {
+fn site(cargo: &Cargo, release: bool) -> Result<PathBuf, String> {
     if release {
         wasm_opt_is_pinned()?;
     }
     let profile = if release { "wasm-release" } else { "dev" };
-    run(Command::new(env!("CARGO"))
-        .current_dir(root())
+    run(cargo
+        .command()
         .args([
             "build",
             "--locked",
@@ -66,11 +96,12 @@ fn site(release: bool) -> Result<PathBuf, String> {
         ])
         .args(["--features", "hydrate", "--profile", profile]))?;
     let profile_dir = if release { "wasm-release" } else { "debug" };
-    let wasm = target_dir()
+    let wasm = cargo
+        .target_dir()
         .join("wasm32-unknown-unknown")
         .join(profile_dir)
         .join("youcraft_ui.wasm");
-    let site = target_dir().join("site");
+    let site = cargo.target_dir().join("site");
     if site.exists() {
         std::fs::remove_dir_all(&site).map_err(|e| format!("{}: {e}", site.display()))?;
     }
@@ -99,17 +130,18 @@ fn site(release: bool) -> Result<PathBuf, String> {
             .arg("-o")
             .arg(&bound))?;
     }
-    write_stylesheet(&root().join("crates"), &pkg.join(format!("{BUNDLE}.css")))?;
-    copy_tree(&root().join("crates/ui/assets"), &site)?;
+    write_stylesheet(
+        &cargo.root.join("crates"),
+        &pkg.join(format!("{BUNDLE}.css")),
+    )?;
+    copy_tree(&cargo.root.join("crates/ui/assets"), &site)?;
     Ok(site)
 }
 
 /// Run the server on `site`, with its data in `data/` of the workspace.
-fn serve(site: &Path, release: bool) -> Result<(), String> {
-    let mut command = Command::new(env!("CARGO"));
-    command
-        .current_dir(root())
-        .args(["run", "--locked", "--package", "youcraft-server"]);
+fn serve(cargo: &Cargo, site: &Path, release: bool) -> Result<(), String> {
+    let mut command = cargo.command();
+    command.args(["run", "--locked", "--package", "youcraft-server"]);
     if release {
         command.arg("--release");
     }
