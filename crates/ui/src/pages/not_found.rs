@@ -32,6 +32,9 @@ pub fn Trouble(error: ApiError) -> impl IntoView {
         ApiError::SignInRequired => tr("Sign in to see this page.").to_owned(),
         ApiError::Forbidden => tr("You can't see this page.").to_owned(),
         ApiError::Invalid { rule, .. } => describe_rule(rule),
+        ApiError::TooOften { .. } => {
+            tr("Too many attempts. Wait a moment and try again.").to_owned()
+        }
         _ => tr("Something went wrong. Try again later.").to_owned(),
     };
     let location = use_location();

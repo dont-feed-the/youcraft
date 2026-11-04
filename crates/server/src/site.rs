@@ -2,12 +2,17 @@
 
 use std::sync::Arc;
 
-use youcraft_api::{AccountId, ApiError, Grant, Role};
+use youcraft_api::{AccountId, ApiError, Grant, Role, VideoId};
 use youcraft_store::accounts::Standing;
 use youcraft_store::credentials::SecretHash;
 use youcraft_store::{Reader, Store, StoreError};
 
 use crate::config::Config;
+use crate::rate::{self, RateLimit, Spender};
+
+/// How many locks the uploads' files share: two uploads wait for each other only when their
+/// videos' ids fall on the same one.
+const UPLOAD_LOCKS: u64 = 64;
 
 /// Everything a command can reach.
 pub struct Site {
@@ -15,8 +20,10 @@ pub struct Site {
     config: Config,
     /// Wakes the job worker when an upload is finished.
     pub work: tokio::sync::Notify,
-    /// Held while bytes of an upload are written, so two pieces never interleave.
-    pub writing: tokio::sync::Mutex<()>,
+    /// The pieces of uploads the site may receive at once.
+    pub streams: tokio::sync::Semaphore,
+    upload_locks: Vec<tokio::sync::Mutex<()>>,
+    rate: RateLimit,
     salt: [u8; 32],
 }
 
@@ -33,6 +40,8 @@ pub struct Caller {
     pub credential: Credential,
     /// Who they are to the view counter.
     pub viewer: ViewerKey,
+    /// The address they come from, to the rate limit when they are signed out.
+    pub address: AddressKey,
 }
 
 /// Who a caller is to the view counter, which counts one view a day per viewer: a hash of their
@@ -44,6 +53,16 @@ pub struct ViewerKey(pub [u8; 32]);
 impl ViewerKey {
     /// No one in particular: the operator, and requests the server did not resolve.
     pub const NOBODY: ViewerKey = ViewerKey([0; 32]);
+}
+
+/// The address a request came from, hashed with the secret of [`ViewerKey`]s: the rate limit
+/// tells those signed out apart by it, and it names nobody.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct AddressKey(pub [u8; 32]);
+
+impl AddressKey {
+    /// No address: the operator, and requests the server did not resolve.
+    pub const NOBODY: AddressKey = AddressKey([0; 32]);
 }
 
 /// How a caller proved who they are.
@@ -66,6 +85,7 @@ impl Caller {
         role: Role::Anyone,
         credential: Credential::Nothing,
         viewer: ViewerKey::NOBODY,
+        address: AddressKey::NOBODY,
     };
 
     /// Whoever runs `youcraft` on the server's machine: an administrator with no account.
@@ -74,6 +94,7 @@ impl Caller {
         role: Role::Admin,
         credential: Credential::Operator,
         viewer: ViewerKey::NOBODY,
+        address: AddressKey::NOBODY,
     };
 
     /// The caller whose credential shows `standing`, known to the view counter as `viewer`, on
@@ -93,6 +114,7 @@ impl Caller {
             },
             credential,
             viewer,
+            address: AddressKey::NOBODY,
         }
     }
 
@@ -119,6 +141,16 @@ impl Caller {
             Err(ApiError::Forbidden)
         }
     }
+
+    /// Whose rate their changes spend: their account's, or their address's while signed out;
+    /// `None` for the operator, whom nothing limits.
+    fn spender(&self) -> Option<Spender> {
+        match (self.credential, self.account) {
+            (Credential::Operator, _) => None,
+            (_, Some(account)) => Some(Spender::Account(account)),
+            (_, None) => Some(Spender::Address(self.address)),
+        }
+    }
 }
 
 impl Site {
@@ -142,11 +174,47 @@ impl Site {
     pub fn with(store: Store, config: Config) -> Site {
         Site {
             store: Arc::new(store),
-            config,
             work: tokio::sync::Notify::new(),
-            writing: tokio::sync::Mutex::new(()),
+            streams: tokio::sync::Semaphore::new(
+                config
+                    .uploads
+                    .streams
+                    .min(tokio::sync::Semaphore::MAX_PERMITS),
+            ),
+            upload_locks: (0..UPLOAD_LOCKS)
+                .map(|_| tokio::sync::Mutex::new(()))
+                .collect(),
+            rate: RateLimit::new(config.writes),
+            config,
             salt: rand::random(),
         }
+    }
+
+    /// Hold the files of `video`'s upload: its pieces never interleave, and finishing,
+    /// deleting or dropping it waits for the piece being written.
+    pub async fn lock_upload(
+        &self,
+        video: VideoId,
+    ) -> Result<tokio::sync::MutexGuard<'_, ()>, ApiError> {
+        let index = usize::try_from(video.bits() % UPLOAD_LOCKS).map_err(|_| ApiError::Internal)?;
+        let lock = self.upload_locks.get(index).ok_or(ApiError::Internal)?;
+        Ok(lock.lock().await)
+    }
+
+    /// Spend one change from `caller`'s rate, or [`ApiError::TooOften`] when it is spent.
+    pub fn spend(&self, caller: &Caller) -> Result<(), ApiError> {
+        caller
+            .spender()
+            .map_or(Ok(()), |spender| self.spend_from(spender))
+    }
+
+    /// Spend one change from the rate of `spender`, or [`ApiError::TooOften`] when it is spent.
+    pub fn spend_from(&self, spender: Spender) -> Result<(), ApiError> {
+        self.rate
+            .spend(spender, std::time::Instant::now())
+            .map_err(|wait| ApiError::TooOften {
+                retry_after: rate::seconds(wait),
+            })
     }
 
     /// The database, for work outside a request.

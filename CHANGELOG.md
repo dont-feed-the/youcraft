@@ -2,6 +2,41 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.3.0
+
+### Changed
+
+- `video.delete` answers `{}`, like every other delete, instead of `null`.
+- Each command says whether it changes the site (`writes` in `site.commands` and `youcraft
+  commands`); tools that only read carry `readOnlyHint` for agents over MCP.
+- One account keeps at most 3 uploads open at once, together no larger than the largest file
+  (`YOUCRAFT_OPEN_UPLOADS`, `YOUCRAFT_OPEN_UPLOAD_BYTES`). An upload not finished 24 hours after
+  it started lapses (`YOUCRAFT_UPLOAD_HOURS`): its pieces are refused, and its video and the bytes
+  it received are deleted, which frees the room it claimed.
+- A piece of an upload that stalls for a minute, or arrives slower than 16 KiB/s, is dropped with
+  408, and the upload page sends it again. At most 8 pieces arrive at once
+  (`YOUCRAFT_UPLOAD_STREAMS`).
+- A visitor's address is the one the proxy wrote last in `X-Forwarded-For`, never one a client
+  may have written before it.
+
+### Added
+
+- A rate limit on changing the site: one account, or one address while signed out, makes at most
+  30 changes in a row, then 20 a minute (`YOUCRAFT_WRITES_BURST`, `YOUCRAFT_WRITES_PER_MINUTE`);
+  signing in counts as one. Over it, commands answer 429 `too_often` with `Retry-After`, and pages
+  say to wait a moment.
+
+### Fixed
+
+- A piece of an upload is read only after its sender, its upload and its offset are checked, and
+  goes to disk as it arrives: nobody can make the server hold 16 MiB per request any more.
+- Uploads of different videos no longer wait for one another, and starting an upload no longer
+  walks every file of the site: it counts what the database records.
+- Finishing an upload works again after the server stopped between moving its file and
+  recording it.
+- Deleting a video while a piece of its upload arrives no longer leaves the piece's file behind;
+  a file that cannot be removed is logged.
+
 ## 0.2.0
 
 ### Changed

@@ -130,7 +130,7 @@ mod tests {
     use super::*;
     use crate::accounts::NewAccount;
     use crate::jobs::{Made, MadeRendition};
-    use crate::uploads::NewUpload;
+    use crate::uploads::{Allowance, Claim, NewUpload};
 
     fn store() -> (Store, AccountId, ChannelId) {
         let store = Store::in_memory().unwrap();
@@ -161,7 +161,8 @@ mod tests {
             size: 1000,
             now,
         };
-        store.create_upload(&upload).unwrap();
+        let claim = store.create_upload(&upload, &Allowance::UNBOUNDED);
+        assert_eq!(claim.unwrap(), Claim::Started);
         video
     }
 

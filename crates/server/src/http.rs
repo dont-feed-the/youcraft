@@ -8,8 +8,8 @@
 use std::sync::Arc;
 
 use axum::Router;
-use axum::body::Bytes;
-use axum::extract::{DefaultBodyLimit, Extension, FromRef, Path, Request, State};
+use axum::body::{Body, Bytes};
+use axum::extract::{Extension, FromRef, Path, Request, State};
 use axum::http::{HeaderMap, StatusCode, header};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, head, post};
@@ -22,7 +22,6 @@ use youcraft_ui::lang::{Language, RenderTime};
 
 use crate::config::Config;
 use crate::dispatch::{self, RequestDispatch};
-use crate::handlers::upload::PIECE;
 use crate::listen::{Listener, listen, stopped};
 use crate::signin;
 use crate::site::{Caller, Credential, Site, now};
@@ -99,14 +98,7 @@ fn router(site: Arc<Site>, config: &Config) -> Router {
         .route("/api/v1/{id}", post(command))
         .route(routes::MCP, post(mcp))
         .route("/media/{video}/{*file}", get(media))
-        .route(
-            "/upload/{video}",
-            head(upload_offset)
-                .patch(upload_piece)
-                .layer(DefaultBodyLimit::max(
-                    usize::try_from(PIECE).unwrap_or(usize::MAX),
-                )),
-        )
+        .route("/upload/{video}", head(upload_offset).patch(upload_piece))
         .leptos_routes_with_context(&state, pages, context.clone(), shell.clone())
         .fallback(leptos_axum::render_app_to_stream_with_context(
             context, shell,
@@ -191,10 +183,16 @@ async fn mcp(
     crate::mcp::answer(&state.site, visitor.caller, &headers, &body).await
 }
 
-/// `error` as JSON, with its status.
+/// `error` as JSON, with its status, and when to try again if it says.
 pub fn error_response(error: &ApiError) -> Response {
     let status = StatusCode::from_u16(error.status()).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
-    (status, axum::Json(error)).into_response()
+    let mut response = (status, axum::Json(error)).into_response();
+    if let ApiError::TooOften { retry_after } = error {
+        response
+            .headers_mut()
+            .insert(header::RETRY_AFTER, (*retry_after).into());
+    }
+    response
 }
 
 /// `GET /media/<video>/<file>`.
@@ -217,13 +215,13 @@ async fn upload_offset(
 }
 
 /// `PATCH /upload/<video>`: a piece of an upload, which a browser's session may send only from
-/// the site's own pages, as it may post commands.
+/// the site's own pages, as it may post commands. Its body is read only once all is checked.
 async fn upload_piece(
     State(state): State<AppState>,
     Path(video): Path<String>,
     Extension(visitor): Extension<Visitor>,
     headers: HeaderMap,
-    body: Bytes,
+    body: Body,
 ) -> Response {
     if let Err(error) = from_own_pages(&state.site, &visitor, &headers) {
         return error_response(&error);
@@ -294,28 +292,24 @@ pub mod tests {
 
     /// A test site and its routes, where every account has at least `signed_in_role`.
     pub fn site_where(signed_in_role: youcraft_api::Grant) -> (Arc<Site>, Router) {
+        site_of(|config| config.signed_in_role = signed_in_role)
+    }
+
+    /// A test site and its routes, configured as [`Config::testing`] says and `change` changes,
+    /// with Google's test key in a file of its own.
+    pub fn site_of(change: impl FnOnce(&mut Config)) -> (Arc<Site>, Router) {
         let keys = std::env::temp_dir().join(format!(
             "youcraft-test-keys-{}.json",
             crate::secrets::random_bits()
         ));
         std::fs::write(&keys, google::tests::keys()).unwrap();
-        let config = Config {
-            data: std::env::temp_dir(),
-            site: std::env::temp_dir(),
-            address: "127.0.0.1:0".parse().unwrap(),
-            origin: ORIGIN.to_owned(),
-            google: Some(Google {
-                client_id: CLIENT.to_owned(),
-                keys,
-            }),
-            signed_in_role,
-            upload_bytes: 1 << 20,
-            storage_bytes: u64::MAX,
-            transcode: crate::config::TranscodeLimits {
-                memory_bytes: 1 << 30,
-                wall: std::time::Duration::from_secs(60),
-            },
-        };
+        let mut config = Config::testing(std::env::temp_dir());
+        config.origin = ORIGIN.to_owned();
+        config.google = Some(Google {
+            client_id: CLIENT.to_owned(),
+            keys,
+        });
+        change(&mut config);
         let site = Arc::new(Site::with(Store::in_memory().unwrap(), config.clone()));
         let routes = router(Arc::clone(&site), &config);
         (site, routes)
@@ -671,6 +665,69 @@ pub mod tests {
         );
         let (status, _) = answer(&routes, "upload.create", upload, &bob).await;
         assert_eq!(status, StatusCode::FORBIDDEN);
+    }
+
+    #[tokio::test]
+    async fn a_piece_of_an_upload_is_not_read_before_it_is_allowed() {
+        use std::sync::atomic::{AtomicBool, Ordering};
+
+        let (_, routes) = site();
+        let read = Arc::new(AtomicBool::new(false));
+        let body = {
+            let read = Arc::clone(&read);
+            Body::from_stream(futures_util::stream::once(async move {
+                read.store(true, Ordering::SeqCst);
+                Ok::<_, std::io::Error>(Bytes::from(vec![0u8; 1 << 20]))
+            }))
+        };
+        let piece = Request::patch(routes::upload(youcraft_api::VideoId::from_bits(5)))
+            .header("upload-offset", "0")
+            .body(body)
+            .unwrap();
+        assert_eq!(send(&routes, piece).await.0, StatusCode::UNAUTHORIZED);
+        assert!(
+            !read.load(Ordering::SeqCst),
+            "a stranger's megabyte is never read"
+        );
+    }
+
+    #[tokio::test]
+    async fn callers_change_the_site_only_so_often() {
+        use crate::config::WriteRate;
+
+        let (_, routes) = site_of(|config| {
+            config.writes = WriteRate {
+                burst: 2,
+                interval: Some(std::time::Duration::from_secs(60)),
+            }
+        });
+        let ada = sign_in(&routes, "ada").await;
+        let token = || command_request("token.create", r#"{"name": "x"}"#, &ada);
+        for _ in 0..2 {
+            assert_eq!(send(&routes, token()).await.0, StatusCode::OK);
+        }
+        let (status, headers, body) = send(&routes, token()).await;
+        assert_eq!(status, StatusCode::TOO_MANY_REQUESTS, "{body}");
+        assert_eq!(headers[header::RETRY_AFTER], "60");
+        assert!(body.contains("too_often"), "{body}");
+        let list = command_request("token.list", "{}", &ada);
+        assert_eq!(
+            send(&routes, list).await.0,
+            StatusCode::OK,
+            "reading costs nothing"
+        );
+        sign_in(&routes, "bob").await;
+        let again = Request::post(routes::SIGNED_IN_WITH_GOOGLE)
+            .header(header::CONTENT_TYPE, "application/x-www-form-urlencoded")
+            .body(Body::from("id_token=x&state=%2F"))
+            .unwrap();
+        let (status, headers, _) = send(&routes, again).await;
+        assert_eq!(status, StatusCode::SEE_OTHER);
+        assert_eq!(
+            headers[header::LOCATION],
+            "/signin/failed?why=too_often&next=%2F",
+            "an address signs in only so often too"
+        );
     }
 
     /// The JSON answer of `id` on `input`, sent with `cookie`, and its status.

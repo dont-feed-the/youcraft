@@ -160,6 +160,7 @@ impl Command for Create {
     const SUMMARY: &'static str = "Make a playlist, empty or holding a first video.";
     type Input = NewPlaylist;
     type Output = PlaylistCard;
+    const WRITES: bool = true;
 }
 
 /// Change a playlist's title, description or visibility.
@@ -172,6 +173,7 @@ impl Command for Update {
         "Change the title, description or visibility of one of your playlists.";
     type Input = Edit;
     type Output = PlaylistCard;
+    const WRITES: bool = true;
 }
 
 /// Delete a playlist; its videos stay.
@@ -183,6 +185,7 @@ impl Command for Delete {
     const SUMMARY: &'static str = "Delete one of your playlists; the videos in it stay.";
     type Input = Which;
     type Output = Nothing;
+    const WRITES: bool = true;
 }
 
 /// Put a video at the end of a list.
@@ -195,6 +198,7 @@ impl Command for Add {
         "Put a video at the end of your Watch later list or of one of your playlists.";
     type Input = Item;
     type Output = PlaylistCard;
+    const WRITES: bool = true;
 }
 
 /// Take a video out of a list.
@@ -207,6 +211,7 @@ impl Command for Remove {
         "Take a video out of your Watch later list or of one of your playlists.";
     type Input = Item;
     type Output = PlaylistCard;
+    const WRITES: bool = true;
 }
 
 /// Move a video within a list.
@@ -219,6 +224,7 @@ impl Command for Move {
         "Move a video to another place in your Watch later list or one of your playlists.";
     type Input = Placing;
     type Output = Nothing;
+    const WRITES: bool = true;
 }
 
 /// The caller's lists.
@@ -230,6 +236,7 @@ impl Command for Lists {
     const SUMMARY: &'static str = "List your Watch later list, your liked videos and your playlists, telling which hold a given video.";
     type Input = Mine;
     type Output = Vec<PlaylistCard>;
+    const WRITES: bool = false;
 }
 
 /// A page of a list the caller may see.
@@ -242,4 +249,5 @@ impl Command for Get {
         "Get a list and a page of its videos: WL, LL, or PL and a playlist's identifier.";
     type Input = Open;
     type Output = PlaylistPage;
+    const WRITES: bool = false;
 }

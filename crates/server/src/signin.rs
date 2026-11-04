@@ -11,7 +11,7 @@
 use std::sync::Arc;
 
 use axum::Form;
-use axum::extract::{Query, State};
+use axum::extract::{Extension, Query, State};
 use axum::http::header::{LOCATION, SET_COOKIE};
 use axum::http::{HeaderMap, HeaderValue, StatusCode};
 use axum::response::{IntoResponse, Response};
@@ -25,8 +25,10 @@ use crate::config::Google;
 use crate::cookies;
 use crate::google::{self, KEYS_LIMIT};
 use crate::handlers::input::cleaned;
+use crate::rate::Spender;
 use crate::secrets::{new_secret, random_bits};
 use crate::site::{Site, now};
+use crate::visitor::Visitor;
 
 /// Where Google's people sign in.
 const GOOGLE_SIGN_IN: &str = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -63,9 +65,11 @@ pub async fn start(State(site): State<Arc<Site>>, Query(start): Query<Start>) ->
     redirect(&address, [cookie].into_iter().flatten())
 }
 
-/// `POST /signin/google`: back from Google.
+/// `POST /signin/google`: back from Google. Signing in spends from the rate of the browser's
+/// address, as a change of the site does, before the token is verified.
 pub async fn back(
     State(site): State<Arc<Site>>,
+    Extension(visitor): Extension<Visitor>,
     headers: HeaderMap,
     Form(back): Form<Back>,
 ) -> Response {
@@ -73,6 +77,12 @@ pub async fn back(
         return failed(routes::SIGN_IN_UNAVAILABLE, None);
     };
     let next = routes::local_path(back.state.as_deref().unwrap_or(routes::HOME)).to_owned();
+    if site
+        .spend_from(Spender::Address(visitor.caller.address))
+        .is_err()
+    {
+        return failed(routes::SIGN_IN_TOO_OFTEN, Some(&next));
+    }
     let secret = cookies::read(&headers, cookies::SIGN_IN);
     let (Some(token), Some(secret)) = (back.id_token, secret) else {
         return failed(routes::SIGN_IN_REFUSED, Some(&next));

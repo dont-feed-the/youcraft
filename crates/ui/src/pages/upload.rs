@@ -39,6 +39,7 @@ fn failure(error: &youcraft_api::ApiError) -> &'static str {
         ApiError::TooLarge { .. } => tr("The file is too large."),
         ApiError::SignInRequired => tr("Sign in to see this page."),
         ApiError::Forbidden => tr("You can't see this page."),
+        ApiError::TooOften { .. } => tr("Too many attempts. Wait a moment and try again."),
         _ => tr("Upload failed. Try again."),
     }
 }

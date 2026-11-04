@@ -48,6 +48,7 @@ impl Command for List {
         "List the videos you watched, the most recent first, and whether your history is paused.";
     type Input = Page;
     type Output = History;
+    const WRITES: bool = false;
 }
 
 /// Take one video out of the caller's history.
@@ -59,6 +60,7 @@ impl Command for Remove {
     const SUMMARY: &'static str = "Take a video out of your history.";
     type Input = Which;
     type Output = Nothing;
+    const WRITES: bool = true;
 }
 
 /// Empty the caller's history.
@@ -70,6 +72,7 @@ impl Command for Clear {
     const SUMMARY: &'static str = "Take every video out of your history.";
     type Input = Nothing;
     type Output = Nothing;
+    const WRITES: bool = true;
 }
 
 /// Pause the caller's history, or keep it again.
@@ -81,4 +84,5 @@ impl Command for Pause {
     const SUMMARY: &'static str = "Stop keeping what you watch in your history, or keep it again.";
     type Input = Pausing;
     type Output = Pausing;
+    const WRITES: bool = true;
 }

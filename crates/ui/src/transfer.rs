@@ -63,8 +63,11 @@ pub async fn send(
             Some(response) if response.status() == 413 => {
                 return Err(ApiError::TooLarge { limit: size });
             }
-            Some(response) if response.status() < 500 => return Err(ApiError::Forbidden),
-            // the network or the server failed: try the same piece again, a few times
+            Some(response) if response.status() < 500 && response.status() != 408 => {
+                return Err(ApiError::Forbidden);
+            }
+            // the network or the server failed, or the piece came too slowly: try the same
+            // piece again, a few times
             _ => {
                 failures += 1;
                 if failures > 5 {

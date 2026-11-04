@@ -20,6 +20,7 @@ mod jobs;
 mod listen;
 mod mcp;
 mod media;
+mod rate;
 mod secrets;
 mod signin;
 mod site;
@@ -79,6 +80,7 @@ fn serve() -> Result<(), String> {
     let runtime = tokio::runtime::Runtime::new().map_err(|e| format!("tokio: {e}"))?;
     runtime.block_on(async {
         tokio::spawn(jobs::serve(Arc::clone(&site)));
+        tokio::spawn(uploads::sweep(Arc::clone(&site)));
         http::serve(site, &config).await
     })
 }

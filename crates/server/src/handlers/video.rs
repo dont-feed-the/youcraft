@@ -103,18 +103,14 @@ impl Handle<Update> for Site {
 }
 
 impl Handle<Delete> for Site {
-    async fn handle(&self, caller: Caller, which: Which) -> Result<(), ApiError> {
+    async fn handle(&self, caller: Caller, which: Which) -> Result<Nothing, ApiError> {
         may_manage(self, caller, which.video).await?;
         let video = which.video;
+        // Waits for a piece of its upload being written, which would otherwise make its file
+        // again once deleted.
+        let _held = self.lock_upload(video).await?;
         self.db(move |store| store.delete_video(video)).await?;
-        let config = self.config();
-        let name = video.to_string();
-        for file in [config.uploads().join(&name), config.originals().join(&name)] {
-            let _ = tokio::fs::remove_file(file).await;
-        }
-        for dir in [config.media().join(&name), config.work().join(&name)] {
-            let _ = tokio::fs::remove_dir_all(dir).await;
-        }
-        Ok(())
+        crate::storage::remove_files_of(self.config(), video).await;
+        Ok(Nothing {})
     }
 }

@@ -1,4 +1,5 @@
-//! Running commands by id: the role check, the JSON on both sides, and the handler.
+//! Running commands by id: the role check, the rate of a command that writes, the JSON on both
+//! sides, and the handler.
 //!
 //! The dispatch table is built from `youcraft_api::for_each_command!`, so every command the API
 //! lists must have a [`Handle`] implementation here, or the server does not compile.
@@ -31,6 +32,9 @@ where
         } else {
             ApiError::Forbidden
         });
+    }
+    if C::WRITES {
+        site.spend(&caller)?;
     }
     let input: C::Input = serde_json::from_value(input).map_err(|e| ApiError::schema(&e))?;
     let output = <Site as Handle<C>>::handle(site, caller, input).await?;

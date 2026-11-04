@@ -155,6 +155,7 @@ impl Command for List {
         "List the comments of a video, the most liked or the newest first, without their replies.";
     type Input = OfVideo;
     type Output = Comments;
+    const WRITES: bool = false;
 }
 
 /// A comment's replies, oldest first.
@@ -166,6 +167,7 @@ impl Command for Replies {
     const SUMMARY: &'static str = "List the replies to a comment, oldest first.";
     type Input = OfComment;
     type Output = Comments;
+    const WRITES: bool = false;
 }
 
 /// Comment on a video, or reply to a comment.
@@ -177,6 +179,7 @@ impl Command for Create {
     const SUMMARY: &'static str = "Comment on a video, or reply to one of its comments.";
     type Input = NewComment;
     type Output = Comment;
+    const WRITES: bool = true;
 }
 
 /// Change the text of one's own comment.
@@ -188,6 +191,7 @@ impl Command for Update {
     const SUMMARY: &'static str = "Change what one of your comments says.";
     type Input = Edit;
     type Output = Comment;
+    const WRITES: bool = true;
 }
 
 /// Delete a comment, with its replies; blocked or not, what one wrote is one's own to take back.
@@ -199,6 +203,7 @@ impl Command for Delete {
     const SUMMARY: &'static str = "Delete a comment with its replies: your own, any on your videos, or any at all for administrators.";
     type Input = Which;
     type Output = Nothing;
+    const WRITES: bool = true;
 }
 
 /// Like a comment, or take the like back; a blocked account may only take it back.
@@ -210,4 +215,5 @@ impl Command for Like {
     const SUMMARY: &'static str = "Like a comment or take your like back; answers its likes.";
     type Input = Liking;
     type Output = Liked;
+    const WRITES: bool = true;
 }

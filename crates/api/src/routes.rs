@@ -24,13 +24,15 @@ pub const PLAYLISTS: &str = "/feed/playlists";
 pub const SIGN_IN: &str = "/signin";
 /// Where Google posts the person back, signed in: the redirect URI registered with Google.
 pub const SIGNED_IN_WITH_GOOGLE: &str = "/signin/google";
-/// Where a sign-in that did not work ends, with `?why=`[`SIGN_IN_UNAVAILABLE`] or
-/// [`SIGN_IN_REFUSED`].
+/// Where a sign-in that did not work ends, with `?why=`[`SIGN_IN_UNAVAILABLE`],
+/// [`SIGN_IN_REFUSED`] or [`SIGN_IN_TOO_OFTEN`].
 pub const SIGN_IN_FAILED: &str = "/signin/failed";
 /// Why a sign-in failed: the server is not set up to sign anyone in.
 pub const SIGN_IN_UNAVAILABLE: &str = "unavailable";
 /// Why a sign-in failed: Google did not vouch for the person, or they cancelled.
 pub const SIGN_IN_REFUSED: &str = "refused";
+/// Why a sign-in failed: this browser's address tried too often of late.
+pub const SIGN_IN_TOO_OFTEN: &str = "too_often";
 /// The signed-in person's settings: appearance, language, personal tokens.
 pub const ACCOUNT: &str = "/account";
 /// The creator's studio: their channel's videos.

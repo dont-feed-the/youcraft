@@ -89,6 +89,7 @@ impl Command for Get {
         "Get what a channel's page shows about it, by its handle: name, description, counts.";
     type Input = Handle;
     type Output = ChannelPage;
+    const WRITES: bool = false;
 }
 
 /// The videos a channel shows everyone, newest first.
@@ -100,6 +101,7 @@ impl Command for Videos {
     const SUMMARY: &'static str = "List the public videos of a channel, newest first.";
     type Input = Shelf;
     type Output = Feed;
+    const WRITES: bool = false;
 }
 
 /// The playlists a channel shows everyone.
@@ -112,6 +114,7 @@ impl Command for Playlists {
         "List the public playlists of a channel, the most recently changed first.";
     type Input = Shelf;
     type Output = PlaylistShelf;
+    const WRITES: bool = false;
 }
 
 /// Subscribe to a channel, or unsubscribe; a blocked account may only unsubscribe.
@@ -124,6 +127,7 @@ impl Command for Subscribe {
         "Subscribe to a channel or unsubscribe from it; answers its subscribers.";
     type Input = Subscribing;
     type Output = Subscription;
+    const WRITES: bool = true;
 }
 
 /// The channels the caller subscribes to.
@@ -135,6 +139,7 @@ impl Command for Subscriptions {
     const SUMMARY: &'static str = "List the channels you subscribe to, by name.";
     type Input = Nothing;
     type Output = Vec<ChannelCard>;
+    const WRITES: bool = false;
 }
 
 /// Keep an account from commenting on the caller's videos, or let it again.
@@ -146,4 +151,5 @@ impl Command for Block {
     const SUMMARY: &'static str = "Keep an account from commenting on your channel's videos, or let it again, by its channel's handle.";
     type Input = Barring;
     type Output = Nothing;
+    const WRITES: bool = true;
 }

@@ -40,6 +40,7 @@ impl Command for Create {
         "Create a video on your channel and get the address its file is uploaded to, in pieces.";
     type Input = NewUpload;
     type Output = Upload;
+    const WRITES: bool = true;
 }
 
 /// Where an upload stands, to resume it.
@@ -52,6 +53,7 @@ impl Command for Status {
         "Get the address of an upload in progress and how many bytes it has received.";
     type Input = Which;
     type Output = Upload;
+    const WRITES: bool = false;
 }
 
 /// Hand a fully uploaded file over to be made playable.
@@ -64,4 +66,5 @@ impl Command for Finish {
         "Finish an upload whose bytes have all arrived; the video is then made playable.";
     type Input = Which;
     type Output = Processing;
+    const WRITES: bool = true;
 }

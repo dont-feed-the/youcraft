@@ -15,6 +15,7 @@ impl Command for Videos {
     const SUMMARY: &'static str = "List the videos of your channel, newest first, with their visibility and processing state.";
     type Input = Page;
     type Output = StudioPage;
+    const WRITES: bool = false;
 }
 
 /// One of the caller's videos, in whatever state it is.
@@ -27,4 +28,5 @@ impl Command for Video {
         "Get one of your videos with its visibility and processing state, as the studio lists it.";
     type Input = Which;
     type Output = StudioVideo;
+    const WRITES: bool = false;
 }

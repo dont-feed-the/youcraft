@@ -32,6 +32,7 @@ impl Command for Get {
         "Get what the watch page shows about a video: title, channel, counts, description.";
     type Input = Which;
     type Output = VideoPage;
+    const WRITES: bool = false;
 }
 
 /// What to watch after a video, as the caller's recommendation algorithm orders it.
@@ -43,6 +44,7 @@ impl Command for Next {
     const SUMMARY: &'static str = "List the videos to watch next beside a video, in the order the recommendation algorithm chose.";
     type Input = Which;
     type Output = Feed;
+    const WRITES: bool = false;
 }
 
 /// What to change about a video; what is `None` stays.
@@ -77,6 +79,7 @@ impl Command for Update {
         "Change the title, description, visibility or comment setting of one of your videos.";
     type Input = Edit;
     type Output = StudioVideo;
+    const WRITES: bool = true;
 }
 
 /// Delete a video of the caller's channel, with its media; blocked or not, what one published
@@ -89,7 +92,8 @@ impl Command for Delete {
     const SUMMARY: &'static str =
         "Delete one of your videos, with its comments and its media, for good.";
     type Input = Which;
-    type Output = ();
+    type Output = Nothing;
+    const WRITES: bool = true;
 }
 
 /// A rating to give a video.
@@ -121,6 +125,7 @@ impl Command for SetRating {
         "Like or dislike a video, or take your rating back; answers its likes.";
     type Input = Rate;
     type Output = Rated;
+    const WRITES: bool = true;
 }
 
 /// Count that the caller started watching a video.
@@ -132,4 +137,5 @@ impl Command for View {
     const SUMMARY: &'static str = "Count a view of a video, once a day per viewer, and keep it in the signed-in viewer's history unless they paused it.";
     type Input = Which;
     type Output = Nothing;
+    const WRITES: bool = true;
 }

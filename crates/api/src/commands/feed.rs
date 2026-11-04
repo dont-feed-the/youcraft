@@ -26,6 +26,7 @@ impl Command for Home {
         "List the videos of the home page, in the order the recommendation algorithm chose.";
     type Input = Page;
     type Output = Feed;
+    const WRITES: bool = false;
 }
 
 /// The newest videos of the channels the caller subscribes to.
@@ -37,4 +38,5 @@ impl Command for Subscriptions {
     const SUMMARY: &'static str = "List the newest public videos of the channels you subscribe to.";
     type Input = Page;
     type Output = Feed;
+    const WRITES: bool = false;
 }

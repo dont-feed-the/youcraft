@@ -67,6 +67,7 @@ impl Command for Create {
         "Make a personal token that acts as the signed-in person; its secret is shown only now.";
     type Input = Naming;
     type Output = Created;
+    const WRITES: bool = true;
 }
 
 /// List one's tokens.
@@ -78,6 +79,7 @@ impl Command for List {
     const SUMMARY: &'static str = "List the signed-in person's personal tokens, newest first.";
     type Input = Nothing;
     type Output = Vec<Token>;
+    const WRITES: bool = false;
 }
 
 /// Revoke a token.
@@ -89,4 +91,5 @@ impl Command for Revoke {
     const SUMMARY: &'static str = "Revoke one of the signed-in person's personal tokens.";
     type Input = Which;
     type Output = Nothing;
+    const WRITES: bool = true;
 }

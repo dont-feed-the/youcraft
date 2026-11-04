@@ -11,7 +11,7 @@ use youcraft_api::{AccountId, ChannelId, CommentId, Grant, List, PlaylistId, Vid
 use youcraft_store::accounts::NewAccount;
 use youcraft_store::comments::{NewComment, Outcome};
 use youcraft_store::playlists::NewPlaylist;
-use youcraft_store::uploads::NewUpload;
+use youcraft_store::uploads::{Allowance, NewUpload};
 use youcraft_store::{Reader, Store, StoreError};
 use youcraft_transcode::synthetic::{self, Synthetic};
 
@@ -89,8 +89,8 @@ pub async fn fill(site: &Site) -> Result<(), String> {
             now,
         };
         let queued = store
-            .create_upload(&upload)
-            .and_then(|()| store.set_received(video, size))
+            .create_upload(&upload, &Allowance::UNBOUNDED)
+            .and_then(|_| store.set_received(video, size))
             .and_then(|()| store.finish_upload(video, now));
         queued.map_err(|e| format!("demo: {e}"))?;
         videos.push(video);

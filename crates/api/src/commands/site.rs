@@ -21,6 +21,7 @@ impl Command for ListCommands {
         "List every command of the site, with the schemas of its input and output.";
     type Input = Nothing;
     type Output = Vec<Descriptor>;
+    const WRITES: bool = false;
 }
 
 /// What the site grants every account, whoever they are.
@@ -41,4 +42,5 @@ impl Command for GetPolicy {
         "Tell what the site grants every account: the least role of a signed-in account.";
     type Input = Nothing;
     type Output = Policy;
+    const WRITES: bool = false;
 }

@@ -263,15 +263,18 @@ mod tests {
 
         let uploading = VideoId::from_bits(20);
         store
-            .create_upload(&NewUpload {
-                video: uploading,
-                channel: ADA_CHANNEL,
-                title: "Soon",
-                description: "",
-                visibility: Visibility::Public,
-                size: 10,
-                now: 600,
-            })
+            .create_upload(
+                &NewUpload {
+                    video: uploading,
+                    channel: ADA_CHANNEL,
+                    title: "Soon",
+                    description: "",
+                    visibility: Visibility::Public,
+                    size: 10,
+                    now: 600,
+                },
+                &crate::uploads::Allowance::UNBOUNDED,
+            )
             .unwrap();
         assert!(!seen(uploading, Reader::ANYONE), "public, but not ready");
         let page = store

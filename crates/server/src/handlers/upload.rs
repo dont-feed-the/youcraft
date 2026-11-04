@@ -5,12 +5,13 @@ use youcraft_api::commands::upload::{Create, Finish, NewUpload, Status};
 use youcraft_api::commands::video::Which;
 use youcraft_api::records::{Processing, Upload};
 use youcraft_api::{ApiError, Rule, VideoId, routes};
-use youcraft_store::uploads::NewUpload as NewRow;
+use youcraft_store::uploads::{Claim, NewUpload as NewRow};
 
 use crate::dispatch::Handle;
-use crate::handlers::studio::{description, may_manage, title};
+use crate::handlers::studio::{description, title};
 use crate::site::{Caller, Site, now};
 use crate::storage;
+use crate::uploads::open_upload;
 
 /// The most bytes one `PATCH` of an upload may carry.
 pub const PIECE: u64 = 16 << 20;
@@ -26,49 +27,43 @@ impl Handle<Create> for Site {
             .db(move |store| store.channel_of(account))
             .await?
             .ok_or(ApiError::Forbidden)?;
-        // Measuring the room and claiming it happen under one lock, so that two uploads
-        // cannot both take the same room.
-        let _writing = self.writing.lock().await;
-        let limit = self.config().upload_bytes.min(storage::room(self).await?);
-        if input.size > limit {
-            return Err(ApiError::TooLarge { limit });
-        }
+        let allowance = storage::allowance(self).await?;
         let video = VideoId::from_bits(crate::secrets::random_bits());
         let visibility = input.visibility;
         let size = input.size;
-        self.db(move |store| {
-            let row = NewRow {
+        let claim = self
+            .db(move |store| {
+                let row = NewRow {
+                    video,
+                    channel,
+                    title: &title,
+                    description: &description,
+                    visibility,
+                    size,
+                    now: now(),
+                };
+                store.create_upload(&row, &allowance)
+            })
+            .await?;
+        match claim {
+            Claim::Started => Ok(Upload {
                 video,
-                channel,
-                title: &title,
-                description: &description,
-                visibility,
-                size,
-                now: now(),
-            };
-            store.create_upload(&row)
-        })
-        .await?;
-        Ok(Upload {
-            video,
-            address: routes::upload(video),
-            piece: PIECE,
-            received: 0,
-        })
+                address: routes::upload(video),
+                piece: PIECE,
+                received: 0,
+            }),
+            Claim::Crowded => Err(ApiError::Conflict),
+            Claim::TooLarge { limit } => Err(ApiError::TooLarge { limit }),
+        }
     }
 }
 
 impl Handle<Status> for Site {
     async fn handle(&self, caller: Caller, which: Which) -> Result<Upload, ApiError> {
-        may_manage(self, caller, which.video).await?;
-        let video = which.video;
-        let receiving = self
-            .db(move |store| store.receiving(video))
-            .await?
-            .ok_or(ApiError::Conflict)?;
+        let receiving = open_upload(self, caller, which.video).await?;
         Ok(Upload {
-            video,
-            address: routes::upload(video),
+            video: which.video,
+            address: routes::upload(which.video),
             piece: PIECE,
             received: receiving.received,
         })
@@ -77,25 +72,27 @@ impl Handle<Status> for Site {
 
 impl Handle<Finish> for Site {
     async fn handle(&self, caller: Caller, which: Which) -> Result<Processing, ApiError> {
-        may_manage(self, caller, which.video).await?;
         let video = which.video;
-        let _writing = self.writing.lock().await;
+        let _held = self.lock_upload(video).await?;
+        let receiving = open_upload(self, caller, video).await?;
+        if receiving.received != receiving.size {
+            return Err(ApiError::Conflict);
+        }
         let config = self.config();
         let (from, to) = (
             config.uploads().join(video.to_string()),
             config.originals().join(video.to_string()),
         );
-        let receiving = self
-            .db(move |store| store.receiving(video))
-            .await?
-            .ok_or(ApiError::Conflict)?;
-        if receiving.received != receiving.size {
-            return Err(ApiError::Conflict);
+        // The file moves before the row, so a crash between them leaves the file whole in
+        // `originals/` and the upload still open: finishing again finds it there.
+        if let Err(e) = tokio::fs::rename(&from, &to).await {
+            let moved = e.kind() == std::io::ErrorKind::NotFound
+                && tokio::fs::try_exists(&to).await.unwrap_or(false);
+            if !moved {
+                tracing::error!("upload {video}: {e}");
+                return Err(ApiError::Internal);
+            }
         }
-        tokio::fs::rename(&from, &to).await.map_err(|e| {
-            tracing::error!("upload {video}: {e}");
-            ApiError::Internal
-        })?;
         if !self
             .db(move |store| store.finish_upload(video, now()))
             .await?

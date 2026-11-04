@@ -79,6 +79,7 @@ impl Command for Get {
         "Tell who is signed in, with their channel, role and preferences; null when nobody is.";
     type Input = Nothing;
     type Output = Option<Me>;
+    const WRITES: bool = false;
 }
 
 /// Change the signed-in person's preferences.
@@ -91,6 +92,7 @@ impl Command for SetPreferences {
         "Set the language and theme the site uses for the signed-in person.";
     type Input = Preferences;
     type Output = Preferences;
+    const WRITES: bool = true;
 }
 
 /// Sign out this browser.
@@ -103,4 +105,5 @@ impl Command for SignOut {
         "End the session that sends this command, signing its browser out.";
     type Input = Nothing;
     type Output = Nothing;
+    const WRITES: bool = true;
 }

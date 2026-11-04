@@ -40,6 +40,7 @@ impl Command for SetRole {
         "Make an account a viewer, a creator or an administrator, by its channel's handle.";
     type Input = NewRole;
     type Output = Nothing;
+    const WRITES: bool = true;
 }
 
 /// Block or unblock an account.
@@ -52,4 +53,5 @@ impl Command for Block {
         "Block an account from acting on the site, or unblock it, by its channel's handle.";
     type Input = Blocking;
     type Output = Nothing;
+    const WRITES: bool = true;
 }

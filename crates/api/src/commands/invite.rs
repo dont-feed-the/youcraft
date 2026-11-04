@@ -70,6 +70,7 @@ impl Command for Create {
         "Invite an e-mail address to publish (creator) or to run the site (admin).";
     type Input = NewInvitation;
     type Output = Invited;
+    const WRITES: bool = true;
 }
 
 /// List the invitations still waiting.
@@ -81,6 +82,7 @@ impl Command for List {
     const SUMMARY: &'static str = "List the invitations whose person has not signed in yet.";
     type Input = Nothing;
     type Output = Vec<Invitation>;
+    const WRITES: bool = false;
 }
 
 /// Withdraw an invitation.
@@ -92,4 +94,5 @@ impl Command for Revoke {
     const SUMMARY: &'static str = "Withdraw an invitation whose person has not signed in yet.";
     type Input = Address;
     type Output = Nothing;
+    const WRITES: bool = true;
 }

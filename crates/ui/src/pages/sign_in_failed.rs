@@ -19,12 +19,10 @@ pub fn SignInFailed() -> impl IntoView {
             .get("next")
             .unwrap_or_else(|| routes::HOME.to_owned())
     };
-    let text = move || {
-        if why() == routes::SIGN_IN_UNAVAILABLE {
-            tr("Sign-in is not set up on this server.")
-        } else {
-            tr("Google did not confirm who you are, or signing in was cancelled.")
-        }
+    let text = move || match why().as_str() {
+        routes::SIGN_IN_UNAVAILABLE => tr("Sign-in is not set up on this server."),
+        routes::SIGN_IN_TOO_OFTEN => tr("Too many attempts. Wait a moment and try again."),
+        _ => tr("Google did not confirm who you are, or signing in was cancelled."),
     };
     view! {
         <Title text=format!("{} - YouCraft", tr("Sign-in did not work"))/>

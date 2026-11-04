@@ -1,4 +1,5 @@
-//! What a command is: an id, typed input and output, the role it requires, a one-line summary.
+//! What a command is: an id, typed input and output, the role it requires, a one-line summary,
+//! and whether it writes.
 //!
 //! Every command type is listed once, in [`crate::for_each_command`]; the server builds its
 //! dispatch table from that list, so a command without a handler does not compile, and the
@@ -26,6 +27,9 @@ pub trait Command: 'static {
     type Input: Serialize + DeserializeOwned + JsonSchema + Send + Sync + 'static;
     /// What it answers.
     type Output: Serialize + DeserializeOwned + JsonSchema + Send + Sync + 'static;
+    /// Whether it changes what the site holds, rather than only reading it. Only a command that
+    /// writes spends from its caller's rate, and agents are told which tools only read.
+    const WRITES: bool;
 }
 
 /// A command as the command line and agents see it.
@@ -41,6 +45,8 @@ pub struct Descriptor {
     pub input: serde_json::Value,
     /// The JSON Schema of its output.
     pub output: serde_json::Value,
+    /// See [`Command::WRITES`].
+    pub writes: bool,
 }
 
 impl Descriptor {
@@ -52,6 +58,7 @@ impl Descriptor {
             summary: C::SUMMARY.to_owned(),
             input: schemars::schema_for!(C::Input).to_value(),
             output: schemars::schema_for!(C::Output).to_value(),
+            writes: C::WRITES,
         }
     }
 }

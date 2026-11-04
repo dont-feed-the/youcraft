@@ -45,4 +45,5 @@ impl Command for Search {
         "Search the public videos by title, description and channel, and the channels by name.";
     type Input = Query;
     type Output = Found;
+    const WRITES: bool = false;
 }

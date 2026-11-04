@@ -158,6 +158,10 @@ fn tools(caller: Caller) -> Vec<Value> {
             if describes_objects(&command.output) {
                 tool.insert("outputSchema".to_owned(), command.output.clone());
             }
+            tool.insert(
+                "annotations".to_owned(),
+                json!({ "readOnlyHint": !command.writes }),
+            );
             Value::Object(tool)
         })
         .collect()
@@ -314,7 +318,19 @@ mod tests {
                     "{name}: agents take [A-Za-z0-9_-]{{1,64}}"
                 );
                 assert_eq!(tool["inputSchema"]["type"], "object", "{name}");
+                let writes = COMMANDS
+                    .iter()
+                    .any(|command| tool_name(&command.id) == name && command.writes);
+                assert_eq!(tool["annotations"]["readOnlyHint"], !writes, "{name}");
             }
+            let hint = |name: &str| {
+                let tool = tools.iter().find(|t| t["name"] == name).unwrap();
+                tool["annotations"]["readOnlyHint"].clone()
+            };
+            assert_eq!(
+                (hint("account-me"), hint("token-create")),
+                (json!(true), json!(false))
+            );
         }
     }
 

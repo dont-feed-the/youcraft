@@ -7,7 +7,8 @@
 //! the browser forget a session cookie that the database found to prove nothing any more; one it
 //! could not look up (the database failed) proves nothing for this request only, and the
 //! browser keeps it. It also gives the caller the [`ViewerKey`] by which the view counter tells
-//! one viewer from another.
+//! one viewer from another, and the [`AddressKey`] by which the rate limit tells apart those
+//! signed out.
 
 use std::sync::Arc;
 
@@ -23,7 +24,7 @@ use youcraft_store::accounts::Standing;
 
 use crate::cookies;
 use crate::secrets::hash;
-use crate::site::{Caller, Credential, Site, ViewerKey, now};
+use crate::site::{AddressKey, Caller, Credential, Site, ViewerKey, now};
 
 /// Who sent a request.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -60,14 +61,20 @@ pub async fn of(site: &Site, headers: &HeaderMap) -> Visitor {
     // A credential the database could not look up proves nothing now, and nothing against
     // itself: the next request may find it.
     let stale_session = bearer.is_none() && session.is_some() && matches!(found, Ok(None));
+
+    let address = address_key(site, headers);
     match found {
         Ok(Some((standing, credential))) => {
             let viewer = viewer_key(site, Some(standing.account), headers);
-            signed_in(&standing, site.config().signed_in_role, credential, viewer)
+            let mut visitor =
+                signed_in(&standing, site.config().signed_in_role, credential, viewer);
+            visitor.caller.address = address;
+            visitor
         }
         Ok(None) | Err(_) => Visitor {
             caller: Caller {
                 viewer: viewer_key(site, None, headers),
+                address,
                 ..Caller::ANONYMOUS
             },
             preferences: Preferences {
@@ -95,8 +102,8 @@ fn signed_in(
     }
 }
 
-/// Who the visitor is to the view counter: their account, or else the address the proxy saw
-/// them come from (`X-Forwarded-For`) and their browser, hashed with the site's salt.
+/// Who the visitor is to the view counter: their account, or else the address they came from
+/// and their browser, hashed with the site's salt.
 fn viewer_key(site: &Site, account: Option<AccountId>, headers: &HeaderMap) -> ViewerKey {
     let mut hasher = Sha256::new();
     hasher.update(site.salt());
@@ -106,18 +113,35 @@ fn viewer_key(site: &Site, account: Option<AccountId>, headers: &HeaderMap) -> V
             hasher.update(account.bits().to_be_bytes());
         }
         None => {
-            let header = |name| headers.get(name).map_or(&[][..], |value| value.as_bytes());
-            let address = header(FORWARDED_FOR)
-                .split(|&b| b == b',')
-                .next()
-                .unwrap_or_default();
             hasher.update(b"visitor\0");
-            hasher.update(address.trim_ascii());
+            hasher.update(address(headers));
             hasher.update(b"\0");
-            hasher.update(header(USER_AGENT.as_str()));
+            hasher.update(headers.get(USER_AGENT).map_or(&[][..], |v| v.as_bytes()));
         }
     }
     ViewerKey(hasher.finalize().into())
+}
+
+/// The address the request came from, hashed with the site's salt.
+fn address_key(site: &Site, headers: &HeaderMap) -> AddressKey {
+    let mut hasher = Sha256::new();
+    hasher.update(site.salt());
+    hasher.update(b"address\0");
+    hasher.update(address(headers));
+    AddressKey(hasher.finalize().into())
+}
+
+/// The address the request came from, as the proxy in front of the site saw it: the last entry
+/// of `X-Forwarded-For`, which the proxy writes, never an earlier one, which the client may.
+/// Empty when no proxy says.
+fn address(headers: &HeaderMap) -> &[u8] {
+    headers
+        .get(FORWARDED_FOR)
+        .map_or(&[][..], |value| value.as_bytes())
+        .rsplit(|&b| b == b',')
+        .next()
+        .unwrap_or_default()
+        .trim_ascii()
 }
 
 /// The header in which the proxy names the address a request came from.
@@ -192,5 +216,18 @@ mod tests {
         let back = of(&site, &carrying(&secret)).await;
         assert_eq!(back.caller.account, Some(account));
         std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn the_address_is_the_one_the_proxy_wrote_last() {
+        let mut headers = HeaderMap::new();
+        assert_eq!(address(&headers), b"");
+        let forwarded = "203.0.113.9, 198.51.100.7 ".parse().unwrap();
+        headers.insert(FORWARDED_FOR, forwarded);
+        assert_eq!(
+            address(&headers),
+            b"198.51.100.7",
+            "a client may write the first"
+        );
     }
 }

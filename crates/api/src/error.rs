@@ -43,6 +43,12 @@ pub enum ApiError {
     /// The action conflicts with the current state (a handle already taken, say).
     #[error("conflict")]
     Conflict,
+    /// The caller changed the site too often of late; it may try again after `retry_after`.
+    #[error("too often: try again in {retry_after} s")]
+    TooOften {
+        /// Seconds until the caller may write again.
+        retry_after: u64,
+    },
     /// The server failed; the details are in its log.
     #[error("server error")]
     Internal,
@@ -112,6 +118,7 @@ impl ApiError {
             ApiError::Invalid { .. } => 422,
             ApiError::TooLarge { .. } => 413,
             ApiError::Conflict => 409,
+            ApiError::TooOften { .. } => 429,
             ApiError::Internal => 500,
         }
     }
