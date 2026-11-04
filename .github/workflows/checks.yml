@@ -27,7 +27,7 @@ jobs:
   hooks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - id: rust
         run: sed -n 's/^rust-version = "\(.*\)"$/version=\1/p' Cargo.toml >> "$GITHUB_OUTPUT"
       - uses: dtolnay/rust-toolchain@master
@@ -36,7 +36,7 @@ jobs:
           components: clippy, rustfmt
           targets: wasm32-unknown-unknown
       - uses: Swatinem/rust-cache@v2
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: python -m pip install pre-commit
