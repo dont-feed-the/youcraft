@@ -52,7 +52,8 @@ pub struct VideoPage {
     pub description: String,
     /// How many people liked it.
     pub likes: u64,
-    /// How many comments it has.
+    /// How many of its comments and replies show: those of blocked authors, and the replies to
+    /// them, do not.
     pub comments: u64,
     /// Whether people may comment on it.
     pub comments_enabled: bool,
@@ -127,7 +128,7 @@ pub enum Visibility {
     Public,
     /// Anyone with its address; it appears nowhere.
     Unlisted,
-    /// Its channel only.
+    /// Its channel, and the site's administrators, only.
     #[default]
     Private,
 }
@@ -195,7 +196,8 @@ pub struct StudioVideo {
     pub comments_enabled: bool,
     /// How many people liked it.
     pub likes: u64,
-    /// How many comments it has.
+    /// How many of its comments and replies show: those of blocked authors, and the replies to
+    /// them, do not.
     pub comments: u64,
 }
 

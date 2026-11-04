@@ -3,10 +3,10 @@
 
 use rusqlite::{OptionalExtension, Row, Transaction, params};
 use youcraft_api::commands::account::{Me, Preferences, Theme};
-use youcraft_api::records::ChannelCard;
 use youcraft_api::{AccountId, ChannelId, Role};
 
-use crate::{Store, StoreError};
+use crate::channels::channel_card;
+use crate::{Named, Store, StoreError};
 
 /// A new account, with the channel every account has.
 pub struct NewAccount<'a> {
@@ -55,21 +55,15 @@ pub struct Standing {
 pub(crate) const STANDING: &str = "a.id, a.role, a.blocked, a.language, a.theme";
 
 /// The [`Standing`] of a row that starts with [`STANDING`].
-pub(crate) fn standing(row: &Row<'_>) -> rusqlite::Result<Result<Standing, StoreError>> {
-    let (role, theme): (String, String) = (row.get(1)?, row.get(4)?);
-    let blocked: i64 = row.get(2)?;
-    let account = AccountId::from_i64(row.get(0)?);
-    let language: Option<String> = row.get(3)?;
-    Ok(match (Role::from_name(&role), Theme::from_name(&theme)) {
-        (Some(role), Some(theme)) => Ok(Standing {
-            account,
-            role,
-            blocked: blocked != 0,
-            preferences: Preferences { language, theme },
-        }),
-        _ => Err(StoreError::Corrupt(format!(
-            "account {account}: role {role:?}, theme {theme:?}"
-        ))),
+pub(crate) fn standing(row: &Row<'_>) -> rusqlite::Result<Standing> {
+    Ok(Standing {
+        account: AccountId::from_i64(row.get(0)?),
+        role: row.get::<_, Named<Role>>(1)?.0,
+        blocked: row.get::<_, i64>(2)? != 0,
+        preferences: Preferences {
+            language: row.get(3)?,
+            theme: row.get::<_, Named<Theme>>(4)?.0,
+        },
     })
 }
 
@@ -162,7 +156,6 @@ impl Store {
         let Some((standing, channel)) = row else {
             return Ok(None);
         };
-        let standing = standing?;
         Ok(Some(Me {
             account,
             channel,
@@ -249,7 +242,7 @@ fn insert_account(
     Ok(())
 }
 
-/// The first of `handles` no channel has; [`StoreError::Corrupt`] if every one is taken.
+/// The first of `handles` no channel has; [`StoreError::HandlesTaken`] if every one is taken.
 fn free_handle(
     transaction: &Transaction<'_>,
     handles: &mut dyn Iterator<Item = String>,
@@ -266,9 +259,7 @@ fn free_handle(
             return Ok(handle);
         }
     }
-    Err(StoreError::Corrupt(
-        "every handle offered is taken".to_owned(),
-    ))
+    Err(StoreError::HandlesTaken)
 }
 
 /// Raise the role of `account` to `role`, if it is lower.
@@ -277,12 +268,12 @@ pub(crate) fn raise_role(
     account: AccountId,
     role: Role,
 ) -> Result<(), StoreError> {
-    let current: String = transaction.query_row(
+    let Named(current): Named<Role> = transaction.query_row(
         "SELECT role FROM accounts WHERE id = ?1",
         [account.to_i64()],
         |row| row.get(0),
     )?;
-    if Role::from_name(&current).is_none_or(|current| current < role) {
+    if current < role {
         transaction.execute(
             "UPDATE accounts SET role = ?2 WHERE id = ?1",
             params![account.to_i64(), role.as_str()],
@@ -302,16 +293,7 @@ fn standing_of(
             standing,
         )
         .optional()?;
-    row.transpose()
-}
-
-/// The channel card in the columns `id, handle, name` starting at `first`.
-pub(crate) fn channel_card(row: &Row<'_>, first: usize) -> rusqlite::Result<ChannelCard> {
-    Ok(ChannelCard {
-        id: ChannelId::from_i64(row.get(first)?),
-        handle: row.get(first + 1)?,
-        name: row.get(first + 2)?,
-    })
+    Ok(row)
 }
 
 /// The form of a handle that two handles share when they differ only in case.
@@ -383,6 +365,45 @@ mod tests {
         store.invite("bob@example.com", Role::Creator, 80).unwrap();
         assert!(store.revoke_invitation("BOB@example.com").unwrap());
         assert!(!store.revoke_invitation("bob@example.com").unwrap());
+    }
+
+    #[test]
+    fn handles_are_unique_in_any_case() {
+        let store = crate::testing::with_videos();
+        assert_eq!(
+            store.channel_by_handle("ADA").unwrap(),
+            Some(crate::testing::ADA_CHANNEL)
+        );
+        let taken = store.create_account(&NewAccount {
+            id: AccountId::from_bits(7),
+            channel: ChannelId::from_bits(8),
+            google_subject: "g7",
+            email: "c@example.com",
+            name: "Cy",
+            handle: "aDa",
+            role: Role::Viewer,
+            now: 100,
+        });
+        assert!(taken.is_err());
+        let ids = (AccountId::from_bits(9), ChannelId::from_bits(9));
+        let mut handles = ["ada", "BOB"].into_iter().map(str::to_owned);
+        assert!(matches!(
+            store.sign_in_with_google(&person("g9", None), ids, &mut handles, 100),
+            Err(StoreError::HandlesTaken)
+        ));
+    }
+
+    #[test]
+    fn a_stored_name_that_means_nothing_is_a_corrupt_row() {
+        let store = Store::in_memory().unwrap();
+        let ada = sign_in(&store, &person("g1", None), 1).account;
+        store
+            .connection()
+            .execute_batch(
+                "PRAGMA ignore_check_constraints = ON; UPDATE accounts SET theme = 'sepia';",
+            )
+            .unwrap();
+        assert!(matches!(store.me(ada), Err(StoreError::Corrupt(_))));
     }
 
     #[test]

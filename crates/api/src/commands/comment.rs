@@ -31,7 +31,7 @@ pub struct Comment {
     pub body: String,
     /// How many people liked it.
     pub likes: u64,
-    /// How many replies it has; zero for a reply.
+    /// How many of its replies show; zero for a reply.
     pub replies: u64,
     /// When it was written, in seconds since 1970 (UTC).
     pub created_at: i64,

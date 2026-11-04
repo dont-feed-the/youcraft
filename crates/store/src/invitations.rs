@@ -4,8 +4,9 @@ use rusqlite::{OptionalExtension, params};
 use youcraft_api::Role;
 use youcraft_api::commands::invite::{Invitation, Invited};
 
-use crate::accounts::{channel_card, raise_role};
-use crate::{Store, StoreError};
+use crate::accounts::raise_role;
+use crate::channels::channel_card;
+use crate::{Named, Store, StoreError};
 
 impl Store {
     /// Invite `email` as `role` (creator or admin): at once if an account has that verified
@@ -55,25 +56,14 @@ impl Store {
         let connection = self.connection();
         let mut statement = connection
             .prepare("SELECT email, role, created_at FROM invitations ORDER BY created_at DESC")?;
-        let rows = statement
-            .query_map([], |row| {
-                Ok((
-                    row.get::<_, String>(0)?,
-                    row.get::<_, String>(1)?,
-                    row.get::<_, i64>(2)?,
-                ))
-            })?
-            .collect::<Result<Vec<_>, _>>()?;
-        rows.into_iter()
-            .map(|(email, role, created_at)| match Role::from_name(&role) {
-                Some(role) => Ok(Invitation {
-                    email,
-                    role,
-                    created_at,
-                }),
-                None => Err(StoreError::Corrupt(format!("invitation role {role:?}"))),
+        let rows = statement.query_map([], |row| {
+            Ok(Invitation {
+                email: row.get(0)?,
+                role: row.get::<_, Named<Role>>(1)?.0,
+                created_at: row.get(2)?,
             })
-            .collect()
+        })?;
+        Ok(rows.collect::<Result<_, _>>()?)
     }
 
     /// Withdraw the invitation of `email`; whether there was one.

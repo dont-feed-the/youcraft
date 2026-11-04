@@ -43,10 +43,11 @@ impl Handle<Videos> for Site {
 }
 
 impl Handle<Playlists> for Site {
-    async fn handle(&self, _: Caller, shelf: Shelf) -> Result<PlaylistShelf, ApiError> {
+    async fn handle(&self, caller: Caller, shelf: Shelf) -> Result<PlaylistShelf, ApiError> {
         let window = window(shelf.after.as_deref(), PAGE)?;
+        let reader = caller.reader();
         let found = self
-            .db(move |store| store.channel_playlists(shelf.channel, window))
+            .db(move |store| store.channel_playlists(shelf.channel, reader, window))
             .await?;
         Ok(PlaylistShelf {
             playlists: found.items,

@@ -4,8 +4,8 @@ use rusqlite::{OptionalExtension, Row, params};
 use youcraft_api::records::{Processing, StudioVideo, Visibility};
 use youcraft_api::{ChannelId, VideoId};
 
-use crate::videos::{CARD_COLUMNS, card, count};
-use crate::{Store, StoreError};
+use crate::videos::{CARD_COLUMNS, State, card};
+use crate::{Named, Store, StoreError, count};
 
 /// What to change about a video; what is `None` stays.
 #[derive(Clone, Copy, Debug, Default)]
@@ -27,31 +27,25 @@ const STUDIO_FROM: &str =
     "FROM videos v JOIN channels c ON c.id = v.channel_id LEFT JOIN uploads u ON u.video_id = v.id";
 
 fn studio_video(row: &Row<'_>) -> rusqlite::Result<StudioVideo> {
-    let corrupt = |what: &str| {
-        rusqlite::Error::InvalidColumnType(0, what.to_owned(), rusqlite::types::Type::Text)
-    };
-    let visibility: String = row.get(10)?;
-    let state: String = row.get(11)?;
-    let processing = match state.as_str() {
-        "uploading" => Processing::Uploading {
+    let processing = match row.get::<_, Named<State>>(11)?.0 {
+        State::Uploading => Processing::Uploading {
             received: count(row.get::<_, Option<i64>>(16)?.unwrap_or(0)),
             size: count(row.get::<_, Option<i64>>(17)?.unwrap_or(0)),
         },
-        "processing" => Processing::Processing {
+        State::Processing => Processing::Processing {
             permille: u32::try_from(row.get::<_, Option<i64>>(18)?.unwrap_or(0)).unwrap_or(0),
         },
-        "ready" => Processing::Ready,
-        "failed" => Processing::Failed {
+        State::Ready => Processing::Ready,
+        State::Failed => Processing::Failed {
             reason: row
                 .get::<_, Option<String>>(12)?
                 .unwrap_or_else(|| "internal".to_owned()),
         },
-        _ => return Err(corrupt("state")),
     };
     Ok(StudioVideo {
         card: card(row)?,
         description: row.get(9)?,
-        visibility: Visibility::from_name(&visibility).ok_or_else(|| corrupt("visibility"))?,
+        visibility: row.get::<_, Named<Visibility>>(10)?.0,
         processing,
         comments_enabled: row.get::<_, i64>(13)? != 0,
         likes: count(row.get(14)?),

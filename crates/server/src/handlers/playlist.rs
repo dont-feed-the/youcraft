@@ -27,19 +27,19 @@ fn changed(change: Changed) -> Result<PlaylistCard, ApiError> {
 
 impl Handle<Create> for Site {
     async fn handle(&self, caller: Caller, new: NewPlaylist) -> Result<PlaylistCard, ApiError> {
-        let owner = caller.signed_in()?;
+        caller.signed_in()?;
         let title = text("title", &new.title, TITLE_LIMIT, false)?;
-        let (id, now) = (PlaylistId::from_bits(random_bits()), now());
+        let (owner, id, now) = (caller.reader(), PlaylistId::from_bits(random_bits()), now());
         let made = self
             .db(move |store| {
-                store.create_playlist(&playlists::NewPlaylist {
+                let playlist = playlists::NewPlaylist {
                     id,
-                    owner,
                     title: &title,
                     visibility: new.visibility,
                     video: new.video,
                     now,
-                })
+                };
+                store.create_playlist(owner, &playlist)
             })
             .await?;
         match made {
@@ -53,7 +53,8 @@ impl Handle<Create> for Site {
 
 impl Handle<Update> for Site {
     async fn handle(&self, caller: Caller, edit: Edit) -> Result<PlaylistCard, ApiError> {
-        let owner = caller.signed_in()?;
+        caller.signed_in()?;
+        let owner = caller.reader();
         let title = edit
             .title
             .map(|title| text("title", &title, TITLE_LIMIT, false))
@@ -89,8 +90,8 @@ impl Handle<Delete> for Site {
 
 impl Handle<Add> for Site {
     async fn handle(&self, caller: Caller, item: Item) -> Result<PlaylistCard, ApiError> {
-        let owner = caller.signed_in()?;
-        let now = now();
+        caller.signed_in()?;
+        let (owner, now) = (caller.reader(), now());
         changed(
             self.db(move |store| store.add_to_list(owner, item.list, item.video, now))
                 .await?,
@@ -100,8 +101,8 @@ impl Handle<Add> for Site {
 
 impl Handle<Remove> for Site {
     async fn handle(&self, caller: Caller, item: Item) -> Result<PlaylistCard, ApiError> {
-        let owner = caller.signed_in()?;
-        let now = now();
+        caller.signed_in()?;
+        let (owner, now) = (caller.reader(), now());
         changed(
             self.db(move |store| store.remove_from_list(owner, item.list, item.video, now))
                 .await?,
@@ -111,8 +112,8 @@ impl Handle<Remove> for Site {
 
 impl Handle<Move> for Site {
     async fn handle(&self, caller: Caller, placing: Placing) -> Result<Nothing, ApiError> {
-        let owner = caller.signed_in()?;
-        let now = now();
+        caller.signed_in()?;
+        let (owner, now) = (caller.reader(), now());
         let change = self
             .db(move |store| {
                 store.move_in_list(owner, placing.list, placing.video, placing.position, now)
@@ -124,7 +125,8 @@ impl Handle<Move> for Site {
 
 impl Handle<Lists> for Site {
     async fn handle(&self, caller: Caller, mine: Mine) -> Result<Vec<PlaylistCard>, ApiError> {
-        let owner = caller.signed_in()?;
+        caller.signed_in()?;
+        let owner = caller.reader();
         self.db(move |store| store.lists_of(owner, mine.containing))
             .await
     }
@@ -133,12 +135,12 @@ impl Handle<Lists> for Site {
 impl Handle<Get> for Site {
     async fn handle(&self, caller: Caller, open: Open) -> Result<PlaylistPage, ApiError> {
         let window = window(open.after.as_deref(), PAGE)?;
-        let (list, reader) = (open.list, caller.account);
+        let (list, reader) = (open.list, caller.reader());
         let page = self
             .db(move |store| store.list_page(list, reader, window))
             .await?;
         let Some(page) = page else {
-            return Err(match (list, reader) {
+            return Err(match (list, caller.account) {
                 (List::WatchLater | List::Liked, None) => ApiError::SignInRequired,
                 _ => ApiError::NotFound,
             });

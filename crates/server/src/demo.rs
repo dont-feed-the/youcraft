@@ -9,10 +9,10 @@
 use youcraft_api::records::{Rating, Visibility};
 use youcraft_api::{AccountId, ChannelId, CommentId, List, PlaylistId, Role, VideoId};
 use youcraft_store::accounts::NewAccount;
-use youcraft_store::comments::NewComment;
+use youcraft_store::comments::{NewComment, Outcome};
 use youcraft_store::playlists::NewPlaylist;
 use youcraft_store::uploads::NewUpload;
-use youcraft_store::{Store, StoreError};
+use youcraft_store::{Reader, Store, StoreError};
 use youcraft_transcode::synthetic::{self, Synthetic};
 
 use crate::site::{Site, now};
@@ -108,12 +108,13 @@ pub async fn fill(site: &Site) -> Result<(), String> {
 /// What the demo channels do with each other's videos: subscribe, like, comment and reply,
 /// keep a playlist.
 fn converse(store: &Store, now: i64) -> Result<(), StoreError> {
-    let person = |n: u64| AccountId::from_bits(0xdead_0000 + n);
+    let person = |n: u64| Reader::of(AccountId::from_bits(0xdead_0000 + n));
     let channel = |n: u64| ChannelId::from_bits(0xc4a0_0000 + n);
     let video = |n: u64| VideoId::from_bits(0x5eed_0000_0000 + n * 7919);
-    store.subscribe(person(2), channel(1), true, now)?;
-    store.subscribe(person(3), channel(1), true, now)?;
-    store.subscribe(person(1), channel(3), true, now)?;
+    for (who, whom) in [(2, 1), (3, 1), (1, 3)] {
+        let account = AccountId::from_bits(0xdead_0000 + who);
+        store.subscribe(account, channel(whom), true, now)?;
+    }
     store.rate(person(2), video(0), Rating::Like, now)?;
     store.rate(person(3), video(0), Rating::Like, now)?;
     store.rate(person(1), video(2), Rating::Like, now)?;
@@ -134,23 +135,28 @@ fn converse(store: &Store, now: i64) -> Result<(), StoreError> {
         (4, None, 3, "Lovely animation at 0:07."),
     ];
     for (id, parent, author, body) in comments {
-        store.add_comment(&NewComment {
+        let comment = NewComment {
             id: CommentId::from_bits(0xc0de_0000 + id),
             video: video(0),
             parent: parent.map(|p| CommentId::from_bits(0xc0de_0000 + p)),
-            author: person(author),
             body,
             now: now - 3600 * (5 - i64::try_from(id).unwrap_or(0)),
-        })?;
+        };
+        if !matches!(
+            store.add_comment(person(author), &comment)?,
+            Outcome::Done(_)
+        ) {
+            tracing::warn!("demo: comment {id} was refused");
+        }
     }
-    store.create_playlist(&NewPlaylist {
+    let playlist = NewPlaylist {
         id: PlaylistId::from_bits(0x9157_0001),
-        owner: person(1),
         title: "Light and waves",
         visibility: Visibility::Public,
         video: Some(video(0)),
         now,
-    })?;
+    };
+    store.create_playlist(person(1), &playlist)?;
     store.add_to_list(
         person(1),
         List::Playlist(PlaylistId::from_bits(0x9157_0001)),

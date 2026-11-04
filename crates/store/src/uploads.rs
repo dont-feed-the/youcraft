@@ -4,8 +4,7 @@ use rusqlite::{OptionalExtension, params};
 use youcraft_api::records::Visibility;
 use youcraft_api::{AccountId, ChannelId, VideoId};
 
-use crate::videos::count;
-use crate::{Store, StoreError};
+use crate::{Store, StoreError, count, signed};
 
 /// A video to upload, as `upload.create` makes it.
 pub struct NewUpload<'a> {
@@ -34,10 +33,6 @@ pub struct Receiving {
     pub size: u64,
     /// Bytes received so far.
     pub received: u64,
-}
-
-fn signed(value: u64) -> i64 {
-    i64::try_from(value).unwrap_or(i64::MAX)
 }
 
 impl Store {

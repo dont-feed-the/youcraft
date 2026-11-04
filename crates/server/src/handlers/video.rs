@@ -21,8 +21,8 @@ const DAY: i64 = 86_400;
 impl Site {
     /// The page of `video`, if `caller` may see it.
     pub async fn video_page(&self, caller: Caller, video: VideoId) -> Result<VideoPage, ApiError> {
-        let viewer = caller.account;
-        self.db(move |store| store.video_page(video, viewer))
+        let reader = caller.reader();
+        self.db(move |store| store.video_page(video, reader))
             .await?
             .ok_or(ApiError::NotFound)
     }
@@ -49,10 +49,10 @@ impl Handle<Next> for Site {
 
 impl Handle<SetRating> for Site {
     async fn handle(&self, caller: Caller, rate: Rate) -> Result<Rated, ApiError> {
-        let account = caller.signed_in()?;
-        let now = now();
+        caller.signed_in()?;
+        let (reader, now) = (caller.reader(), now());
         let likes = self
-            .db(move |store| store.rate(account, rate.video, rate.rating, now))
+            .db(move |store| store.rate(reader, rate.video, rate.rating, now))
             .await?
             .ok_or(ApiError::NotFound)?;
         Ok(Rated {

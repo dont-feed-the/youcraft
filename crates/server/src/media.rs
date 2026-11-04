@@ -1,8 +1,9 @@
 //! The media of videos, `GET /media/<video>/<file>`, served to whoever may watch the video.
 //!
-//! A public or unlisted video's files are anyone's and never change, so caches keep them for a
-//! year; a private video's go to its channel (and administrators) only, and no shared cache keeps
-//! them. Files are served with `Range` support, as players fetch segments by byte range.
+//! The files of a video everyone may see (ready, public or unlisted) are anyone's and never
+//! change, so caches keep them for a year; those of a video only its managers see (private, or
+//! not ready yet) go to its channel and administrators only, and no shared cache keeps them.
+//! Files are served with `Range` support, as players fetch segments by byte range.
 
 use axum::body::Body;
 use axum::extract::Request;
@@ -10,8 +11,8 @@ use axum::http::{HeaderValue, header};
 use axum::response::{IntoResponse, Response};
 use tower::ServiceExt;
 use tower_http::services::ServeDir;
-use youcraft_api::records::Visibility;
-use youcraft_api::{ApiError, Role, VideoId};
+use youcraft_api::{ApiError, VideoId};
+use youcraft_store::videos::Audience;
 
 use crate::http::error_response;
 use crate::site::{Caller, Site};
@@ -27,19 +28,12 @@ pub async fn serve(
     let Ok(video) = video.parse::<VideoId>() else {
         return error_response(&ApiError::NotFound);
     };
-    let audience = match site.db(move |store| store.audience(video)).await {
-        Ok(Some(audience)) => audience,
+    let reader = caller.reader();
+    let cache = match site.db(move |store| store.audience(video, reader)).await {
+        Ok(Some(Audience::Everyone)) => "public, max-age=31536000, immutable",
+        Ok(Some(Audience::Managers)) => "private, max-age=3600",
         Ok(None) => return error_response(&ApiError::NotFound),
         Err(error) => return error_response(&error),
-    };
-    let cache = match audience {
-        (Visibility::Public | Visibility::Unlisted, _) => "public, max-age=31536000, immutable",
-        (Visibility::Private, owner)
-            if caller.account == Some(owner) || caller.role.allows(Role::Admin) =>
-        {
-            "private, max-age=3600"
-        }
-        (Visibility::Private, _) => return error_response(&ApiError::NotFound),
     };
     let Ok(uri) = format!("/{file}").parse() else {
         return error_response(&ApiError::NotFound);

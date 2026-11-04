@@ -1,19 +1,13 @@
 //! What a viewer does with a video: rating it, viewing it, and the history of what they watched,
 //! from which the recommendation algorithm learns what they like.
 
-use rusqlite::{OptionalExtension, params};
+use rusqlite::{OptionalExtension, named_params, params};
 use youcraft_api::commands::history::Watched;
 use youcraft_api::records::Rating;
 use youcraft_api::{AccountId, ChannelId, VideoId};
 
-use crate::videos::{CARD_COLUMNS, card, count};
-use crate::{Paged, Store, StoreError, Window};
-
-/// Whether `?viewer` may see the video `v` of the channel `c`: it is ready, and public, unlisted,
-/// or theirs.
-pub(crate) fn visible_to(viewer: &str) -> String {
-    format!("v.state = 'ready' AND (v.visibility != 'private' OR c.account_id IS {viewer})")
-}
+use crate::videos::{CARD_COLUMNS, VISIBLE, card};
+use crate::{Paged, Reader, Store, StoreError, Window, count};
 
 /// What a person has done that the recommendation algorithm may weigh, most recent first.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -30,24 +24,25 @@ pub struct Signals {
 const SIGNAL_LIMIT: i64 = 500;
 
 impl Store {
-    /// Give `video` the rating of `account`, if they may see it; its likes then.
+    /// Give `video` the rating of `reader`, if they are signed in and may see it; its likes then.
     pub fn rate(
         &self,
-        account: AccountId,
+        reader: Reader,
         video: VideoId,
         rating: Rating,
         now: i64,
     ) -> Result<Option<u64>, StoreError> {
+        let Some(account) = reader.account else {
+            return Ok(None);
+        };
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         let seen: Option<i64> = transaction
             .query_row(
                 &format!(
-                    "SELECT v.id FROM videos v JOIN channels c ON c.id = v.channel_id \
-                     WHERE v.id = ?1 AND {}",
-                    visible_to("?2")
+                    "SELECT v.id FROM videos v WHERE v.id = :video AND {VISIBLE}"
                 ),
-                params![video.to_i64(), account.to_i64()],
+                named_params! {":video": video.to_i64(), ":reader": reader.id(), ":admin": reader.admin},
                 |row| row.get(0),
             )
             .optional()?;
@@ -106,22 +101,24 @@ impl Store {
         Ok(())
     }
 
-    /// The history of `account`, the most recent first, with the videos they may still see; and
-    /// whether they paused it.
+    /// The history of `reader`, the most recent first, with the videos they may still see; and
+    /// whether they paused it. Someone signed out has none.
     pub fn history(
         &self,
-        account: AccountId,
+        reader: Reader,
         window: Window,
     ) -> Result<(Paged<Watched>, bool), StoreError> {
         let connection = self.connection();
         let mut statement = connection.prepare_cached(&format!(
             "SELECT {CARD_COLUMNS}, h.watched_at FROM history h JOIN videos v ON v.id = h.video_id \
-             JOIN channels c ON c.id = v.channel_id WHERE h.account_id = ?1 AND {} \
-             ORDER BY h.watched_at DESC, v.id LIMIT ?2 OFFSET ?3",
-            visible_to("?1")
+             JOIN channels c ON c.id = v.channel_id WHERE h.account_id = :reader AND {VISIBLE} \
+             ORDER BY h.watched_at DESC, v.id LIMIT :limit OFFSET :offset"
         ))?;
         let rows = statement.query_map(
-            params![account.to_i64(), window.probe(), window.skip()],
+            named_params! {
+                ":reader": reader.id(), ":admin": reader.admin,
+                ":limit": window.probe(), ":offset": window.skip()
+            },
             |row| {
                 Ok(Watched {
                     card: card(row)?,
@@ -133,7 +130,7 @@ impl Store {
         let paused: Option<bool> = connection
             .query_row(
                 "SELECT history_paused FROM accounts WHERE id = ?1",
-                [account.to_i64()],
+                [reader.id()],
                 |row| row.get(0),
             )
             .optional()?;
@@ -217,16 +214,22 @@ mod tests {
     #[test]
     fn a_rating_counts_once_and_changes_its_mind() {
         let store = with_videos();
-        let rate = |rating| store.rate(BOB, PUBLIC, rating, 7).unwrap();
+        let rate = |rating| store.rate(Reader::of(BOB), PUBLIC, rating, 7).unwrap();
         assert_eq!(rate(Rating::Like), Some(1));
         assert_eq!(rate(Rating::Like), Some(1));
         assert_eq!(rate(Rating::Dislike), Some(0));
-        let page = store.video_page(PUBLIC, Some(BOB)).unwrap().unwrap();
+        let page = store.video_page(PUBLIC, Reader::of(BOB)).unwrap().unwrap();
         assert_eq!(page.rating, Rating::Dislike);
         assert_eq!(rate(Rating::None), Some(0));
         assert_eq!(rate(Rating::Like), Some(1));
-        assert_eq!(store.rate(BOB, UNLISTED, Rating::Like, 7).unwrap(), Some(1));
-        assert_eq!(store.rate(BOB, PRIVATE, Rating::Like, 7).unwrap(), None);
+        let bob = Reader::of(BOB);
+        assert_eq!(store.rate(bob, UNLISTED, Rating::Like, 7).unwrap(), Some(1));
+        assert_eq!(store.rate(bob, PRIVATE, Rating::Like, 7).unwrap(), None);
+        assert_eq!(
+            store.rate(Reader::ANYONE, PUBLIC, Rating::Like, 7).unwrap(),
+            None,
+            "only someone signed in rates"
+        );
         assert_eq!(store.signals(BOB).unwrap().liked, [PUBLIC, UNLISTED]);
     }
 
@@ -238,7 +241,12 @@ mod tests {
         assert!(store.count_view(PUBLIC, b"eve", 100).unwrap());
         assert!(store.count_view(PUBLIC, b"bob", 101).unwrap());
         assert!(store.count_view(PUBLIC, b"bob", 103).unwrap());
-        let views = store.video_page(PUBLIC, None).unwrap().unwrap().card.views;
+        let views = store
+            .video_page(PUBLIC, Reader::ANYONE)
+            .unwrap()
+            .unwrap()
+            .card
+            .views;
         assert_eq!(views, 4);
     }
 
@@ -253,7 +261,7 @@ mod tests {
             offset: 0,
             limit: 10,
         };
-        let (history, paused) = store.history(BOB, all).unwrap();
+        let (history, paused) = store.history(Reader::of(BOB), all).unwrap();
         let ids: Vec<_> = history.items.iter().map(|w| w.card.id).collect();
         assert_eq!(ids, [PUBLIC, NEWER], "newest first, private videos hidden");
         assert!(!paused && !history.more);
@@ -261,12 +269,19 @@ mod tests {
         assert_eq!(signals.watched.first(), Some(&(PRIVATE, ADA_CHANNEL, 13)));
         store.pause_history(BOB, true).unwrap();
         store.remember_watched(BOB, UNLISTED, 14).unwrap();
-        let (history, paused) = store.history(BOB, all).unwrap();
+        let (history, paused) = store.history(Reader::of(BOB), all).unwrap();
         assert!(paused);
         assert_eq!(history.items.len(), 2, "nothing kept while paused");
         assert!(store.forget_watched(BOB, NEWER).unwrap());
         assert!(!store.forget_watched(BOB, NEWER).unwrap());
         store.clear_history(BOB).unwrap();
-        assert!(store.history(BOB, all).unwrap().0.items.is_empty());
+        assert!(
+            store
+                .history(Reader::of(BOB), all)
+                .unwrap()
+                .0
+                .items
+                .is_empty()
+        );
     }
 }

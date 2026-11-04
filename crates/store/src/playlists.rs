@@ -1,47 +1,64 @@
 //! Lists of videos: playlists, each account's Watch later list, and its liked videos, which the
-//! `likes` table already holds. A list shows only the videos its reader may see.
+//! `likes` table already holds. A list shows, and counts, only the videos its reader may see.
 
-use rusqlite::{OptionalExtension, Row, Transaction, params};
+use rusqlite::{OptionalExtension, Row, Transaction, named_params, params};
 use youcraft_api::commands::playlist::{PLAYLIST_LIMIT, PlaylistCard, VIDEO_LIMIT};
-use youcraft_api::records::{ChannelCard, VideoCard, Visibility};
+use youcraft_api::records::{VideoCard, Visibility};
 use youcraft_api::{AccountId, ChannelId, List, PlaylistId, VideoId};
 
-use crate::videos::{CARD_COLUMNS, card, count};
-use crate::watching::visible_to;
-use crate::{Paged, Store, StoreError, Window};
+use crate::channels::channel_card;
+use crate::videos::{CARD_COLUMNS, VISIBLE, card};
+use crate::{Name, Named, Paged, Reader, Store, StoreError, Window, count};
 
-/// The columns [`playlist_card`] reads, from `playlists` as `p` joined with its owner's channel
-/// `o`, telling whether it holds the video `?1`.
-const CARD: &str = "p.id, p.kind, p.title, p.visibility, p.updated_at, o.id, o.handle, o.name, \
-    (SELECT count(*) FROM playlist_items i WHERE i.playlist_id = p.id), \
-    (SELECT i.video_id FROM playlist_items i WHERE i.playlist_id = p.id ORDER BY i.position LIMIT 1), \
-    EXISTS (SELECT 1 FROM playlist_items i WHERE i.playlist_id = p.id AND i.video_id = ?1)";
-
-/// The tables [`CARD`] reads.
-const FROM: &str = "playlists p JOIN channels o ON o.account_id = p.account_id";
-
-fn owner(row: &Row<'_>, at: usize) -> rusqlite::Result<ChannelCard> {
-    Ok(ChannelCard {
-        id: ChannelId::from_i64(row.get(at)?),
-        handle: row.get(at + 1)?,
-        name: row.get(at + 2)?,
-    })
+/// What a row of `playlists` is.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Kind {
+    /// A playlist its owner made.
+    Playlist,
+    /// The owner's Watch later list.
+    WatchLater,
 }
 
+impl Name for Kind {
+    const WHAT: &'static str = "playlist kind";
+    fn from_name(name: &str) -> Option<Kind> {
+        match name {
+            "playlist" => Some(Kind::Playlist),
+            "watch_later" => Some(Kind::WatchLater),
+            _ => None,
+        }
+    }
+}
+
+/// The items of the playlist `p`, as `i` with their videos `v`.
+const ITEMS: &str =
+    "playlist_items i JOIN videos v ON v.id = i.video_id WHERE i.playlist_id = p.id";
+
+/// The columns [`playlist_card`] reads, from `playlists` as `p` joined with its owner's channel
+/// `o`, for the reader `:reader`, telling whether it holds the video `:containing`.
+fn card_columns() -> String {
+    format!(
+        "p.id, p.kind, p.title, p.visibility, p.updated_at, o.id, o.handle, o.name, \
+         (SELECT count(*) FROM {ITEMS} AND {VISIBLE}), \
+         (SELECT i.video_id FROM {ITEMS} AND {VISIBLE} ORDER BY i.position, i.added_at LIMIT 1), \
+         EXISTS (SELECT 1 FROM playlist_items i WHERE i.playlist_id = p.id AND i.video_id = :containing)"
+    )
+}
+
+/// The tables [`card_columns`] reads.
+const FROM: &str = "playlists p JOIN channels o ON o.account_id = p.account_id";
+
 fn playlist_card(row: &Row<'_>) -> rusqlite::Result<PlaylistCard> {
-    let kind: String = row.get(1)?;
-    let list = if kind == "watch_later" {
-        List::WatchLater
-    } else {
-        List::Playlist(PlaylistId::from_i64(row.get(0)?))
+    let list = match row.get::<_, Named<Kind>>(1)?.0 {
+        Kind::WatchLater => List::WatchLater,
+        Kind::Playlist => List::Playlist(PlaylistId::from_i64(row.get(0)?)),
     };
-    let visibility: String = row.get(3)?;
     Ok(PlaylistCard {
         list,
         title: row.get(2)?,
-        visibility: Visibility::from_name(&visibility).unwrap_or_default(),
+        visibility: row.get::<_, Named<Visibility>>(3)?.0,
         updated_at: row.get(4)?,
-        owner: owner(row, 5)?,
+        owner: channel_card(row, 5)?,
         videos: count(row.get(8)?),
         first: row.get::<_, Option<i64>>(9)?.map(VideoId::from_i64),
         contains: row.get(10)?,
@@ -53,7 +70,7 @@ fn playlist_card(row: &Row<'_>) -> rusqlite::Result<PlaylistCard> {
 pub enum Changed {
     /// Done: the list now.
     Done(PlaylistCard),
-    /// No such list of the account's, or no such video they may see.
+    /// No such list of the account's, or no such video they may see; or they are signed out.
     Missing,
     /// The list holds [`VIDEO_LIMIT`] videos, or the account [`PLAYLIST_LIMIT`] playlists.
     Full,
@@ -78,8 +95,6 @@ pub struct ListPage {
 pub struct NewPlaylist<'a> {
     /// Its identifier.
     pub id: PlaylistId,
-    /// Its owner.
-    pub owner: AccountId,
     /// Its title.
     pub title: &'a str,
     /// Who may see it.
@@ -100,43 +115,54 @@ pub struct PlaylistEdit<'a> {
     pub visibility: Option<Visibility>,
 }
 
-/// The card of the playlist row `id`, telling whether it holds `containing`.
+/// The card of the playlist row `id` as `reader` sees it, telling whether it holds `containing`.
 fn card_of(
     transaction: &Transaction<'_>,
     id: i64,
+    reader: Reader,
     containing: Option<VideoId>,
 ) -> Result<Option<PlaylistCard>, StoreError> {
     let found = transaction
         .query_row(
-            &format!("SELECT {CARD} FROM {FROM} WHERE p.id = ?2"),
-            params![containing.map(VideoId::to_i64), id],
+            &format!("SELECT {} FROM {FROM} WHERE p.id = :id", card_columns()),
+            named_params! {
+                ":id": id, ":reader": reader.id(), ":admin": reader.admin,
+                ":containing": containing.map(VideoId::to_i64)
+            },
             playlist_card,
         )
         .optional()?;
     Ok(found)
 }
 
-/// The card of the liked videos of `account`, telling whether they hold `containing`.
+/// The card of the liked videos of `reader`, telling whether they hold `containing`.
 fn liked_card(
     transaction: &Transaction<'_>,
-    account: AccountId,
+    reader: Reader,
     containing: Option<VideoId>,
 ) -> Result<Option<PlaylistCard>, StoreError> {
+    let liked = format!(
+        "likes l JOIN videos v ON v.id = l.video_id WHERE l.account_id = :reader AND l.value = 1 AND {VISIBLE}"
+    );
     let found = transaction
         .query_row(
-            "SELECT o.id, o.handle, o.name, \
-             (SELECT count(*) FROM likes WHERE account_id = ?1 AND value = 1), \
-             (SELECT video_id FROM likes WHERE account_id = ?1 AND value = 1 ORDER BY created_at DESC LIMIT 1), \
-             (SELECT max(created_at) FROM likes WHERE account_id = ?1 AND value = 1), \
-             EXISTS (SELECT 1 FROM likes WHERE account_id = ?1 AND value = 1 AND video_id = ?2) \
-             FROM channels o WHERE o.account_id = ?1",
-            params![account.to_i64(), containing.map(VideoId::to_i64)],
+            &format!(
+                "SELECT o.id, o.handle, o.name, (SELECT count(*) FROM {liked}), \
+                 (SELECT l.video_id FROM {liked} ORDER BY l.created_at DESC, v.id LIMIT 1), \
+                 (SELECT max(l.created_at) FROM {liked}), \
+                 EXISTS (SELECT 1 FROM likes WHERE account_id = :reader AND value = 1 AND video_id = :containing) \
+                 FROM channels o WHERE o.account_id = :reader"
+            ),
+            named_params! {
+                ":reader": reader.id(), ":admin": reader.admin,
+                ":containing": containing.map(VideoId::to_i64)
+            },
             |row| {
                 Ok(PlaylistCard {
                     list: List::Liked,
                     title: String::new(),
                     visibility: Visibility::Private,
-                    owner: owner(row, 0)?,
+                    owner: channel_card(row, 0)?,
                     videos: count(row.get(3)?),
                     first: row.get::<_, Option<i64>>(4)?.map(VideoId::from_i64),
                     updated_at: row.get::<_, Option<i64>>(5)?.unwrap_or(0),
@@ -178,15 +204,17 @@ fn watch_later(
     Ok(find(transaction)?)
 }
 
-/// The row of `list` if it is a playlist or the Watch later list of `account`.
+/// The row of `list` if it is a playlist or the Watch later list of `account`; Watch later is
+/// made now if `make` and it has none yet.
 fn owned(
     transaction: &Transaction<'_>,
     account: AccountId,
     list: List,
     now: i64,
+    make: bool,
 ) -> Result<Option<i64>, StoreError> {
     match list {
-        List::WatchLater => watch_later(transaction, account, now, true),
+        List::WatchLater => watch_later(transaction, account, now, make),
         List::Liked => Ok(None),
         List::Playlist(id) => Ok(transaction
             .query_row(
@@ -207,7 +235,7 @@ fn empty_watch_later(
         .query_row(
             "SELECT o.id, o.handle, o.name FROM channels o WHERE o.account_id = ?1",
             [account.to_i64()],
-            |row| owner(row, 0),
+            |row| channel_card(row, 0),
         )
         .optional()?;
     Ok(found.map(|owner| PlaylistCard {
@@ -222,21 +250,20 @@ fn empty_watch_later(
     }))
 }
 
-/// Put `video` last in the playlist row `id`, unless it holds it already.
+/// Put `video` last in the playlist row `id`, unless it holds it already, if `reader` may see it.
 fn append(
     transaction: &Transaction<'_>,
     id: i64,
-    account: AccountId,
+    reader: Reader,
     video: VideoId,
     now: i64,
 ) -> Result<Option<Changed>, StoreError> {
     let seen: Option<i64> = transaction
         .query_row(
             &format!(
-                "SELECT v.id FROM videos v JOIN channels c ON c.id = v.channel_id WHERE v.id = ?1 AND {}",
-                visible_to("?2")
+                "SELECT v.id FROM videos v WHERE v.id = :video AND {VISIBLE}"
             ),
-            params![video.to_i64(), account.to_i64()],
+            named_params! {":video": video.to_i64(), ":reader": reader.id(), ":admin": reader.admin},
             |row| row.get(0),
         )
         .optional()?;
@@ -264,29 +291,36 @@ fn append(
 }
 
 impl Store {
-    /// The lists of `account`: Watch later, liked videos, then their playlists, the most recently
-    /// changed first; each telling whether it holds `containing`.
+    /// The lists of `reader`: Watch later, liked videos, then their playlists, the most recently
+    /// changed first; each telling whether it holds `containing`. Someone signed out has none.
     pub fn lists_of(
         &self,
-        account: AccountId,
+        reader: Reader,
         containing: Option<VideoId>,
     ) -> Result<Vec<PlaylistCard>, StoreError> {
+        let Some(account) = reader.account else {
+            return Ok(Vec::new());
+        };
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         let mut lists = Vec::new();
         let later = match watch_later(&transaction, account, 0, false)? {
-            Some(id) => card_of(&transaction, id, containing)?,
+            Some(id) => card_of(&transaction, id, reader, containing)?,
             None => empty_watch_later(&transaction, account)?,
         };
         lists.extend(later);
-        lists.extend(liked_card(&transaction, account, containing)?);
+        lists.extend(liked_card(&transaction, reader, containing)?);
         {
             let mut statement = transaction.prepare_cached(&format!(
-                "SELECT {CARD} FROM {FROM} WHERE p.account_id = ?2 AND p.kind = 'playlist' \
-                 ORDER BY p.updated_at DESC, p.id"
+                "SELECT {} FROM {FROM} WHERE p.account_id = :reader AND p.kind = 'playlist' \
+                 ORDER BY p.updated_at DESC, p.id",
+                card_columns()
             ))?;
             let rows = statement.query_map(
-                params![containing.map(VideoId::to_i64), account.to_i64()],
+                named_params! {
+                    ":reader": reader.id(), ":admin": reader.admin,
+                    ":containing": containing.map(VideoId::to_i64)
+                },
                 playlist_card,
             )?;
             for row in rows {
@@ -297,31 +331,43 @@ impl Store {
         Ok(lists)
     }
 
-    /// The public playlists of `channel`, the most recently changed first.
+    /// The public playlists of `channel` as `reader` sees them, the most recently changed first.
     pub fn channel_playlists(
         &self,
         channel: ChannelId,
+        reader: Reader,
         window: Window,
     ) -> Result<Paged<PlaylistCard>, StoreError> {
         let connection = self.connection();
         let mut statement = connection.prepare_cached(&format!(
-            "SELECT {CARD} FROM {FROM} WHERE o.id = ?2 AND p.kind = 'playlist' AND p.visibility = 'public' \
-             ORDER BY p.updated_at DESC, p.id LIMIT ?3 OFFSET ?4"
+            "SELECT {} FROM {FROM} WHERE o.id = :channel AND p.kind = 'playlist' AND p.visibility = 'public' \
+             ORDER BY p.updated_at DESC, p.id LIMIT :limit OFFSET :offset",
+            card_columns()
         ))?;
         let rows = statement.query_map(
-            params![None::<i64>, channel.to_i64(), window.probe(), window.skip()],
+            named_params! {
+                ":channel": channel.to_i64(), ":reader": reader.id(), ":admin": reader.admin,
+                ":containing": None::<i64>, ":limit": window.probe(), ":offset": window.skip()
+            },
             playlist_card,
         )?;
         Ok(window.page(rows.collect::<Result<_, _>>()?))
     }
 
-    /// Make `playlist`.
-    pub fn create_playlist(&self, playlist: &NewPlaylist<'_>) -> Result<Changed, StoreError> {
+    /// Make `playlist` for `owner`.
+    pub fn create_playlist(
+        &self,
+        owner: Reader,
+        playlist: &NewPlaylist<'_>,
+    ) -> Result<Changed, StoreError> {
+        let Some(account) = owner.account else {
+            return Ok(Changed::Missing);
+        };
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         let made: i64 = transaction.query_row(
             "SELECT count(*) FROM playlists WHERE account_id = ?1 AND kind = 'playlist'",
-            [playlist.owner.to_i64()],
+            [account.to_i64()],
             |row| row.get(0),
         )?;
         if count(made) >= PLAYLIST_LIMIT {
@@ -333,27 +379,27 @@ impl Store {
              VALUES (?1, ?2, 'playlist', ?3, ?4, ?5, ?5)",
             params![
                 id,
-                playlist.owner.to_i64(),
+                account.to_i64(),
                 playlist.title,
                 playlist.visibility.as_str(),
                 playlist.now
             ],
         )?;
         if let Some(video) = playlist.video
-            && let Some(refused) = append(&transaction, id, playlist.owner, video, playlist.now)?
+            && let Some(refused) = append(&transaction, id, owner, video, playlist.now)?
         {
             return Ok(refused);
         }
-        let made = card_of(&transaction, id, playlist.video)?;
+        let made = card_of(&transaction, id, owner, playlist.video)?;
         transaction.commit()?;
         Ok(made.map_or(Changed::Missing, Changed::Done))
     }
 
-    /// Change the playlist `id` of `account`.
+    /// Change the playlist `id` of `owner`.
     pub fn update_playlist(
         &self,
         id: PlaylistId,
-        account: AccountId,
+        owner: Reader,
         edit: &PlaylistEdit<'_>,
         now: i64,
     ) -> Result<Changed, StoreError> {
@@ -365,7 +411,7 @@ impl Store {
              WHERE id = ?1 AND account_id = ?2 AND kind = 'playlist'",
             params![
                 id.to_i64(),
-                account.to_i64(),
+                owner.id(),
                 edit.title,
                 edit.description,
                 edit.visibility.map(Visibility::as_str),
@@ -375,7 +421,7 @@ impl Store {
         if changed == 0 {
             return Ok(Changed::Missing);
         }
-        let card = card_of(&transaction, id.to_i64(), None)?;
+        let card = card_of(&transaction, id.to_i64(), owner, None)?;
         transaction.commit()?;
         Ok(card.map_or(Changed::Missing, Changed::Done))
     }
@@ -389,10 +435,10 @@ impl Store {
         Ok(deleted > 0)
     }
 
-    /// Put `video` last in the `list` of `account`.
+    /// Put `video` last in the `list` of `owner`.
     pub fn add_to_list(
         &self,
-        account: AccountId,
+        owner: Reader,
         list: List,
         video: VideoId,
         now: i64,
@@ -400,23 +446,26 @@ impl Store {
         if list == List::Liked {
             return Ok(Changed::Fixed);
         }
-        let mut connection = self.connection();
-        let transaction = connection.transaction()?;
-        let Some(id) = owned(&transaction, account, list, now)? else {
+        let Some(account) = owner.account else {
             return Ok(Changed::Missing);
         };
-        if let Some(refused) = append(&transaction, id, account, video, now)? {
+        let mut connection = self.connection();
+        let transaction = connection.transaction()?;
+        let Some(id) = owned(&transaction, account, list, now, true)? else {
+            return Ok(Changed::Missing);
+        };
+        if let Some(refused) = append(&transaction, id, owner, video, now)? {
             return Ok(refused);
         }
-        let card = card_of(&transaction, id, Some(video))?;
+        let card = card_of(&transaction, id, owner, Some(video))?;
         transaction.commit()?;
         Ok(card.map_or(Changed::Missing, Changed::Done))
     }
 
-    /// Take `video` out of the `list` of `account`.
+    /// Take `video` out of the `list` of `owner`.
     pub fn remove_from_list(
         &self,
-        account: AccountId,
+        owner: Reader,
         list: List,
         video: VideoId,
         now: i64,
@@ -424,9 +473,12 @@ impl Store {
         if list == List::Liked {
             return Ok(Changed::Fixed);
         }
+        let Some(account) = owner.account else {
+            return Ok(Changed::Missing);
+        };
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
-        let Some(id) = owned(&transaction, account, list, now)? else {
+        let Some(id) = owned(&transaction, account, list, now, false)? else {
             return Ok(Changed::Missing);
         };
         let removed = transaction.execute(
@@ -439,16 +491,16 @@ impl Store {
                 params![id, now],
             )?;
         }
-        let card = card_of(&transaction, id, Some(video))?;
+        let card = card_of(&transaction, id, owner, Some(video))?;
         transaction.commit()?;
         Ok(card.map_or(Changed::Missing, Changed::Done))
     }
 
     /// Move `video` to `position` (counted from 0, past the end meaning last) in the `list` of
-    /// `account`.
+    /// `owner`.
     pub fn move_in_list(
         &self,
-        account: AccountId,
+        owner: Reader,
         list: List,
         video: VideoId,
         position: u64,
@@ -457,9 +509,12 @@ impl Store {
         if list == List::Liked {
             return Ok(Changed::Fixed);
         }
+        let Some(account) = owner.account else {
+            return Ok(Changed::Missing);
+        };
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
-        let Some(id) = owned(&transaction, account, list, now)? else {
+        let Some(id) = owned(&transaction, account, list, now, false)? else {
             return Ok(Changed::Missing);
         };
         let mut order: Vec<i64> = {
@@ -476,17 +531,19 @@ impl Store {
         let moved = order.remove(from);
         let to = usize::try_from(position).map_or(order.len(), |p| p.min(order.len()));
         order.insert(to, moved);
-        for (place, video) in order.iter().enumerate() {
-            transaction.execute(
+        {
+            let mut place = transaction.prepare_cached(
                 "UPDATE playlist_items SET position = ?3 WHERE playlist_id = ?1 AND video_id = ?2",
-                params![id, video, i64::try_from(place).unwrap_or(i64::MAX)],
             )?;
+            for (at, video) in (0i64..).zip(&order) {
+                place.execute(params![id, video, at])?;
+            }
         }
         transaction.execute(
             "UPDATE playlists SET updated_at = ?2 WHERE id = ?1",
             params![id, now],
         )?;
-        let card = card_of(&transaction, id, None)?;
+        let card = card_of(&transaction, id, owner, None)?;
         transaction.commit()?;
         Ok(card.map_or(Changed::Missing, Changed::Done))
     }
@@ -496,30 +553,37 @@ impl Store {
     pub fn list_page(
         &self,
         list: List,
-        reader: Option<AccountId>,
+        reader: Reader,
         window: Window,
     ) -> Result<Option<ListPage>, StoreError> {
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
-        let viewer = reader.map(AccountId::to_i64);
-        let (heading, description, row) = match (list, reader) {
-            (List::Liked, Some(account)) => (
-                liked_card(&transaction, account, None)?,
+        let viewer = reader.id();
+        let (heading, description, row, editable) = match (list, reader.account) {
+            (List::Liked, Some(_)) => (
+                liked_card(&transaction, reader, None)?,
                 String::new(),
                 None,
+                false,
             ),
             (List::WatchLater, Some(account)) => {
                 match watch_later(&transaction, account, 0, false)? {
-                    Some(id) => (card_of(&transaction, id, None)?, String::new(), Some(id)),
+                    Some(id) => (
+                        card_of(&transaction, id, reader, None)?,
+                        String::new(),
+                        Some(id),
+                        true,
+                    ),
                     None => (
                         empty_watch_later(&transaction, account)?,
                         String::new(),
                         None,
+                        true,
                     ),
                 }
             }
             (List::Playlist(id), _) => {
-                let found: Option<(String, i64, String)> = transaction
+                let found: Option<(String, i64, Named<Visibility>)> = transaction
                     .query_row(
                         "SELECT description, account_id, visibility FROM playlists WHERE id = ?1 AND kind = 'playlist'",
                         [id.to_i64()],
@@ -527,19 +591,20 @@ impl Store {
                     )
                     .optional()?;
                 match found {
-                    Some((description, owner, visibility))
-                        if visibility != "private" || viewer == Some(owner) =>
+                    Some((description, owner, Named(visibility)))
+                        if visibility != Visibility::Private || viewer == Some(owner) =>
                     {
                         (
-                            card_of(&transaction, id.to_i64(), None)?,
+                            card_of(&transaction, id.to_i64(), reader, None)?,
                             description,
                             Some(id.to_i64()),
+                            viewer == Some(owner),
                         )
                     }
-                    _ => (None, String::new(), None),
+                    _ => (None, String::new(), None, false),
                 }
             }
-            (_, None) => (None, String::new(), None),
+            (_, None) => (None, String::new(), None, false),
         };
         let Some(heading) = heading else {
             return Ok(None);
@@ -550,18 +615,16 @@ impl Store {
                     format!(
                         "SELECT {CARD_COLUMNS} FROM likes l JOIN videos v ON v.id = l.video_id \
                          JOIN channels c ON c.id = v.channel_id \
-                         WHERE l.account_id = ?1 AND l.value = 1 AND {} \
-                         ORDER BY l.created_at DESC, v.id LIMIT ?3 OFFSET ?4",
-                        visible_to("?2")
+                         WHERE l.account_id = :key AND l.value = 1 AND {VISIBLE} \
+                         ORDER BY l.created_at DESC, v.id LIMIT :limit OFFSET :offset"
                     ),
                     viewer,
                 ),
                 (_, Some(id)) => (
                     format!(
                         "SELECT {CARD_COLUMNS} FROM playlist_items i JOIN videos v ON v.id = i.video_id \
-                         JOIN channels c ON c.id = v.channel_id WHERE i.playlist_id = ?1 AND {} \
-                         ORDER BY i.position, i.added_at LIMIT ?3 OFFSET ?4",
-                        visible_to("?2")
+                         JOIN channels c ON c.id = v.channel_id WHERE i.playlist_id = :key AND {VISIBLE} \
+                         ORDER BY i.position, i.added_at LIMIT :limit OFFSET :offset"
                     ),
                     Some(id),
                 ),
@@ -571,21 +634,19 @@ impl Store {
                 Some(key) => {
                     let mut statement = transaction.prepare_cached(&sql)?;
                     statement
-                        .query_map(params![key, viewer, window.probe(), window.skip()], card)?
+                        .query_map(
+                            named_params! {
+                                ":key": key, ":reader": viewer, ":admin": reader.admin,
+                                ":limit": window.probe(), ":offset": window.skip()
+                            },
+                            card,
+                        )?
                         .collect::<Result<_, _>>()?
                 }
                 None => Vec::new(),
             }
         };
-        let readers_channel: Option<i64> = transaction
-            .query_row(
-                "SELECT id FROM channels WHERE account_id = ?1",
-                [viewer],
-                |row| row.get(0),
-            )
-            .optional()?;
         transaction.commit()?;
-        let editable = list != List::Liked && readers_channel == Some(heading.owner.id.to_i64());
         Ok(Some(ListPage {
             card: heading,
             description,
@@ -600,7 +661,8 @@ mod tests {
     use youcraft_api::records::Rating;
 
     use super::*;
-    use crate::testing::{ADA, BOB, NEWER, PRIVATE, PUBLIC, UNLISTED, with_videos};
+    use crate::studio::VideoEdit;
+    use crate::testing::{ADA, BOB, BOB_CHANNEL, NEWER, PRIVATE, PUBLIC, UNLISTED, with_videos};
 
     const ALL: Window = Window {
         offset: 0,
@@ -614,47 +676,48 @@ mod tests {
     #[test]
     fn watch_later_is_made_when_first_used_and_kept_in_order() {
         let store = with_videos();
-        let lists = store.lists_of(BOB, Some(PUBLIC)).unwrap();
+        let bob = Reader::of(BOB);
+        let lists = store.lists_of(bob, Some(PUBLIC)).unwrap();
         let kinds: Vec<List> = lists.iter().map(|l| l.list).collect();
         assert_eq!(kinds, [List::WatchLater, List::Liked]);
         for video in [PUBLIC, NEWER, UNLISTED, PUBLIC] {
             assert!(matches!(
-                store.add_to_list(BOB, List::WatchLater, video, 10).unwrap(),
+                store.add_to_list(bob, List::WatchLater, video, 10).unwrap(),
                 Changed::Done(_)
             ));
         }
         assert_eq!(
             store
-                .add_to_list(BOB, List::WatchLater, PRIVATE, 10)
+                .add_to_list(bob, List::WatchLater, PRIVATE, 10)
                 .unwrap(),
             Changed::Missing,
             "not a video Bob may see"
         );
         let page = store
-            .list_page(List::WatchLater, Some(BOB), ALL)
+            .list_page(List::WatchLater, bob, ALL)
             .unwrap()
             .unwrap();
         assert_eq!(ids(&page), [PUBLIC, NEWER, UNLISTED]);
         assert!(page.editable && page.card.videos == 3);
         store
-            .move_in_list(BOB, List::WatchLater, UNLISTED, 0, 11)
+            .move_in_list(bob, List::WatchLater, UNLISTED, 0, 11)
             .unwrap();
         store
-            .move_in_list(BOB, List::WatchLater, PUBLIC, 99, 11)
+            .move_in_list(bob, List::WatchLater, PUBLIC, 99, 11)
             .unwrap();
         let page = store
-            .list_page(List::WatchLater, Some(BOB), ALL)
+            .list_page(List::WatchLater, bob, ALL)
             .unwrap()
             .unwrap();
         assert_eq!(ids(&page), [UNLISTED, NEWER, PUBLIC]);
         store
-            .remove_from_list(BOB, List::WatchLater, NEWER, 12)
+            .remove_from_list(bob, List::WatchLater, NEWER, 12)
             .unwrap();
-        let lists = store.lists_of(BOB, Some(PUBLIC)).unwrap();
+        let lists = store.lists_of(bob, Some(PUBLIC)).unwrap();
         assert!(lists[0].contains && lists[0].videos == 2);
         assert_eq!(
             store
-                .list_page(List::WatchLater, Some(ADA), ALL)
+                .list_page(List::WatchLater, Reader::of(ADA), ALL)
                 .unwrap()
                 .unwrap()
                 .card
@@ -663,7 +726,7 @@ mod tests {
         );
         assert!(
             store
-                .list_page(List::WatchLater, None, ALL)
+                .list_page(List::WatchLater, Reader::ANYONE, ALL)
                 .unwrap()
                 .is_none()
         );
@@ -673,25 +736,28 @@ mod tests {
     fn a_private_playlist_shows_to_its_owner_only() {
         let store = with_videos();
         let id = PlaylistId::from_bits(5);
+        let (ada, bob) = (Reader::of(ADA), Reader::of(BOB));
         let made = store
-            .create_playlist(&NewPlaylist {
-                id,
-                owner: BOB,
-                title: "Waves",
-                visibility: Visibility::Private,
-                video: Some(PUBLIC),
-                now: 10,
-            })
+            .create_playlist(
+                bob,
+                &NewPlaylist {
+                    id,
+                    title: "Waves",
+                    visibility: Visibility::Private,
+                    video: Some(PUBLIC),
+                    now: 10,
+                },
+            )
             .unwrap();
         let Changed::Done(card) = made else {
             panic!("{made:?}")
         };
         assert!(card.contains && card.videos == 1 && card.first == Some(PUBLIC));
         let list = List::Playlist(id);
-        assert!(store.list_page(list, Some(ADA), ALL).unwrap().is_none());
-        assert!(store.list_page(list, Some(BOB), ALL).unwrap().is_some());
+        assert!(store.list_page(list, ada, ALL).unwrap().is_none());
+        assert!(store.list_page(list, bob, ALL).unwrap().is_some());
         assert_eq!(
-            store.add_to_list(ADA, list, NEWER, 11).unwrap(),
+            store.add_to_list(ada, list, NEWER, 11).unwrap(),
             Changed::Missing
         );
         let public = PlaylistEdit {
@@ -699,35 +765,98 @@ mod tests {
             description: Some("All about waves."),
             visibility: Some(Visibility::Public),
         };
-        store.update_playlist(id, BOB, &public, 12).unwrap();
-        let seen = store.list_page(list, None, ALL).unwrap().unwrap();
+        store.update_playlist(id, bob, &public, 12).unwrap();
+        let seen = store.list_page(list, Reader::ANYONE, ALL).unwrap().unwrap();
         assert_eq!(
             (seen.card.title.as_str(), seen.description.as_str()),
             ("Waves", "All about waves.")
         );
         assert!(!seen.editable);
         let shelf = store
-            .channel_playlists(crate::testing::BOB_CHANNEL, ALL)
+            .channel_playlists(BOB_CHANNEL, Reader::ANYONE, ALL)
             .unwrap();
         assert_eq!(shelf.items.len(), 1);
         assert!(!store.delete_playlist(id, ADA).unwrap());
         assert!(store.delete_playlist(id, BOB).unwrap());
     }
 
+    /// A list counts, and shows first, only the videos its reader may see: a video made private
+    /// leaves the lists of others, and stays in those its channel reads.
+    #[test]
+    fn a_list_counts_what_its_reader_may_see() {
+        let store = with_videos();
+        let bob = Reader::of(BOB);
+        let id = PlaylistId::from_bits(5);
+        let new = NewPlaylist {
+            id,
+            title: "Waves",
+            visibility: Visibility::Public,
+            video: Some(NEWER),
+            now: 10,
+        };
+        store.create_playlist(bob, &new).unwrap();
+        store
+            .add_to_list(bob, List::Playlist(id), PUBLIC, 11)
+            .unwrap();
+        store
+            .rate(bob, NEWER, youcraft_api::records::Rating::Like, 12)
+            .unwrap();
+        let private = VideoEdit {
+            visibility: Some(Visibility::Private),
+            ..VideoEdit::default()
+        };
+        store.edit_video(NEWER, &private, 13).unwrap();
+        let list = List::Playlist(id);
+        let cards = store.lists_of(bob, None).unwrap();
+        let (liked, mine) = (&cards[1], &cards[2]);
+        assert_eq!((liked.videos, liked.first), (0, None));
+        assert_eq!((mine.videos, mine.first), (1, Some(PUBLIC)));
+        let page = store.list_page(list, bob, ALL).unwrap().unwrap();
+        assert_eq!(ids(&page), [PUBLIC]);
+        let shelf = store
+            .channel_playlists(BOB_CHANNEL, Reader::ANYONE, ALL)
+            .unwrap();
+        assert_eq!(shelf.items[0].videos, 1);
+        let as_ada = store
+            .list_page(list, Reader::of(ADA), ALL)
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            ids(&as_ada),
+            [NEWER, PUBLIC],
+            "Ada still sees her own video"
+        );
+        assert_eq!(as_ada.card.videos, 2);
+        assert_eq!(
+            store
+                .remove_from_list(bob, List::WatchLater, PUBLIC, 14)
+                .unwrap(),
+            Changed::Missing,
+            "taking out of a Watch later list never made does not make it"
+        );
+        let later: i64 = store
+            .connection()
+            .query_row(
+                "SELECT count(*) FROM playlists WHERE kind = 'watch_later'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(later, 0);
+    }
+
     #[test]
     fn liked_videos_follow_ratings() {
         let store = with_videos();
-        store.rate(BOB, PUBLIC, Rating::Like, 10).unwrap();
-        store.rate(BOB, NEWER, Rating::Like, 11).unwrap();
-        store.rate(BOB, UNLISTED, Rating::Dislike, 12).unwrap();
-        let page = store
-            .list_page(List::Liked, Some(BOB), ALL)
-            .unwrap()
-            .unwrap();
+        let bob = Reader::of(BOB);
+        store.rate(bob, PUBLIC, Rating::Like, 10).unwrap();
+        store.rate(bob, NEWER, Rating::Like, 11).unwrap();
+        store.rate(bob, UNLISTED, Rating::Dislike, 12).unwrap();
+        let page = store.list_page(List::Liked, bob, ALL).unwrap().unwrap();
         assert_eq!(ids(&page), [NEWER, PUBLIC]);
         assert!(!page.editable && page.card.videos == 2);
         assert_eq!(
-            store.add_to_list(BOB, List::Liked, UNLISTED, 13).unwrap(),
+            store.add_to_list(bob, List::Liked, UNLISTED, 13).unwrap(),
             Changed::Fixed
         );
     }

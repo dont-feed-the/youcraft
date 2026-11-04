@@ -31,13 +31,13 @@ pub struct PlaylistCard {
     pub title: String,
     /// Who may see it.
     pub visibility: Visibility,
-    /// How many videos it holds.
+    /// How many of the videos it holds its reader may see.
     pub videos: u64,
     /// Its owner's channel.
     pub owner: ChannelCard,
     /// When it last changed, in seconds since 1970 (UTC).
     pub updated_at: i64,
-    /// The video whose thumbnail stands for it: its first.
+    /// The video whose thumbnail stands for it: the first its reader may see.
     pub first: Option<VideoId>,
     /// Whether it holds the video `playlist.list` was asked about; `false` otherwise.
     pub contains: bool,

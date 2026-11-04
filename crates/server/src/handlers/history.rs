@@ -13,9 +13,10 @@ use crate::site::{Caller, Site};
 
 impl Handle<List> for Site {
     async fn handle(&self, caller: Caller, page: Page) -> Result<History, ApiError> {
-        let account = caller.signed_in()?;
+        caller.signed_in()?;
         let window = window(page.after.as_deref(), PAGE)?;
-        let (found, paused) = self.db(move |store| store.history(account, window)).await?;
+        let reader = caller.reader();
+        let (found, paused) = self.db(move |store| store.history(reader, window)).await?;
         Ok(History {
             videos: found.items,
             next: next(window, found.more),

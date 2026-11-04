@@ -4,6 +4,8 @@
 //! `src/migrations/` (applied in order and counted in `PRAGMA user_version`), and answers the
 //! site's queries, one module per area. SQLite never sees an uploaded file, only our statements
 //! with bound parameters. Calls are synchronous; the server runs them off its async threads.
+//! Every transaction is immediate: it takes the write lock when it begins, so that a transaction
+//! that reads and then writes never finds that another process wrote in between.
 
 pub mod accounts;
 pub mod channels;
@@ -22,17 +24,25 @@ pub mod watching;
 use std::path::Path;
 use std::sync::{Mutex, MutexGuard, PoisonError};
 
-use rusqlite::Connection;
+use rusqlite::types::{FromSql, FromSqlError, FromSqlResult, ValueRef};
+use rusqlite::{Connection, TransactionBehavior};
+use youcraft_api::AccountId;
+use youcraft_api::Role;
+use youcraft_api::commands::account::Theme;
+use youcraft_api::records::Visibility;
 
 /// Why a query failed.
 #[derive(Debug, thiserror::Error)]
 pub enum StoreError {
     /// SQLite refused or failed.
     #[error("database: {0}")]
-    Sqlite(#[from] rusqlite::Error),
+    Sqlite(rusqlite::Error),
     /// A stored value breaks the schema's meaning (an unknown enum name, say).
     #[error("corrupt row: {0}")]
     Corrupt(String),
+    /// Every handle offered for a new channel is taken.
+    #[error("every handle offered is taken")]
+    HandlesTaken,
     /// The file holds a newer schema than this program knows.
     #[error("the database is at schema {found}, newer than this program's {known}")]
     TooNew {
@@ -41,6 +51,114 @@ pub enum StoreError {
         /// The number of migrations this program has.
         known: i64,
     },
+}
+
+impl From<rusqlite::Error> for StoreError {
+    /// A column that holds no [`Name`] of its type is a corrupt row; anything else, SQLite's.
+    fn from(error: rusqlite::Error) -> StoreError {
+        match error {
+            rusqlite::Error::FromSqlConversionFailure(column, _, cause)
+                if cause.is::<Unnamed>() =>
+            {
+                StoreError::Corrupt(format!("column {column}: {cause}"))
+            }
+            error => StoreError::Sqlite(error),
+        }
+    }
+}
+
+/// Who reads, or changes what they may: their account if they are signed in, and whether they
+/// run the site, which shows them every video as its own channel sees it.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Reader {
+    /// Their account, if they are signed in.
+    pub account: Option<AccountId>,
+    /// Whether they are an administrator.
+    pub admin: bool,
+}
+
+impl Reader {
+    /// Someone signed out.
+    pub const ANYONE: Reader = Reader {
+        account: None,
+        admin: false,
+    };
+
+    /// The person signed in as `account`, who does not run the site.
+    pub fn of(account: AccountId) -> Reader {
+        Reader {
+            account: Some(account),
+            admin: false,
+        }
+    }
+
+    /// Their account as the database stores it, or `NULL`.
+    pub(crate) fn id(self) -> Option<i64> {
+        self.account.map(AccountId::to_i64)
+    }
+}
+
+/// A value the database keeps as one of a few names.
+pub(crate) trait Name: Sized {
+    /// What it is, for the message of a corrupt row.
+    const WHAT: &'static str;
+    /// The value named `name`, if it is one.
+    fn from_name(name: &str) -> Option<Self>;
+}
+
+/// A column that holds a [`Name`]: a stored name that is none of its type's fails the query
+/// with [`StoreError::Corrupt`].
+pub(crate) struct Named<T>(pub T);
+
+impl<T: Name> FromSql for Named<T> {
+    fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
+        let name = value.as_str()?;
+        T::from_name(name).map(Named).ok_or_else(|| {
+            FromSqlError::Other(Box::new(Unnamed {
+                what: T::WHAT,
+                name: name.to_owned(),
+            }))
+        })
+    }
+}
+
+/// A stored name that is none of what its column holds.
+#[derive(Debug, thiserror::Error)]
+#[error("unknown {what} {name:?}")]
+struct Unnamed {
+    what: &'static str,
+    name: String,
+}
+
+impl Name for Role {
+    const WHAT: &'static str = "role";
+    fn from_name(name: &str) -> Option<Role> {
+        Role::from_name(name)
+    }
+}
+
+impl Name for Theme {
+    const WHAT: &'static str = "theme";
+    fn from_name(name: &str) -> Option<Theme> {
+        Theme::from_name(name)
+    }
+}
+
+impl Name for Visibility {
+    const WHAT: &'static str = "visibility";
+    fn from_name(name: &str) -> Option<Visibility> {
+        Visibility::from_name(name)
+    }
+}
+
+/// A stored count as its type: the schema keeps counts at zero or more.
+pub(crate) fn count(value: i64) -> u64 {
+    u64::try_from(value).unwrap_or(0)
+}
+
+/// A size or count as SQLite keeps integers, which reach `i64::MAX`.
+pub(crate) fn signed(value: u64) -> i64 {
+    i64::try_from(value).unwrap_or(i64::MAX)
 }
 
 /// Which rows of a list to read: `limit` of them, after the first `offset`.
@@ -97,12 +215,13 @@ impl Store {
         Store::prepare(Connection::open_in_memory()?)
     }
 
-    fn prepare(connection: Connection) -> Result<Store, StoreError> {
+    fn prepare(mut connection: Connection) -> Result<Store, StoreError> {
         connection.pragma_update(None, "journal_mode", "WAL")?;
         connection.pragma_update(None, "synchronous", "NORMAL")?;
-        connection.pragma_update(None, "foreign_keys", "ON")?;
         connection.busy_timeout(std::time::Duration::from_secs(5))?;
-        migrations::run(&connection)?;
+        connection.set_transaction_behavior(TransactionBehavior::Immediate);
+        migrations::run(&mut connection)?;
+        connection.pragma_update(None, "foreign_keys", "ON")?;
         Ok(Store {
             connection: Mutex::new(connection),
         })
@@ -113,6 +232,33 @@ impl Store {
         self.connection
             .lock()
             .unwrap_or_else(PoisonError::into_inner)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A transaction takes the write lock as it begins: another connection may not begin to
+    /// write until it ends, so neither finds, as it writes, that the other wrote since it read.
+    #[test]
+    fn a_transaction_holds_the_write_lock_from_its_start() {
+        let dir = std::env::temp_dir().join(format!("youcraft-store-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("immediate.sqlite");
+        let first = Store::open(&path).unwrap();
+        let second = Connection::open(&path).unwrap();
+        second.busy_timeout(std::time::Duration::ZERO).unwrap();
+        {
+            let mut connection = first.connection();
+            let transaction = connection.transaction().unwrap();
+            let busy = second.execute_batch("BEGIN IMMEDIATE; COMMIT;");
+            assert!(busy.is_err(), "the first transaction holds the lock");
+            transaction.commit().unwrap();
+        }
+        second.execute_batch("BEGIN IMMEDIATE; COMMIT;").unwrap();
+        drop((first, second));
+        std::fs::remove_dir_all(&dir).unwrap();
     }
 }
 

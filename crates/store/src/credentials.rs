@@ -44,7 +44,7 @@ impl Store {
                 standing,
             )
             .optional()?;
-        row.transpose()
+        Ok(row)
     }
 
     /// End the session `hash`.
@@ -103,7 +103,7 @@ impl Store {
                 standing,
             )
             .optional()?;
-        row.transpose()
+        Ok(row)
     }
 
     /// The tokens of `account`, newest first.

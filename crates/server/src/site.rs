@@ -5,7 +5,7 @@ use std::sync::Arc;
 use youcraft_api::{AccountId, ApiError, Role};
 use youcraft_store::accounts::Standing;
 use youcraft_store::credentials::SecretHash;
-use youcraft_store::{Store, StoreError};
+use youcraft_store::{Reader, Store, StoreError};
 
 use crate::config::Config;
 
@@ -99,6 +99,14 @@ impl Caller {
     /// The caller's account, or [`ApiError::SignInRequired`] if they have none.
     pub fn signed_in(&self) -> Result<AccountId, ApiError> {
         self.account.ok_or(ApiError::SignInRequired)
+    }
+
+    /// The caller as the store sees who reads: their account, and whether they run the site.
+    pub fn reader(&self) -> Reader {
+        Reader {
+            account: self.account,
+            admin: self.role.allows(Role::Admin),
+        }
     }
 }
 

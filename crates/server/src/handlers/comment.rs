@@ -1,14 +1,14 @@
 //! Comments: read by anyone who may see the video, written by people signed in where the
 //! creator lets them, edited by their author, deleted by their author, the video's creator or
-//! an administrator.
+//! an administrator. The store checks each of these as it reads or writes.
 
 use youcraft_api::commands::comment::{
     BODY_LIMIT, Comment, Comments, Create, Delete, Edit, Like, Liked, Liking, List, NewComment,
     OfComment, OfVideo, Replies, Update, Which,
 };
 use youcraft_api::commands::site::Nothing;
-use youcraft_api::{ApiError, CommentId, Role};
-use youcraft_store::comments::{self, Deleted, Opening, Reader};
+use youcraft_api::{ApiError, CommentId};
+use youcraft_store::comments::{self, Outcome};
 
 use crate::dispatch::Handle;
 use crate::handlers::input::{next, text, window};
@@ -18,23 +18,12 @@ use crate::site::{Caller, Site, now};
 /// How many comments one page holds.
 const PAGE: u32 = 20;
 
-fn reader(caller: Caller) -> Reader {
-    Reader {
-        account: caller.account,
-        admin: caller.role >= Role::Admin,
-    }
-}
-
-impl Site {
-    /// The comment `id`, if `caller` may see it and its video.
-    async fn seen_comment(&self, caller: Caller, id: CommentId) -> Result<Comment, ApiError> {
-        let reader = reader(caller);
-        let comment = self
-            .db(move |store| store.comment(id, reader))
-            .await?
-            .ok_or(ApiError::NotFound)?;
-        self.video_page(caller, comment.video).await?;
-        Ok(comment)
+/// What a write to comments made, or why it made nothing.
+fn outcome<T>(outcome: Outcome<T>) -> Result<T, ApiError> {
+    match outcome {
+        Outcome::Done(made) => Ok(made),
+        Outcome::Missing => Err(ApiError::NotFound),
+        Outcome::Refused => Err(ApiError::Forbidden),
     }
 }
 
@@ -48,7 +37,7 @@ impl Handle<List> for Site {
                 next: None,
             });
         }
-        let reader = reader(caller);
+        let reader = caller.reader();
         let found = self
             .db(move |store| store.comments(of.video, of.order, reader, window))
             .await?;
@@ -61,12 +50,12 @@ impl Handle<List> for Site {
 
 impl Handle<Replies> for Site {
     async fn handle(&self, caller: Caller, of: OfComment) -> Result<Comments, ApiError> {
-        self.seen_comment(caller, of.comment).await?;
         let window = window(of.after.as_deref(), PAGE)?;
-        let reader = reader(caller);
+        let reader = caller.reader();
         let found = self
             .db(move |store| store.replies(of.comment, reader, window))
-            .await?;
+            .await?
+            .ok_or(ApiError::NotFound)?;
         Ok(Comments {
             comments: found.items,
             next: next(window, found.more),
@@ -76,77 +65,54 @@ impl Handle<Replies> for Site {
 
 impl Handle<Create> for Site {
     async fn handle(&self, caller: Caller, new: NewComment) -> Result<Comment, ApiError> {
-        let author = caller.signed_in()?;
+        caller.signed_in()?;
         let body = text("body", &new.body, BODY_LIMIT, true)?;
-        self.video_page(caller, new.video).await?;
-        let video = new.video;
-        let opening = self
-            .db(move |store| store.opening(video, new.parent, author))
-            .await?;
-        let parent = match opening {
-            Opening::Open { parent } => parent,
-            Opening::Missing => return Err(ApiError::NotFound),
-            Opening::Closed => return Err(ApiError::Forbidden),
-        };
-        let id = CommentId::from_bits(random_bits());
-        let now = now();
-        self.db(move |store| {
-            store.add_comment(&comments::NewComment {
-                id,
-                video,
-                parent,
-                author,
-                body: &body,
-                now,
+        let (author, id, now) = (caller.reader(), CommentId::from_bits(random_bits()), now());
+        let posted = self
+            .db(move |store| {
+                let comment = comments::NewComment {
+                    id,
+                    video: new.video,
+                    parent: new.parent,
+                    body: &body,
+                    now,
+                };
+                store.add_comment(author, &comment)
             })
-        })
-        .await?;
-        let reader = reader(caller);
-        self.db(move |store| store.comment(id, reader))
-            .await?
-            .ok_or(ApiError::Internal)
+            .await?;
+        outcome(posted)
     }
 }
 
 impl Handle<Update> for Site {
     async fn handle(&self, caller: Caller, edit: Edit) -> Result<Comment, ApiError> {
-        let author = caller.signed_in()?;
+        caller.signed_in()?;
         let body = text("body", &edit.body, BODY_LIMIT, true)?;
-        let found = self.seen_comment(caller, edit.comment).await?;
-        if !found.editable {
-            return Err(ApiError::Forbidden);
-        }
-        let (id, now) = (edit.comment, now());
-        self.db(move |store| store.edit_comment(id, author, &body, now))
+        let (author, now) = (caller.reader(), now());
+        let edited = self
+            .db(move |store| store.edit_comment(edit.comment, author, &body, now))
             .await?;
-        let reader = reader(caller);
-        self.db(move |store| store.comment(id, reader))
-            .await?
-            .ok_or(ApiError::NotFound)
+        outcome(edited)
     }
 }
 
 impl Handle<Delete> for Site {
     async fn handle(&self, caller: Caller, which: Which) -> Result<Nothing, ApiError> {
         caller.signed_in()?;
-        let reader = reader(caller);
+        let reader = caller.reader();
         let deleted = self
             .db(move |store| store.delete_comment(which.comment, reader))
             .await?;
-        match deleted {
-            Deleted::Done => Ok(Nothing {}),
-            Deleted::Missing => Err(ApiError::NotFound),
-            Deleted::NotTheirs => Err(ApiError::Forbidden),
-        }
+        outcome(deleted).map(|()| Nothing {})
     }
 }
 
 impl Handle<Like> for Site {
     async fn handle(&self, caller: Caller, liking: Liking) -> Result<Liked, ApiError> {
-        let account = caller.signed_in()?;
-        self.seen_comment(caller, liking.comment).await?;
+        caller.signed_in()?;
+        let reader = caller.reader();
         let likes = self
-            .db(move |store| store.like_comment(liking.comment, account, liking.liked))
+            .db(move |store| store.like_comment(liking.comment, reader, liking.liked))
             .await?
             .ok_or(ApiError::NotFound)?;
         Ok(Liked {

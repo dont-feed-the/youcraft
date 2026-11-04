@@ -2,6 +2,26 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.15
+
+### Changed
+
+- Who sees a video follows one rule everywhere: its channel and the site's administrators always,
+  everyone else once it is ready and not private. A public video still uploading or processing no
+  longer shows its page to others, and administrators see a private video's page as they could
+  already see its media.
+- The comments of blocked authors, and the replies to them, no longer count: a video's and a
+  comment's counts match what they list, and come back when the block is lifted.
+- Playlists, Watch later and liked videos count, and take their thumbnail from, only the videos
+  their reader may see.
+
+### Fixed
+
+- A video's creator and the site's administrators can delete the comments of blocked authors.
+- Replies open at once on videos with many comments.
+- A command run from the command line, or the demo, no longer fails when the site writes to the
+  database at the same moment.
+
 ## 0.1.14
 
 ### Changed

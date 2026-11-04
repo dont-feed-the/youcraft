@@ -1,29 +1,38 @@
 //! Channels as people meet them: their page, their public videos, subscribing to them, the
 //! subscriptions feed, and the accounts a channel keeps from commenting.
 
-use rusqlite::{OptionalExtension, params};
+use rusqlite::{OptionalExtension, Row, named_params, params};
 use youcraft_api::commands::channel::{ChannelPage, Subscription};
 use youcraft_api::records::{ChannelCard, VideoCard};
 use youcraft_api::{AccountId, ChannelId};
 
 use crate::accounts::handle_key;
-use crate::videos::{CARD_COLUMNS, card, count};
-use crate::{Paged, Store, StoreError, Window};
+use crate::videos::{CARD_COLUMNS, LISTED, card};
+use crate::{Paged, Store, StoreError, Window, count};
 
-/// The columns [`channel_page`] reads, from `channels` as `c`, for the viewer `?2`.
-pub(crate) const PAGE_COLUMNS: &str = "c.id, c.handle, c.name, c.description, c.subscriber_count, \
-    (SELECT count(*) FROM videos v WHERE v.channel_id = c.id AND v.visibility = 'public' AND v.state = 'ready'), \
-    EXISTS (SELECT 1 FROM subscriptions s WHERE s.channel_id = c.id AND s.account_id = ?2), \
-    c.account_id IS ?2";
+/// The [`ChannelCard`] of the columns `id, handle, name` of a channel, from the `first`.
+pub(crate) fn channel_card(row: &Row<'_>, first: usize) -> rusqlite::Result<ChannelCard> {
+    Ok(ChannelCard {
+        id: ChannelId::from_i64(row.get(first)?),
+        handle: row.get(first + 1)?,
+        name: row.get(first + 2)?,
+    })
+}
 
-/// The [`ChannelPage`] of a row that starts with [`PAGE_COLUMNS`].
-pub(crate) fn channel_page(row: &rusqlite::Row<'_>) -> rusqlite::Result<ChannelPage> {
+/// The columns [`channel_page`] reads, from `channels` as `c`, for the reader `:reader`.
+pub(crate) fn page_columns() -> String {
+    format!(
+        "c.id, c.handle, c.name, c.description, c.subscriber_count, \
+         (SELECT count(*) FROM videos v WHERE v.channel_id = c.id AND {LISTED}), \
+         EXISTS (SELECT 1 FROM subscriptions s WHERE s.channel_id = c.id AND s.account_id = :reader), \
+         c.account_id IS :reader"
+    )
+}
+
+/// The [`ChannelPage`] of a row that starts with [`page_columns`].
+pub(crate) fn channel_page(row: &Row<'_>) -> rusqlite::Result<ChannelPage> {
     Ok(ChannelPage {
-        card: ChannelCard {
-            id: ChannelId::from_i64(row.get(0)?),
-            handle: row.get(1)?,
-            name: row.get(2)?,
-        },
+        card: channel_card(row, 0)?,
         description: row.get(3)?,
         subscribers: count(row.get(4)?),
         videos: count(row.get(5)?),
@@ -52,11 +61,12 @@ impl Store {
     ) -> Result<Option<ChannelPage>, StoreError> {
         let connection = self.connection();
         let mut statement = connection.prepare_cached(&format!(
-            "SELECT {PAGE_COLUMNS} FROM channels c WHERE c.handle_key = ?1"
+            "SELECT {} FROM channels c WHERE c.handle_key = :handle",
+            page_columns()
         ))?;
         let page = statement
             .query_row(
-                params![handle_key(handle), viewer.map(AccountId::to_i64)],
+                named_params! {":handle": handle_key(handle), ":reader": viewer.map(AccountId::to_i64)},
                 channel_page,
             )
             .optional()?;
@@ -72,7 +82,7 @@ impl Store {
         let connection = self.connection();
         let mut statement = connection.prepare_cached(&format!(
             "SELECT {CARD_COLUMNS} FROM videos v JOIN channels c ON c.id = v.channel_id \
-             WHERE v.channel_id = ?1 AND v.visibility = 'public' AND v.state = 'ready' \
+             WHERE v.channel_id = ?1 AND {LISTED} \
              ORDER BY v.published_at DESC, v.id LIMIT ?2 OFFSET ?3"
         ))?;
         let rows = statement.query_map(
@@ -134,13 +144,7 @@ impl Store {
             "SELECT c.id, c.handle, c.name FROM subscriptions s JOIN channels c ON c.id = s.channel_id \
              WHERE s.account_id = ?1 ORDER BY c.name COLLATE NOCASE, c.id",
         )?;
-        let rows = statement.query_map([account.to_i64()], |row| {
-            Ok(ChannelCard {
-                id: ChannelId::from_i64(row.get(0)?),
-                handle: row.get(1)?,
-                name: row.get(2)?,
-            })
-        })?;
+        let rows = statement.query_map([account.to_i64()], |row| channel_card(row, 0))?;
         Ok(rows.collect::<Result<_, _>>()?)
     }
 
@@ -154,7 +158,7 @@ impl Store {
         let mut statement = connection.prepare_cached(&format!(
             "SELECT {CARD_COLUMNS} FROM subscriptions s JOIN videos v ON v.channel_id = s.channel_id \
              JOIN channels c ON c.id = v.channel_id \
-             WHERE s.account_id = ?1 AND v.visibility = 'public' AND v.state = 'ready' \
+             WHERE s.account_id = ?1 AND {LISTED} \
              ORDER BY v.published_at DESC, v.id LIMIT ?2 OFFSET ?3"
         ))?;
         let rows = statement.query_map(

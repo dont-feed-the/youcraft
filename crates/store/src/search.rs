@@ -11,8 +11,8 @@ use youcraft_api::AccountId;
 use youcraft_api::commands::channel::ChannelPage;
 use youcraft_api::records::VideoCard;
 
-use crate::channels::{PAGE_COLUMNS, channel_page};
-use crate::videos::{CARD_COLUMNS, card};
+use crate::channels::{channel_page, page_columns};
+use crate::videos::{CARD_COLUMNS, LISTED, card};
 use crate::{Paged, Store, StoreError, Window};
 
 /// The most words of a query that count.
@@ -59,7 +59,7 @@ impl Store {
             .into_iter()
             .partition(|word| word.chars().count() >= 3);
         let mut values: Vec<Value> = Vec::new();
-        let mut conditions = vec!["v.visibility = 'public' AND v.state = 'ready'".to_owned()];
+        let mut conditions = vec![LISTED.to_owned()];
         let from = if long.is_empty() {
             "videos v JOIN channels c ON c.id = v.channel_id"
         } else {
@@ -108,28 +108,33 @@ impl Store {
         if words.is_empty() {
             return Ok(Vec::new());
         }
-        let mut values: Vec<Value> = vec![
-            Value::Integer(i64::from(limit)),
-            viewer.map_or(Value::Null, |account| Value::Integer(account.to_i64())),
+        let mut values: Vec<(String, Value)> = vec![
+            (":limit".to_owned(), Value::Integer(i64::from(limit))),
+            (
+                ":reader".to_owned(),
+                viewer.map_or(Value::Null, |account| Value::Integer(account.to_i64())),
+            ),
         ];
         let mut conditions = Vec::new();
-        for word in words {
-            values.push(Value::Text(like_pattern(word)));
-            let n = values.len();
+        for (n, word) in words.into_iter().enumerate() {
+            let name = format!(":word{n}");
             conditions.push(format!(
-                "(c.name LIKE ?{n} ESCAPE '\\' OR c.handle LIKE ?{n} ESCAPE '\\')"
+                "(c.name LIKE {name} ESCAPE '\\' OR c.handle LIKE {name} ESCAPE '\\')"
             ));
+            values.push((name, Value::Text(like_pattern(word))));
         }
         let sql = format!(
-            "SELECT {PAGE_COLUMNS} FROM channels c WHERE {} ORDER BY c.subscriber_count DESC, c.id LIMIT ?1",
+            "SELECT {} FROM channels c WHERE {} ORDER BY c.subscriber_count DESC, c.id LIMIT :limit",
+            page_columns(),
             conditions.join(" AND ")
         );
+        let bound: Vec<(&str, &dyn ToSql)> = values
+            .iter()
+            .map(|(name, value)| (name.as_str(), value as &dyn ToSql))
+            .collect();
         let connection = self.connection();
         let mut statement = connection.prepare(&sql)?;
-        let rows = statement.query_map(
-            params_from_iter(values.iter().map(|v| v as &dyn ToSql)),
-            channel_page,
-        )?;
+        let rows = statement.query_map(bound.as_slice(), channel_page)?;
         Ok(rows.collect::<Result<_, _>>()?)
     }
 }
@@ -181,6 +186,30 @@ mod tests {
             2,
             "the channel's name counts"
         );
+    }
+
+    #[test]
+    fn the_index_holds_every_script() {
+        let store = Store::in_memory().unwrap();
+        let connection = store.connection();
+        connection
+            .execute("INSERT INTO video_search (rowid, title, description, channel) VALUES (1, 'Ondes et lumière', '', 'Ada')", [])
+            .unwrap();
+        connection
+            .execute("INSERT INTO video_search (rowid, title, description, channel) VALUES (2, '光の波について', '', 'Bob')", [])
+            .unwrap();
+        let find = |query: &str| -> Vec<i64> {
+            let mut statement = connection
+                .prepare("SELECT rowid FROM video_search WHERE video_search MATCH ?1")
+                .unwrap();
+            statement
+                .query_map([query], |row| row.get(0))
+                .unwrap()
+                .map(Result::unwrap)
+                .collect()
+        };
+        assert_eq!(find("lumiere"), [1], "diacritics fold");
+        assert_eq!(find("の波に"), [2]);
     }
 
     #[test]
