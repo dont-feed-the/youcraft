@@ -1,6 +1,7 @@
-//! The settings page, `/account`: the signed-in person themselves, their account, appearance,
-//! language, watch history and personal tokens. What concerns their channel is in the studio,
-//! and what concerns the site in the administration.
+//! The settings page, `/account`: the signed-in person themselves, their account, their channels
+//! and the invitations to join others (in `memberships`), appearance, language, the watch history
+//! of the channel they act as, and personal tokens. How a channel shows itself, and who runs it,
+//! is in the studio; what concerns the site, in the administration.
 //!
 //! A role is shown only above what the site grants every account.
 
@@ -21,6 +22,7 @@ use crate::components::avatar::{Face, Size};
 use crate::icons::{Glyph, Icon};
 use crate::lang::{Language, RenderTime, fill, offered, tr};
 use crate::pages::admin::role_name;
+use crate::pages::memberships::{ChannelsSection, InvitationsSection};
 use crate::pages::not_found::Trouble;
 
 /// The settings page.
@@ -54,30 +56,43 @@ pub fn Account() -> impl IntoView {
 #[component]
 fn Sections(me: Me, floor: Option<Grant>) -> impl IntoView {
     let paused = me.history_paused;
-    let channel = routes::channel(&me.channel.handle);
+    let acting = me.channel.clone();
     let blocked = me.blocked.then(|| {
         view! { <p class="settings-notice">{tr("Your account is blocked: you can watch videos, but not like, comment or publish.")}</p> }
     });
+    let channels = me.clone();
     let me = StoredValue::new(me);
+    let face = acting.clone().map(|channel| {
+        view! {
+            <span class="avatar avatar-large"><Face channel size=Size::Large/></span>
+        }
+    });
+    let link = acting.map(|channel| {
+        view! {
+            <span class="settings-hint"><bdi>{format!("@{}", channel.handle)}</bdi></span>
+            <a class="menu-link" href=routes::channel(&channel.handle)>{tr("View your channel")}</a>
+        }
+    });
     view! {
         <section class="settings-section">
             <h2>{tr("Account")}</h2>
             <div class="settings-account">
-                <span class="avatar avatar-large">{me.with_value(|me| view! { <Face channel=me.channel.clone() size=Size::Large/> })}</span>
+                {face}
                 <div class="settings-account-names">
-                    <span class="settings-account-name">{me.with_value(|me| me.channel.name.clone())}</span>
-                    <span class="settings-hint">
-                        <bdi>{me.with_value(|me| format!("@{}", me.channel.handle))}</bdi>
-                        {me.with_value(|me| (Some(me.role) > floor).then(|| format!(" · {}", role_name(me.role))))}
-                    </span>
-                    <a class="menu-link" href=channel>{tr("View your channel")}</a>
+                    <span class="settings-account-name">{me.with_value(|me| me.name.clone())}</span>
+                    {me.with_value(|me| (Some(me.role) > floor).then(|| view! {
+                        <span class="settings-hint">{role_name(me.role)}</span>
+                    }))}
+                    {link}
                 </div>
             </div>
             {blocked}
         </section>
+        <InvitationsSection/>
+        <ChannelsSection me=channels/>
         <AppearanceSection me/>
         <LanguageSection me/>
-        <HistorySection paused/>
+        {me.with_value(|me| me.channel.is_some()).then(|| view! { <HistorySection paused/> })}
         <TokenSection/>
     }
 }

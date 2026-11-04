@@ -49,7 +49,7 @@ pub async fn of(site: &Site, headers: &HeaderMap) -> Visitor {
         (Some(token), _) => {
             let hash = hash(token);
             let standing = site.db(move |store| store.token(&hash, now())).await;
-            standing.map(|found| found.map(|s| (s, Credential::Token)))
+            standing.map(|found| found.map(|s| (s, Credential::Token(hash))))
         }
         (None, Some(secret)) => {
             let hash = hash(secret);

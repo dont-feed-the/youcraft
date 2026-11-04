@@ -1,13 +1,15 @@
 //! How channels show themselves (their name, description and photo), and the administrators'
-//! list of accounts, which names each by its channel and never by its e-mail address.
+//! list of accounts, which names each by its person's name and channels, never by its e-mail
+//! address.
 
 use rusqlite::{OptionalExtension, params};
 use youcraft_api::commands::admin::AccountRow;
 use youcraft_api::commands::profile::Profile;
-use youcraft_api::{AccountId, Grant};
+use youcraft_api::{AccountId, ChannelId, Grant};
 
 use crate::accounts::handle_key;
-use crate::channels::{CARD_WIDTH, card_columns, channel_card};
+use crate::channels::{card_columns, channel_card};
+use crate::members::memberships_of;
 use crate::{Named, Paged, Store, StoreError, Window, signed};
 
 /// What changes about a channel; `None` keeps what it has.
@@ -29,16 +31,16 @@ pub struct PhotoFiles {
 }
 
 impl Store {
-    /// How the channel of `account` shows itself.
-    pub fn profile(&self, account: AccountId) -> Result<Option<Profile>, StoreError> {
+    /// How `channel` shows itself.
+    pub fn profile(&self, channel: ChannelId) -> Result<Option<Profile>, StoreError> {
         let connection = self.connection();
         let profile = connection
             .query_row(
                 &format!(
-                    "SELECT {}, c.description FROM channels c WHERE c.account_id = ?1",
+                    "SELECT {}, c.description FROM channels c WHERE c.id = ?1",
                     card_columns("c")
                 ),
-                [account.to_i64()],
+                [channel.to_i64()],
                 |row| {
                     Ok(Profile {
                         card: channel_card(row, 0)?,
@@ -50,50 +52,50 @@ impl Store {
         Ok(profile)
     }
 
-    /// Change the channel of `account` as `edit` says; how it shows itself then.
+    /// Change `channel` as `edit` says; how it shows itself then.
     pub fn edit_profile(
         &self,
-        account: AccountId,
+        channel: ChannelId,
         edit: &ProfileEdit<'_>,
     ) -> Result<Option<Profile>, StoreError> {
         self.connection().execute(
             "UPDATE channels SET name = COALESCE(?2, name), description = COALESCE(?3, description) \
-             WHERE account_id = ?1",
-            params![account.to_i64(), edit.name, edit.description],
+             WHERE id = ?1",
+            params![channel.to_i64(), edit.name, edit.description],
         )?;
-        self.profile(account)
+        self.profile(channel)
     }
 
-    /// Name the channel of `account` after its handle again.
-    pub fn reset_name(&self, account: AccountId) -> Result<Option<Profile>, StoreError> {
+    /// Name `channel` after its handle again.
+    pub fn reset_name(&self, channel: ChannelId) -> Result<Option<Profile>, StoreError> {
         self.connection().execute(
-            "UPDATE channels SET name = handle WHERE account_id = ?1",
-            [account.to_i64()],
+            "UPDATE channels SET name = handle WHERE id = ?1",
+            [channel.to_i64()],
         )?;
-        self.profile(account)
+        self.profile(channel)
     }
 
-    /// Give the channel of `account` the photo `photo`, or none; the version it had, whose
-    /// files are no longer named by anything.
+    /// Give `channel` the photo `photo`, or none; the version it had, whose files are no longer
+    /// named by anything.
     pub fn set_photo(
         &self,
-        account: AccountId,
+        channel: ChannelId,
         photo: Option<&PhotoFiles>,
     ) -> Result<Option<String>, StoreError> {
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         let old: Option<String> = transaction
             .query_row(
-                "SELECT photo FROM channels WHERE account_id = ?1",
-                [account.to_i64()],
+                "SELECT photo FROM channels WHERE id = ?1",
+                [channel.to_i64()],
                 |row| row.get(0),
             )
             .optional()?
             .flatten();
         transaction.execute(
-            "UPDATE channels SET photo = ?2, photo_bytes = ?3 WHERE account_id = ?1",
+            "UPDATE channels SET photo = ?2, photo_bytes = ?3 WHERE id = ?1",
             params![
-                account.to_i64(),
+                channel.to_i64(),
                 photo.map(|photo| photo.version.as_str()),
                 photo.map_or(0, |photo| signed(photo.bytes))
             ],
@@ -102,8 +104,8 @@ impl Store {
         Ok(old)
     }
 
-    /// The accounts whose channel's name or handle holds every word of `query`, ignoring case,
-    /// the newest first.
+    /// The accounts whose person's name, or the name or handle of one of whose channels, holds
+    /// every word of `query`, ignoring case, the newest first.
     pub fn accounts(&self, query: &str, window: Window) -> Result<Paged<AccountRow>, StoreError> {
         let words: Vec<String> = query
             .split_whitespace()
@@ -114,28 +116,42 @@ impl Store {
         for index in 0..words.len() {
             let at = index + 3;
             filter.push_str(&format!(
-                " AND (lower(c.name) LIKE ?{at} ESCAPE '\\' OR c.handle_key LIKE ?{at} ESCAPE '\\')"
+                " AND (lower(a.name) LIKE ?{at} ESCAPE '\\' OR EXISTS (SELECT 1 FROM members m \
+                 JOIN channels c ON c.id = m.channel_id WHERE m.account_id = a.id \
+                 AND (lower(c.name) LIKE ?{at} ESCAPE '\\' OR c.handle_key LIKE ?{at} ESCAPE '\\')))"
             ));
         }
-        let connection = self.connection();
-        let mut statement = connection.prepare(&format!(
-            "SELECT {}, a.role, a.blocked, a.created_at FROM accounts a \
-             JOIN channels c ON c.account_id = a.id WHERE {filter} \
-             ORDER BY a.created_at DESC, a.id DESC LIMIT ?1 OFFSET ?2",
-            card_columns("c")
-        ))?;
-        let mut values: Vec<rusqlite::types::Value> =
-            vec![window.probe().into(), window.skip().into()];
-        values.extend(words.into_iter().map(rusqlite::types::Value::from));
-        let rows = statement.query_map(rusqlite::params_from_iter(values), |row| {
-            Ok(AccountRow {
-                channel: channel_card(row, 0)?,
-                role: row.get::<_, Named<Grant>>(CARD_WIDTH)?.0,
-                blocked: row.get(CARD_WIDTH + 1)?,
-                created_at: row.get(CARD_WIDTH + 2)?,
-            })
-        })?;
-        Ok(window.page(rows.collect::<Result<_, _>>()?))
+        let mut connection = self.connection();
+        let transaction = connection.transaction()?;
+        let rows = {
+            let mut statement = transaction.prepare(&format!(
+                "SELECT a.id, a.name, a.role, a.blocked, a.created_at FROM accounts a WHERE {filter} \
+                 ORDER BY a.created_at DESC, a.id DESC LIMIT ?1 OFFSET ?2"
+            ))?;
+            let mut values: Vec<rusqlite::types::Value> =
+                vec![window.probe().into(), window.skip().into()];
+            values.extend(words.into_iter().map(rusqlite::types::Value::from));
+            let rows = statement.query_map(rusqlite::params_from_iter(values), |row| {
+                Ok(AccountRow {
+                    account: AccountId::from_i64(row.get(0)?),
+                    name: row.get(1)?,
+                    channels: Vec::new(),
+                    role: row.get::<_, Named<Grant>>(2)?.0,
+                    blocked: row.get(3)?,
+                    created_at: row.get(4)?,
+                })
+            })?;
+            rows.collect::<Result<Vec<_>, _>>()?
+        };
+        let mut page = window.page(rows);
+        for row in &mut page.items {
+            row.channels = memberships_of(&transaction, row.account)?
+                .into_iter()
+                .map(|membership| membership.channel)
+                .collect();
+        }
+        transaction.commit()?;
+        Ok(page)
     }
 }
 
@@ -154,7 +170,7 @@ fn like_escaped(text: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::testing::{ADA, BOB, with_videos};
+    use crate::testing::{ADA, ADA_CHANNEL, with_videos};
     use crate::uploads::Allowance;
 
     #[test]
@@ -164,14 +180,14 @@ mod tests {
             name: Some("Ada K."),
             description: Some("Notes on the engine."),
         };
-        let profile = store.edit_profile(ADA, &edit).unwrap().unwrap();
+        let profile = store.edit_profile(ADA_CHANNEL, &edit).unwrap().unwrap();
         assert_eq!(
             (profile.card.name.as_str(), profile.card.handle.as_str()),
             ("Ada K.", "Ada")
         );
         assert_eq!(profile.description, "Notes on the engine.");
         let kept = store
-            .edit_profile(ADA, &ProfileEdit::default())
+            .edit_profile(ADA_CHANNEL, &ProfileEdit::default())
             .unwrap()
             .unwrap();
         assert_eq!(kept, profile, "what is left out stays");
@@ -186,20 +202,28 @@ mod tests {
             };
             store.room(&allowance).unwrap()
         };
-        assert_eq!(store.set_photo(ADA, Some(&files("v1", 300))).unwrap(), None);
         assert_eq!(
             store
-                .set_photo(ADA, Some(&files("v2", 200)))
+                .set_photo(ADA_CHANNEL, Some(&files("v1", 300)))
+                .unwrap(),
+            None
+        );
+        assert_eq!(
+            store
+                .set_photo(ADA_CHANNEL, Some(&files("v2", 200)))
                 .unwrap()
                 .as_deref(),
             Some("v1")
         );
-        let card = store.profile(ADA).unwrap().unwrap().card;
+        let card = store.profile(ADA_CHANNEL).unwrap().unwrap().card;
         assert_eq!(card.photo.as_deref(), Some("v2"));
         assert_eq!(room(), 800, "the photo's files fill the site's storage");
-        assert_eq!(store.set_photo(ADA, None).unwrap().as_deref(), Some("v2"));
+        assert_eq!(
+            store.set_photo(ADA_CHANNEL, None).unwrap().as_deref(),
+            Some("v2")
+        );
         assert_eq!(room(), 1000);
-        let reset = store.reset_name(ADA).unwrap().unwrap();
+        let reset = store.reset_name(ADA_CHANNEL).unwrap().unwrap();
         assert_eq!(reset.card.name, "Ada");
     }
 
@@ -214,7 +238,8 @@ mod tests {
         assert_eq!(all.items.len(), 2);
         let found = store.accounts("LOVE ada", window).unwrap();
         assert_eq!(found.items.len(), 1);
-        assert_eq!(found.items[0].channel.handle, "Ada");
+        assert_eq!(found.items[0].account, ADA);
+        assert_eq!(found.items[0].channels[0].handle, "Ada");
         assert_eq!(found.items[0].role, Grant::Creator);
         assert!(
             store.accounts("100%", window).unwrap().items.is_empty(),
@@ -230,6 +255,5 @@ mod tests {
             )
             .unwrap();
         assert!(one.more);
-        let _ = BOB;
     }
 }

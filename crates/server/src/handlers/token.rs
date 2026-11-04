@@ -5,6 +5,7 @@ use youcraft_api::commands::token::{
     Create, Created, List, NAME_LIMIT, Naming, Revoke, TOKEN_LIMIT, Token, Which,
 };
 use youcraft_api::{ApiError, TokenId};
+use youcraft_store::StoreError;
 
 use crate::dispatch::Handle;
 use crate::handlers::input::line;
@@ -22,24 +23,27 @@ impl Handle<Create> for Site {
         let secret = format!("{PREFIX}{secret}");
         let hash = crate::secrets::hash(&secret);
         let id = TokenId::from_bits(random_bits());
-        let (now, stored) = (now(), name.clone());
+        let (now, channel) = (now(), caller.channel);
         let made = self
-            .db(move |store| store.create_token((id, &hash), account, &stored, now, TOKEN_LIMIT))
+            .db(move |store| {
+                let made =
+                    store.create_token((id, &hash), (account, channel), &name, now, TOKEN_LIMIT)?;
+                if !made {
+                    return Ok(None);
+                }
+                let listed = store
+                    .tokens(account)?
+                    .into_iter()
+                    .find(|token| token.id == id);
+                listed
+                    .map(Some)
+                    .ok_or_else(|| StoreError::Corrupt(format!("token {id} vanished")))
+            })
             .await?;
-        if !made {
-            return Err(ApiError::TooLarge {
-                limit: TOKEN_LIMIT as u64,
-            });
-        }
-        Ok(Created {
-            token: Token {
-                id,
-                name,
-                created_at: now,
-                last_used_at: None,
-            },
-            secret,
-        })
+        let token = made.ok_or(ApiError::TooLarge {
+            limit: TOKEN_LIMIT as u64,
+        })?;
+        Ok(Created { token, secret })
     }
 }
 

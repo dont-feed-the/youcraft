@@ -1,9 +1,10 @@
 //! Commands about comments: reading them, writing, editing and deleting them, liking them.
 //!
 //! A comment answers a video; a reply answers a comment, one level deep as on YouTube. Anyone
-//! signed in and not blocked may comment where the video's creator lets them; the author edits
-//! their own and deletes it, blocked or not, and the video's creator and the site's
-//! administrators delete any.
+//! signed in and not blocked may comment, as the channel they act as, where the video's channel
+//! lets them. Whoever speaks as the author's channel (its managers and owners) edits the comment
+//! and deletes it, blocked or not; whoever speaks as the video's channel, and the site's
+//! administrators, delete any.
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -38,13 +39,14 @@ pub struct Comment {
     pub created_at: i64,
     /// Whether its author changed it since.
     pub edited: bool,
-    /// Whether the caller liked it.
+    /// Whether the channel the caller acts as liked it.
     pub liked: bool,
-    /// Whether its author is the video's creator.
+    /// Whether its author is the video's channel.
     pub by_creator: bool,
-    /// Whether the caller may edit it: they wrote it.
+    /// Whether the caller may edit it: they speak as its author.
     pub editable: bool,
-    /// Whether the caller may delete it: they wrote it, made the video, or run the site.
+    /// Whether the caller may delete it: they speak as its author or as the video's channel, or
+    /// they run the site.
     pub deletable: bool,
 }
 
@@ -188,7 +190,7 @@ pub struct Update;
 impl Command for Update {
     const ID: &'static str = "comment.edit";
     const REQUIRES: Role = Role::Viewer;
-    const SUMMARY: &'static str = "Change what one of your comments says.";
+    const SUMMARY: &'static str = "Change what a comment of a channel you speak as says.";
     type Input = Edit;
     type Output = Comment;
     const WRITES: bool = true;
@@ -200,7 +202,7 @@ pub struct Delete;
 impl Command for Delete {
     const ID: &'static str = "comment.delete";
     const REQUIRES: Role = Role::SignedIn;
-    const SUMMARY: &'static str = "Delete a comment with its replies: your own, any on your videos, or any at all for administrators.";
+    const SUMMARY: &'static str = "Delete a comment with its replies: your channel's, any on your channel's videos, or any at all for administrators.";
     type Input = Which;
     type Output = Nothing;
     const WRITES: bool = true;

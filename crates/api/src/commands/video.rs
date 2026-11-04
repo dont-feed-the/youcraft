@@ -69,28 +69,27 @@ pub struct Edit {
     pub comments_enabled: Option<bool>,
 }
 
-/// Change a video of the caller's channel.
+/// Change a video of a channel the caller edits.
 pub struct Update;
 
 impl Command for Update {
     const ID: &'static str = "video.update";
     const REQUIRES: Role = Role::Creator;
-    const SUMMARY: &'static str =
-        "Change the title, description, visibility or comment setting of one of your videos.";
+    const SUMMARY: &'static str = "Change the title, description, visibility or comment setting of a video of a channel you edit.";
     type Input = Edit;
     type Output = StudioVideo;
     const WRITES: bool = true;
 }
 
-/// Delete a video of the caller's channel, with its media; blocked or not, what one published
-/// is one's own to take back.
+/// Delete a video of a channel the caller edits, with its media; blocked or not, what one
+/// published is one's own to take back.
 pub struct Delete;
 
 impl Command for Delete {
     const ID: &'static str = "video.delete";
     const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str =
-        "Delete one of your videos, with its comments and its media, for good.";
+        "Delete a video of a channel you edit, with its comments and its media, for good.";
     type Input = Which;
     type Output = Nothing;
     const WRITES: bool = true;
@@ -115,7 +114,8 @@ pub struct Rated {
     pub rating: Rating,
 }
 
-/// Like a video, dislike it, or take the rating back; a blocked account may only take it back.
+/// Like a video as the channel the caller acts as, dislike it, or take the rating back; a blocked
+/// account may only take it back.
 pub struct SetRating;
 
 impl Command for SetRating {
@@ -134,7 +134,7 @@ pub struct View;
 impl Command for View {
     const ID: &'static str = "video.view";
     const REQUIRES: Role = Role::Anyone;
-    const SUMMARY: &'static str = "Count a view of a video, once a day per viewer, and keep it in the signed-in viewer's history unless they paused it.";
+    const SUMMARY: &'static str = "Count a view of a video, once a day per viewer, and keep it in the history of the channel the viewer acts as unless it is paused.";
     type Input = Which;
     type Output = Nothing;
     const WRITES: bool = true;

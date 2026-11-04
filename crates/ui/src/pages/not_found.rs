@@ -30,6 +30,10 @@ pub fn Trouble(error: ApiError) -> impl IntoView {
             <a class="pill" rel="external" href=move || routes::sign_in(&here())>{tr("Sign in")}</a>
         }
         .into_any(),
+        ApiError::ChannelRequired => view! {
+            <a class="pill" href=routes::ACCOUNT_CHANNELS>{tr("Create a channel")}</a>
+        }
+        .into_any(),
         _ => view! { <a class="pill" href=routes::HOME>{tr("Go to home")}</a> }.into_any(),
     };
     view! {

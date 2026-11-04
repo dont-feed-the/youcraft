@@ -1,15 +1,15 @@
-//! Commands that change how the caller's channel shows itself: its name, its description and
-//! its photo. Its handle never changes, so no link to it ever breaks.
+//! Commands that change how a channel shows itself: its name, its description and its photo. Its
+//! handle never changes, so no link to it ever breaks.
 //!
-//! Every account that is not blocked runs them on its own channel, viewers too, since their
-//! name and photo stand beside their comments; administrators moderate others' in `admin`.
+//! Its owners run them, viewers of the site too, since a channel's name and photo stand beside
+//! its comments; administrators moderate others' in `admin`.
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::command::Command;
-use crate::commands::channel::NAME_LIMIT;
-use crate::commands::site::Nothing;
+use crate::commands::channel::{NAME_LIMIT, Which};
+use crate::ids::ChannelId;
 use crate::records::ChannelCard;
 use crate::role::Role;
 
@@ -18,10 +18,12 @@ pub const DESCRIPTION_LIMIT: usize = 1000;
 /// The most bytes the file of a channel's photo has.
 pub const PHOTO_BYTES: usize = 5 << 20;
 
-/// What changes about the caller's channel; what is left out stays.
-#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+/// What changes about a channel; what is left out stays.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct Customization {
+    /// The channel, which the caller owns.
+    pub channel: ChannelId,
     /// Its new name: 1 to [`NAME_LIMIT`] characters on one line, any script, which other
     /// channels may share.
     #[serde(default)]
@@ -42,49 +44,52 @@ pub struct Profile {
     pub description: String,
 }
 
-/// A new photo for the caller's channel.
+/// A new photo for a channel.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct NewPhoto {
+    /// The channel, which the caller owns.
+    pub channel: ChannelId,
     /// The file, JPEG, PNG or WebP of at most [`PHOTO_BYTES`] bytes, in base64 (RFC 4648, with
     /// or without padding). Its centre is cut square.
     #[schemars(length(min = 1, max = PHOTO_BYTES.div_ceil(3) * 4))]
     pub image: String,
 }
 
-/// Change the name or the description of the caller's channel.
+/// Change the name or the description of a channel the caller owns.
 pub struct Update;
 
 impl Command for Update {
     const ID: &'static str = "channel.update";
     const REQUIRES: Role = Role::Viewer;
     const SUMMARY: &'static str =
-        "Change the name or the description of your channel; its handle stays.";
+        "Change the name or the description of a channel you own; its handle stays.";
     type Input = Customization;
     type Output = Profile;
     const WRITES: bool = true;
 }
 
-/// Give the caller's channel a photo, in place of the one it had.
+/// Give a channel the caller owns a photo, in place of the one it had.
 pub struct SetPhoto;
 
 impl Command for SetPhoto {
     const ID: &'static str = "channel.set_photo";
     const REQUIRES: Role = Role::Viewer;
-    const SUMMARY: &'static str = "Give your channel a photo: a JPEG, PNG or WebP file of at most 5 MB, in base64, cut square at its centre.";
+    const SUMMARY: &'static str = "Give a channel you own a photo: a JPEG, PNG or WebP file of at most 5 MB, in base64, cut square at its centre.";
     type Input = NewPhoto;
     type Output = Profile;
     const WRITES: bool = true;
 }
 
-/// Take the photo of the caller's channel away; its initial shows again.
+/// Take the photo of a channel the caller owns away; its initial shows again.
 pub struct RemovePhoto;
 
 impl Command for RemovePhoto {
     const ID: &'static str = "channel.remove_photo";
     const REQUIRES: Role = Role::Viewer;
-    const SUMMARY: &'static str = "Remove the photo of your channel; its initial shows instead.";
-    type Input = Nothing;
+    const SUMMARY: &'static str =
+        "Remove the photo of a channel you own; its initial shows instead.";
+    type Input = Which;
     type Output = Profile;
     const WRITES: bool = true;
 }

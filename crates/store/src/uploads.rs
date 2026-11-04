@@ -4,7 +4,8 @@
 //! The room left in the site's storage is counted from rows, never from a walk over the disk:
 //! what each video's files fill (`stored_bytes`, which the server measures once after each
 //! change), what each channel's photo fills (`photo_bytes`), what uploads have received, and what
-//! open ones have yet to receive.
+//! open ones have yet to receive. An upload is its sender's: their account's share bounds what
+//! their open uploads claim, whichever channels they upload to.
 
 use rusqlite::{OptionalExtension, Transaction, params};
 use youcraft_api::records::Visibility;
@@ -18,6 +19,8 @@ pub struct NewUpload<'a> {
     pub video: VideoId,
     /// The channel it is uploaded to.
     pub channel: ChannelId,
+    /// The account that sends it.
+    pub account: AccountId,
     /// Its title.
     pub title: &'a str,
     /// Its description.
@@ -33,7 +36,7 @@ pub struct NewUpload<'a> {
 /// An upload in progress.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Receiving {
-    /// The account whose channel it goes to.
+    /// The account that sends it.
     pub owner: AccountId,
     /// The size of its file in bytes.
     pub size: u64,
@@ -43,7 +46,7 @@ pub struct Receiving {
     pub created_at: i64,
 }
 
-/// What a new upload may claim of the site's storage and of its channel's share.
+/// What a new upload may claim of the site's storage and of its sender's share.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Allowance {
     /// The most bytes the site's videos may fill, uploads in progress included; `u64::MAX` for
@@ -53,9 +56,9 @@ pub struct Allowance {
     pub unrecorded: u64,
     /// The largest file one may upload.
     pub file: u64,
-    /// The most uploads one channel may have open at once.
+    /// The most uploads one account may have open at once.
     pub open: u64,
-    /// The most bytes one channel's open uploads may claim together.
+    /// The most bytes one account's open uploads may claim together.
     pub open_bytes: u64,
     /// When the oldest upload still open started; an older one has lapsed and claims nothing.
     pub since: i64,
@@ -78,7 +81,7 @@ impl Allowance {
 pub enum Claim {
     /// It started, and claims its size.
     Started,
-    /// Its channel has as many uploads open as it may.
+    /// Its sender has as many uploads open as they may.
     Crowded,
     /// It is larger than `limit`, the most it may be now.
     TooLarge {
@@ -115,32 +118,6 @@ fn room_in(transaction: &Transaction<'_>, allowance: &Allowance) -> Result<u64, 
 }
 
 impl Store {
-    /// The channel of `account`.
-    pub fn channel_of(&self, account: AccountId) -> Result<Option<ChannelId>, StoreError> {
-        let id: Option<i64> = self
-            .connection()
-            .query_row(
-                "SELECT id FROM channels WHERE account_id = ?1",
-                [account.to_i64()],
-                |row| row.get(0),
-            )
-            .optional()?;
-        Ok(id.map(ChannelId::from_i64))
-    }
-
-    /// The account whose channel published `video`.
-    pub fn owner_of(&self, video: VideoId) -> Result<Option<AccountId>, StoreError> {
-        let id: Option<i64> = self
-            .connection()
-            .query_row(
-                "SELECT c.account_id FROM videos v JOIN channels c ON c.id = v.channel_id WHERE v.id = ?1",
-                [video.to_i64()],
-                |row| row.get(0),
-            )
-            .optional()?;
-        Ok(id.map(AccountId::from_i64))
-    }
-
     /// Create a video that is uploading, and its upload, if `allowance` leaves room for it.
     ///
     /// The room is what [`room_in`] leaves; measuring it and claiming from it happen in one
@@ -154,9 +131,9 @@ impl Store {
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         let (open, claimed): (i64, i64) = transaction.query_row(
-            "SELECT COUNT(*), COALESCE(SUM(u.size), 0) FROM uploads u JOIN videos v ON v.id = u.video_id \
-             WHERE v.channel_id = ?1 AND u.created_at >= ?2",
-            params![upload.channel.to_i64(), allowance.since],
+            "SELECT COUNT(*), COALESCE(SUM(size), 0) FROM uploads \
+             WHERE account_id = ?1 AND created_at >= ?2",
+            params![upload.account.to_i64(), allowance.since],
             |row| Ok((row.get(0)?, row.get(1)?)),
         )?;
         if count(open) >= allowance.open {
@@ -179,8 +156,13 @@ impl Store {
             ],
         )?;
         transaction.execute(
-            "INSERT INTO uploads (id, video_id, size, created_at) VALUES (?1, ?1, ?2, ?3)",
-            params![upload.video.to_i64(), signed(upload.size), upload.now],
+            "INSERT INTO uploads (id, video_id, account_id, size, created_at) VALUES (?1, ?1, ?2, ?3, ?4)",
+            params![
+                upload.video.to_i64(),
+                upload.account.to_i64(),
+                signed(upload.size),
+                upload.now
+            ],
         )?;
         transaction.commit()?;
         Ok(Claim::Started)
@@ -200,9 +182,7 @@ impl Store {
         let row = self
             .connection()
             .query_row(
-                "SELECT c.account_id, u.size, u.received, u.created_at FROM uploads u \
-                 JOIN videos v ON v.id = u.video_id JOIN channels c ON c.id = v.channel_id \
-                 WHERE u.video_id = ?1",
+                "SELECT account_id, size, received, created_at FROM uploads WHERE video_id = ?1",
                 [video.to_i64()],
                 |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
             )
@@ -322,6 +302,7 @@ mod tests {
         NewUpload {
             video: VideoId::from_bits(id),
             channel,
+            account: AccountId::from_bits(channel.bits() - 1),
             title: "Waves",
             description: "",
             visibility: Visibility::Private,
@@ -349,7 +330,7 @@ mod tests {
         assert_eq!(
             claim(11, 450).unwrap(),
             Claim::TooLarge { limit: 400 },
-            "the channel's share: 900 less the 500 claimed"
+            "the sender's share: 900 less the 500 claimed"
         );
         assert_eq!(claim(11, 400).unwrap(), Claim::Started);
         assert_eq!(claim(12, 1).unwrap(), Claim::TooLarge { limit: 0 });
@@ -382,7 +363,7 @@ mod tests {
     }
 
     #[test]
-    fn a_channel_keeps_only_so_many_uploads_open() {
+    fn a_sender_keeps_only_so_many_uploads_open() {
         let (store, channel) = store_with_channel(1);
         for id in 10..13 {
             let started = store.create_upload(&upload(channel, id, 1, 100), &ROOM);

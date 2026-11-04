@@ -203,3 +203,27 @@
 	This isn't available.	ఇది అందుబాటులో లేదు.
 	This is larger than YouCraft accepts.	ఇది YouCraft అంగీకరించే దానికంటే పెద్దది.
 	This conflicts with what is already there.	ఇది ఇప్పటికే ఉన్నదానితో విభేదిస్తుంది.
+	Accept	అంగీకరించండి
+	Channel name	ఛానెల్ పేరు
+	Create a channel	ఛానెల్‌ను సృష్టించండి
+	Create a channel first.	ముందుగా ఛానెల్‌ను సృష్టించండి.
+	Decline	తిరస్కరించండి
+	Delete channel	ఛానెల్‌ను తొలగించండి
+	Delete this channel, with its videos, comments and playlists, for good?	ఈ ఛానెల్‌ను దాని వీడియోలు, కామెంట్‌లు, ప్లేలిస్ట్‌లతో సహా శాశ్వతంగా తొలగించాలా?
+	Editor	ఎడిటర్
+	Invite someone	ఎవరినైనా ఆహ్వానించండి
+	Its videos, comments and playlists go with it, for good.	దాని వీడియోలు, కామెంట్‌లు, ప్లేలిస్ట్‌లు కూడా దానితో పాటు శాశ్వతంగా పోతాయి.
+	Leave	నిష్క్రమించండి
+	Leave this channel?	ఈ ఛానెల్ నుండి నిష్క్రమించాలా?
+	Manager	మేనేజర్
+	Members	సభ్యులు
+	Owner	యజమాని
+	Permissions	అనుమతులు
+	Switch channel	ఛానెల్ మార్చండి
+	Switch to this channel	ఈ ఛానెల్‌కు మారండి
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	ఆహ్వానించబడిన వ్యక్తి ఒక వారంలోపు అవును లేదా కాదు అని చెప్పడానికి ఈ చిరునామాతో సైన్ ఇన్ చేస్తారు. యజమానులు సభ్యులను ఎంచుకుంటారు; మేనేజర్‌లు ఛానెల్‌గా కూడా వ్యవహరిస్తారు; ఎడిటర్‌లు దాని వీడియోలను అప్‌లోడ్ చేసి మారుస్తారు; వీక్షకులు దాని స్టూడియోను చూస్తారు.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	YouCraftలో మీరు చేసేదంతా మీ ఛానెల్‌లలో ఒకటిగా చేస్తారు: అది కామెంట్ చేస్తుంది, లైక్ చేస్తుంది, సబ్‌స్క్రైబ్ చేస్తుంది, ప్లేలిస్ట్‌లను ఉంచుతుంది. ఒక ఛానెల్‌ను చాలా మంది కలిసి నడపవచ్చు.
+	You act as this channel	మీరు ఈ ఛానెల్‌గా వ్యవహరిస్తున్నారు
+	Your channels	మీ ఛానెల్‌లు
+	{channel} invites you to join as {role}.	{channel} మిమ్మల్ని చేరమని ఆహ్వానిస్తోంది. పాత్ర: {role}.
+@plural	{n} invitation|{n} invitations	{n} ఆహ్వానం|{n} ఆహ్వానాలు

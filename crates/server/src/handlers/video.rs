@@ -1,18 +1,18 @@
 //! Commands about one video: what its page shows, what to watch next, rating it, viewing it,
-//! and its creator changing or deleting it.
+//! and its channel's editors changing or deleting it.
 
 use youcraft_api::commands::site::Nothing;
 use youcraft_api::commands::video::{
     Delete, Edit, Get, Next, Rate, Rated, SetRating, Update, View, Which,
 };
 use youcraft_api::records::{Feed, Rating, StudioVideo, VideoPage};
-use youcraft_api::{ApiError, VideoId};
+use youcraft_api::{ApiError, ChannelRole, VideoId};
 use youcraft_recommend::v1::Surface;
 use youcraft_store::studio::VideoEdit;
 
 use crate::dispatch::Handle;
 use crate::handlers::feed::{CANDIDATES, PAGE, ranked};
-use crate::handlers::studio::{description, may_manage, studio_video, title};
+use crate::handlers::studio::{description, studio_video, title};
 use crate::site::{Caller, Site, now};
 
 /// Seconds in a day, the span in which a viewer's views of a video count once.
@@ -49,7 +49,7 @@ impl Handle<Next> for Site {
 
 impl Handle<SetRating> for Site {
     async fn handle(&self, caller: Caller, rate: Rate) -> Result<Rated, ApiError> {
-        caller.signed_in()?;
+        caller.acting()?;
         if rate.rating != Rating::None {
             caller.may_act()?;
         }
@@ -74,8 +74,8 @@ impl Handle<View> for Site {
         let (video, viewer, now) = (which.video, caller.viewer, now());
         self.db(move |store| store.count_view(video, &viewer.0, now.div_euclid(DAY)))
             .await?;
-        if let Some(account) = caller.account {
-            self.db(move |store| store.remember_watched(account, video, now))
+        if let Some(channel) = caller.channel {
+            self.db(move |store| store.remember_watched(channel, video, now))
                 .await?;
         }
         Ok(Nothing {})
@@ -84,7 +84,8 @@ impl Handle<View> for Site {
 
 impl Handle<Update> for Site {
     async fn handle(&self, caller: Caller, edit: Edit) -> Result<StudioVideo, ApiError> {
-        may_manage(self, caller, edit.video).await?;
+        self.allow_on_video(caller, edit.video, ChannelRole::Editor)
+            .await?;
         let new_title = edit.title.as_deref().map(title).transpose()?;
         let new_description = edit.description.as_deref().map(description).transpose()?;
         let video = edit.video;
@@ -104,7 +105,8 @@ impl Handle<Update> for Site {
 
 impl Handle<Delete> for Site {
     async fn handle(&self, caller: Caller, which: Which) -> Result<Nothing, ApiError> {
-        may_manage(self, caller, which.video).await?;
+        self.allow_on_video(caller, which.video, ChannelRole::Editor)
+            .await?;
         let video = which.video;
         // Waits for a piece of its upload being written, which would otherwise make its file
         // again once deleted.

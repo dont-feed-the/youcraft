@@ -203,3 +203,27 @@
 	This isn't available.	ეს მიუწვდომელია.
 	This is larger than YouCraft accepts.	ეს იმაზე დიდია, რასაც YouCraft იღებს.
 	This conflicts with what is already there.	ეს ეწინააღმდეგება უკვე არსებულს.
+	Accept	მიღება
+	Channel name	არხის სახელი
+	Create a channel	არხის შექმნა
+	Create a channel first.	ჯერ შექმენით არხი.
+	Decline	უარყოფა
+	Delete channel	არხის წაშლა
+	Delete this channel, with its videos, comments and playlists, for good?	წაიშალოს ეს არხი სამუდამოდ, მისი ვიდეოებით, კომენტარებითა და დასაკრავი სიებით?
+	Editor	რედაქტორი
+	Invite someone	ვინმეს მოწვევა
+	Its videos, comments and playlists go with it, for good.	მასთან ერთად სამუდამოდ წაიშლება მისი ვიდეოები, კომენტარები და დასაკრავი სიები.
+	Leave	დატოვება
+	Leave this channel?	დატოვოთ ეს არხი?
+	Manager	მენეჯერი
+	Members	წევრები
+	Owner	მფლობელი
+	Permissions	ნებართვები
+	Switch channel	არხის გადართვა
+	Switch to this channel	ამ არხზე გადართვა
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	მოწვეული პირი ამ მისამართით შედის, რათა ერთი კვირის განმავლობაში დათანხმდეს ან უარი თქვას. მფლობელები ირჩევენ წევრებს; მენეჯერები ასევე მოქმედებენ არხის სახელით; რედაქტორები ტვირთავენ და ცვლიან მის ვიდეოებს; მაყურებლები ხედავენ მის სტუდიოს.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	რასაც YouCraft-ზე აკეთებთ, აკეთებთ თქვენი ერთ-ერთი არხის სახელით: სწორედ არხი წერს კომენტარებს, იწონებს, იწერს და ინახავს დასაკრავ სიებს. ერთ არხს რამდენიმე ადამიანი შეიძლება მართავდეს.
+	You act as this channel	თქვენ მოქმედებთ ამ არხის სახელით
+	Your channels	თქვენი არხები
+	{channel} invites you to join as {role}.	{channel} გიწვევთ, შეუერთდეთ როგორც {role}.
+@plural	{n} invitation|{n} invitations	{n} მოწვევა|{n} მოწვევა

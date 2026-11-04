@@ -1,10 +1,13 @@
 //! Comments and replies: reading them as their reader sees them, writing, editing, deleting and
 //! liking them. The counts they change are kept by the schema's triggers.
 //!
-//! A comment shows wherever its video does ([`crate::videos::VISIBLE`]) unless it is hidden: its
-//! author is blocked from the site or by the video's channel, or it answers a hidden comment. The
-//! schema keeps `comments.hidden`, and the counts that leave hidden comments out, true as blocks
-//! come and go. Each write is one transaction that checks what it may do as it does it.
+//! A comment's author is a channel, the one its writer acted as; the writer's account stays on the
+//! row, which nobody reads. It shows wherever its video does ([`crate::videos::VISIBLE`]) unless
+//! it is hidden: its writer is blocked from the site, or its channel by the video's channel, or it
+//! answers a hidden comment. The schema keeps `comments.hidden`, and the counts that leave hidden
+//! comments out, true as blocks come and go. Each write is one transaction that checks what it
+//! may do as it does it. Whoever speaks as a channel ([`crate::SPEAKS_AS`]) edits and deletes its
+//! comments, and deletes any on its videos.
 
 use rusqlite::{OptionalExtension, Row, Transaction, named_params};
 use youcraft_api::commands::comment::{Comment, Order};
@@ -12,33 +15,36 @@ use youcraft_api::{CommentId, VideoId};
 
 use crate::channels::{CARD_WIDTH, card_columns, channel_card};
 use crate::videos::VISIBLE;
-use crate::{Paged, Reader, Store, StoreError, Window, count};
+use crate::{Paged, Reader, SPEAKS_AS, Store, StoreError, Window, count};
 
 /// Whether the comment `m` shows: neither it nor the comment it answers is hidden.
 const SHOWN: &str = "m.hidden = 0 AND (m.parent_id IS NULL OR EXISTS \
     (SELECT 1 FROM comments p WHERE p.id = m.parent_id AND p.hidden = 0))";
 
-/// Whether `:reader` may delete the comment `m` on a video of the channel `c`: they wrote it, the
-/// video is their channel's, or they run the site (`:admin`).
-const DELETABLE: &str = "(m.account_id IS :reader OR c.account_id IS :reader OR :admin)";
+/// Whether `:reader` may delete the comment `m` on the video `v`: they speak as its author or
+/// as the video's channel, or they run the site (`:admin`).
+fn deletable() -> String {
+    format!("(m.channel_id IN {SPEAKS_AS} OR v.channel_id IN {SPEAKS_AS} OR :admin)")
+}
 
-/// The columns [`comment`] reads, from `comments` as `m` (with its author's channel `a`, its
-/// video `v` and the video's channel `c`), for the reader `:reader`.
+/// The columns [`comment`] reads, from `comments` as `m` (with its author's channel `a` and its
+/// video `v`), for the reader `:reader` acting as `:actor`.
 fn columns() -> String {
     format!(
         "m.id, m.video_id, m.parent_id, {}, m.body, m.like_count, \
          m.reply_count, m.created_at, m.edited_at IS NOT NULL, \
-         EXISTS (SELECT 1 FROM comment_likes l WHERE l.comment_id = m.id AND l.account_id = :reader), \
-         m.account_id = c.account_id, m.account_id IS :reader, {DELETABLE}",
-        card_columns("a")
+         EXISTS (SELECT 1 FROM comment_likes l WHERE l.comment_id = m.id AND l.channel_id = :actor), \
+         m.channel_id = v.channel_id, m.channel_id IN {SPEAKS_AS}, {}",
+        card_columns("a"),
+        deletable()
     )
 }
 
 /// The comments `:reader` may see, with the tables [`columns`] reads.
 fn seen() -> String {
     format!(
-        "comments m JOIN channels a ON a.account_id = m.account_id JOIN videos v ON v.id = m.video_id \
-         JOIN channels c ON c.id = v.channel_id WHERE {SHOWN} AND {VISIBLE}"
+        "comments m JOIN channels a ON a.id = m.channel_id JOIN videos v ON v.id = m.video_id \
+         WHERE {SHOWN} AND {VISIBLE}"
     )
 }
 
@@ -71,7 +77,10 @@ fn seen_comment(
     let found = transaction
         .query_row(
             &format!("SELECT {} FROM {} AND m.id = :id", columns(), seen()),
-            named_params! {":id": id.to_i64(), ":reader": reader.id(), ":admin": reader.admin},
+            named_params! {
+                ":id": id.to_i64(), ":reader": reader.id(), ":actor": reader.actor(),
+                ":admin": reader.admin
+            },
             comment,
         )
         .optional()?;
@@ -83,9 +92,10 @@ fn seen_comment(
 pub enum Outcome<T> {
     /// Done, with what it made.
     Done(T),
-    /// There is no such comment or video, or not one its writer may see; or they are signed out.
+    /// There is no such comment or video, or not one its writer may see; or they act as no
+    /// channel.
     Missing,
-    /// It is not theirs to change, or the creator does not let them comment.
+    /// It is not theirs to change, or the video's channel does not let them comment.
     Refused,
 }
 
@@ -125,8 +135,8 @@ impl Store {
         ))?;
         let rows = statement.query_map(
             named_params! {
-                ":video": video.to_i64(), ":reader": reader.id(), ":admin": reader.admin,
-                ":limit": window.probe(), ":offset": window.skip()
+                ":video": video.to_i64(), ":reader": reader.id(), ":actor": reader.actor(),
+                ":admin": reader.admin, ":limit": window.probe(), ":offset": window.skip()
             },
             comment,
         )?;
@@ -154,8 +164,8 @@ impl Store {
             ))?;
             let rows = statement.query_map(
                 named_params! {
-                    ":parent": parent.to_i64(), ":reader": reader.id(), ":admin": reader.admin,
-                    ":limit": window.probe(), ":offset": window.skip()
+                    ":parent": parent.to_i64(), ":reader": reader.id(), ":actor": reader.actor(),
+                    ":admin": reader.admin, ":limit": window.probe(), ":offset": window.skip()
                 },
                 comment,
             )?;
@@ -174,14 +184,14 @@ impl Store {
         Ok(found)
     }
 
-    /// Write `new` as `author`, where they may: a video they may see, whose creator lets them
-    /// comment, answering a comment of that video they may see.
+    /// Write `new` as the channel `author` acts as, where they may: a video they may see, whose
+    /// channel lets them comment, answering a comment of that video they may see.
     pub fn add_comment(
         &self,
         author: Reader,
         new: &NewComment<'_>,
     ) -> Result<Outcome<Comment>, StoreError> {
-        let Some(account) = author.account else {
+        let (Some(account), Some(channel)) = (author.account, author.channel) else {
             return Ok(Outcome::Missing);
         };
         let mut connection = self.connection();
@@ -191,10 +201,13 @@ impl Store {
                 &format!(
                     "SELECT v.comments_enabled = 1 \
                      AND NOT EXISTS (SELECT 1 FROM accounts p WHERE p.id = :reader AND p.blocked = 1) \
-                     AND NOT EXISTS (SELECT 1 FROM blocks b WHERE b.channel_id = v.channel_id AND b.account_id = :reader) \
+                     AND NOT EXISTS (SELECT 1 FROM blocks b WHERE b.channel_id = v.channel_id AND b.blocked_id = :actor) \
                      FROM videos v WHERE v.id = :video AND {VISIBLE}"
                 ),
-                named_params! {":video": new.video.to_i64(), ":reader": author.id(), ":admin": author.admin},
+                named_params! {
+                    ":video": new.video.to_i64(), ":reader": author.id(), ":actor": author.actor(),
+                    ":admin": author.admin
+                },
                 |row| row.get(0),
             )
             .optional()?;
@@ -223,11 +236,11 @@ impl Store {
             }
         };
         transaction.execute(
-            "INSERT INTO comments (id, video_id, account_id, parent_id, body, created_at) \
-             VALUES (:id, :video, :account, :parent, :body, :now)",
+            "INSERT INTO comments (id, video_id, channel_id, account_id, parent_id, body, created_at) \
+             VALUES (:id, :video, :channel, :account, :parent, :body, :now)",
             named_params! {
-                ":id": new.id.to_i64(), ":video": new.video.to_i64(), ":account": account.to_i64(),
-                ":parent": parent, ":body": new.body, ":now": new.now
+                ":id": new.id.to_i64(), ":video": new.video.to_i64(), ":channel": channel.to_i64(),
+                ":account": account.to_i64(), ":parent": parent, ":body": new.body, ":now": new.now
             },
         )?;
         let written = seen_comment(&transaction, new.id, author)?.ok_or_else(|| {
@@ -237,7 +250,7 @@ impl Store {
         Ok(Outcome::Done(written))
     }
 
-    /// Make the comment `id` say `body`, if `author` wrote it and may still see it.
+    /// Make the comment `id` say `body`, if `author` speaks as its channel and may still see it.
     pub fn edit_comment(
         &self,
         id: CommentId,
@@ -254,24 +267,24 @@ impl Store {
             return Ok(Outcome::Refused);
         }
         transaction.execute(
-            "UPDATE comments SET body = :body, edited_at = :now WHERE id = :id AND account_id = :reader",
-            named_params! {":id": id.to_i64(), ":reader": author.id(), ":body": body, ":now": now},
+            "UPDATE comments SET body = :body, edited_at = :now WHERE id = :id",
+            named_params! {":id": id.to_i64(), ":body": body, ":now": now},
         )?;
         let edited = seen_comment(&transaction, id, author)?;
         transaction.commit()?;
         Ok(edited.map_or(Outcome::Missing, Outcome::Done))
     }
 
-    /// Delete the comment `id` with its replies, if `reader` may: they wrote it, it is on their
-    /// channel's video, or they run the site. They may delete a comment that is hidden.
+    /// Delete the comment `id` with its replies, if `reader` may: they speak as its channel or as
+    /// its video's, or they run the site. They may delete a comment that is hidden.
     pub fn delete_comment(&self, id: CommentId, reader: Reader) -> Result<Outcome<()>, StoreError> {
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         let deleted = transaction.execute(
             &format!(
                 "DELETE FROM comments WHERE id = :id AND EXISTS (SELECT 1 FROM comments m \
-                 JOIN videos v ON v.id = m.video_id JOIN channels c ON c.id = v.channel_id \
-                 WHERE m.id = :id AND {DELETABLE})"
+                 JOIN videos v ON v.id = m.video_id WHERE m.id = :id AND {})",
+                deletable()
             ),
             named_params! {":id": id.to_i64(), ":reader": reader.id(), ":admin": reader.admin},
         )?;
@@ -286,14 +299,15 @@ impl Store {
         Ok(outcome)
     }
 
-    /// Make `reader` like the comment `id`, or stop; its likes then, if they may see it.
+    /// Make the channel `reader` acts as like the comment `id`, or stop; its likes then, if they
+    /// may see it.
     pub fn like_comment(
         &self,
         id: CommentId,
         reader: Reader,
         liked: bool,
     ) -> Result<Option<u64>, StoreError> {
-        let Some(account) = reader.account else {
+        let Some(channel) = reader.channel else {
             return Ok(None);
         };
         let mut connection = self.connection();
@@ -302,13 +316,13 @@ impl Store {
             return Ok(None);
         }
         let sql = if liked {
-            "INSERT OR IGNORE INTO comment_likes (account_id, comment_id) VALUES (:account, :id)"
+            "INSERT OR IGNORE INTO comment_likes (channel_id, comment_id) VALUES (:channel, :id)"
         } else {
-            "DELETE FROM comment_likes WHERE account_id = :account AND comment_id = :id"
+            "DELETE FROM comment_likes WHERE channel_id = :channel AND comment_id = :id"
         };
         transaction.execute(
             sql,
-            named_params! {":account": account.to_i64(), ":id": id.to_i64()},
+            named_params! {":channel": channel.to_i64(), ":id": id.to_i64()},
         )?;
         let likes: i64 = transaction.query_row(
             "SELECT like_count FROM comments WHERE id = ?1",
@@ -328,7 +342,7 @@ mod tests {
     use super::*;
     use crate::accounts::NewAccount;
     use crate::studio::VideoEdit;
-    use crate::testing::{ADA, ADA_CHANNEL, BOB, PUBLIC, with_videos};
+    use crate::testing::{ADA, ADA_CHANNEL, BOB, BOB_CHANNEL, PUBLIC, ada, person, with_videos};
 
     /// Eve, a third person, who replies.
     const EVE: AccountId = AccountId::from_bits(5);
@@ -338,6 +352,7 @@ mod tests {
     };
     const ADMIN: Reader = Reader {
         account: None,
+        channel: None,
         admin: true,
     };
 
@@ -366,7 +381,7 @@ mod tests {
             body: "Lovely.",
             now: i64::try_from(id).unwrap(),
         };
-        store.add_comment(Reader::of(author), &new).unwrap()
+        store.add_comment(person(author), &new).unwrap()
     }
 
     fn write(store: &Store, id: u64, parent: Option<u64>, author: AccountId) {
@@ -391,7 +406,7 @@ mod tests {
         write(&store, 2, None, ADA);
         write(&store, 3, Some(1), ADA);
         write(&store, 4, Some(3), BOB);
-        let bob = Reader::of(BOB);
+        let bob = person(BOB);
         let best = store.comments(PUBLIC, Order::Top, bob, ALL).unwrap();
         let ids: Vec<u64> = best.items.iter().map(|c| c.id.bits()).collect();
         assert_eq!(ids, [1, 2], "the one with replies first");
@@ -416,7 +431,7 @@ mod tests {
         );
         assert_eq!(
             store
-                .delete_comment(CommentId::from_bits(1), Reader::of(ADA))
+                .delete_comment(CommentId::from_bits(1), person(ADA))
                 .unwrap(),
             Outcome::Done(()),
             "the creator deletes any comment on her video"
@@ -433,7 +448,7 @@ mod tests {
         let store = with_videos();
         write(&store, 1, None, BOB);
         let id = CommentId::from_bits(1);
-        let (ada, bob) = (Reader::of(ADA), Reader::of(BOB));
+        let (ada, bob) = (person(ADA), person(BOB));
         assert_eq!(
             store.edit_comment(id, ada, "Mine now", 11).unwrap(),
             Outcome::Refused
@@ -454,7 +469,7 @@ mod tests {
         );
         assert_eq!(
             store
-                .delete_comment(CommentId::from_bits(9), Reader::of(ADA))
+                .delete_comment(CommentId::from_bits(9), person(ADA))
                 .unwrap(),
             Outcome::Missing
         );
@@ -471,9 +486,11 @@ mod tests {
         write(&store, 4, None, EVE);
         write(&store, 5, Some(4), BOB);
         assert_eq!(counted(&store), 5);
-        let eve = Reader::of(EVE);
+        let eve = person(EVE);
 
-        store.set_channel_block(ADA_CHANNEL, BOB, true, 11).unwrap();
+        store
+            .set_channel_block(ADA_CHANNEL, (BOB_CHANNEL, true), 11)
+            .unwrap();
         assert_eq!(post(&store, 6, None, BOB), Outcome::Refused);
         assert_eq!(top(&store, eve), [4]);
         assert_eq!(counted(&store), 1, "Bob's thread and his reply are gone");
@@ -488,7 +505,7 @@ mod tests {
         );
         assert_eq!(store.comment(CommentId::from_bits(2), eve).unwrap(), None);
         store
-            .set_channel_block(ADA_CHANNEL, BOB, false, 12)
+            .set_channel_block(ADA_CHANNEL, (BOB_CHANNEL, false), 12)
             .unwrap();
         assert_eq!(counted(&store), 5);
         assert_eq!(top(&store, eve), [4, 1]);
@@ -499,7 +516,7 @@ mod tests {
             2,
             "Eve's comment, its reply and her reply are gone"
         );
-        assert_eq!(top(&store, Reader::of(BOB)), [1]);
+        assert_eq!(top(&store, person(BOB)), [1]);
         let bobs = store
             .comment(CommentId::from_bits(1), Reader::ANYONE)
             .unwrap()
@@ -515,7 +532,7 @@ mod tests {
         );
         assert_eq!(
             store
-                .delete_comment(CommentId::from_bits(2), Reader::of(ADA))
+                .delete_comment(CommentId::from_bits(2), person(ADA))
                 .unwrap(),
             Outcome::Done(()),
             "so does the creator of the video"
@@ -552,7 +569,7 @@ mod tests {
             ..VideoEdit::default()
         };
         store.edit_video(PUBLIC, &private, 11).unwrap();
-        let (bob, ada) = (Reader::of(BOB), Reader::of(ADA));
+        let (bob, ada) = (person(BOB), person(ADA));
         let id = CommentId::from_bits(1);
         assert!(top(&store, bob).is_empty());
         assert_eq!(store.comment(id, bob).unwrap(), None);
@@ -570,5 +587,51 @@ mod tests {
             Outcome::Done(()),
             "Bob still deletes what he wrote"
         );
+    }
+
+    /// A channel speaks through its managers and owners: they edit what any of them wrote as it,
+    /// an editor does not, and a blocked writer hides only what they wrote.
+    #[test]
+    fn a_shared_channel_comments_through_its_managers() {
+        let store = with_eve();
+        for (account, role) in [(BOB, "manager"), (EVE, "editor")] {
+            store
+                .connection()
+                .execute(
+                    "INSERT INTO members (channel_id, account_id, role, created_at) VALUES (?1, ?2, ?3, 0)",
+                    rusqlite::params![ADA_CHANNEL.to_i64(), account.to_i64(), role],
+                )
+                .unwrap();
+        }
+        let as_lab = |account| Reader::of(account, ADA_CHANNEL);
+        let new = |id| NewComment {
+            id: CommentId::from_bits(id),
+            video: PUBLIC,
+            parent: None,
+            body: "Lovely.",
+            now: i64::try_from(id).unwrap(),
+        };
+        assert!(
+            matches!(store.add_comment(as_lab(BOB), &new(1)).unwrap(), Outcome::Done(c) if c.by_creator)
+        );
+        write(&store, 2, None, ADA);
+        let id = CommentId::from_bits(1);
+        assert!(
+            store.comment(id, ada()).unwrap().unwrap().editable,
+            "Ada speaks as her channel"
+        );
+        assert_eq!(
+            store.edit_comment(id, as_lab(EVE), "Mine", 3).unwrap(),
+            Outcome::Refused,
+            "an editor does not speak as the channel"
+        );
+        assert!(matches!(
+            store.edit_comment(id, ada(), "Ours", 3).unwrap(),
+            Outcome::Done(_)
+        ));
+        store.set_blocked(BOB, true).unwrap();
+        assert_eq!(top(&store, person(EVE)), [2], "only what Bob wrote hides");
+        store.set_blocked(BOB, false).unwrap();
+        assert_eq!(top(&store, person(EVE)), [2, 1]);
     }
 }

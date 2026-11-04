@@ -203,3 +203,27 @@
 	This isn't available.	Acest lucru nu este disponibil.
 	This is larger than YouCraft accepts.	Este mai mare decât acceptă YouCraft.
 	This conflicts with what is already there.	Intră în conflict cu ceva ce există deja.
+	Accept	Acceptă
+	Channel name	Numele canalului
+	Create a channel	Creează un canal
+	Create a channel first.	Creează mai întâi un canal.
+	Decline	Refuză
+	Delete channel	Șterge canalul
+	Delete this channel, with its videos, comments and playlists, for good?	Ștergi definitiv acest canal, cu videoclipurile, comentariile și playlisturile sale?
+	Editor	Editor
+	Invite someone	Invită pe cineva
+	Its videos, comments and playlists go with it, for good.	Videoclipurile, comentariile și playlisturile sale dispar odată cu el, definitiv.
+	Leave	Părăsește
+	Leave this channel?	Părăsești acest canal?
+	Manager	Manager
+	Members	Membri
+	Owner	Proprietar
+	Permissions	Permisiuni
+	Switch channel	Schimbă canalul
+	Switch to this channel	Comută la acest canal
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Persoana invitată se conectează cu această adresă ca să accepte sau să refuze, în decurs de o săptămână. Proprietarii aleg membrii; managerii acționează și ca acest canal; editorii încarcă și modifică videoclipurile lui; spectatorii îi văd studioul.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Ce faci pe YouCraft faci ca unul dintre canalele tale: el comentează, apreciază, se abonează și păstrează playlisturi. Mai multe persoane pot administra un canal.
+	You act as this channel	Acționezi ca acest canal
+	Your channels	Canalele tale
+	{channel} invites you to join as {role}.	{channel} te invită să te alături ca {role}.
+@plural	{n} invitation|{n} invitations	{n} invitație|{n} invitații|{n} de invitații

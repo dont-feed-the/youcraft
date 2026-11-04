@@ -203,3 +203,27 @@
 	This isn't available.	Bu kullanılamıyor.
 	This is larger than YouCraft accepts.	Bu, YouCraft'ın kabul ettiğinden büyük.
 	This conflicts with what is already there.	Bu, zaten var olan bir şeyle çakışıyor.
+	Accept	Kabul et
+	Channel name	Kanal adı
+	Create a channel	Kanal oluştur
+	Create a channel first.	Önce bir kanal oluşturun.
+	Decline	Reddet
+	Delete channel	Kanalı sil
+	Delete this channel, with its videos, comments and playlists, for good?	Bu kanal; videoları, yorumları ve oynatma listeleriyle birlikte kalıcı olarak silinsin mi?
+	Editor	Editör
+	Invite someone	Birini davet et
+	Its videos, comments and playlists go with it, for good.	Videoları, yorumları ve oynatma listeleri de onunla birlikte kalıcı olarak silinir.
+	Leave	Ayrıl
+	Leave this channel?	Bu kanaldan ayrılmak istiyor musunuz?
+	Manager	Yönetici
+	Members	Üyeler
+	Owner	Sahip
+	Permissions	İzinler
+	Switch channel	Kanal değiştir
+	Switch to this channel	Bu kanala geç
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Davet edilen kişi, bir hafta içinde evet ya da hayır demek için bu adresle oturum açar. Sahipler üyeleri seçer; yöneticiler ayrıca kanal olarak hareket eder; editörler videolarını yükler ve değiştirir; izleyiciler stüdyosunu görür.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	YouCraft'ta yaptığınız her şeyi kanallarınızdan biri olarak yaparsınız: o kanal yorum yapar, beğenir, abone olur ve oynatma listeleri tutar. Bir kanalı birden fazla kişi yönetebilir.
+	You act as this channel	Bu kanal olarak hareket ediyorsunuz
+	Your channels	Kanallarınız
+	{channel} invites you to join as {role}.	{channel} sizi katılmaya davet ediyor. Rol: {role}.
+@plural	{n} invitation|{n} invitations	{n} davet|{n} davet

@@ -27,10 +27,10 @@ impl Handle<Home> for Site {
 
 impl Handle<Subscriptions> for Site {
     async fn handle(&self, caller: Caller, page: Page) -> Result<Feed, ApiError> {
-        let account = caller.signed_in()?;
+        let subscriber = caller.acting()?;
         let window = window(page.after.as_deref(), PAGE)?;
         let found = self
-            .db(move |store| store.subscription_feed(account, window))
+            .db(move |store| store.subscription_feed(subscriber, window))
             .await?;
         Ok(Feed {
             videos: found.items,
@@ -40,13 +40,16 @@ impl Handle<Subscriptions> for Site {
 }
 
 impl Site {
-    /// What the recommendation algorithm may know of `caller`: what they watched, liked and
-    /// subscribed to; nothing for someone signed out.
+    /// What the recommendation algorithm may know of `caller`: what the channel they act as
+    /// watched, liked and subscribed to; nothing for someone who acts as no channel.
     pub async fn viewer(&self, caller: Caller) -> Result<Viewer, ApiError> {
-        let Some(account) = caller.account else {
-            return Ok(Viewer::default());
+        let Some(channel) = caller.channel else {
+            return Ok(Viewer {
+                signed_in: caller.account.is_some(),
+                ..Viewer::default()
+            });
         };
-        let signals = self.db(move |store| store.signals(account)).await?;
+        let signals = self.db(move |store| store.signals(channel)).await?;
         Ok(Viewer {
             signed_in: true,
             watched: signals

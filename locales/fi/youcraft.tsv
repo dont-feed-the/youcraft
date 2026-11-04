@@ -203,3 +203,27 @@
 	This isn't available.	Tämä ei ole saatavilla.
 	This is larger than YouCraft accepts.	Tämä on suurempi kuin YouCraft hyväksyy.
 	This conflicts with what is already there.	Tämä on ristiriidassa jo olemassa olevan kanssa.
+	Accept	Hyväksy
+	Channel name	Kanavan nimi
+	Create a channel	Luo kanava
+	Create a channel first.	Luo ensin kanava.
+	Decline	Hylkää
+	Delete channel	Poista kanava
+	Delete this channel, with its videos, comments and playlists, for good?	Poistetaanko tämä kanava pysyvästi videoineen, kommentteineen ja soittolistoineen?
+	Editor	Muokkaaja
+	Invite someone	Kutsu joku
+	Its videos, comments and playlists go with it, for good.	Sen videot, kommentit ja soittolistat poistetaan pysyvästi sen mukana.
+	Leave	Poistu
+	Leave this channel?	Poistutaanko tältä kanavalta?
+	Manager	Ylläpitäjä
+	Members	Jäsenet
+	Owner	Omistaja
+	Permissions	Käyttöoikeudet
+	Switch channel	Vaihda kanavaa
+	Switch to this channel	Vaihda tähän kanavaan
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Kutsuttu kirjautuu tällä osoitteella ja vastaa kyllä tai ei viikon kuluessa. Omistajat valitsevat jäsenet; ylläpitäjät myös toimivat kanavana; muokkaajat lataavat ja muokkaavat sen videoita; katsojat näkevät sen studion.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Mitä teet YouCraftissa, teet yhtenä kanavistasi: kanava kommentoi, tykkää, tilaa ja pitää soittolistoja. Useampi ihminen voi hoitaa yhtä kanavaa.
+	You act as this channel	Toimit tänä kanavana
+	Your channels	Omat kanavat
+	{channel} invites you to join as {role}.	{channel} kutsuu sinut mukaan rooliin {role}.
+@plural	{n} invitation|{n} invitations	{n} kutsu|{n} kutsua

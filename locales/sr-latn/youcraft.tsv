@@ -203,3 +203,27 @@
 	This isn't available.	Ovo nije dostupno.
 	This is larger than YouCraft accepts.	Ovo je veće nego što YouCraft prihvata.
 	This conflicts with what is already there.	Ovo je u sukobu sa nečim što već postoji.
+	Accept	Prihvati
+	Channel name	Naziv kanala
+	Create a channel	Napravi kanal
+	Create a channel first.	Prvo napravite kanal.
+	Decline	Odbij
+	Delete channel	Izbriši kanal
+	Delete this channel, with its videos, comments and playlists, for good?	Trajno izbrisati ovaj kanal, zajedno sa njegovim video snimcima, komentarima i plejlistama?
+	Editor	Urednik
+	Invite someone	Pozovi nekoga
+	Its videos, comments and playlists go with it, for good.	Njegovi video snimci, komentari i plejliste trajno nestaju zajedno sa njim.
+	Leave	Napusti
+	Leave this channel?	Napustiti ovaj kanal?
+	Manager	Menadžer
+	Members	Članovi
+	Owner	Vlasnik
+	Permissions	Dozvole
+	Switch channel	Promeni kanal
+	Switch to this channel	Prebaci na ovaj kanal
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Pozvana osoba se prijavljuje ovom adresom da u roku od nedelju dana prihvati ili odbije poziv. Vlasnici biraju članove; menadžeri takođe deluju kao kanal; urednici otpremaju i menjaju njegove video snimke; gledaoci vide njegov studio.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Sve što radite na YouCraft-u radite kao jedan od svojih kanala: on komentariše, označava sa „Sviđa mi se“, pretplaćuje se i čuva plejliste. Više osoba može da vodi jedan kanal.
+	You act as this channel	Delujete kao ovaj kanal
+	Your channels	Vaši kanali
+	{channel} invites you to join as {role}.	{channel} vas poziva da se pridružite. Uloga: {role}.
+@plural	{n} invitation|{n} invitations	{n} pozivnica|{n} pozivnice|{n} pozivnica

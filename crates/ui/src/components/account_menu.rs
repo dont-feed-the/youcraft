@@ -1,24 +1,27 @@
-//! The account end of the masthead: the avatar and its menu when signed in; the settings menu
-//! and the sign-in button when not. The menu opens on panels as YouTube's does: the account and
-//! its places first (its channel, the studio, the settings, the administration for
-//! administrators, signing out), then appearance and language, each with the current choice
-//! ticked, then the project's places beyond the site.
+//! The account end of the masthead: the avatar of the channel the person acts as and its menu
+//! when signed in; the settings menu and the sign-in button when not. The menu opens on panels as
+//! YouTube's does: the account and its places first (its channel, the way to act as another, the
+//! invitations waiting, the studio, the settings, the administration for administrators, signing
+//! out), then appearance and language, each with the current choice ticked, then the project's
+//! places beyond the site.
 
 use leptos::prelude::*;
 use leptos_router::hooks::use_location;
 use youcraft_api::commands::account::{Me, Theme};
-use youcraft_api::{Grant, routes};
+use youcraft_api::{ChannelRole, Grant, routes};
 
 use crate::account::{Shown, SignedIn, choose_language, choose_theme, sign_out};
 use crate::components::avatar::{Face, Size};
 use crate::components::project;
 use crate::icons::{Glyph, Icon};
-use crate::lang::{Language, fill, offered, tr};
+use crate::lang::{Language, count, fill, offered, tr};
+use crate::pages::memberships::act_as;
 
 /// Which panel of the menu shows.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Panel {
     Main,
+    Channels,
     Appearance,
     Language,
 }
@@ -62,7 +65,7 @@ pub fn AccountArea() -> impl IntoView {
                     Some(me) => view! {
                         <button class="icon-button" type="button" aria-label=tr("Account menu")
                             aria-haspopup="menu" aria-expanded=expanded on:click=toggle>
-                            <span class="avatar"><Face channel=me.channel.clone() size=Size::Regular/></span>
+                            <span class="avatar"><Avatar me=me.clone()/></span>
                         </button>
                         <Menu me=Some(me) open/>
                     }.into_any(),
@@ -83,6 +86,16 @@ pub fn AccountArea() -> impl IntoView {
     }
 }
 
+/// What the avatar of `me` shows: the channel they act as, or the glyph of an account when they
+/// act as none.
+#[component]
+fn Avatar(me: Me) -> impl IntoView {
+    match me.channel {
+        Some(channel) => view! { <Face channel size=Size::Regular/> }.into_any(),
+        None => view! { <Glyph icon=Icon::Account/> }.into_any(),
+    }
+}
+
 /// The menu, while `open` names a panel.
 #[component]
 fn Menu(me: Option<Me>, open: RwSignal<Option<Panel>>) -> impl IntoView {
@@ -98,6 +111,7 @@ fn Menu(me: Option<Me>, open: RwSignal<Option<Panel>>) -> impl IntoView {
             <div class="menu-backdrop" on:click=close></div>
             <div class="menu" role="menu" on:keydown=escape>
                 {move || match open.get() {
+                    Some(Panel::Channels) => view! { <ChannelsPanel me open/> }.into_any(),
                     Some(Panel::Appearance) => view! { <AppearancePanel me open/> }.into_any(),
                     Some(Panel::Language) => view! { <LanguagePanel me open/> }.into_any(),
                     _ => view! { <MainPanel me open/> }.into_any(),
@@ -119,18 +133,49 @@ fn MainPanel(me: StoredValue<Option<Me>>, open: RwSignal<Option<Panel>>) -> impl
         .find(|(offered, _)| offered == code)
         .map_or_else(|| code.to_owned(), |(_, name)| name);
     let account = me.get_value().map(|me| {
-        let channel = routes::channel(&me.channel.handle);
+        let (name, handle) = match &me.channel {
+            Some(channel) => (channel.name.clone(), Some(format!("@{}", channel.handle))),
+            None => (me.name.clone(), None),
+        };
+        let place = match &me.channel {
+            Some(channel) => view! {
+                <MenuLink href=routes::channel(&channel.handle) icon=Icon::Account label=tr("Your channel") open/>
+            }.into_any(),
+            None => view! {
+                <MenuLink href=routes::ACCOUNT_CHANNELS icon=Icon::Create label=tr("Create a channel") open/>
+            }.into_any(),
+        };
+        let invitations = (me.invitations > 0).then(|| {
+            let label = count(me.invitations, "{n} invitation", "{n} invitations");
+            view! {
+                <a class="menu-entry" role="menuitem" href=routes::ACCOUNT on:click=move |_| open.set(None)>
+                    <Glyph icon=Icon::Mail/><span>{label}</span>
+                </a>
+            }
+        });
+        let runs = !me.channels.is_empty();
         view! {
             <div class="menu-account">
-                <span class="avatar"><Face channel=me.channel.clone() size=Size::Regular/></span>
+                <span class="avatar"><Avatar me=me.clone()/></span>
                 <div class="menu-account-names">
-                    <span class="menu-account-name">{me.channel.name.clone()}</span>
-                    <bdi class="menu-account-handle">{format!("@{}", me.channel.handle)}</bdi>
+                    <span class="menu-account-name">{name}</span>
+                    {handle.map(|handle| view! { <bdi class="menu-account-handle">{handle}</bdi> })}
                 </div>
             </div>
             <hr class="menu-rule"/>
-            <MenuLink href=channel icon=Icon::Account label=tr("Your channel") open/>
-            <MenuLink href=routes::STUDIO icon=Icon::Studio label=tr("YouCraft Studio") open/>
+            {place}
+            {runs.then(|| view! {
+                <button class="menu-entry" role="menuitem" type="button" aria-haspopup="menu"
+                    on:click=move |_| open.set(Some(Panel::Channels))>
+                    <Glyph icon=Icon::You/>
+                    <span>{tr("Switch channel")}</span>
+                    <span class="menu-more"><Glyph icon=Icon::Forward/></span>
+                </button>
+            })}
+            {invitations}
+            {runs.then(|| view! {
+                <MenuLink href=routes::STUDIO icon=Icon::Studio label=tr("YouCraft Studio") open/>
+            })}
             <MenuLink href=routes::ACCOUNT icon=Icon::Settings label=tr("Settings") open/>
             {(me.role >= Grant::Admin).then(|| view! {
                 <MenuLink href=routes::ADMIN icon=Icon::Shield label=tr("Administration") open/>
@@ -197,6 +242,46 @@ fn PanelHeading(title: &'static str, open: RwSignal<Option<Panel>>) -> impl Into
             <span>{title}</span>
         </div>
         <hr class="menu-rule"/>
+    }
+}
+
+/// The channels the person may act as, the one they act as ticked, and the way to make another.
+#[component]
+fn ChannelsPanel(me: StoredValue<Option<Me>>, open: RwSignal<Option<Panel>>) -> impl IntoView {
+    let (acting, channels) = me.with_value(|me| match me {
+        Some(me) => (
+            me.channel.as_ref().map(|card| card.id),
+            me.channels
+                .iter()
+                .filter(|membership| membership.role.allows(ChannelRole::Manager))
+                .cloned()
+                .collect::<Vec<_>>(),
+        ),
+        None => (None, Vec::new()),
+    });
+    let entries = channels.into_iter().map(|membership| {
+        let channel = membership.channel.id;
+        let ticked = Some(channel) == acting;
+        let choose = move |_| {
+            open.set(None);
+            if !ticked {
+                act_as(channel);
+            }
+        };
+        view! {
+            <button class="menu-entry" role="menuitemradio" type="button"
+                aria-checked=if ticked { "true" } else { "false" } on:click=choose>
+                <span class="avatar"><Face channel=membership.channel.clone() size=Size::Small/></span>
+                <span>{membership.channel.name.clone()}</span>
+                <span class="menu-tick" class:ticked=ticked><Glyph icon=Icon::Check/></span>
+            </button>
+        }
+    });
+    view! {
+        <PanelHeading title=tr("Switch channel") open/>
+        <div class="menu-scroll">{entries.collect_view()}</div>
+        <hr class="menu-rule"/>
+        <MenuLink href=routes::ACCOUNT_CHANNELS icon=Icon::Create label=tr("Create a channel") open/>
     }
 }
 

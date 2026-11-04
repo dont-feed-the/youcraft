@@ -203,3 +203,27 @@
 	This isn't available.	Det er ikke tilgængeligt.
 	This is larger than YouCraft accepts.	Det er større, end YouCraft accepterer.
 	This conflicts with what is already there.	Det strider mod noget, der allerede findes.
+	Accept	Accepter
+	Channel name	Kanalnavn
+	Create a channel	Opret en kanal
+	Create a channel first.	Opret først en kanal.
+	Decline	Afvis
+	Delete channel	Slet kanal
+	Delete this channel, with its videos, comments and playlists, for good?	Vil du slette denne kanal permanent med dens videoer, kommentarer og playlister?
+	Editor	Redaktør
+	Invite someone	Inviter nogen
+	Its videos, comments and playlists go with it, for good.	Dens videoer, kommentarer og playlister slettes permanent sammen med den.
+	Leave	Forlad
+	Leave this channel?	Vil du forlade denne kanal?
+	Manager	Administrator
+	Members	Medlemmer
+	Owner	Ejer
+	Permissions	Tilladelser
+	Switch channel	Skift kanal
+	Switch to this channel	Skift til denne kanal
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Den inviterede logger ind med denne adresse for at sige ja eller nej inden for en uge. Ejere vælger medlemmerne; administratorer handler også som kanalen; redaktører uploader og ændrer dens videoer; seere ser dens studie.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Det, du gør på YouCraft, gør du som en af dine kanaler: den kommenterer, synes godt om, abonnerer og har playlister. Flere personer kan drive én kanal.
+	You act as this channel	Du handler som denne kanal
+	Your channels	Dine kanaler
+	{channel} invites you to join as {role}.	{channel} inviterer dig til at blive medlem som {role}.
+@plural	{n} invitation|{n} invitations	{n} invitation|{n} invitationer

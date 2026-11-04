@@ -1,10 +1,13 @@
 //! Who may run a command: the levels a caller acts at, from anyone at all to the site's
-//! administrators, and the roles an account holds.
+//! administrators, the roles an account holds, and the roles of a channel's members.
 //!
 //! Every command requires a [`Role`]. An account holds a [`Grant`], which the site may raise to
 //! what it grants every account; it acts with that role while it is not blocked, and as
 //! [`Role::SignedIn`] while it is, managing only what is its own. A visitor who is not signed in
-//! acts as [`Role::Anyone`].
+//! acts as [`Role::Anyone`]. Within a channel, each member holds a [`ChannelRole`]. What a person
+//! does to a channel needs both: the site's role for the kind of act (publishing needs
+//! [`Role::Creator`]), the channel's for that channel (publishing there needs
+//! [`ChannelRole::Editor`]); neither alone gives more than the other allows.
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -91,6 +94,55 @@ impl Grant {
     }
 }
 
+/// What a member of a channel may do there. Each role can do everything the roles before it can.
+#[derive(
+    Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, JsonSchema,
+)]
+#[serde(rename_all = "snake_case")]
+pub enum ChannelRole {
+    /// Sees the channel's studio: its videos in every state, and their numbers.
+    Viewer,
+    /// Also uploads videos to it, and changes and deletes its videos.
+    Editor,
+    /// Also acts as the channel everywhere: comments, likes, subscribes, keeps its playlists and
+    /// history, and keeps others from commenting on its videos.
+    Manager,
+    /// Also changes how it shows itself, chooses its members and their roles, and deletes it.
+    Owner,
+}
+
+impl ChannelRole {
+    /// Every role, the least first.
+    pub const ALL: [ChannelRole; 4] = [
+        ChannelRole::Viewer,
+        ChannelRole::Editor,
+        ChannelRole::Manager,
+        ChannelRole::Owner,
+    ];
+
+    /// The name the database and the command line use, as JSON writes it.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            ChannelRole::Viewer => "viewer",
+            ChannelRole::Editor => "editor",
+            ChannelRole::Manager => "manager",
+            ChannelRole::Owner => "owner",
+        }
+    }
+
+    /// The role named `name`, as [`ChannelRole::as_str`] writes it.
+    pub fn from_name(name: &str) -> Option<ChannelRole> {
+        ChannelRole::ALL
+            .into_iter()
+            .find(|role| role.as_str() == name)
+    }
+
+    /// Whether a member with this role may do what `required` may.
+    pub fn allows(self, required: ChannelRole) -> bool {
+        self >= required
+    }
+}
+
 impl From<Grant> for Role {
     fn from(grant: Grant) -> Role {
         match grant {
@@ -128,5 +180,17 @@ mod tests {
         }
         assert_eq!(Grant::from_name("anyone"), None);
         assert_eq!(Grant::from_name("signed_in"), None);
+    }
+
+    #[test]
+    fn channel_roles_are_cumulative_and_keep_their_names() {
+        for (i, role) in ChannelRole::ALL.iter().enumerate() {
+            for (j, required) in ChannelRole::ALL.iter().enumerate() {
+                assert_eq!(role.allows(*required), i >= j, "{role:?} for {required:?}");
+            }
+            assert_eq!(ChannelRole::from_name(role.as_str()), Some(*role));
+            assert_eq!(serde_json::to_value(role).unwrap(), role.as_str());
+        }
+        assert_eq!(ChannelRole::from_name("admin"), None);
     }
 }

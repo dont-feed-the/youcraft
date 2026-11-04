@@ -21,10 +21,9 @@ use http_body_util::BodyExt;
 use tokio::io::{AsyncSeekExt, AsyncWriteExt};
 use tokio::time::Instant;
 use youcraft_api::commands::upload::Create;
-use youcraft_api::{ApiError, Command, Rule, VideoId};
+use youcraft_api::{ApiError, ChannelRole, Command, Rule, VideoId};
 use youcraft_store::uploads::Receiving;
 
-use crate::handlers::studio::may_manage;
 use crate::handlers::upload::PIECE;
 use crate::http::error_response;
 use crate::site::{Caller, Site, now};
@@ -63,8 +62,8 @@ pub fn lapsing(site: &Site) -> i64 {
     now().saturating_sub(i64::try_from(lifetime).unwrap_or(i64::MAX))
 }
 
-/// The upload of `video` that `caller` may send to: of their channel, or any if they run the
-/// site, and not lapsed.
+/// The upload of `video` that `caller` may send to: theirs, to a channel they still edit, or any
+/// if they run the site; and not lapsed. Another's is answered as not found.
 pub async fn open_upload(
     site: &Site,
     caller: Caller,
@@ -77,11 +76,15 @@ pub async fn open_upload(
             ApiError::Forbidden
         });
     }
-    may_manage(site, caller, video).await?;
+    site.allow_on_video(caller, video, ChannelRole::Editor)
+        .await?;
     let receiving = site
         .db(move |store| store.receiving(video))
         .await?
         .ok_or(ApiError::Conflict)?;
+    if caller.account != Some(receiving.owner) && !caller.admin() {
+        return Err(ApiError::NotFound);
+    }
     if receiving.created_at < lapsing(site) {
         return Err(ApiError::NotFound);
     }
@@ -317,8 +320,9 @@ pub mod tests {
             .unwrap();
         Caller {
             account: Some(account),
+            channel: Some(ChannelId::from_bits(bits + 1)),
             role: Role::Creator,
-            credential: Credential::Token,
+            credential: Credential::Token([0; 32]),
             viewer: ViewerKey::NOBODY,
             address: AddressKey::NOBODY,
         }
@@ -326,7 +330,8 @@ pub mod tests {
 
     /// `caller` starts uploading a file of `size` bytes.
     async fn start(site: &Site, caller: Caller, size: u64) -> Result<VideoId, ApiError> {
-        let input = serde_json::json!({ "title": "Waves", "size": size });
+        let channel = caller.channel.map(|channel| channel.to_string());
+        let input = serde_json::json!({ "channel": channel, "title": "Waves", "size": size });
         let upload = crate::dispatch::run(site, caller, "upload.create", input).await?;
         Ok(upload["video"].as_str().unwrap().parse().unwrap())
     }
@@ -557,7 +562,11 @@ pub mod tests {
             !file.exists() && !orphan.exists(),
             "its bytes and an orphan's go"
         );
-        assert_eq!(site.store().owner_of(video).unwrap(), None, "and its video");
+        assert_eq!(
+            site.store().studio_video(video).unwrap(),
+            None,
+            "and its video"
+        );
         let _ = std::fs::remove_dir_all(dir);
     }
 

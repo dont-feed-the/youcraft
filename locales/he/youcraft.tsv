@@ -203,3 +203,27 @@
 	This isn't available.	זה לא זמין.
 	This is larger than YouCraft accepts.	זה גדול ממה ש-YouCraft מקבל.
 	This conflicts with what is already there.	זה מתנגש במשהו שכבר קיים.
+	Accept	אישור
+	Channel name	שם הערוץ
+	Create a channel	יצירת ערוץ
+	Create a channel first.	יש ליצור ערוץ קודם.
+	Decline	דחייה
+	Delete channel	מחיקת הערוץ
+	Delete this channel, with its videos, comments and playlists, for good?	למחוק את הערוץ הזה, עם הסרטונים, התגובות והפלייליסטים שלו, לצמיתות?
+	Editor	עורך
+	Invite someone	הזמנת מישהו
+	Its videos, comments and playlists go with it, for good.	הסרטונים, התגובות והפלייליסטים שלו נמחקים יחד איתו, לצמיתות.
+	Leave	עזיבה
+	Leave this channel?	לעזוב את הערוץ הזה?
+	Manager	מנהל
+	Members	חברים
+	Owner	בעלים
+	Permissions	הרשאות
+	Switch channel	החלפת ערוץ
+	Switch to this channel	מעבר לערוץ הזה
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	האדם המוזמן נכנס עם הכתובת הזו כדי לאשר או לסרב, תוך שבוע. בעלים בוחרים את החברים; מנהלים גם פועלים בשם הערוץ; עורכים מעלים ומשנים את הסרטונים שלו; צופים רואים את הסטודיו שלו.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	מה שאתה עושה ב-YouCraft, אתה עושה בתור אחד מהערוצים שלך: הערוץ מגיב, אוהב, נרשם למינויים ושומר פלייליסטים. כמה אנשים יכולים לנהל ערוץ אחד.
+	You act as this channel	אתה פועל בתור הערוץ הזה
+	Your channels	הערוצים שלך
+	{channel} invites you to join as {role}.	{channel} מזמין אותך להצטרף בתור {role}.
+@plural	{n} invitation|{n} invitations	{n} הזמנה|{n} הזמנות|{n} הזמנות

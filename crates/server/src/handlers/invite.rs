@@ -11,7 +11,7 @@ use crate::site::{Caller, Site, now};
 
 /// `email` trimmed, if it looks like an address: one `@` between a local part and a domain,
 /// no spaces or control characters, at most [`EMAIL_LIMIT`] bytes.
-fn address(email: &str) -> Result<String, ApiError> {
+pub(super) fn address(email: &str) -> Result<String, ApiError> {
     let email = email.trim();
     let well_formed = email.len() <= EMAIL_LIMIT
         && !email.chars().any(|c| c.is_whitespace() || c.is_control())

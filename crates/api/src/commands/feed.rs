@@ -29,7 +29,7 @@ impl Command for Home {
     const WRITES: bool = false;
 }
 
-/// The newest videos of the channels the caller subscribes to.
+/// The newest videos of the channels that the channel the caller acts as subscribes to.
 pub struct Subscriptions;
 
 impl Command for Subscriptions {

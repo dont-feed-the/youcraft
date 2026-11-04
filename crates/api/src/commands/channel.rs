@@ -1,5 +1,9 @@
-//! Commands about channels: their page, their videos and playlists, subscribing to them, and a
-//! creator keeping an account from commenting on theirs.
+//! Commands about channels: making and deleting them, their page, their videos and playlists,
+//! subscribing to them, and a channel keeping another from commenting on its videos.
+//!
+//! A channel is a public identity that one or more people run (see `member`). Whatever the caller
+//! does toward a channel, subscribing or blocking, they do as the channel they act as (see
+//! `account`).
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -28,8 +32,26 @@ pub struct ChannelPage {
     pub videos: u64,
     /// Whether the caller subscribes to it.
     pub subscribed: bool,
-    /// Whether it is the caller's own channel.
+    /// Whether it is the channel the caller acts as.
     pub owned: bool,
+}
+
+/// A channel, by its identifier.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
+pub struct Which {
+    /// The channel.
+    pub channel: ChannelId,
+}
+
+/// A channel to make.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
+pub struct NewChannel {
+    /// Its name: 1 to [`NAME_LIMIT`] characters on one line, any script. Its handle comes from
+    /// it, and never changes.
+    #[schemars(length(min = 1, max = NAME_LIMIT))]
+    pub name: String,
 }
 
 /// A channel, by its handle.
@@ -70,14 +92,39 @@ pub struct Subscription {
     pub subscribed: bool,
 }
 
-/// Whether an account may comment on the caller's videos.
+/// Whether a channel may comment on the videos of the channel the caller acts as.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct Barring {
-    /// The handle of the account's channel, with or without `@`.
+    /// The handle of the channel, with or without `@`.
     pub handle: String,
     /// `true` to keep it from commenting, `false` to let it again.
     pub blocked: bool,
+}
+
+/// Make a channel, which the caller owns and then acts as.
+pub struct Create;
+
+impl Command for Create {
+    const ID: &'static str = "channel.create";
+    const REQUIRES: Role = Role::Viewer;
+    const SUMMARY: &'static str = "Make a channel that you own, named as you say, with a handle that comes from its name; you then act as it.";
+    type Input = NewChannel;
+    type Output = ChannelCard;
+    const WRITES: bool = true;
+}
+
+/// Delete a channel, with its videos, comments and playlists, for good.
+pub struct Delete;
+
+impl Command for Delete {
+    const ID: &'static str = "channel.delete";
+    const REQUIRES: Role = Role::SignedIn;
+    const SUMMARY: &'static str =
+        "Delete a channel you own, with its videos, comments, playlists and members, for good.";
+    type Input = Which;
+    type Output = Nothing;
+    const WRITES: bool = true;
 }
 
 /// The top of a channel's page.
@@ -118,7 +165,8 @@ impl Command for Playlists {
     const WRITES: bool = false;
 }
 
-/// Subscribe to a channel, or unsubscribe; a blocked account may only unsubscribe.
+/// Subscribe the channel the caller acts as to a channel, or unsubscribe it; a blocked account
+/// may only unsubscribe.
 pub struct Subscribe;
 
 impl Command for Subscribe {
@@ -131,7 +179,7 @@ impl Command for Subscribe {
     const WRITES: bool = true;
 }
 
-/// The channels the caller subscribes to.
+/// The channels that the channel the caller acts as subscribes to.
 pub struct Subscriptions;
 
 impl Command for Subscriptions {
@@ -143,13 +191,15 @@ impl Command for Subscriptions {
     const WRITES: bool = false;
 }
 
-/// Keep an account from commenting on the caller's videos, or let it again.
+/// Keep a channel from commenting on the videos of the channel the caller acts as, or let it
+/// again.
 pub struct Block;
 
 impl Command for Block {
     const ID: &'static str = "channel.block";
-    const REQUIRES: Role = Role::Creator;
-    const SUMMARY: &'static str = "Keep an account from commenting on your channel's videos, or let it again, by its channel's handle.";
+    const REQUIRES: Role = Role::Viewer;
+    const SUMMARY: &'static str =
+        "Keep a channel from commenting on your channel's videos, or let it again, by its handle.";
     type Input = Barring;
     type Output = Nothing;
     const WRITES: bool = true;

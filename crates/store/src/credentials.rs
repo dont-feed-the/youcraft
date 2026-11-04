@@ -1,13 +1,17 @@
 //! Credentials: the sessions of signed-in browsers and the personal tokens of programs.
 //!
 //! Both are known by the SHA-256 of their secret, which only the browser or program holds, so
-//! the database alone signs nobody in. Each lookup answers the account's [`Standing`] as of now.
+//! the database alone signs nobody in. Each lookup answers the account's [`Standing`] as of now,
+//! with the channel the credential acts as: the one its person chose with it, while they still
+//! manage it, else the first they manage. A new session acts as the person's latest one did; a
+//! new token, as the credential that made it.
 
 use rusqlite::{OptionalExtension, params};
 use youcraft_api::commands::token::Token;
-use youcraft_api::{AccountId, TokenId};
+use youcraft_api::{AccountId, ChannelId, TokenId};
 
-use crate::accounts::{STANDING, Standing, standing};
+use crate::accounts::{Standing, acting, standing, standing_columns};
+use crate::channels::{card_columns, channel_card};
 use crate::{Store, StoreError};
 
 /// The SHA-256 of a credential's secret.
@@ -25,7 +29,9 @@ impl Store {
         let connection = self.connection();
         connection.execute("DELETE FROM sessions WHERE expires_at <= ?1", [now])?;
         connection.execute(
-            "INSERT INTO sessions (secret_hash, account_id, created_at, expires_at) VALUES (?1, ?2, ?3, ?4)",
+            "INSERT INTO sessions (secret_hash, account_id, created_at, expires_at, channel_id) \
+             VALUES (?1, ?2, ?3, ?4, (SELECT channel_id FROM sessions WHERE account_id = ?2 \
+             ORDER BY created_at DESC LIMIT 1))",
             params![hash.as_slice(), account.to_i64(), now, expires_at],
         )?;
         Ok(())
@@ -37,8 +43,9 @@ impl Store {
             .connection()
             .query_row(
                 &format!(
-                    "SELECT {STANDING} FROM sessions s JOIN accounts a ON a.id = s.account_id \
-                     WHERE s.secret_hash = ?1 AND s.expires_at > ?2"
+                    "SELECT {} FROM sessions s JOIN accounts a ON a.id = s.account_id \
+                     WHERE s.secret_hash = ?1 AND s.expires_at > ?2",
+                    standing_columns("s.channel_id")
                 ),
                 params![hash.as_slice(), now],
                 standing,
@@ -56,11 +63,38 @@ impl Store {
         Ok(())
     }
 
-    /// Make the token `id` of `account`, unless it already has `limit`; whether it was made.
+    /// Have the session `hash` act as `channel` from now on.
+    pub fn act_as_in_session(
+        &self,
+        hash: &SecretHash,
+        channel: ChannelId,
+    ) -> Result<(), StoreError> {
+        self.connection().execute(
+            "UPDATE sessions SET channel_id = ?2 WHERE secret_hash = ?1",
+            params![hash.as_slice(), channel.to_i64()],
+        )?;
+        Ok(())
+    }
+
+    /// Have the token `hash` act as `channel` from now on.
+    pub fn act_as_with_token(
+        &self,
+        hash: &SecretHash,
+        channel: ChannelId,
+    ) -> Result<(), StoreError> {
+        self.connection().execute(
+            "UPDATE tokens SET channel_id = ?2 WHERE secret_hash = ?1",
+            params![hash.as_slice(), channel.to_i64()],
+        )?;
+        Ok(())
+    }
+
+    /// Make the token `id` of `account`, acting as `channel`, unless it already has `limit`;
+    /// whether it was made.
     pub fn create_token(
         &self,
         (id, hash): (TokenId, &SecretHash),
-        account: AccountId,
+        (account, channel): (AccountId, Option<ChannelId>),
         name: &str,
         now: i64,
         limit: usize,
@@ -76,8 +110,16 @@ impl Store {
             return Ok(false);
         }
         transaction.execute(
-            "INSERT INTO tokens (id, secret_hash, account_id, name, created_at) VALUES (?1, ?2, ?3, ?4, ?5)",
-            params![id.to_i64(), hash.as_slice(), account.to_i64(), name, now],
+            "INSERT INTO tokens (id, secret_hash, account_id, name, created_at, channel_id) \
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            params![
+                id.to_i64(),
+                hash.as_slice(),
+                account.to_i64(),
+                name,
+                now,
+                channel.map(ChannelId::to_i64)
+            ],
         )?;
         transaction.commit()?;
         Ok(true)
@@ -96,8 +138,9 @@ impl Store {
         let row = connection
             .query_row(
                 &format!(
-                    "SELECT {STANDING} FROM tokens t JOIN accounts a ON a.id = t.account_id \
-                     WHERE t.secret_hash = ?1"
+                    "SELECT {} FROM tokens t JOIN accounts a ON a.id = t.account_id \
+                     WHERE t.secret_hash = ?1",
+                    standing_columns("t.channel_id")
                 ),
                 [hash.as_slice()],
                 standing,
@@ -106,20 +149,28 @@ impl Store {
         Ok(row)
     }
 
-    /// The tokens of `account`, newest first.
+    /// The tokens of `account`, newest first, each with the channel it acts as.
     pub fn tokens(&self, account: AccountId) -> Result<Vec<Token>, StoreError> {
         let connection = self.connection();
-        let mut statement = connection.prepare(
-            "SELECT id, name, created_at, last_used_at FROM tokens WHERE account_id = ?1 \
-             ORDER BY created_at DESC, id",
-        )?;
+        let mut statement = connection.prepare(&format!(
+            "SELECT t.id, t.name, t.created_at, t.last_used_at, {} \
+             FROM (SELECT t.*, {} AS acting FROM tokens t WHERE t.account_id = ?1) t \
+             LEFT JOIN channels c ON c.id = t.acting ORDER BY t.created_at DESC, t.id",
+            card_columns("c"),
+            acting("t.account_id", "t.channel_id")
+        ))?;
         let tokens = statement
             .query_map([account.to_i64()], |row| {
+                let acting: Option<i64> = row.get(4)?;
                 Ok(Token {
                     id: TokenId::from_i64(row.get(0)?),
                     name: row.get(1)?,
                     created_at: row.get(2)?,
                     last_used_at: row.get(3)?,
+                    channel: match acting {
+                        Some(_) => Some(channel_card(row, 4)?),
+                        None => None,
+                    },
                 })
             })?
             .collect::<Result<_, _>>()?;
@@ -187,17 +238,17 @@ mod tests {
         let (first, second) = (TokenId::from_bits(1), TokenId::from_bits(2));
         assert!(
             store
-                .create_token((first, &[1; 32]), ada, "laptop", 100, 2)
+                .create_token((first, &[1; 32]), (ada, None), "laptop", 100, 2)
                 .unwrap()
         );
         assert!(
             store
-                .create_token((second, &[2; 32]), ada, "ci", 110, 2)
+                .create_token((second, &[2; 32]), (ada, None), "ci", 110, 2)
                 .unwrap()
         );
         assert!(
             !store
-                .create_token((TokenId::from_bits(3), &[3; 32]), ada, "x", 120, 2)
+                .create_token((TokenId::from_bits(3), &[3; 32]), (ada, None), "x", 120, 2)
                 .unwrap()
         );
         assert_eq!(store.token(&[1; 32], 130).unwrap().unwrap().account, ada);

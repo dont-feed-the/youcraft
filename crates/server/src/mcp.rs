@@ -52,7 +52,7 @@ pub async fn answer(site: &Site, caller: Caller, headers: &HeaderMap, body: &[u8
     if text(header::ORIGIN.as_str()).is_some_and(|origin| origin != site.config().origin) {
         return StatusCode::FORBIDDEN.into_response();
     }
-    if caller.credential != Credential::Token {
+    if !matches!(caller.credential, Credential::Token(_)) {
         return (
             StatusCode::UNAUTHORIZED,
             [(header::WWW_AUTHENTICATE, "Bearer")],

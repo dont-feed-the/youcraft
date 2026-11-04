@@ -1,4 +1,5 @@
-//! Lists of videos: playlists their owner makes and changes, Watch later, liked videos.
+//! Lists of videos: the playlists of the channel the caller acts as, which whoever speaks as
+//! a channel changes, its Watch later and its liked videos.
 
 use youcraft_api::commands::playlist::{
     Add, Create, DESCRIPTION_LIMIT, Delete, Edit, Get, Item, Lists, Mine, Move, NewPlaylist, Open,
@@ -27,7 +28,7 @@ fn changed(change: Changed) -> Result<PlaylistCard, ApiError> {
 
 impl Handle<Create> for Site {
     async fn handle(&self, caller: Caller, new: NewPlaylist) -> Result<PlaylistCard, ApiError> {
-        caller.signed_in()?;
+        caller.acting()?;
         let title = line("title", &new.title, TITLE_LIMIT)?;
         let (owner, id, now) = (caller.reader(), PlaylistId::from_bits(random_bits()), now());
         let made = self

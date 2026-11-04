@@ -11,6 +11,8 @@
 // default limit allows, as that crate says.
 #![recursion_limit = "256"]
 
+#[cfg(test)]
+mod channel_tests;
 mod cli;
 mod client;
 mod config;

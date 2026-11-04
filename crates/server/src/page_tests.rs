@@ -211,6 +211,18 @@ async fn every_page_says_its_status_and_title_in_the_html() {
             StatusCode::OK,
             en("Customization"),
         ),
+        (
+            "/studio/permissions",
+            &bob,
+            StatusCode::OK,
+            en("Permissions"),
+        ),
+        (
+            "/studio?c=AAAAAAAAAAA",
+            &bob,
+            StatusCode::NOT_FOUND,
+            en("Channel content"),
+        ),
         ("/admin", "", StatusCode::UNAUTHORIZED, en("Administration")),
         ("/admin", &bob, StatusCode::FORBIDDEN, en("Administration")),
         ("/admin", &grace, StatusCode::OK, en("Administration")),

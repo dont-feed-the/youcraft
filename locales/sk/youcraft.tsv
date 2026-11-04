@@ -203,3 +203,27 @@
 	This isn't available.	Toto nie je dostupné.
 	This is larger than YouCraft accepts.	Je to viac, než YouCraft prijíma.
 	This conflicts with what is already there.	Je to v rozpore s tým, čo už existuje.
+	Accept	Prijať
+	Channel name	Názov kanála
+	Create a channel	Vytvoriť kanál
+	Create a channel first.	Najprv vytvorte kanál.
+	Decline	Odmietnuť
+	Delete channel	Odstrániť kanál
+	Delete this channel, with its videos, comments and playlists, for good?	Odstrániť tento kanál natrvalo aj s jeho videami, komentármi a playlistami?
+	Editor	Editor
+	Invite someone	Pozvať niekoho
+	Its videos, comments and playlists go with it, for good.	Jeho videá, komentáre a playlisty sa odstránia spolu s ním, natrvalo.
+	Leave	Opustiť
+	Leave this channel?	Opustiť tento kanál?
+	Manager	Manažér
+	Members	Členovia
+	Owner	Vlastník
+	Permissions	Povolenia
+	Switch channel	Prepnúť kanál
+	Switch to this channel	Prepnúť na tento kanál
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Pozvaná osoba sa prihlási s touto adresou a do týždňa pozvánku prijme alebo odmietne. Vlastníci vyberajú členov; manažéri navyše konajú v mene kanála; editori nahrávajú a upravujú jeho videá; diváci vidia jeho štúdio.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Čo robíte v YouCraft, robíte ako jeden zo svojich kanálov: ten komentuje, dáva Páči sa mi, odoberá a uchováva playlisty. Jeden kanál môže spravovať viac ľudí.
+	You act as this channel	Konáte v mene tohto kanála
+	Your channels	Vaše kanály
+	{channel} invites you to join as {role}.	{channel} vás pozýva, aby ste sa pripojili. Rola: {role}.
+@plural	{n} invitation|{n} invitations	{n} pozvánka|{n} pozvánky|{n} pozvánok

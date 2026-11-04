@@ -15,28 +15,17 @@ use crate::dispatch::Handle;
 use crate::handlers::input::{line, next, window};
 use crate::site::{Caller, Site};
 
-impl Site {
-    /// The account whose channel is `@handle`.
-    async fn account_named(&self, handle: &str) -> Result<AccountId, ApiError> {
-        let handle = handle.trim().trim_start_matches('@').to_owned();
-        self.db(move |store| store.account_by_handle(&handle))
-            .await?
-            .ok_or(ApiError::NotFound)
+/// `account`, unless it is the caller's own.
+fn other_account(caller: Caller, account: AccountId) -> Result<AccountId, ApiError> {
+    if caller.account == Some(account) {
+        return Err(ApiError::Conflict);
     }
-
-    /// The account whose channel is `@handle`, unless it is the caller's own.
-    async fn other_account(&self, caller: Caller, handle: &str) -> Result<AccountId, ApiError> {
-        let account = self.account_named(handle).await?;
-        if caller.account == Some(account) {
-            return Err(ApiError::Conflict);
-        }
-        Ok(account)
-    }
+    Ok(account)
 }
 
 impl Handle<SetRole> for Site {
     async fn handle(&self, caller: Caller, change: NewRole) -> Result<Nothing, ApiError> {
-        let account = self.other_account(caller, &change.handle).await?;
+        let account = other_account(caller, change.account)?;
         let changed = self
             .db(move |store| store.set_role(account, change.role))
             .await?;
@@ -46,7 +35,7 @@ impl Handle<SetRole> for Site {
 
 impl Handle<Block> for Site {
     async fn handle(&self, caller: Caller, change: Blocking) -> Result<Nothing, ApiError> {
-        let account = self.other_account(caller, &change.handle).await?;
+        let account = other_account(caller, change.account)?;
         let changed = self
             .db(move |store| store.set_blocked(account, change.blocked))
             .await?;
@@ -72,8 +61,8 @@ impl Handle<Accounts> for Site {
 
 impl Handle<ResetName> for Site {
     async fn handle(&self, _: Caller, channel: ByHandle) -> Result<Profile, ApiError> {
-        let account = self.account_named(&channel.handle).await?;
-        self.db(move |store| store.reset_name(account))
+        let channel = self.channel_named(&channel.handle).await?;
+        self.db(move |store| store.reset_name(channel))
             .await?
             .ok_or(ApiError::NotFound)
     }
@@ -81,7 +70,7 @@ impl Handle<ResetName> for Site {
 
 impl Handle<RemovePhoto> for Site {
     async fn handle(&self, _: Caller, channel: ByHandle) -> Result<Profile, ApiError> {
-        let account = self.account_named(&channel.handle).await?;
-        self.replace_photo(account, None).await
+        let channel = self.channel_named(&channel.handle).await?;
+        self.replace_photo(channel, None).await
     }
 }

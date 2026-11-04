@@ -1,14 +1,19 @@
-//! Commands about the signed-in person's own account: who they are, their preferences, signing
-//! out.
+//! Commands about the signed-in person's own account: who they are, the channels they run and
+//! the one they act as, their preferences, signing out.
+//!
+//! A person acts on the site as one of their channels at a time: it comments, likes, subscribes,
+//! keeps playlists and a history. Each credential (a browser's session, a token) remembers which
+//! channel it acts as; until its person chooses, or once they no longer manage it, it acts as the
+//! first channel they manage, and as none when they manage none.
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::command::Command;
 use crate::commands::site::Nothing;
-use crate::ids::AccountId;
+use crate::ids::{AccountId, ChannelId};
 use crate::records::ChannelCard;
-use crate::role::{Grant, Role};
+use crate::role::{ChannelRole, Grant, Role};
 
 /// How pages are drawn: as the device prefers, or always dark or light.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, Serialize, Deserialize, JsonSchema)]
@@ -52,13 +57,29 @@ pub struct Preferences {
     pub theme: Theme,
 }
 
+/// A channel a person belongs to, and what they are to it.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct Membership {
+    /// The channel.
+    pub channel: ChannelCard,
+    /// Their role in it.
+    pub role: ChannelRole,
+}
+
 /// The signed-in person, as they see themselves.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct Me {
     /// Their account.
     pub account: AccountId,
-    /// Their channel.
-    pub channel: ChannelCard,
+    /// Their name, as Google gave it when they first signed in.
+    pub name: String,
+    /// The channel they act as; `None` when they manage none, and then they act toward no one
+    /// until they make one.
+    pub channel: Option<ChannelCard>,
+    /// Every channel they belong to, the one they joined first first.
+    pub channels: Vec<Membership>,
+    /// How many invitations to run a channel wait for their answer.
+    pub invitations: u64,
     /// The role their account holds, raised to what the site grants every account that is not
     /// blocked.
     pub role: Grant,
@@ -67,9 +88,18 @@ pub struct Me {
     pub blocked: bool,
     /// Their preferences.
     pub preferences: Preferences,
-    /// Whether they paused their watch history, which then keeps nothing they watch.
+    /// Whether the channel they act as paused its watch history, which then keeps nothing it
+    /// watches.
     #[serde(default)]
     pub history_paused: bool,
+}
+
+/// The channel to act as.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
+pub struct Acting {
+    /// A channel the caller manages or owns.
+    pub channel: ChannelId,
 }
 
 /// Who is signed in.
@@ -78,11 +108,22 @@ pub struct Get;
 impl Command for Get {
     const ID: &'static str = "account.me";
     const REQUIRES: Role = Role::Anyone;
-    const SUMMARY: &'static str =
-        "Tell who is signed in, with their channel, role and preferences; null when nobody is.";
+    const SUMMARY: &'static str = "Tell who is signed in, with the channel they act as, their channels, role and preferences; null when nobody is.";
     type Input = Nothing;
     type Output = Option<Me>;
     const WRITES: bool = false;
+}
+
+/// Act as another of one's channels, with the credential that sends this command.
+pub struct ActAs;
+
+impl Command for ActAs {
+    const ID: &'static str = "account.act_as";
+    const REQUIRES: Role = Role::SignedIn;
+    const SUMMARY: &'static str = "Act as another channel you manage or own, from this browser or token on: what you then do, you do as it.";
+    type Input = Acting;
+    type Output = Me;
+    const WRITES: bool = true;
 }
 
 /// Change the signed-in person's preferences.

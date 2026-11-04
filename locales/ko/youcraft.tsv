@@ -203,3 +203,27 @@
 	This isn't available.	사용할 수 없습니다.
 	This is larger than YouCraft accepts.	YouCraft에서 받을 수 있는 크기보다 큽니다.
 	This conflicts with what is already there.	이미 있는 항목과 충돌합니다.
+	Accept	수락
+	Channel name	채널 이름
+	Create a channel	채널 만들기
+	Create a channel first.	먼저 채널을 만드세요.
+	Decline	거절
+	Delete channel	채널 삭제
+	Delete this channel, with its videos, comments and playlists, for good?	이 채널을 동영상, 댓글, 재생목록과 함께 영구적으로 삭제할까요?
+	Editor	편집자
+	Invite someone	사용자 초대
+	Its videos, comments and playlists go with it, for good.	동영상, 댓글, 재생목록도 함께 영구적으로 삭제됩니다.
+	Leave	나가기
+	Leave this channel?	이 채널에서 나갈까요?
+	Manager	매니저
+	Members	멤버
+	Owner	소유자
+	Permissions	권한
+	Switch channel	채널 전환
+	Switch to this channel	이 채널로 전환
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	초대받은 사람은 일주일 안에 이 주소로 로그인하여 수락하거나 거절합니다. 소유자는 멤버를 선택하고, 매니저는 채널로서 활동할 수도 있으며, 편집자는 동영상을 업로드하고 수정하고, 시청자는 스튜디오를 볼 수 있습니다.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	YouCraft에서 하는 모든 활동은 내 채널 중 하나로서 하게 됩니다. 댓글, 좋아요, 구독, 재생목록 관리는 채널이 합니다. 여러 사람이 하나의 채널을 운영할 수 있습니다.
+	You act as this channel	이 채널로 활동 중
+	Your channels	내 채널
+	{channel} invites you to join as {role}.	{channel}에서 {role}(으)로 참여하도록 초대했습니다.
+@plural	{n} invitation|{n} invitations	초대 {n}건

@@ -7,7 +7,7 @@
 
 use rusqlite::types::Value;
 use rusqlite::{ToSql, params_from_iter};
-use youcraft_api::AccountId;
+use youcraft_api::ChannelId;
 use youcraft_api::commands::channel::ChannelPage;
 use youcraft_api::records::VideoCard;
 
@@ -97,11 +97,11 @@ impl Store {
     }
 
     /// At most `limit` channels whose name or handle holds every word of `query`, the most
-    /// subscribed first, as `viewer` sees them.
+    /// subscribed first, as the viewer acting as `viewer` sees them.
     pub fn search_channels(
         &self,
         query: &str,
-        viewer: Option<AccountId>,
+        viewer: Option<ChannelId>,
         limit: u32,
     ) -> Result<Vec<ChannelPage>, StoreError> {
         let words = words(query);
@@ -111,8 +111,8 @@ impl Store {
         let mut values: Vec<(String, Value)> = vec![
             (":limit".to_owned(), Value::Integer(i64::from(limit))),
             (
-                ":reader".to_owned(),
-                viewer.map_or(Value::Null, |account| Value::Integer(account.to_i64())),
+                ":actor".to_owned(),
+                viewer.map_or(Value::Null, |channel| Value::Integer(channel.to_i64())),
             ),
         ];
         let mut conditions = Vec::new();

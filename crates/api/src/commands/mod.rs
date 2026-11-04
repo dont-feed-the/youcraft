@@ -7,6 +7,7 @@ pub mod comment;
 pub mod feed;
 pub mod history;
 pub mod invite;
+pub mod member;
 pub mod playlist;
 pub mod profile;
 pub mod search;
@@ -31,6 +32,8 @@ macro_rules! for_each_command {
             $crate::commands::video::View,
             $crate::commands::feed::Subscriptions,
             $crate::commands::channel::Get,
+            $crate::commands::channel::Create,
+            $crate::commands::channel::Delete,
             $crate::commands::channel::Videos,
             $crate::commands::channel::Playlists,
             $crate::commands::channel::Subscribe,
@@ -59,11 +62,20 @@ macro_rules! for_each_command {
             $crate::commands::playlist::Get,
             $crate::commands::search::Search,
             $crate::commands::account::Get,
+            $crate::commands::account::ActAs,
             $crate::commands::account::SetPreferences,
             $crate::commands::account::SignOut,
             $crate::commands::token::Create,
             $crate::commands::token::List,
             $crate::commands::token::Revoke,
+            $crate::commands::member::List,
+            $crate::commands::member::Invite,
+            $crate::commands::member::Uninvite,
+            $crate::commands::member::SetRole,
+            $crate::commands::member::Remove,
+            $crate::commands::member::Offers,
+            $crate::commands::member::Accept,
+            $crate::commands::member::Decline,
             $crate::commands::invite::Create,
             $crate::commands::invite::List,
             $crate::commands::invite::Revoke,

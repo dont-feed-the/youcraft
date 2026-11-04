@@ -203,3 +203,27 @@
 	This isn't available.	Αυτό δεν είναι διαθέσιμο.
 	This is larger than YouCraft accepts.	Αυτό είναι μεγαλύτερο από όσο δέχεται το YouCraft.
 	This conflicts with what is already there.	Αυτό συγκρούεται με κάτι που υπάρχει ήδη.
+	Accept	Αποδοχή
+	Channel name	Όνομα καναλιού
+	Create a channel	Δημιουργία καναλιού
+	Create a channel first.	Δημιουργήστε πρώτα ένα κανάλι.
+	Decline	Απόρριψη
+	Delete channel	Διαγραφή καναλιού
+	Delete this channel, with its videos, comments and playlists, for good?	Να διαγραφεί οριστικά αυτό το κανάλι, μαζί με τα βίντεο, τα σχόλια και τις λίστες αναπαραγωγής του;
+	Editor	Συντάκτης
+	Invite someone	Πρόσκληση ατόμου
+	Its videos, comments and playlists go with it, for good.	Τα βίντεο, τα σχόλια και οι λίστες αναπαραγωγής του διαγράφονται οριστικά μαζί του.
+	Leave	Αποχώρηση
+	Leave this channel?	Να γίνει αποχώρηση από αυτό το κανάλι;
+	Manager	Διαχειριστής
+	Members	Μέλη
+	Owner	Κάτοχος
+	Permissions	Δικαιώματα
+	Switch channel	Αλλαγή καναλιού
+	Switch to this channel	Μετάβαση σε αυτό το κανάλι
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Το άτομο που προσκαλείται συνδέεται με αυτή τη διεύθυνση για να πει ναι ή όχι, μέσα σε μία εβδομάδα. Οι κάτοχοι επιλέγουν τα μέλη· οι διαχειριστές ενεργούν επίσης ως το κανάλι· οι συντάκτες ανεβάζουν και αλλάζουν τα βίντεό του· οι θεατές βλέπουν το στούντιό του.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Ό,τι κάνετε στο YouCraft το κάνετε ως ένα από τα κανάλια σας: αυτό σχολιάζει, δηλώνει ότι του αρέσει κάτι, εγγράφεται και διατηρεί λίστες αναπαραγωγής. Πολλά άτομα μπορούν να διαχειρίζονται ένα κανάλι.
+	You act as this channel	Ενεργείτε ως αυτό το κανάλι
+	Your channels	Τα κανάλια σας
+	{channel} invites you to join as {role}.	Το κανάλι {channel} σας προσκαλεί να συμμετάσχετε ως {role}.
+@plural	{n} invitation|{n} invitations	{n} πρόσκληση|{n} προσκλήσεις

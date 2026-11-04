@@ -3,12 +3,13 @@
 
 mod account;
 mod admin;
-mod channel;
+pub mod channel;
 mod comment;
 mod feed;
 mod history;
 pub mod input;
 mod invite;
+mod member;
 mod playlist;
 mod profile;
 mod search;

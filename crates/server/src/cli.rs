@@ -4,7 +4,8 @@
 //!
 //! - `youcraft invite <email> [creator|admin]`: invite an address (as a creator by default).
 //! - `youcraft admin <email>`: make an address an administrator.
-//! - `youcraft block <@handle>` and `youcraft unblock <@handle>`.
+//! - `youcraft block <account>` and `youcraft unblock <account>`, by the account's identifier,
+//!   which `admin.accounts` lists.
 //! - `youcraft run <command id> [<input JSON>]`: any command, as the operator.
 
 use serde_json::{Value, json};
@@ -16,7 +17,7 @@ use crate::site::{Caller, Site};
 
 /// How to call them.
 pub const USAGE: &str = "youcraft invite <email> [creator|admin] | youcraft admin <email> | \
-                         youcraft block <@handle> | youcraft unblock <@handle> | \
+                         youcraft block <account> | youcraft unblock <account> | \
                          youcraft run <command> [<json>]";
 
 /// The command and input `arguments` (after the subcommand's name `name`) ask for.
@@ -32,9 +33,9 @@ pub fn parse(name: &str, arguments: &[String]) -> Result<(&'static str, Value), 
         ("admin", Some(email), None) => {
             Ok((invite::Create::ID, json!({"email": email, "role": "admin"})))
         }
-        ("block" | "unblock", Some(handle), None) => Ok((
+        ("block" | "unblock", Some(account), None) => Ok((
             admin::Block::ID,
-            json!({"handle": handle, "blocked": name == "block"}),
+            json!({"account": account, "blocked": name == "block"}),
         )),
         ("run", Some(id), input) => {
             let id = youcraft_api::command::descriptors()
@@ -80,8 +81,11 @@ mod tests {
             )
         );
         assert_eq!(
-            parse("unblock", &arguments(&["@ada"])).unwrap(),
-            ("admin.block", json!({"handle": "@ada", "blocked": false}))
+            parse("unblock", &arguments(&["AAAAAAAAAAE"])).unwrap(),
+            (
+                "admin.block",
+                json!({"account": "AAAAAAAAAAE", "blocked": false})
+            )
         );
         assert_eq!(
             parse("run", &arguments(&["feed.home"])).unwrap().0,

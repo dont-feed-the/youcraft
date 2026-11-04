@@ -1,5 +1,6 @@
 //! The upload page: choose a file, and while it is sent, give it a title, a description and a
-//! visibility, as YouTube's upload dialog does.
+//! visibility, as YouTube's upload dialog does. The video goes to the channel the address names
+//! (as the studio's do), else to the one the person acts as.
 //!
 //! The video is created the moment the file is chosen, so the details can be saved while the
 //! bytes travel; when the last piece has arrived, the details are saved once more and the file is
@@ -9,10 +10,12 @@
 
 use leptos::prelude::*;
 use leptos_meta::Title;
+use leptos_router::hooks::use_query_map;
 use youcraft_api::commands::video;
 use youcraft_api::records::{Processing, Visibility};
-use youcraft_api::{VideoId, routes};
+use youcraft_api::{ChannelId, VideoId, routes};
 
+use crate::account::SignedIn;
 use crate::act::{Scope, act};
 use crate::app::titled;
 use crate::browser::Timer;
@@ -37,6 +40,7 @@ enum Stage {
 /// What the page shows of an upload, and the details the person gives it.
 #[derive(Clone, Copy)]
 struct Upload {
+    channel: Memo<Option<ChannelId>>,
     stage: RwSignal<Stage>,
     processing: RwSignal<Processing>,
     video: RwSignal<Option<VideoId>>,
@@ -65,7 +69,21 @@ const FOLLOW_EVERY: std::time::Duration = std::time::Duration::from_secs(3);
 /// The upload page.
 #[component]
 pub fn UploadPage() -> impl IntoView {
+    let query = use_query_map();
+    let me = SignedIn::resource();
+    let channel = Memo::new(move |_| {
+        let named = query.with(|query| {
+            query
+                .get(routes::STUDIO_CHANNEL)
+                .and_then(|channel| channel.parse::<ChannelId>().ok())
+        });
+        named.or_else(|| {
+            me.and_then(|me| me.get().flatten())
+                .and_then(|me| me.channel.map(|card| card.id))
+        })
+    });
     let upload = Upload {
+        channel,
         stage: RwSignal::new(Stage::Choosing),
         processing: RwSignal::new(Processing::Processing { permille: 0 }),
         video: RwSignal::new(None),
@@ -74,6 +92,7 @@ pub fn UploadPage() -> impl IntoView {
         visibility: RwSignal::new(Visibility::Private),
     };
     let Upload {
+        channel,
         stage,
         processing,
         video,
@@ -135,7 +154,10 @@ pub fn UploadPage() -> impl IntoView {
                             };
                             view! {
                                 {state}
-                                <a class="pill" href=routes::STUDIO>{tr("Channel content")}</a>
+                                <a class="pill" href=move || channel.get().map_or_else(
+                                    || routes::STUDIO.to_owned(),
+                                    |channel| routes::in_studio(routes::STUDIO, channel),
+                                )>{tr("Channel content")}</a>
                             }.into_any()
                         }
                         Stage::Failed(reason) => view! { <p class="failure">{reason}</p> }.into_any(),
@@ -177,8 +199,15 @@ fn start(file: web_sys::File, upload: Upload, follow: Timer, scope: Scope) {
             .set(stem.chars().take(video::TITLE_LIMIT).collect());
     }
     let size = file.size() as u64;
+    let Some(channel) = upload.channel.get_untracked() else {
+        upload.stage.set(Stage::Failed(describe(
+            &youcraft_api::ApiError::ChannelRequired,
+        )));
+        return;
+    };
     upload.stage.set(Stage::Sending { sent: 0, size });
     let request = uploading::NewUpload {
+        channel,
         title: upload.title.get_untracked(),
         description: upload.description.get_untracked(),
         visibility: upload.visibility.get_untracked(),

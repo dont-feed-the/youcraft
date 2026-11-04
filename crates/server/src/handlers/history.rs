@@ -1,4 +1,5 @@
-//! The watch history, which only its owner reads and changes.
+//! The watch history of the channel the caller acts as, which only those who speak as it read
+//! and change.
 
 use youcraft_api::ApiError;
 use youcraft_api::commands::feed::Page;
@@ -13,7 +14,7 @@ use crate::site::{Caller, Site};
 
 impl Handle<List> for Site {
     async fn handle(&self, caller: Caller, page: Page) -> Result<History, ApiError> {
-        caller.signed_in()?;
+        caller.acting()?;
         let window = window(page.after.as_deref(), PAGE)?;
         let reader = caller.reader();
         let (found, paused) = self.db(move |store| store.history(reader, window)).await?;
@@ -27,9 +28,9 @@ impl Handle<List> for Site {
 
 impl Handle<Remove> for Site {
     async fn handle(&self, caller: Caller, which: Which) -> Result<Nothing, ApiError> {
-        let account = caller.signed_in()?;
+        let channel = caller.acting()?;
         let removed = self
-            .db(move |store| store.forget_watched(account, which.video))
+            .db(move |store| store.forget_watched(channel, which.video))
             .await?;
         removed.then_some(Nothing {}).ok_or(ApiError::NotFound)
     }
@@ -37,16 +38,16 @@ impl Handle<Remove> for Site {
 
 impl Handle<Clear> for Site {
     async fn handle(&self, caller: Caller, _: Nothing) -> Result<Nothing, ApiError> {
-        let account = caller.signed_in()?;
-        self.db(move |store| store.clear_history(account)).await?;
+        let channel = caller.acting()?;
+        self.db(move |store| store.clear_history(channel)).await?;
         Ok(Nothing {})
     }
 }
 
 impl Handle<Pause> for Site {
     async fn handle(&self, caller: Caller, pausing: Pausing) -> Result<Pausing, ApiError> {
-        let account = caller.signed_in()?;
-        self.db(move |store| store.pause_history(account, pausing.paused))
+        let channel = caller.acting()?;
+        self.db(move |store| store.pause_history(channel, pausing.paused))
             .await?;
         Ok(pausing)
     }

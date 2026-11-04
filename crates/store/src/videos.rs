@@ -17,12 +17,12 @@ macro_rules! seen_by_everyone {
 }
 
 /// Whether the reader `:reader`, an administrator when `:admin`, may see the video `v`: everyone
-/// may, or they manage it (they run the site, or it is their channel's). The channel is looked
-/// up once per statement, not once per video.
+/// may, or they manage it (they run the site, or they are a member of its channel, in any
+/// role). Their channels are looked up once per statement, not once per video.
 pub(crate) const VISIBLE: &str = concat!(
     "((",
     seen_by_everyone!(),
-    ") OR :admin OR v.channel_id IN (SELECT id FROM channels WHERE account_id = :reader))"
+    ") OR :admin OR v.channel_id IN (SELECT channel_id FROM members WHERE account_id = :reader))"
 );
 
 /// Whether feeds, search and its channel's page list the video `v`: it is ready and public.
@@ -59,8 +59,8 @@ impl Name for State {
 pub enum Audience {
     /// Everyone: it is ready, and public or unlisted.
     Everyone,
-    /// Only those who manage it, its channel and the site's administrators, of whom the reader is
-    /// one.
+    /// Only those who manage it, its channel's members and the site's administrators, of whom the
+    /// reader is one.
     Managers,
 }
 
@@ -187,14 +187,17 @@ impl Store {
         let connection = self.connection();
         let mut statement = connection.prepare_cached(&format!(
             "SELECT {CARD_COLUMNS}, v.description, v.like_count, v.comment_count, v.comments_enabled, v.state, \
-             c.account_id IS :reader, c.subscriber_count, \
-             (SELECT l.value FROM likes l WHERE l.video_id = v.id AND l.account_id = :reader), \
-             EXISTS (SELECT 1 FROM subscriptions s WHERE s.channel_id = c.id AND s.account_id = :reader) \
+             c.id IS :actor, c.subscriber_count, \
+             (SELECT l.value FROM likes l WHERE l.video_id = v.id AND l.channel_id = :actor), \
+             EXISTS (SELECT 1 FROM subscriptions s WHERE s.channel_id = c.id AND s.subscriber_id = :actor) \
              FROM videos v JOIN channels c ON c.id = v.channel_id WHERE v.id = :video AND {VISIBLE}"
         ))?;
         let page = statement
             .query_row(
-                named_params! {":video": video.to_i64(), ":reader": reader.id(), ":admin": reader.admin},
+                named_params! {
+                    ":video": video.to_i64(), ":reader": reader.id(), ":actor": reader.actor(),
+                    ":admin": reader.admin
+                },
                 |row| {
                     Ok(VideoPage {
                         card: card(row)?,
@@ -218,11 +221,14 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::testing::{ADA, ADA_CHANNEL, BOB, NEWER, PRIVATE, PUBLIC, UNLISTED, with_videos};
+    use crate::testing::{
+        ADA, ADA_CHANNEL, NEWER, PRIVATE, PUBLIC, UNLISTED, ada, bob, with_videos,
+    };
     use crate::uploads::NewUpload;
 
     const ADMIN: Reader = Reader {
         account: None,
+        channel: None,
         admin: true,
     };
 
@@ -246,23 +252,23 @@ mod tests {
         let store = with_videos();
         let seen = |video, reader| store.video_page(video, reader).unwrap().is_some();
         for video in [PUBLIC, UNLISTED] {
-            assert!(seen(video, Reader::ANYONE) && seen(video, Reader::of(BOB)));
+            assert!(seen(video, Reader::ANYONE) && seen(video, bob()));
             assert_eq!(
                 store.audience(video, Reader::ANYONE).unwrap(),
                 Some(Audience::Everyone)
             );
         }
-        assert!(!seen(PRIVATE, Reader::ANYONE) && !seen(PRIVATE, Reader::of(BOB)));
-        assert!(seen(PRIVATE, Reader::of(ADA)) && seen(PRIVATE, ADMIN));
-        assert_eq!(store.audience(PRIVATE, Reader::of(BOB)).unwrap(), None);
+        assert!(!seen(PRIVATE, Reader::ANYONE) && !seen(PRIVATE, bob()));
+        assert!(seen(PRIVATE, ada()) && seen(PRIVATE, ADMIN));
+        assert_eq!(store.audience(PRIVATE, bob()).unwrap(), None);
         assert_eq!(
             store.audience(PRIVATE, ADMIN).unwrap(),
             Some(Audience::Managers)
         );
-        let page = store.video_page(PRIVATE, Reader::of(ADA)).unwrap().unwrap();
+        let page = store.video_page(PRIVATE, ada()).unwrap().unwrap();
         assert!(page.owned && page.playable && page.comments_enabled);
         assert!(!store.video_page(PRIVATE, ADMIN).unwrap().unwrap().owned);
-        assert!(!seen(VideoId::from_bits(14), Reader::of(ADA)));
+        assert!(!seen(VideoId::from_bits(14), ada()));
 
         let uploading = VideoId::from_bits(20);
         store
@@ -270,6 +276,7 @@ mod tests {
                 &NewUpload {
                     video: uploading,
                     channel: ADA_CHANNEL,
+                    account: ADA,
                     title: "Soon",
                     description: "",
                     visibility: Visibility::Public,
@@ -280,13 +287,10 @@ mod tests {
             )
             .unwrap();
         assert!(!seen(uploading, Reader::ANYONE), "public, but not ready");
-        let page = store
-            .video_page(uploading, Reader::of(ADA))
-            .unwrap()
-            .unwrap();
+        let page = store.video_page(uploading, ada()).unwrap().unwrap();
         assert!(page.owned && !page.playable);
         assert_eq!(
-            store.audience(uploading, Reader::of(ADA)).unwrap(),
+            store.audience(uploading, ada()).unwrap(),
             Some(Audience::Managers)
         );
     }

@@ -2,6 +2,29 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.4.0
+
+### Added
+
+- Several people can run one channel, as on YouTube. Its owners invite people by e-mail address as
+  viewers (who see its studio), editors (who also upload and change its videos), managers (who
+  also comment, like and subscribe as the channel and moderate its comments) or owners (who also
+  customize it, choose its members and may delete it). An invitation waits a week for the person
+  with that address to accept it on the settings page.
+- The studio has a Permissions tab listing the channel's members and invitations, and a menu to
+  choose which of your channels it shows.
+- A person can create more channels on the settings page, and Switch channel in the account menu
+  chooses the channel they comment, like, subscribe and keep playlists as.
+- An owner can delete a channel from its customization, with its videos.
+
+### Changed
+
+- Comments, likes, subscriptions, playlists, history and blocks belong to a channel instead of a
+  person; what each person did so far stays with the channel they had.
+- A channel always keeps at least one owner; owners are equal.
+- Blocking a person on the site hides what they wrote, also as a shared channel, and nothing
+  written by its other members.
+
 ## 0.3.6
 
 ### Changed

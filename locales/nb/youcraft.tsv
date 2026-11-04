@@ -203,3 +203,27 @@
 	This isn't available.	Dette er ikke tilgjengelig.
 	This is larger than YouCraft accepts.	Dette er større enn YouCraft godtar.
 	This conflicts with what is already there.	Dette er i konflikt med noe som allerede finnes.
+	Accept	Godta
+	Channel name	Kanalnavn
+	Create a channel	Opprett en kanal
+	Create a channel first.	Opprett en kanal først.
+	Decline	Avslå
+	Delete channel	Slett kanalen
+	Delete this channel, with its videos, comments and playlists, for good?	Vil du slette denne kanalen for godt, med videoene, kommentarene og spillelistene?
+	Editor	Redaktør
+	Invite someone	Inviter noen
+	Its videos, comments and playlists go with it, for good.	Videoene, kommentarene og spillelistene forsvinner med den, for godt.
+	Leave	Forlat
+	Leave this channel?	Vil du forlate denne kanalen?
+	Manager	Leder
+	Members	Medlemmer
+	Owner	Eier
+	Permissions	Tillatelser
+	Switch channel	Bytt kanal
+	Switch to this channel	Bytt til denne kanalen
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Den inviterte logger på med denne adressen for å si ja eller nei innen en uke. Eiere velger medlemmene; ledere handler også som kanalen; redaktører laster opp og endrer videoene; seere ser studioet.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Det du gjør på YouCraft, gjør du som en av kanalene dine: den kommenterer, liker, abonnerer og har spillelister. Flere personer kan drive én kanal.
+	You act as this channel	Du handler som denne kanalen
+	Your channels	Kanalene dine
+	{channel} invites you to join as {role}.	{channel} inviterer deg til å bli med som {role}.
+@plural	{n} invitation|{n} invitations	{n} invitasjon|{n} invitasjoner

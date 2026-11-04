@@ -2,7 +2,7 @@
 
 use std::sync::Arc;
 
-use youcraft_api::{AccountId, ApiError, Grant, Role, VideoId};
+use youcraft_api::{AccountId, ApiError, ChannelId, ChannelRole, Grant, Role, VideoId};
 use youcraft_store::accounts::Standing;
 use youcraft_store::credentials::SecretHash;
 use youcraft_store::{Reader, Store, StoreError};
@@ -28,11 +28,15 @@ pub struct Site {
 }
 
 /// Who runs a command. Handlers decide with it what the caller may do: [`Caller::role`] for
-/// what the site lets them do at all, [`Caller::signed_in`] for whose things they act on.
+/// what the site lets them do at all, [`Caller::signed_in`] for whose things they act on,
+/// [`Caller::acting`] for the channel they act as, and [`Site::allow_in_channel`] for what they
+/// may do to a channel.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Caller {
     /// Their account; `None` when signed out, and for the operator.
     pub account: Option<AccountId>,
+    /// The channel they act as, which they manage or own; `None` when they manage none.
+    pub channel: Option<ChannelId>,
     /// What they may do: their account's role, raised to the site's floor, or
     /// [`Role::SignedIn`] while it is blocked.
     pub role: Role,
@@ -72,8 +76,8 @@ pub enum Credential {
     Nothing,
     /// The session cookie of a browser, by its hash.
     Session(SecretHash),
-    /// A personal token.
-    Token,
+    /// A personal token, by its hash.
+    Token(SecretHash),
     /// They run the server's command line, on its machine.
     Operator,
 }
@@ -82,6 +86,7 @@ impl Caller {
     /// Someone signed out.
     pub const ANONYMOUS: Caller = Caller {
         account: None,
+        channel: None,
         role: Role::Anyone,
         credential: Credential::Nothing,
         viewer: ViewerKey::NOBODY,
@@ -91,6 +96,7 @@ impl Caller {
     /// Whoever runs `youcraft` on the server's machine: an administrator with no account.
     pub const OPERATOR: Caller = Caller {
         account: None,
+        channel: None,
         role: Role::Admin,
         credential: Credential::Operator,
         viewer: ViewerKey::NOBODY,
@@ -107,6 +113,7 @@ impl Caller {
     ) -> Caller {
         Caller {
             account: Some(standing.account),
+            channel: standing.channel,
             role: if standing.blocked {
                 Role::SignedIn
             } else {
@@ -123,12 +130,26 @@ impl Caller {
         self.account.ok_or(ApiError::SignInRequired)
     }
 
-    /// The caller as the store sees who reads: their account, and whether they run the site.
+    /// The channel the caller acts as: [`ApiError::SignInRequired`] if they are signed out,
+    /// [`ApiError::ChannelRequired`] if they manage no channel.
+    pub fn acting(&self) -> Result<ChannelId, ApiError> {
+        self.signed_in()?;
+        self.channel.ok_or(ApiError::ChannelRequired)
+    }
+
+    /// The caller as the store sees who reads: their account, the channel they act as, and
+    /// whether they run the site.
     pub fn reader(&self) -> Reader {
         Reader {
             account: self.account,
+            channel: self.channel,
             admin: self.role.allows(Role::Admin),
         }
+    }
+
+    /// Whether the caller runs the site.
+    pub fn admin(&self) -> bool {
+        self.role.allows(Role::Admin)
     }
 
     /// Allow the caller to act toward others, as a command that also lets them take back what
@@ -154,6 +175,51 @@ impl Caller {
 }
 
 impl Site {
+    /// Allow `caller` to do to `channel` what `least` may: they hold that role in it, or more, or
+    /// they run the site. [`ApiError::Forbidden`] otherwise; the role the store says they hold.
+    pub async fn allow_in_channel(
+        &self,
+        caller: Caller,
+        channel: ChannelId,
+        least: ChannelRole,
+    ) -> Result<Option<ChannelRole>, ApiError> {
+        let role = match caller.account {
+            Some(account) => {
+                self.db(move |store| store.member_role(channel, account))
+                    .await?
+            }
+            None => None,
+        };
+        if caller.admin() || role.is_some_and(|role| role.allows(least)) {
+            Ok(role)
+        } else if caller.account.is_none() {
+            Err(ApiError::SignInRequired)
+        } else {
+            Err(ApiError::Forbidden)
+        }
+    }
+
+    /// Allow `caller` to do to `video` what `least` may in its channel, as
+    /// [`Site::allow_in_channel`] does; the video's channel. A video of a channel they are no
+    /// member of is answered as not found, so that a private video's existence never leaks.
+    pub async fn allow_on_video(
+        &self,
+        caller: Caller,
+        video: VideoId,
+        least: ChannelRole,
+    ) -> Result<ChannelId, ApiError> {
+        let account = caller.account;
+        let found = self
+            .db(move |store| store.video_member_role(video, account))
+            .await?;
+        match found {
+            Some((channel, _)) if caller.admin() => Ok(channel),
+            Some((channel, Some(role))) if role.allows(least) => Ok(channel),
+            Some((_, Some(_))) => Err(ApiError::Forbidden),
+            _ => Err(ApiError::NotFound),
+        }
+    }
+
     /// Open the site's data directory and database.
     pub fn open(config: &Config) -> Result<Site, String> {
         for dir in [

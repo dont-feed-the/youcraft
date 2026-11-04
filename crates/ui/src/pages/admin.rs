@@ -1,7 +1,8 @@
 //! The administration, `/admin`, for administrators: the invitations waiting, and every account
-//! of the site, found by name or handle, with what administrators do to one: change its role,
-//! block or unblock it, take its photo away or name it after its handle again. Accounts are
-//! shown by their channel and never by their e-mail address.
+//! of the site, found by its person's name or by a channel's name or handle, with what
+//! administrators do to one: change its role, block or unblock it; and to each of its channels:
+//! take its photo away or name it after its handle again. Accounts are shown by their person's
+//! name and channels, never by their e-mail address.
 
 use leptos::prelude::*;
 use leptos_meta::Title;
@@ -10,7 +11,8 @@ use youcraft_api::commands::channel::Handle;
 use youcraft_api::commands::invite::{self, Invitation};
 use youcraft_api::commands::search::QUERY_LIMIT;
 use youcraft_api::commands::site::{GetPolicy, Nothing};
-use youcraft_api::{ApiError, ChannelId, Grant, routes};
+use youcraft_api::records::ChannelCard;
+use youcraft_api::{AccountId, ApiError, Grant, routes};
 
 use crate::account::SignedIn;
 use crate::act::{Optimistic, act};
@@ -52,7 +54,7 @@ pub fn Admin() -> impl IntoView {
                     match me {
                         Some(me) if me.role >= Grant::Admin => view! {
                             <InvitationSection floor/>
-                            <AccountsSection own=me.channel.id/>
+                            <AccountsSection own=me.account/>
                         }.into_any(),
                         Some(_) => view! { <Trouble error=ApiError::Forbidden/> }.into_any(),
                         None => view! { <Trouble error=ApiError::SignInRequired/> }.into_any(),
@@ -156,7 +158,7 @@ fn InvitationRow(invitation: Invitation, version: RwSignal<u32>) -> impl IntoVie
 
 /// Every account, the newest first, found by the words of the search.
 #[component]
-fn AccountsSection(own: ChannelId) -> impl IntoView {
+fn AccountsSection(own: AccountId) -> impl IntoView {
     let query = RwSignal::new(String::new());
     let searched = RwSignal::new(String::new());
     let first = Resource::new(
@@ -190,8 +192,8 @@ fn AccountsSection(own: ChannelId) -> impl IntoView {
                             });
                             view! {
                                 <ul class="settings-list">
-                                    <For each=move || pages.items.get() key=|row| row.channel.id let:row>
-                                        <AccountEntry own=row.channel.id == own row/>
+                                    <For each=move || pages.items.get() key=|row| row.account let:row>
+                                        <AccountEntry own=row.account == own row/>
                                     </For>
                                 </ul>
                                 <ShowMore pages more/>
@@ -207,19 +209,18 @@ fn AccountsSection(own: ChannelId) -> impl IntoView {
 
 /// One account and what an administrator does to it; `own` when it is theirs, whose role and
 /// blocking they cannot change. Its role and blocking show the change at once, and what the site
-/// last confirmed if the change fails.
+/// last confirmed if the change fails. Its channels follow, each with what moderates it.
 #[component]
 fn AccountEntry(row: AccountRow, own: bool) -> impl IntoView {
     let role = Optimistic::new(row.role);
     let blocked = Optimistic::new(row.blocked);
-    let channel = RwSignal::new(row.channel);
-    let handle = move || channel.with(|channel| channel.handle.clone());
+    let account = row.account;
     let pick = move |event: leptos::ev::Event| {
         let Some(wanted) = Grant::from_name(&event_target_value(&event)) else {
             return;
         };
         let change = admin::NewRole {
-            handle: handle(),
+            account,
             role: wanted,
         };
         role.change::<admin::SetRole>(wanted, change, move |_| wanted);
@@ -227,11 +228,47 @@ fn AccountEntry(row: AccountRow, own: bool) -> impl IntoView {
     let block = move |_| {
         let wanted = !blocked.shown.get_untracked();
         let change = admin::Blocking {
-            handle: handle(),
+            account,
             blocked: wanted,
         };
         blocked.change::<admin::Block>(wanted, change, move |_| wanted);
     };
+    view! {
+        <li class="settings-row admin-account">
+            <Glyph icon=Icon::Account/>
+            <div class="settings-row-text">
+                <span dir="auto">{row.name}</span>
+                <span class="settings-hint">
+                    {move || blocked.shown.get().then(|| tr("Blocked"))}
+                </span>
+            </div>
+            <div class="admin-actions">
+                {(!own).then(|| view! {
+                    <select class="field" aria-label=tr("Role") on:change=pick>
+                        {Grant::ALL.map(|choice| view! {
+                            <option value=choice.as_str() selected=role.shown.get_untracked() == choice
+                                prop:selected=move || role.shown.get() == choice>
+                                {role_name(choice)}
+                            </option>
+                        }).collect_view()}
+                    </select>
+                    <button class="pill" type="button" on:click=block>
+                        {move || if blocked.shown.get() { tr("Unblock") } else { tr("Block") }}
+                    </button>
+                })}
+            </div>
+            <ul class="settings-list admin-channels">
+                {row.channels.into_iter().map(|channel| view! { <ChannelEntry channel/> }).collect_view()}
+            </ul>
+        </li>
+    }
+}
+
+/// A channel of an account, with the ways to take back a name or a photo that should not show.
+#[component]
+fn ChannelEntry(channel: ChannelCard) -> impl IntoView {
+    let channel = RwSignal::new(channel);
+    let handle = move || channel.with(|channel| channel.handle.clone());
     let remove_photo = move |_| {
         act::<admin::RemovePhoto>(Handle { handle: handle() }, move |answer| {
             if let Ok(profile) = answer {
@@ -253,25 +290,9 @@ fn AccountEntry(row: AccountRow, own: bool) -> impl IntoView {
             </a>
             <div class="settings-row-text">
                 <a href=move || routes::channel(&handle()) dir="auto">{move || channel.with(|channel| channel.name.clone())}</a>
-                <span class="settings-hint">
-                    <bdi>{move || format!("@{}", handle())}</bdi>
-                    {move || blocked.shown.get().then(|| format!(" · {}", tr("Blocked")))}
-                </span>
+                <bdi class="settings-hint">{move || format!("@{}", handle())}</bdi>
             </div>
             <div class="admin-actions">
-                {(!own).then(|| view! {
-                    <select class="field" aria-label=tr("Role") on:change=pick>
-                        {Grant::ALL.map(|choice| view! {
-                            <option value=choice.as_str() selected=role.shown.get_untracked() == choice
-                                prop:selected=move || role.shown.get() == choice>
-                                {role_name(choice)}
-                            </option>
-                        }).collect_view()}
-                    </select>
-                    <button class="pill" type="button" on:click=block>
-                        {move || if blocked.shown.get() { tr("Unblock") } else { tr("Block") }}
-                    </button>
-                })}
                 <Show when=move || channel.with(|channel| channel.photo.is_some())>
                     <button class="pill" type="button" on:click=remove_photo>{tr("Remove picture")}</button>
                 </Show>

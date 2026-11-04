@@ -83,6 +83,7 @@ pub async fn fill(site: &Site) -> Result<(), String> {
         let upload = NewUpload {
             video,
             channel: ChannelId::from_bits(0xc4a0_0001 + u64::from(n % 3)),
+            account: AccountId::from_bits(0xdead_0001 + u64::from(n % 3)),
             title,
             description: "An example video, generated for local development.",
             visibility: Visibility::Public,
@@ -109,12 +110,11 @@ pub async fn fill(site: &Site) -> Result<(), String> {
 /// What the demo channels do with each other's videos: subscribe, like, comment and reply,
 /// keep a playlist.
 fn converse(store: &Store, now: i64) -> Result<(), StoreError> {
-    let person = |n: u64| Reader::of(AccountId::from_bits(0xdead_0000 + n));
     let channel = |n: u64| ChannelId::from_bits(0xc4a0_0000 + n);
+    let person = |n: u64| Reader::of(AccountId::from_bits(0xdead_0000 + n), channel(n));
     let video = |n: u64| VideoId::from_bits(0x5eed_0000_0000 + n * 7919);
     for (who, whom) in [(2, 1), (3, 1), (1, 3)] {
-        let account = AccountId::from_bits(0xdead_0000 + who);
-        store.subscribe(account, channel(whom), true, now)?;
+        store.subscribe(channel(who), channel(whom), true, now)?;
     }
     store.rate(person(2), video(0), Rating::Like, now)?;
     store.rate(person(3), video(0), Rating::Like, now)?;

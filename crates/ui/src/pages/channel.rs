@@ -95,8 +95,8 @@ fn Heading(page: ChannelPage) -> impl IntoView {
                 <div class="channel-buttons">
                     <SubscribeButton channel=page.card.id state owned=page.owned/>
                     {page.owned.then(|| view! {
-                        <a class="pill" href=routes::STUDIO_CUSTOMIZE>{tr("Customize channel")}</a>
-                        <a class="pill" href=routes::STUDIO>{tr("Manage videos")}</a>
+                        <a class="pill" href=routes::in_studio(routes::STUDIO_CUSTOMIZE, page.card.id)>{tr("Customize channel")}</a>
+                        <a class="pill" href=routes::in_studio(routes::STUDIO, page.card.id)>{tr("Manage videos")}</a>
                     })}
                 </div>
             </div>

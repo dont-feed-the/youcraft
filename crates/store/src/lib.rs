@@ -13,6 +13,7 @@ pub mod comments;
 pub mod credentials;
 pub mod invitations;
 pub mod jobs;
+pub mod members;
 mod migrations;
 pub mod playlists;
 pub mod profiles;
@@ -27,10 +28,9 @@ use std::sync::{Mutex, MutexGuard, PoisonError};
 
 use rusqlite::types::{FromSql, FromSqlError, FromSqlResult, ValueRef};
 use rusqlite::{Connection, TransactionBehavior};
-use youcraft_api::AccountId;
-use youcraft_api::Grant;
 use youcraft_api::commands::account::Theme;
 use youcraft_api::records::{Failure, Visibility};
+use youcraft_api::{AccountId, ChannelId, ChannelRole, Grant};
 
 /// Why a query failed.
 #[derive(Debug, thiserror::Error)]
@@ -68,12 +68,16 @@ impl From<rusqlite::Error> for StoreError {
     }
 }
 
-/// Who reads, or changes what they may: their account if they are signed in, and whether they
-/// run the site, which shows them every video as its own channel sees it.
+/// Who reads, or changes what they may: the person, if signed in, whose memberships let them
+/// manage their channels' videos; the channel they act as, whose likes, subscriptions and
+/// history are theirs; and whether they run the site, which shows them every video as its own
+/// channel sees it.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct Reader {
     /// Their account, if they are signed in.
     pub account: Option<AccountId>,
+    /// The channel they act as, if they run one.
+    pub channel: Option<ChannelId>,
     /// Whether they are an administrator.
     pub admin: bool,
 }
@@ -82,22 +86,34 @@ impl Reader {
     /// Someone signed out.
     pub const ANYONE: Reader = Reader {
         account: None,
+        channel: None,
         admin: false,
     };
 
-    /// The person signed in as `account`, who does not run the site.
-    pub fn of(account: AccountId) -> Reader {
+    /// The person signed in as `account`, acting as `channel`, who does not run the site.
+    pub fn of(account: AccountId, channel: ChannelId) -> Reader {
         Reader {
             account: Some(account),
+            channel: Some(channel),
             admin: false,
         }
     }
 
-    /// Their account as the database stores it, or `NULL`.
+    /// Their account as the database stores it, or `NULL`: the `:reader` of queries.
     pub(crate) fn id(self) -> Option<i64> {
         self.account.map(AccountId::to_i64)
     }
+
+    /// The channel they act as, as the database stores it, or `NULL`: the `:actor` of queries.
+    pub(crate) fn actor(self) -> Option<i64> {
+        self.channel.map(ChannelId::to_i64)
+    }
 }
+
+/// The channels the reader `:reader` speaks as, managers and owners: they may do as the channel
+/// whatever it may do, and take back whatever it did.
+pub(crate) const SPEAKS_AS: &str = "(SELECT channel_id FROM members WHERE account_id = :reader \
+    AND role IN ('manager', 'owner'))";
 
 /// A value the database keeps as one of a few names.
 pub(crate) trait Name: Sized {
@@ -135,6 +151,13 @@ impl Name for Grant {
     const WHAT: &'static str = "role";
     fn from_name(name: &str) -> Option<Grant> {
         Grant::from_name(name)
+    }
+}
+
+impl Name for ChannelRole {
+    const WHAT: &'static str = "channel role";
+    fn from_name(name: &str) -> Option<ChannelRole> {
+        ChannelRole::from_name(name)
     }
 }
 
@@ -294,6 +317,22 @@ pub(crate) mod testing {
     pub const NEWER: VideoId = VideoId::from_bits(11);
     pub const UNLISTED: VideoId = VideoId::from_bits(12);
     pub const PRIVATE: VideoId = VideoId::from_bits(13);
+
+    /// The person `account` as they read, acting as their first channel, whose identifier the
+    /// tests make one more than their account's.
+    pub fn person(account: AccountId) -> crate::Reader {
+        crate::Reader::of(account, ChannelId::from_bits(account.bits() + 1))
+    }
+
+    /// Ada as she reads, acting as her channel.
+    pub fn ada() -> crate::Reader {
+        person(ADA)
+    }
+
+    /// Bob as he reads, acting as his channel.
+    pub fn bob() -> crate::Reader {
+        person(BOB)
+    }
 
     /// The database with Ada, Bob and Ada's videos.
     pub fn with_videos() -> Store {

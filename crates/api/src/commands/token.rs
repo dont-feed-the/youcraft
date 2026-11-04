@@ -1,4 +1,6 @@
-//! Personal tokens: how a program acts as the person who made it, with exactly their rights.
+//! Personal tokens: how a program acts as the person who made it, with exactly their rights. A
+//! token acts as the channel its person acted as when they made it, until it is told to act as
+//! another (`account.act_as`).
 //!
 //! A program sends its token as `Authorization: Bearer <secret>`. The site keeps only a hash of
 //! the secret, so it is shown once, when the token is created. Tokens are their owner's to manage
@@ -10,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use crate::command::Command;
 use crate::commands::site::Nothing;
 use crate::ids::TokenId;
+use crate::records::ChannelCard;
 use crate::role::Role;
 
 /// A token as its owner lists it.
@@ -23,6 +26,9 @@ pub struct Token {
     pub created_at: i64,
     /// When a request last used it, in seconds since 1970.
     pub last_used_at: Option<i64>,
+    /// The channel it acts as; `None` when its person manages none.
+    #[serde(default)]
+    pub channel: Option<ChannelCard>,
 }
 
 /// The name of a new token.

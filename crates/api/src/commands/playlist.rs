@@ -1,8 +1,9 @@
-//! Commands about lists of videos: playlists people make, their Watch later list, the videos
-//! they liked.
+//! Commands about lists of videos: the playlists channels make, their Watch later lists, the
+//! videos they liked. "Your" lists are those of the channel the caller acts as.
 //!
-//! A playlist is its owner's to change; others see it if it is public or unlisted. Watch later
-//! and Liked videos are private, and Liked videos changes only as its owner rates videos.
+//! A playlist is its channel's to change, by whoever speaks as it (its managers and owners);
+//! others see it if it is public or unlisted. Watch later and Liked videos are private, and Liked
+//! videos changes only as its channel rates videos.
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -19,7 +20,7 @@ pub const TITLE_LIMIT: usize = 150;
 pub const DESCRIPTION_LIMIT: usize = 5_000;
 /// The most videos a list holds.
 pub const VIDEO_LIMIT: u64 = 5_000;
-/// The most playlists one account makes.
+/// The most playlists one channel makes.
 pub const PLAYLIST_LIMIT: u64 = 1_000;
 
 /// A list as a grid or a menu shows it.
@@ -33,7 +34,7 @@ pub struct PlaylistCard {
     pub visibility: Visibility,
     /// How many of the videos it holds its reader may see.
     pub videos: u64,
-    /// Its owner's channel.
+    /// The channel it belongs to.
     pub owner: ChannelCard,
     /// When it last changed, in seconds since 1970 (UTC).
     pub updated_at: i64,

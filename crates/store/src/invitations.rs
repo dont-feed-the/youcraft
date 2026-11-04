@@ -5,7 +5,6 @@ use youcraft_api::Grant;
 use youcraft_api::commands::invite::{Invitation, Invited};
 
 use crate::accounts::raise_role;
-use crate::channels::channel_card;
 use crate::{Named, Store, StoreError};
 
 impl Store {
@@ -16,21 +15,17 @@ impl Store {
         let transaction = connection.transaction()?;
         let holder = transaction
             .query_row(
-                "SELECT a.id, c.id, c.handle, c.name, c.photo FROM accounts a \
-                 JOIN channels c ON c.account_id = a.id \
+                "SELECT a.id, a.name FROM accounts a \
                  WHERE a.email = ?1 COLLATE NOCASE AND a.email != ''",
                 [email],
-                |row| Ok((row.get::<_, i64>(0)?, channel_card(row, 1)?)),
+                |row| Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?)),
             )
             .optional()?;
         let invited = match holder {
-            Some((account, channel)) => {
-                raise_role(
-                    &transaction,
-                    youcraft_api::AccountId::from_i64(account),
-                    role,
-                )?;
-                Invited::Applied { channel }
+            Some((account, name)) => {
+                let account = youcraft_api::AccountId::from_i64(account);
+                raise_role(&transaction, account, role)?;
+                Invited::Applied { account, name }
             }
             None => {
                 transaction.execute(

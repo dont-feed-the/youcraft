@@ -203,3 +203,27 @@
 	This isn't available.	Ini tidak tersedia.
 	This is larger than YouCraft accepts.	Ini lebih besar dari yang diterima YouCraft.
 	This conflicts with what is already there.	Ini bertentangan dengan yang sudah ada.
+	Accept	Terima
+	Channel name	Nama saluran
+	Create a channel	Buat saluran
+	Create a channel first.	Buat saluran terlebih dahulu.
+	Decline	Tolak
+	Delete channel	Hapus saluran
+	Delete this channel, with its videos, comments and playlists, for good?	Hapus saluran ini selamanya, beserta video, komentar, dan playlist-nya?
+	Editor	Editor
+	Invite someone	Undang seseorang
+	Its videos, comments and playlists go with it, for good.	Video, komentar, dan playlist-nya ikut terhapus selamanya.
+	Leave	Keluar
+	Leave this channel?	Keluar dari saluran ini?
+	Manager	Pengelola
+	Members	Anggota
+	Owner	Pemilik
+	Permissions	Izin
+	Switch channel	Ganti saluran
+	Switch to this channel	Beralih ke saluran ini
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Orang yang diundang masuk dengan alamat ini untuk menerima atau menolak, dalam waktu seminggu. Pemilik memilih anggota; pengelola juga bertindak sebagai saluran; editor mengunggah dan mengubah videonya; penonton melihat studionya.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Apa yang Anda lakukan di YouCraft, Anda lakukan sebagai salah satu saluran Anda: saluran itulah yang berkomentar, menyukai, berlangganan, dan menyimpan playlist. Beberapa orang dapat mengelola satu saluran.
+	You act as this channel	Anda bertindak sebagai saluran ini
+	Your channels	Saluran Anda
+	{channel} invites you to join as {role}.	{channel} mengundang Anda untuk bergabung sebagai {role}.
+@plural	{n} invitation|{n} invitations	{n} undangan

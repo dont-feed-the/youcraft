@@ -16,7 +16,7 @@ impl Handle<Search> for Site {
         let words = line("query", &query.query, QUERY_LIMIT)?;
         let first = query.after.is_none();
         let window = window(query.after.as_deref(), PAGE)?;
-        let viewer = caller.account;
+        let viewer = caller.channel;
         let searched = words.clone();
         let channels = if first {
             self.db(move |store| store.search_channels(&searched, viewer, CHANNELS))

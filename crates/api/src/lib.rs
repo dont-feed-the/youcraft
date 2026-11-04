@@ -18,4 +18,4 @@ pub mod time;
 pub use command::{Answer, Command, Descriptor, Dispatch};
 pub use error::{ApiError, Rule};
 pub use ids::{AccountId, ChannelId, CommentId, List, PlaylistId, TokenId, VideoId};
-pub use role::{Grant, Role};
+pub use role::{ChannelRole, Grant, Role};

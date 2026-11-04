@@ -203,3 +203,27 @@
 	This isn't available.	هذا غير متاح.
 	This is larger than YouCraft accepts.	هذا أكبر مما يقبله YouCraft.
 	This conflicts with what is already there.	هذا يتعارض مع ما هو موجود بالفعل.
+	Accept	قبول
+	Channel name	اسم القناة
+	Create a channel	إنشاء قناة
+	Create a channel first.	أنشئ قناة أولًا.
+	Decline	رفض
+	Delete channel	حذف القناة
+	Delete this channel, with its videos, comments and playlists, for good?	هل تريد حذف هذه القناة نهائيًا مع فيديوهاتها وتعليقاتها وقوائم التشغيل الخاصة بها؟
+	Editor	محرّر
+	Invite someone	دعوة شخص
+	Its videos, comments and playlists go with it, for good.	تُحذف معها فيديوهاتها وتعليقاتها وقوائم التشغيل الخاصة بها نهائيًا.
+	Leave	مغادرة
+	Leave this channel?	هل تريد مغادرة هذه القناة؟
+	Manager	مدير
+	Members	الأعضاء
+	Owner	مالك
+	Permissions	الأذونات
+	Switch channel	تبديل القناة
+	Switch to this channel	التبديل إلى هذه القناة
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	يسجّل المدعو الدخول بهذا العنوان ليقبل أو يرفض خلال أسبوع. يختار المالكون الأعضاء؛ ويتصرّف المديرون أيضًا باسم القناة؛ ويرفع المحرّرون فيديوهاتها ويعدّلونها؛ ويطّلع المشاهدون على الاستوديو الخاص بها.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	ما تفعله على YouCraft تفعله باسم إحدى قنواتك: فهي التي تعلّق وتبدي الإعجاب وتشترك وتحتفظ بقوائم التشغيل. ويمكن لعدة أشخاص إدارة قناة واحدة.
+	You act as this channel	أنت تتصرّف باسم هذه القناة
+	Your channels	قنواتك
+	{channel} invites you to join as {role}.	القناة {channel} تدعوك للانضمام بصفة {role}.
+@plural	{n} invitation|{n} invitations	{n} دعوة|{n} دعوة|{n} دعوة|{n} دعوات|{n} دعوةً|{n} دعوة

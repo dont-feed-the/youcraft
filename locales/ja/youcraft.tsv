@@ -203,3 +203,27 @@
 	This isn't available.	これは利用できません。
 	This is larger than YouCraft accepts.	YouCraft が受け付けられるサイズを超えています。
 	This conflicts with what is already there.	すでにあるものと競合しています。
+	Accept	承諾
+	Channel name	チャンネル名
+	Create a channel	チャンネルを作成
+	Create a channel first.	先にチャンネルを作成してください。
+	Decline	辞退
+	Delete channel	チャンネルを削除
+	Delete this channel, with its videos, comments and playlists, for good?	このチャンネルを、動画、コメント、再生リストとともに完全に削除しますか？
+	Editor	編集者
+	Invite someone	メンバーを招待
+	Its videos, comments and playlists go with it, for good.	動画、コメント、再生リストもあわせて完全に削除されます。
+	Leave	退出
+	Leave this channel?	このチャンネルから退出しますか？
+	Manager	マネージャー
+	Members	メンバー
+	Owner	オーナー
+	Permissions	権限
+	Switch channel	チャンネルを切り替え
+	Switch to this channel	このチャンネルに切り替え
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	招待された人は、1 週間以内にこのアドレスでログインして承諾または辞退します。オーナーはメンバーを選び、マネージャーはチャンネルとしても行動し、編集者は動画をアップロード・変更し、視聴者はスタジオを閲覧できます。
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	YouCraft での操作は、すべて自分のチャンネルのいずれかとして行います。コメント、いいね、チャンネル登録、再生リストの保持はチャンネルが行います。1 つのチャンネルを複数の人で運営できます。
+	You act as this channel	このチャンネルとして行動中
+	Your channels	あなたのチャンネル
+	{channel} invites you to join as {role}.	{channel} から {role} として参加するよう招待されています。
+@plural	{n} invitation|{n} invitations	{n} 件の招待

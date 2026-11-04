@@ -14,7 +14,7 @@ use youcraft_api::commands::comment::Comment;
 use youcraft_api::commands::history::Watched;
 use youcraft_api::commands::playlist::PlaylistCard;
 use youcraft_api::records::{StudioVideo, VideoCard};
-use youcraft_api::{ChannelId, CommentId, List, VideoId};
+use youcraft_api::{AccountId, CommentId, List, VideoId};
 
 use crate::act::Scope;
 use crate::lang::tr;
@@ -63,9 +63,9 @@ impl Keyed for Comment {
 }
 
 impl Keyed for AccountRow {
-    type Key = ChannelId;
-    fn key(&self) -> ChannelId {
-        self.channel.id
+    type Key = AccountId;
+    fn key(&self) -> AccountId {
+        self.account
     }
 }
 

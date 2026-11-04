@@ -16,7 +16,7 @@
 
 .menu-entry { display: flex; align-items: center; gap: var(--space-4); min-block-size: 40px; padding-inline: var(--space-4); border: 0; background: transparent; text-align: start; cursor: pointer; }
 .menu-entry:hover { background: var(--bg-hover); }
-.menu-entry > span:not(.menu-tick):not(.menu-more) { flex: 1; }
+.menu-entry > span:not(.menu-tick, .menu-more, .avatar) { flex: 1; }
 .menu-more { display: inline-grid; margin-inline-start: auto; }
 .menu-tick { display: inline-grid; visibility: hidden; }
 .menu-tick.ticked { visibility: visible; }
@@ -56,5 +56,7 @@
 }
 .trouble h1 { color: var(--text); font-size: var(--text-lg); }
 .admin-account { flex-wrap: wrap; }
-.admin-account .settings-row-text { flex: 1 1 40%; }
+.admin-account .settings-row-text { flex: 1 1 25%; }
 .admin-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-inline-start: auto; }
+.admin-channels { flex: 1 1 100%; padding-inline-start: var(--space-10); }
+.menu-entry .avatar { inline-size: var(--avatar-small); block-size: var(--avatar-small); }

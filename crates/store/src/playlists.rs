@@ -1,10 +1,14 @@
-//! Lists of videos: playlists, each account's Watch later list, and its liked videos, which the
-//! `likes` table already holds. A list shows, and counts, only the videos its reader may see.
+//! Lists of videos: the playlists of channels, each channel's Watch later list, and its liked
+//! videos, which the `likes` table already holds. A list shows, and counts, only the videos its
+//! reader may see. A reader's own Watch later and liked videos are those of the channel they act
+//! as; they change a playlist of any channel they speak as ([`crate::SPEAKS_AS`]).
 
 use rusqlite::{OptionalExtension, Row, Transaction, named_params, params};
 use youcraft_api::commands::playlist::{PLAYLIST_LIMIT, PlaylistCard, VIDEO_LIMIT};
 use youcraft_api::records::{VideoCard, Visibility};
 use youcraft_api::{AccountId, ChannelId, List, PlaylistId, VideoId};
+
+use crate::SPEAKS_AS;
 
 use crate::channels::{self, CARD_WIDTH, channel_card};
 use crate::videos::{CARD_COLUMNS, VISIBLE, card};
@@ -13,9 +17,9 @@ use crate::{Name, Named, Paged, Reader, Store, StoreError, Window, count};
 /// What a row of `playlists` is.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Kind {
-    /// A playlist its owner made.
+    /// A playlist its channel made.
     Playlist,
-    /// The owner's Watch later list.
+    /// The channel's Watch later list.
     WatchLater,
 }
 
@@ -34,8 +38,8 @@ impl Name for Kind {
 const ITEMS: &str =
     "playlist_items i JOIN videos v ON v.id = i.video_id WHERE i.playlist_id = p.id";
 
-/// The columns [`playlist_card`] reads, from `playlists` as `p` joined with its owner's channel
-/// `o`, for the reader `:reader`, telling whether it holds the video `:containing`.
+/// The columns [`playlist_card`] reads, from `playlists` as `p` joined with its channel `o`, for
+/// the reader `:reader`, telling whether it holds the video `:containing`.
 fn card_columns() -> String {
     format!(
         "p.id, p.kind, p.title, p.visibility, p.updated_at, {}, \
@@ -47,7 +51,7 @@ fn card_columns() -> String {
 }
 
 /// The tables [`card_columns`] reads.
-const FROM: &str = "playlists p JOIN channels o ON o.account_id = p.account_id";
+const FROM: &str = "playlists p JOIN channels o ON o.id = p.channel_id";
 
 fn playlist_card(row: &Row<'_>) -> rusqlite::Result<PlaylistCard> {
     let list = match row.get::<_, Named<Kind>>(1)?.0 {
@@ -73,11 +77,11 @@ fn playlist_card(row: &Row<'_>) -> rusqlite::Result<PlaylistCard> {
 pub enum Changed {
     /// Done: the list now.
     Done(PlaylistCard),
-    /// No such list of the account's, or no such video they may see; or they are signed out.
+    /// No such list of the reader's, or no such video they may see; or they act as no channel.
     Missing,
-    /// The list holds [`VIDEO_LIMIT`] videos, or the account [`PLAYLIST_LIMIT`] playlists.
+    /// The list holds [`VIDEO_LIMIT`] videos, or the channel [`PLAYLIST_LIMIT`] playlists.
     Full,
-    /// Liked videos changes only as its owner rates videos.
+    /// Liked videos changes only as its channel rates videos.
     Fixed,
 }
 
@@ -86,7 +90,7 @@ pub enum Changed {
 pub struct ListPage {
     /// The list.
     pub card: PlaylistCard,
-    /// What its owner says about it.
+    /// What its channel says about it.
     pub description: String,
     /// A page of its videos the reader may see.
     pub videos: Paged<VideoCard>,
@@ -138,14 +142,15 @@ fn card_of(
     Ok(found)
 }
 
-/// The card of the liked videos of `reader`, telling whether they hold `containing`.
+/// The card of the liked videos of the channel `reader` acts as, telling whether they hold
+/// `containing`.
 fn liked_card(
     transaction: &Transaction<'_>,
     reader: Reader,
     containing: Option<VideoId>,
 ) -> Result<Option<PlaylistCard>, StoreError> {
     let liked = format!(
-        "likes l JOIN videos v ON v.id = l.video_id WHERE l.account_id = :reader AND l.value = 1 AND {VISIBLE}"
+        "likes l JOIN videos v ON v.id = l.video_id WHERE l.channel_id = :actor AND l.value = 1 AND {VISIBLE}"
     );
     let found = transaction
         .query_row(
@@ -153,12 +158,12 @@ fn liked_card(
                 "SELECT {}, (SELECT count(*) FROM {liked}), \
                  (SELECT l.video_id FROM {liked} ORDER BY l.created_at DESC, v.id LIMIT 1), \
                  (SELECT max(l.created_at) FROM {liked}), \
-                 EXISTS (SELECT 1 FROM likes WHERE account_id = :reader AND value = 1 AND video_id = :containing) \
-                 FROM channels o WHERE o.account_id = :reader",
+                 EXISTS (SELECT 1 FROM likes WHERE channel_id = :actor AND value = 1 AND video_id = :containing) \
+                 FROM channels o WHERE o.id = :actor",
                 channels::card_columns("o")
             ),
             named_params! {
-                ":reader": reader.id(), ":admin": reader.admin,
+                ":reader": reader.id(), ":actor": reader.actor(), ":admin": reader.admin,
                 ":containing": containing.map(VideoId::to_i64)
             },
             |row| {
@@ -178,18 +183,18 @@ fn liked_card(
     Ok(found)
 }
 
-/// The Watch later row of `account`, made now if `make` and it has none yet.
+/// The Watch later row of `channel`, made now if `make` and it has none yet.
 fn watch_later(
     transaction: &Transaction<'_>,
-    account: AccountId,
+    channel: ChannelId,
     now: i64,
     make: bool,
 ) -> Result<Option<i64>, StoreError> {
     let find = |transaction: &Transaction<'_>| {
         transaction
             .query_row(
-                "SELECT id FROM playlists WHERE account_id = ?1 AND kind = 'watch_later'",
-                [account.to_i64()],
+                "SELECT id FROM playlists WHERE channel_id = ?1 AND kind = 'watch_later'",
+                [channel.to_i64()],
                 |row| row.get::<_, i64>(0),
             )
             .optional()
@@ -201,47 +206,50 @@ fn watch_later(
         return Ok(None);
     }
     transaction.execute(
-        "INSERT INTO playlists (account_id, kind, title, created_at, updated_at) \
+        "INSERT INTO playlists (channel_id, kind, title, created_at, updated_at) \
          VALUES (?1, 'watch_later', '', ?2, ?2)",
-        params![account.to_i64(), now],
+        params![channel.to_i64(), now],
     )?;
     Ok(find(transaction)?)
 }
 
-/// The row of `list` if it is a playlist or the Watch later list of `account`; Watch later is
-/// made now if `make` and it has none yet.
+/// The row of `list` if it is a playlist of a channel `reader` speaks as, or the Watch later list
+/// of the channel they act as; Watch later is made now if `make` and it has none yet.
 fn owned(
     transaction: &Transaction<'_>,
-    account: AccountId,
+    reader: Reader,
     list: List,
     now: i64,
     make: bool,
 ) -> Result<Option<i64>, StoreError> {
-    match list {
-        List::WatchLater => watch_later(transaction, account, now, make),
-        List::Liked => Ok(None),
-        List::Playlist(id) => Ok(transaction
+    match (list, reader.channel) {
+        (List::WatchLater, Some(channel)) => watch_later(transaction, channel, now, make),
+        (List::WatchLater, None) | (List::Liked, _) => Ok(None),
+        (List::Playlist(id), _) => Ok(transaction
             .query_row(
-                "SELECT id FROM playlists WHERE id = ?1 AND account_id = ?2 AND kind = 'playlist'",
-                params![id.to_i64(), account.to_i64()],
+                &format!(
+                    "SELECT id FROM playlists WHERE id = :id AND kind = 'playlist' \
+                     AND channel_id IN {SPEAKS_AS}"
+                ),
+                named_params! {":id": id.to_i64(), ":reader": reader.id()},
                 |row| row.get(0),
             )
             .optional()?),
     }
 }
 
-/// The empty Watch later list of `account`, before anything was put in it.
+/// The empty Watch later list of `channel`, before anything was put in it.
 fn empty_watch_later(
     transaction: &Transaction<'_>,
-    account: AccountId,
+    channel: ChannelId,
 ) -> Result<Option<PlaylistCard>, StoreError> {
     let found = transaction
         .query_row(
             &format!(
-                "SELECT {} FROM channels o WHERE o.account_id = ?1",
+                "SELECT {} FROM channels o WHERE o.id = ?1",
                 channels::card_columns("o")
             ),
-            [account.to_i64()],
+            [channel.to_i64()],
             |row| channel_card(row, 0),
         )
         .optional()?;
@@ -298,34 +306,35 @@ fn append(
 }
 
 impl Store {
-    /// The lists of `reader`: Watch later, liked videos, then their playlists, the most recently
-    /// changed first; each telling whether it holds `containing`. Someone signed out has none.
+    /// The lists of the channel `reader` acts as: Watch later, liked videos, then its playlists,
+    /// the most recently changed first; each telling whether it holds `containing`. Someone who
+    /// acts as no channel has none.
     pub fn lists_of(
         &self,
         reader: Reader,
         containing: Option<VideoId>,
     ) -> Result<Vec<PlaylistCard>, StoreError> {
-        let Some(account) = reader.account else {
+        let Some(channel) = reader.channel else {
             return Ok(Vec::new());
         };
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         let mut lists = Vec::new();
-        let later = match watch_later(&transaction, account, 0, false)? {
+        let later = match watch_later(&transaction, channel, 0, false)? {
             Some(id) => card_of(&transaction, id, reader, containing)?,
-            None => empty_watch_later(&transaction, account)?,
+            None => empty_watch_later(&transaction, channel)?,
         };
         lists.extend(later);
         lists.extend(liked_card(&transaction, reader, containing)?);
         {
             let mut statement = transaction.prepare_cached(&format!(
-                "SELECT {} FROM {FROM} WHERE p.account_id = :reader AND p.kind = 'playlist' \
+                "SELECT {} FROM {FROM} WHERE p.channel_id = :actor AND p.kind = 'playlist' \
                  ORDER BY p.updated_at DESC, p.id",
                 card_columns()
             ))?;
             let rows = statement.query_map(
                 named_params! {
-                    ":reader": reader.id(), ":admin": reader.admin,
+                    ":reader": reader.id(), ":actor": reader.actor(), ":admin": reader.admin,
                     ":containing": containing.map(VideoId::to_i64)
                 },
                 playlist_card,
@@ -361,20 +370,20 @@ impl Store {
         Ok(window.page(rows.collect::<Result<_, _>>()?))
     }
 
-    /// Make `playlist` for `owner`.
+    /// Make `playlist` for the channel `owner` acts as.
     pub fn create_playlist(
         &self,
         owner: Reader,
         playlist: &NewPlaylist<'_>,
     ) -> Result<Changed, StoreError> {
-        let Some(account) = owner.account else {
+        let Some(channel) = owner.channel else {
             return Ok(Changed::Missing);
         };
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         let made: i64 = transaction.query_row(
-            "SELECT count(*) FROM playlists WHERE account_id = ?1 AND kind = 'playlist'",
-            [account.to_i64()],
+            "SELECT count(*) FROM playlists WHERE channel_id = ?1 AND kind = 'playlist'",
+            [channel.to_i64()],
             |row| row.get(0),
         )?;
         if count(made) >= PLAYLIST_LIMIT {
@@ -382,11 +391,11 @@ impl Store {
         }
         let id = playlist.id.to_i64();
         transaction.execute(
-            "INSERT INTO playlists (id, account_id, kind, title, visibility, created_at, updated_at) \
+            "INSERT INTO playlists (id, channel_id, kind, title, visibility, created_at, updated_at) \
              VALUES (?1, ?2, 'playlist', ?3, ?4, ?5, ?5)",
             params![
                 id,
-                account.to_i64(),
+                channel.to_i64(),
                 playlist.title,
                 playlist.visibility.as_str(),
                 playlist.now
@@ -402,7 +411,7 @@ impl Store {
         Ok(made.map_or(Changed::Missing, Changed::Done))
     }
 
-    /// Change the playlist `id` of `owner`.
+    /// Change the playlist `id` of a channel `owner` speaks as.
     pub fn update_playlist(
         &self,
         id: PlaylistId,
@@ -413,17 +422,17 @@ impl Store {
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         let changed = transaction.execute(
-            "UPDATE playlists SET title = COALESCE(?3, title), description = COALESCE(?4, description), \
-             visibility = COALESCE(?5, visibility), updated_at = ?6 \
-             WHERE id = ?1 AND account_id = ?2 AND kind = 'playlist'",
-            params![
-                id.to_i64(),
-                owner.id(),
-                edit.title,
-                edit.description,
-                edit.visibility.map(Visibility::as_str),
-                now
-            ],
+            &format!(
+                "UPDATE playlists SET title = COALESCE(:title, title), \
+                 description = COALESCE(:description, description), \
+                 visibility = COALESCE(:visibility, visibility), updated_at = :now \
+                 WHERE id = :id AND kind = 'playlist' AND channel_id IN {SPEAKS_AS}"
+            ),
+            named_params! {
+                ":id": id.to_i64(), ":reader": owner.id(), ":title": edit.title,
+                ":description": edit.description,
+                ":visibility": edit.visibility.map(Visibility::as_str), ":now": now
+            },
         )?;
         if changed == 0 {
             return Ok(Changed::Missing);
@@ -433,16 +442,19 @@ impl Store {
         Ok(card.map_or(Changed::Missing, Changed::Done))
     }
 
-    /// Delete the playlist `id` of `account`; whether it was theirs.
+    /// Delete the playlist `id` of a channel `account` speaks as; whether it was one.
     pub fn delete_playlist(&self, id: PlaylistId, account: AccountId) -> Result<bool, StoreError> {
         let deleted = self.connection().execute(
-            "DELETE FROM playlists WHERE id = ?1 AND account_id = ?2 AND kind = 'playlist'",
-            params![id.to_i64(), account.to_i64()],
+            &format!(
+                "DELETE FROM playlists WHERE id = :id AND kind = 'playlist' \
+                 AND channel_id IN {SPEAKS_AS}"
+            ),
+            named_params! {":id": id.to_i64(), ":reader": account.to_i64()},
         )?;
         Ok(deleted > 0)
     }
 
-    /// Put `video` last in the `list` of `owner`.
+    /// Put `video` last in `list`, a list of `owner`'s (see [`owned`]).
     pub fn add_to_list(
         &self,
         owner: Reader,
@@ -453,12 +465,9 @@ impl Store {
         if list == List::Liked {
             return Ok(Changed::Fixed);
         }
-        let Some(account) = owner.account else {
-            return Ok(Changed::Missing);
-        };
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
-        let Some(id) = owned(&transaction, account, list, now, true)? else {
+        let Some(id) = owned(&transaction, owner, list, now, true)? else {
             return Ok(Changed::Missing);
         };
         if let Some(refused) = append(&transaction, id, owner, video, now)? {
@@ -469,7 +478,7 @@ impl Store {
         Ok(card.map_or(Changed::Missing, Changed::Done))
     }
 
-    /// Take `video` out of the `list` of `owner`.
+    /// Take `video` out of `list`, a list of `owner`'s (see [`owned`]).
     pub fn remove_from_list(
         &self,
         owner: Reader,
@@ -480,12 +489,9 @@ impl Store {
         if list == List::Liked {
             return Ok(Changed::Fixed);
         }
-        let Some(account) = owner.account else {
-            return Ok(Changed::Missing);
-        };
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
-        let Some(id) = owned(&transaction, account, list, now, false)? else {
+        let Some(id) = owned(&transaction, owner, list, now, false)? else {
             return Ok(Changed::Missing);
         };
         let removed = transaction.execute(
@@ -503,8 +509,8 @@ impl Store {
         Ok(card.map_or(Changed::Missing, Changed::Done))
     }
 
-    /// Move `video` to `position` (counted from 0, past the end meaning last) in the `list` of
-    /// `owner`.
+    /// Move `video` to `position` (counted from 0, past the end meaning last) in `list`, a list of
+    /// `owner`'s (see [`owned`]).
     pub fn move_in_list(
         &self,
         owner: Reader,
@@ -516,12 +522,9 @@ impl Store {
         if list == List::Liked {
             return Ok(Changed::Fixed);
         }
-        let Some(account) = owner.account else {
-            return Ok(Changed::Missing);
-        };
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
-        let Some(id) = owned(&transaction, account, list, now, false)? else {
+        let Some(id) = owned(&transaction, owner, list, now, false)? else {
             return Ok(Changed::Missing);
         };
         let mut order: Vec<i64> = {
@@ -555,8 +558,9 @@ impl Store {
         Ok(card.map_or(Changed::Missing, Changed::Done))
     }
 
-    /// The page of `list` as `reader` sees it, if they may: Watch later and liked videos are the
-    /// reader's own; a playlist shows to all unless it is private.
+    /// The page of `list` as `reader` sees it, if they may: Watch later and liked videos are
+    /// those of the channel the reader acts as; a playlist shows to all unless it is private, and
+    /// then to those who speak as its channel.
     pub fn list_page(
         &self,
         list: List,
@@ -565,16 +569,15 @@ impl Store {
     ) -> Result<Option<ListPage>, StoreError> {
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
-        let viewer = reader.id();
-        let (heading, description, row, editable) = match (list, reader.account) {
+        let (heading, description, row, editable) = match (list, reader.channel) {
             (List::Liked, Some(_)) => (
                 liked_card(&transaction, reader, None)?,
                 String::new(),
                 None,
                 false,
             ),
-            (List::WatchLater, Some(account)) => {
-                match watch_later(&transaction, account, 0, false)? {
+            (List::WatchLater, Some(channel)) => {
+                match watch_later(&transaction, channel, 0, false)? {
                     Some(id) => (
                         card_of(&transaction, id, reader, None)?,
                         String::new(),
@@ -582,7 +585,7 @@ impl Store {
                         true,
                     ),
                     None => (
-                        empty_watch_later(&transaction, account)?,
+                        empty_watch_later(&transaction, channel)?,
                         String::new(),
                         None,
                         true,
@@ -590,22 +593,25 @@ impl Store {
                 }
             }
             (List::Playlist(id), _) => {
-                let found: Option<(String, i64, Named<Visibility>)> = transaction
+                let found: Option<(String, bool, Named<Visibility>)> = transaction
                     .query_row(
-                        "SELECT description, account_id, visibility FROM playlists WHERE id = ?1 AND kind = 'playlist'",
-                        [id.to_i64()],
+                        &format!(
+                            "SELECT description, channel_id IN {SPEAKS_AS}, visibility FROM playlists \
+                             WHERE id = :id AND kind = 'playlist'"
+                        ),
+                        named_params! {":id": id.to_i64(), ":reader": reader.id()},
                         |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
                     )
                     .optional()?;
                 match found {
-                    Some((description, owner, Named(visibility)))
-                        if visibility != Visibility::Private || viewer == Some(owner) =>
+                    Some((description, speaks, Named(visibility)))
+                        if visibility != Visibility::Private || speaks =>
                     {
                         (
                             card_of(&transaction, id.to_i64(), reader, None)?,
                             description,
                             Some(id.to_i64()),
-                            viewer == Some(owner),
+                            speaks,
                         )
                     }
                     _ => (None, String::new(), None, false),
@@ -622,10 +628,10 @@ impl Store {
                     format!(
                         "SELECT {CARD_COLUMNS} FROM likes l JOIN videos v ON v.id = l.video_id \
                          JOIN channels c ON c.id = v.channel_id \
-                         WHERE l.account_id = :key AND l.value = 1 AND {VISIBLE} \
+                         WHERE l.channel_id = :key AND l.value = 1 AND {VISIBLE} \
                          ORDER BY l.created_at DESC, v.id LIMIT :limit OFFSET :offset"
                     ),
-                    viewer,
+                    reader.actor(),
                 ),
                 (_, Some(id)) => (
                     format!(
@@ -643,7 +649,7 @@ impl Store {
                     statement
                         .query_map(
                             named_params! {
-                                ":key": key, ":reader": viewer, ":admin": reader.admin,
+                                ":key": key, ":reader": reader.id(), ":admin": reader.admin,
                                 ":limit": window.probe(), ":offset": window.skip()
                             },
                             card,
@@ -669,7 +675,9 @@ mod tests {
 
     use super::*;
     use crate::studio::VideoEdit;
-    use crate::testing::{ADA, BOB, BOB_CHANNEL, NEWER, PRIVATE, PUBLIC, UNLISTED, with_videos};
+    use crate::testing::{
+        ADA, BOB, BOB_CHANNEL, NEWER, PRIVATE, PUBLIC, UNLISTED, ada, bob, with_videos,
+    };
 
     const ALL: Window = Window {
         offset: 0,
@@ -683,7 +691,7 @@ mod tests {
     #[test]
     fn watch_later_is_made_when_first_used_and_kept_in_order() {
         let store = with_videos();
-        let bob = Reader::of(BOB);
+        let bob = bob();
         let lists = store.lists_of(bob, Some(PUBLIC)).unwrap();
         let kinds: Vec<List> = lists.iter().map(|l| l.list).collect();
         assert_eq!(kinds, [List::WatchLater, List::Liked]);
@@ -724,7 +732,7 @@ mod tests {
         assert!(lists[0].contains && lists[0].videos == 2);
         assert_eq!(
             store
-                .list_page(List::WatchLater, Reader::of(ADA), ALL)
+                .list_page(List::WatchLater, ada(), ALL)
                 .unwrap()
                 .unwrap()
                 .card
@@ -743,7 +751,7 @@ mod tests {
     fn a_private_playlist_shows_to_its_owner_only() {
         let store = with_videos();
         let id = PlaylistId::from_bits(5);
-        let (ada, bob) = (Reader::of(ADA), Reader::of(BOB));
+        let (ada, bob) = (ada(), bob());
         let made = store
             .create_playlist(
                 bob,
@@ -792,7 +800,7 @@ mod tests {
     #[test]
     fn a_list_counts_what_its_reader_may_see() {
         let store = with_videos();
-        let bob = Reader::of(BOB);
+        let bob = bob();
         let id = PlaylistId::from_bits(5);
         let new = NewPlaylist {
             id,
@@ -824,10 +832,7 @@ mod tests {
             .channel_playlists(BOB_CHANNEL, Reader::ANYONE, ALL)
             .unwrap();
         assert_eq!(shelf.items[0].videos, 1);
-        let as_ada = store
-            .list_page(list, Reader::of(ADA), ALL)
-            .unwrap()
-            .unwrap();
+        let as_ada = store.list_page(list, ada(), ALL).unwrap().unwrap();
         assert_eq!(
             ids(&as_ada),
             [NEWER, PUBLIC],
@@ -855,7 +860,7 @@ mod tests {
     #[test]
     fn liked_videos_follow_ratings() {
         let store = with_videos();
-        let bob = Reader::of(BOB);
+        let bob = bob();
         store.rate(bob, PUBLIC, Rating::Like, 10).unwrap();
         store.rate(bob, NEWER, Rating::Like, 11).unwrap();
         store.rate(bob, UNLISTED, Rating::Dislike, 12).unwrap();

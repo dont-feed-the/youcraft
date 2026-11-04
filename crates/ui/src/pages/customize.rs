@@ -1,14 +1,13 @@
-//! The studio's Customization tab, `/studio/customize`: how the caller's channel shows itself,
-//! its photo, name and description, which every signed-in account changes on its own channel.
-//! The handle stays, so no link to the channel ever breaks.
+//! The studio's Customization tab, `/studio/customize`: how a channel shows itself, its photo,
+//! name and description, which its owners change. The handle stays, so no link to the channel
+//! ever breaks.
 
 use leptos::prelude::*;
 use leptos_meta::Title;
-use youcraft_api::commands::channel::{self, ChannelPage, NAME_LIMIT};
+use youcraft_api::commands::channel::{self, ChannelPage, NAME_LIMIT, Which};
 use youcraft_api::commands::profile::{self, Customization, DESCRIPTION_LIMIT, Profile};
-use youcraft_api::commands::site::Nothing;
 use youcraft_api::records::ChannelCard;
-use youcraft_api::{ApiError, routes};
+use youcraft_api::routes;
 
 use crate::account::SignedIn;
 use crate::act::{Scope, act};
@@ -19,31 +18,16 @@ use crate::components::avatar::{Face, Size};
 use crate::lang::tr;
 use crate::notice::Notices;
 use crate::pages::not_found::Trouble;
-use crate::pages::studio::{StudioTab, StudioTabs};
+use crate::pages::studio::{StudioFrame, StudioTab};
 
 /// The Customization tab.
 #[component]
 pub fn Customize() -> impl IntoView {
-    let me = SignedIn::resource();
     view! {
         <Title text=titled(tr("Customization"))/>
         <main class="studio">
-            <StudioTabs current=StudioTab::Customization/>
-            <Suspense fallback=|| ()>
-                {
-                    // the forms hang on the handle alone, so that refreshing the masthead after a
-                    // change leaves them, and what they say, as they are
-                    let handle = Memo::new(move |_| match me {
-                        Some(me) => me.get().map(|me| me.map(|me| me.channel.handle)),
-                        None => Some(None),
-                    });
-                    move || match handle.get() {
-                        Some(Some(handle)) => view! { <Loaded handle/> }.into_any(),
-                        Some(None) => view! { <Trouble error=ApiError::SignInRequired/> }.into_any(),
-                        None => ().into_any(),
-                    }
-                }
-            </Suspense>
+            <StudioFrame current=StudioTab::Customization
+                body=|_, membership| view! { <Loaded handle=membership.channel.handle/> }.into_any()/>
         </main>
     }
 }
@@ -90,9 +74,11 @@ fn Forms(page: ChannelPage) -> impl IntoView {
             notices.say(tr("Saved.").to_owned());
         }
     };
+    let channel = page.card.id;
     let save = move |event: leptos::ev::SubmitEvent| {
         event.prevent_default();
         let change = Customization {
+            channel,
             name: Some(name.get_untracked()),
             description: Some(description.get_untracked()),
         };
@@ -116,15 +102,16 @@ fn Forms(page: ChannelPage) -> impl IntoView {
             leptos::task::spawn_local(async move {
                 let image = crate::transfer::base64_of(&file, profile::PHOTO_BYTES).await;
                 scope.within(move || match image {
-                    Ok(image) => {
-                        act::<profile::SetPhoto>(profile::NewPhoto { image }, move |sent| {
+                    Ok(image) => act::<profile::SetPhoto>(
+                        profile::NewPhoto { channel, image },
+                        move |sent| {
                             busy.set(false);
                             if let Ok(profile) = sent {
                                 shown(profile);
                                 saved();
                             }
-                        })
-                    }
+                        },
+                    ),
                     Err(error) => {
                         busy.set(false);
                         Notices::say_here(crate::notice::describe(&error));
@@ -137,7 +124,7 @@ fn Forms(page: ChannelPage) -> impl IntoView {
     };
     let remove = move |_| {
         busy.set(true);
-        act::<profile::RemovePhoto>(Nothing {}, move |answer| {
+        act::<profile::RemovePhoto>(Which { channel }, move |answer| {
             busy.set(false);
             if let Ok(profile) = answer {
                 shown(profile);
@@ -182,5 +169,34 @@ fn Forms(page: ChannelPage) -> impl IntoView {
                 <button class="pill accent" type="submit" disabled=move || busy.get()>{tr("Save")}</button>
             </div>
         </form>
+        <DeleteSection channel/>
+    }
+}
+
+/// The way to delete the channel, with all that is its own, for good.
+#[component]
+fn DeleteSection(channel: youcraft_api::ChannelId) -> impl IntoView {
+    let delete = move |_| {
+        #[cfg(feature = "hydrate")]
+        if crate::transfer::confirm(tr(
+            "Delete this channel, with its videos, comments and playlists, for good?",
+        )) {
+            act::<channel::Delete>(Which { channel }, |answer| {
+                if answer.is_ok() {
+                    browser::go(routes::ACCOUNT_CHANNELS);
+                }
+            });
+        }
+        #[cfg(not(feature = "hydrate"))]
+        let _ = channel;
+    };
+    view! {
+        <section class="settings-section">
+            <h2>{tr("Delete channel")}</h2>
+            <p class="settings-hint">{tr("Its videos, comments and playlists go with it, for good.")}</p>
+            <div class="choices">
+                <button class="pill danger" type="button" on:click=delete>{tr("Delete channel")}</button>
+            </div>
+        </section>
     }
 }

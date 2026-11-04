@@ -203,3 +203,27 @@
 	This isn't available.	Esto no está disponible.
 	This is larger than YouCraft accepts.	Esto supera lo que YouCraft acepta.
 	This conflicts with what is already there.	Esto entra en conflicto con algo que ya existe.
+	Accept	Aceptar
+	Channel name	Nombre del canal
+	Create a channel	Crear un canal
+	Create a channel first.	Primero crea un canal.
+	Decline	Rechazar
+	Delete channel	Eliminar canal
+	Delete this channel, with its videos, comments and playlists, for good?	¿Eliminar este canal para siempre, con sus vídeos, comentarios y listas de reproducción?
+	Editor	Editor
+	Invite someone	Invitar a alguien
+	Its videos, comments and playlists go with it, for good.	Sus vídeos, comentarios y listas de reproducción se eliminan con él para siempre.
+	Leave	Abandonar
+	Leave this channel?	¿Abandonar este canal?
+	Manager	Gestor
+	Members	Miembros
+	Owner	Propietario
+	Permissions	Permisos
+	Switch channel	Cambiar de canal
+	Switch to this channel	Cambiar a este canal
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	La persona invitada inicia sesión con esta dirección para decir sí o no en el plazo de una semana. Los propietarios eligen a los miembros; los gestores también actúan como el canal; los editores suben y modifican sus vídeos; los espectadores ven su estudio.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Lo que haces en YouCraft lo haces como uno de tus canales: es el canal el que comenta, da me gusta, se suscribe y guarda listas de reproducción. Varias personas pueden gestionar un mismo canal.
+	You act as this channel	Actúas como este canal
+	Your channels	Tus canales
+	{channel} invites you to join as {role}.	{channel} te invita a unirte como {role}.
+@plural	{n} invitation|{n} invitations	{n} invitación|{n} invitaciones

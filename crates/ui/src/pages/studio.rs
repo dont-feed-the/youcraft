@@ -1,7 +1,10 @@
-//! The studio, open to every signed-in account, in two tabs: Content, a channel's videos in every
-//! state, page after page, each with its visibility, processing, date and views, and a form to
-//! change or delete it, with the way to upload for those who may publish (the others read that
-//! publishing is by invitation); and Customization, in `customize`.
+//! The studio of a channel, open to its members, with the way to the studio of their other
+//! channels, in three tabs: Content, the channel's videos in every state, page after page, each
+//! with its visibility, processing, date and views, and a form to change or delete it, with the
+//! way to upload for those who may publish there (those the site does not let publish read that
+//! publishing is by invitation); and, for its owners, Customization, in `customize`, and
+//! Permissions, in `permissions`. The page's address names the channel; without one, it is the
+//! channel the person acts as.
 //!
 //! While a video is uploading or being processed, the studio asks the site again every few
 //! seconds how far it has come, so its progress moves without a reload; each row keeps its own
@@ -9,15 +12,19 @@
 
 use leptos::prelude::*;
 use leptos_meta::Title;
-use youcraft_api::commands::{feed, studio, video};
+use leptos_router::hooks::use_query_map;
+use youcraft_api::commands::account::{Me, Membership};
+use youcraft_api::commands::channel::Shelf;
+use youcraft_api::commands::{studio, video};
 use youcraft_api::records::{Failure, Processing, StudioPage, StudioVideo, Visibility};
-use youcraft_api::{Grant, VideoId, routes};
+use youcraft_api::{ApiError, ChannelId, ChannelRole, Grant, VideoId, routes};
 
 use crate::account::SignedIn;
 use crate::act::act;
 use crate::app::titled;
 use crate::browser::{self, Timer};
 use crate::call::call;
+use crate::components::avatar::{Face, Size};
 use crate::components::more::{Pages, ShowMore};
 use crate::components::visibility::{VisibilityChoice, visibility_name};
 use crate::icons::{Glyph, Icon};
@@ -69,44 +76,56 @@ fn failure_text(reason: Failure) -> &'static str {
 /// The studio page.
 #[component]
 pub fn Studio() -> impl IntoView {
-    let me = SignedIn::resource();
-    let first = Resource::new(|| (), |()| call::<studio::Videos>(feed::Page::default()));
     view! {
         <Title text=titled(tr("Channel content"))/>
         <main class="studio">
-            <StudioTabs current=StudioTab::Content/>
-            <Suspense fallback=|| ()>
-                {move || Suspend::new(async move {
-                    let me = match me {
-                        Some(me) => me.await,
-                        None => None,
-                    };
-                    // what the account may do, raised to what the site grants every account
-                    let publishes = me.as_ref().is_some_and(|me| !me.blocked && me.role >= Grant::Creator);
-                    let invited = me.as_ref().is_some_and(|me| !me.blocked);
-                    match first.await {
-                        Ok(page) => {
-                            let held = !page.videos.is_empty();
-                            view! {
-                                {publishes.then(|| view! {
-                                    <div class="studio-actions">
-                                        <a class="pill accent" href=routes::UPLOAD>
-                                            <Glyph icon=Icon::Upload/>
-                                            <span>{tr("Upload video")}</span>
-                                        </a>
-                                    </div>
-                                })}
-                                {(!publishes && invited).then(|| view! {
-                                    <p class="empty">{tr("Publishing on YouCraft is by invitation.")}</p>
-                                })}
-                                {(publishes || held).then(|| view! { <Table first=page/> })}
-                            }.into_any()
-                        }
-                        Err(error) => view! { <Trouble error/> }.into_any(),
-                    }
-                })}
-            </Suspense>
+            <StudioFrame current=StudioTab::Content body=|me, membership| view! { <Content me membership/> }.into_any()/>
         </main>
+    }
+}
+
+/// The Content tab of `membership`'s channel, for `me`.
+#[component]
+fn Content(me: Me, membership: Membership) -> impl IntoView {
+    let channel = membership.channel.id;
+    let first = Resource::new(
+        move || channel,
+        |channel| {
+            call::<studio::Videos>(Shelf {
+                channel,
+                after: None,
+            })
+        },
+    );
+    // what the account may do, raised to what the site grants every account, and in the channel
+    let publishes =
+        !me.blocked && me.role >= Grant::Creator && membership.role.allows(ChannelRole::Editor);
+    let invited = !me.blocked && me.role < Grant::Creator;
+    view! {
+        <Suspense fallback=|| ()>
+            {move || Suspend::new(async move {
+                match first.await {
+                    Ok(page) => {
+                        let held = !page.videos.is_empty();
+                        view! {
+                            {publishes.then(|| view! {
+                                <div class="studio-actions">
+                                    <a class="pill accent" href=routes::in_studio(routes::UPLOAD, channel)>
+                                        <Glyph icon=Icon::Upload/>
+                                        <span>{tr("Upload video")}</span>
+                                    </a>
+                                </div>
+                            })}
+                            {invited.then(|| view! {
+                                <p class="empty">{tr("Publishing on YouCraft is by invitation.")}</p>
+                            })}
+                            {(publishes || held).then(|| view! { <Table channel first=page/> })}
+                        }.into_any()
+                    }
+                    Err(error) => view! { <Trouble error/> }.into_any(),
+                }
+            })}
+        </Suspense>
     }
 }
 
@@ -117,23 +136,149 @@ pub enum StudioTab {
     Content,
     /// The channel's name, description and photo.
     Customization,
+    /// Who runs the channel.
+    Permissions,
 }
 
-/// The studio's heading and its tabs, `current` open.
-#[component]
-pub fn StudioTabs(current: StudioTab) -> impl IntoView {
-    let tab = move |to: StudioTab, href: &'static str, label: &'static str| {
-        let here = current == to;
-        view! {
-            <a class="tab" class:current=here href=href aria-current=here.then_some("page")>{label}</a>
+impl StudioTab {
+    /// Every tab, in the order the studio shows them.
+    const ALL: [StudioTab; 3] = [
+        StudioTab::Content,
+        StudioTab::Customization,
+        StudioTab::Permissions,
+    ];
+
+    /// The least role in a channel that opens the tab.
+    fn opens_to(self) -> ChannelRole {
+        match self {
+            StudioTab::Content => ChannelRole::Viewer,
+            StudioTab::Customization | StudioTab::Permissions => ChannelRole::Owner,
         }
+    }
+
+    /// Its page.
+    fn page(self) -> &'static str {
+        match self {
+            StudioTab::Content => routes::STUDIO,
+            StudioTab::Customization => routes::STUDIO_CUSTOMIZE,
+            StudioTab::Permissions => routes::STUDIO_PERMISSIONS,
+        }
+    }
+
+    /// Its name.
+    fn label(self) -> &'static str {
+        match self {
+            StudioTab::Content => tr("Content"),
+            StudioTab::Customization => tr("Customization"),
+            StudioTab::Permissions => tr("Permissions"),
+        }
+    }
+}
+
+/// The name of a role in a channel.
+pub fn channel_role_name(role: ChannelRole) -> &'static str {
+    match role {
+        ChannelRole::Viewer => tr("Viewer"),
+        ChannelRole::Editor => tr("Editor"),
+        ChannelRole::Manager => tr("Manager"),
+        ChannelRole::Owner => tr("Owner"),
+    }
+}
+
+/// The channel the page of the studio is about, among those `me` belongs to: the one its address
+/// names, else the one they act as, else the first they belong to.
+fn studied(me: &Me, named: Option<ChannelId>) -> Option<Membership> {
+    let wanted = named.or(me.channel.as_ref().map(|card| card.id));
+    me.channels
+        .iter()
+        .find(|membership| Some(membership.channel.id) == wanted)
+        .or_else(|| named.is_none().then(|| me.channels.first()).flatten())
+        .cloned()
+}
+
+/// A page of the studio: who is signed in, the channel it is about with the way to another, its
+/// tabs with `current` open, and `body` for that channel when the person's role there opens it.
+#[component]
+pub fn StudioFrame(current: StudioTab, body: fn(Me, Membership) -> AnyView) -> impl IntoView {
+    let me = SignedIn::resource();
+    let query = use_query_map();
+    let named = move || {
+        query.with(|query| {
+            query
+                .get(routes::STUDIO_CHANNEL)
+                .and_then(|channel| channel.parse::<ChannelId>().ok())
+        })
     };
     view! {
+        <Suspense fallback=|| ()>
+            {move || Suspend::new(async move {
+                let me = match me {
+                    Some(me) => me.await,
+                    None => None,
+                };
+                let Some(me) = me else {
+                    return view! { <Trouble error=ApiError::SignInRequired/> }.into_any();
+                };
+                let Some(membership) = studied(&me, named()) else {
+                    let error = if me.channels.is_empty() { ApiError::ChannelRequired } else { ApiError::NotFound };
+                    return view! { <Trouble error/> }.into_any();
+                };
+                let opens = membership.role.allows(current.opens_to());
+                view! {
+                    <StudioTabs current membership=membership.clone() channels=me.channels.clone()/>
+                    {if opens {
+                        body(me, membership)
+                    } else {
+                        view! { <Trouble error=ApiError::Forbidden/> }.into_any()
+                    }}
+                }.into_any()
+            })}
+        </Suspense>
+    }
+}
+
+/// The studio's heading, the channel it is about among `channels` with the way to another, and
+/// the tabs `membership` opens, `current` open.
+#[component]
+fn StudioTabs(
+    current: StudioTab,
+    membership: Membership,
+    channels: Vec<Membership>,
+) -> impl IntoView {
+    let channel = membership.channel.id;
+    let options = channels.into_iter().map(|other| {
+        let id = other.channel.id;
+        view! { <option value=id.to_string() selected=id == channel>{other.channel.name}</option> }
+    });
+    let go = move |event: leptos::ev::Event| {
+        if let Ok(other) = event_target_value(&event).parse::<ChannelId>() {
+            let page = if current.opens_to() == ChannelRole::Viewer {
+                current
+            } else {
+                StudioTab::Content
+            };
+            browser::go(&routes::in_studio(page.page(), other));
+        }
+    };
+    let tabs = StudioTab::ALL
+        .into_iter()
+        .filter(|tab| membership.role.allows(tab.opens_to()))
+        .map(|tab| {
+            let here = current == tab;
+            view! {
+                <a class="tab" class:current=here href=routes::in_studio(tab.page(), channel)
+                    aria-current=here.then_some("page")>{tab.label()}</a>
+            }
+        })
+        .collect_view();
+    view! {
         <h1 class="studio-title">{tr("YouCraft Studio")}</h1>
-        <nav class="tabs" aria-label=tr("YouCraft Studio")>
-            {tab(StudioTab::Content, routes::STUDIO, tr("Content"))}
-            {tab(StudioTab::Customization, routes::STUDIO_CUSTOMIZE, tr("Customization"))}
-        </nav>
+        <div class="studio-channel">
+            <span class="avatar" aria-hidden="true"><Face channel=membership.channel.clone() size=Size::Regular/></span>
+            <select class="field" aria-label=tr("Channel") on:change=go>{options.collect_view()}</select>
+            <span class="settings-hint">{channel_role_name(membership.role)}</span>
+        </div>
+        <nav class="tabs" aria-label=tr("YouCraft Studio")>{tabs}</nav>
     }
 }
 
@@ -143,11 +288,11 @@ pub fn StudioTabs(current: StudioTab) -> impl IntoView {
 /// The rows are keyed by video, so a video read again moves what its row shows without
 /// rebuilding it, and an open form stays open.
 #[component]
-fn Table(first: StudioPage) -> impl IntoView {
+fn Table(channel: ChannelId, first: StudioPage) -> impl IntoView {
     let pages: Pages<StudioVideo> = Pages::new(first.videos, first.next);
     let more = Callback::new(move |()| {
         pages.read_next::<studio::Videos>(
-            |after| feed::Page { after },
+            move |after| Shelf { channel, after },
             |page| (page.videos, page.next),
         );
     });

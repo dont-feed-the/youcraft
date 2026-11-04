@@ -203,3 +203,27 @@
 	This isn't available.	Это недоступно.
 	This is larger than YouCraft accepts.	Это больше, чем принимает YouCraft.
 	This conflicts with what is already there.	Это противоречит тому, что уже существует.
+	Accept	Принять
+	Channel name	Название канала
+	Create a channel	Создать канал
+	Create a channel first.	Сначала создайте канал.
+	Decline	Отклонить
+	Delete channel	Удалить канал
+	Delete this channel, with its videos, comments and playlists, for good?	Удалить этот канал навсегда вместе с его видео, комментариями и плейлистами?
+	Editor	Редактор
+	Invite someone	Пригласить человека
+	Its videos, comments and playlists go with it, for good.	Его видео, комментарии и плейлисты будут удалены вместе с ним навсегда.
+	Leave	Покинуть
+	Leave this channel?	Покинуть этот канал?
+	Manager	Менеджер
+	Members	Участники
+	Owner	Владелец
+	Permissions	Права доступа
+	Switch channel	Сменить канал
+	Switch to this channel	Перейти на этот канал
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Приглашённый входит с этим адресом, чтобы в течение недели принять или отклонить приглашение. Владельцы выбирают участников; менеджеры также действуют от имени канала; редакторы загружают и изменяют его видео; зрители видят его студию.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Всё, что вы делаете на YouCraft, вы делаете от имени одного из своих каналов: он комментирует, отмечает «Нравится», подписывается и хранит плейлисты. Одним каналом могут управлять несколько человек.
+	You act as this channel	Вы действуете от имени этого канала
+	Your channels	Ваши каналы
+	{channel} invites you to join as {role}.	{channel} приглашает вас присоединиться. Роль: {role}.
+@plural	{n} invitation|{n} invitations	{n} приглашение|{n} приглашения|{n} приглашений

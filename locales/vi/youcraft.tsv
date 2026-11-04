@@ -203,3 +203,27 @@
 	This isn't available.	Mục này không có sẵn.
 	This is larger than YouCraft accepts.	Nội dung này lớn hơn mức YouCraft chấp nhận.
 	This conflicts with what is already there.	Điều này xung đột với nội dung đã có.
+	Accept	Chấp nhận
+	Channel name	Tên kênh
+	Create a channel	Tạo kênh
+	Create a channel first.	Hãy tạo kênh trước.
+	Decline	Từ chối
+	Delete channel	Xóa kênh
+	Delete this channel, with its videos, comments and playlists, for good?	Xóa vĩnh viễn kênh này cùng các video, bình luận và danh sách phát của kênh?
+	Editor	Biên tập viên
+	Invite someone	Mời ai đó
+	Its videos, comments and playlists go with it, for good.	Các video, bình luận và danh sách phát của kênh sẽ bị xóa vĩnh viễn cùng với kênh.
+	Leave	Rời khỏi
+	Leave this channel?	Rời khỏi kênh này?
+	Manager	Người quản lý
+	Members	Thành viên
+	Owner	Chủ sở hữu
+	Permissions	Quyền
+	Switch channel	Chuyển kênh
+	Switch to this channel	Chuyển sang kênh này
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Người được mời đăng nhập bằng địa chỉ này để đồng ý hoặc từ chối trong vòng một tuần. Chủ sở hữu chọn thành viên; người quản lý còn hành động với tư cách kênh; biên tập viên tải lên và thay đổi video của kênh; người xem xem được studio của kênh.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Mọi việc bạn làm trên YouCraft, bạn làm với tư cách một trong các kênh của mình: kênh đó bình luận, thích, đăng ký và lưu danh sách phát. Nhiều người có thể cùng điều hành một kênh.
+	You act as this channel	Bạn đang hành động với tư cách kênh này
+	Your channels	Các kênh của bạn
+	{channel} invites you to join as {role}.	{channel} mời bạn tham gia với vai trò {role}.
+@plural	{n} invitation|{n} invitations	{n} lời mời

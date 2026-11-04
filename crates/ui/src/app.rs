@@ -22,6 +22,7 @@ use crate::pages::embed::Embed;
 use crate::pages::history::History;
 use crate::pages::home::Home;
 use crate::pages::not_found::NotFound;
+use crate::pages::permissions::Permissions;
 use crate::pages::playlist::Playlist;
 use crate::pages::playlists::Playlists;
 use crate::pages::results::Results;
@@ -59,6 +60,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/signin/failed") view=SignInFailed/>
                     <Route path=path!("/studio") view=Studio/>
                     <Route path=path!("/studio/customize") view=Customize/>
+                    <Route path=path!("/studio/permissions") view=Permissions/>
                     <Route path=path!("/admin") view=Admin/>
                     <Route path=path!("/upload") view=UploadPage/>
                     <Route path=path!("/results") view=Results/>

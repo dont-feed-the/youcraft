@@ -56,7 +56,7 @@ refreshed by a timer, since the site itself never reaches the network); register
 ```sh
 youcraft admin you@example.com           # an administrator, from their first sign-in
 youcraft invite friend@example.com       # a creator, who may publish
-youcraft block @handle                   # or unblock
+youcraft block <account>                 # or unblock; admin.accounts lists them
 youcraft run <command id> '<json>'       # any command, as the operator
 ```
 

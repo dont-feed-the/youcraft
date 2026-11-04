@@ -46,3 +46,5 @@
   .studio-row > :nth-child(3), .studio-row > :nth-child(4) { display: none; }
   .studio-thumb { inline-size: 96px; }
 }
+.studio-channel { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.studio-channel select.field { inline-size: auto; max-inline-size: 100%; }

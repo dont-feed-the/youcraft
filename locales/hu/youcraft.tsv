@@ -203,3 +203,27 @@
 	This isn't available.	Ez nem érhető el.
 	This is larger than YouCraft accepts.	Ez nagyobb, mint amit a YouCraft elfogad.
 	This conflicts with what is already there.	Ez ütközik valamivel, ami már létezik.
+	Accept	Elfogadás
+	Channel name	Csatorna neve
+	Create a channel	Csatorna létrehozása
+	Create a channel first.	Előbb hozzon létre egy csatornát.
+	Decline	Elutasítás
+	Delete channel	Csatorna törlése
+	Delete this channel, with its videos, comments and playlists, for good?	Véglegesen törli ezt a csatornát a videóival, hozzászólásaival és lejátszási listáival együtt?
+	Editor	Szerkesztő
+	Invite someone	Valaki meghívása
+	Its videos, comments and playlists go with it, for good.	Videói, hozzászólásai és lejátszási listái vele együtt véglegesen törlődnek.
+	Leave	Kilépés
+	Leave this channel?	Kilép ebből a csatornából?
+	Manager	Menedzser
+	Members	Tagok
+	Owner	Tulajdonos
+	Permissions	Engedélyek
+	Switch channel	Csatornaváltás
+	Switch to this channel	Váltás erre a csatornára
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	A meghívott ezzel a címmel jelentkezik be, hogy egy héten belül igent vagy nemet mondjon. A tulajdonosok választják ki a tagokat; a menedzserek a csatorna nevében is eljárnak; a szerkesztők feltöltik és módosítják a videóit; a nézők látják a stúdióját.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Amit a YouCraften tesz, azt az egyik csatornájaként teszi: a csatorna hozzászól, kedvel, feliratkozik és lejátszási listákat tart fenn. Egy csatornát többen is vezethetnek.
+	You act as this channel	Ön ennek a csatornának a nevében jár el
+	Your channels	Az Ön csatornái
+	{channel} invites you to join as {role}.	{channel} meghívja Önt, hogy csatlakozzon {role} szerepkörben.
+@plural	{n} invitation|{n} invitations	{n} meghívás|{n} meghívás

@@ -203,3 +203,27 @@
 	This isn't available.	این در دسترس نیست.
 	This is larger than YouCraft accepts.	این بزرگ‌تر از حدی است که YouCraft می‌پذیرد.
 	This conflicts with what is already there.	این با چیزی که از قبل وجود دارد تداخل دارد.
+	Accept	پذیرفتن
+	Channel name	نام کانال
+	Create a channel	ساختن کانال
+	Create a channel first.	ابتدا یک کانال بسازید.
+	Decline	رد کردن
+	Delete channel	حذف کانال
+	Delete this channel, with its videos, comments and playlists, for good?	این کانال همراه با ویدیوها، نظرها و فهرست‌های پخش آن برای همیشه حذف شود؟
+	Editor	ویرایشگر
+	Invite someone	دعوت از یک نفر
+	Its videos, comments and playlists go with it, for good.	ویدیوها، نظرها و فهرست‌های پخش آن نیز همراهش برای همیشه حذف می‌شوند.
+	Leave	ترک کردن
+	Leave this channel?	این کانال را ترک می‌کنید؟
+	Manager	مدیر
+	Members	اعضا
+	Owner	مالک
+	Permissions	مجوزها
+	Switch channel	تغییر کانال
+	Switch to this channel	تغییر به این کانال
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	دعوت‌شده با این نشانی وارد می‌شود تا ظرف یک هفته بپذیرد یا نپذیرد. مالکان اعضا را انتخاب می‌کنند؛ مدیران به نام کانال نیز عمل می‌کنند؛ ویرایشگران ویدیوهای آن را بارگذاری و ویرایش می‌کنند؛ بینندگان استودیوی آن را می‌بینند.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	هر کاری که در YouCraft انجام می‌دهید، به نام یکی از کانال‌هایتان انجام می‌دهید: کانال است که نظر می‌دهد، می‌پسندد، مشترک می‌شود و فهرست‌های پخش را نگه می‌دارد. چند نفر می‌توانند یک کانال را اداره کنند.
+	You act as this channel	شما به نام این کانال عمل می‌کنید
+	Your channels	کانال‌های شما
+	{channel} invites you to join as {role}.	{channel} شما را دعوت می‌کند که به‌عنوان {role} بپیوندید.
+@plural	{n} invitation|{n} invitations	{n} دعوت|{n} دعوت

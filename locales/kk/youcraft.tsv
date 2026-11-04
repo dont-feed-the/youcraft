@@ -203,3 +203,27 @@
 	This isn't available.	Бұл қолжетімсіз.
 	This is larger than YouCraft accepts.	Бұл YouCraft қабылдайтыннан үлкен.
 	This conflicts with what is already there.	Бұл бұрыннан бар нәрсеге қайшы келеді.
+	Accept	Қабылдау
+	Channel name	Арна атауы
+	Create a channel	Арна жасау
+	Create a channel first.	Алдымен арна жасаңыз.
+	Decline	Қабылдамау
+	Delete channel	Арнаны жою
+	Delete this channel, with its videos, comments and playlists, for good?	Бұл арнаны бейнелерімен, пікірлерімен және ойнату тізімдерімен бірге біржола жою керек пе?
+	Editor	Редактор
+	Invite someone	Біреуді шақыру
+	Its videos, comments and playlists go with it, for good.	Оның бейнелері, пікірлері және ойнату тізімдері онымен бірге біржола жойылады.
+	Leave	Шығу
+	Leave this channel?	Бұл арнадан шығу керек пе?
+	Manager	Менеджер
+	Members	Мүшелер
+	Owner	Иесі
+	Permissions	Рұқсаттар
+	Switch channel	Арнаны ауыстыру
+	Switch to this channel	Осы арнаға ауысу
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Шақырылған адам осы мекенжаймен кіріп, бір апта ішінде келісетінін не бас тартатынын білдіреді. Иелері мүшелерді таңдайды; менеджерлер арна атынан да әрекет етеді; редакторлар оның бейнелерін жүктеп, өзгертеді; көрермендер оның студиясын көреді.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	YouCraft-та не істесеңіз де, оны арналарыңыздың бірі ретінде істейсіз: пікір жазатын, ұнататын, жазылатын және ойнату тізімдерін сақтайтын — арна. Бір арнаны бірнеше адам жүргізе алады.
+	You act as this channel	Сіз осы арна атынан әрекет етесіз
+	Your channels	Сіздің арналарыңыз
+	{channel} invites you to join as {role}.	{channel} сізді {role} ретінде қосылуға шақырады.
+@plural	{n} invitation|{n} invitations	{n} шақыру|{n} шақыру

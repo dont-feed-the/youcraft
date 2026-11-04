@@ -1,6 +1,7 @@
-//! Comments: read by anyone who may see the video, written by people signed in where the
-//! creator lets them, edited by their author, deleted by their author, the video's creator or
-//! an administrator. The store checks each of these as it reads or writes.
+//! Comments: read by anyone who may see the video, written as the channel its writer acts as
+//! where the video's channel lets them, edited by whoever speaks as its channel, deleted by them,
+//! by whoever speaks as the video's channel, or by an administrator. The store checks each of
+//! these as it reads or writes.
 
 use youcraft_api::commands::comment::{
     BODY_LIMIT, Comment, Comments, Create, Delete, Edit, Like, Liked, Liking, List, NewComment,
@@ -65,7 +66,7 @@ impl Handle<Replies> for Site {
 
 impl Handle<Create> for Site {
     async fn handle(&self, caller: Caller, new: NewComment) -> Result<Comment, ApiError> {
-        caller.signed_in()?;
+        caller.acting()?;
         let body = text("body", &new.body, BODY_LIMIT)?;
         let (author, id, now) = (caller.reader(), CommentId::from_bits(random_bits()), now());
         let posted = self
@@ -109,7 +110,7 @@ impl Handle<Delete> for Site {
 
 impl Handle<Like> for Site {
     async fn handle(&self, caller: Caller, liking: Liking) -> Result<Liked, ApiError> {
-        caller.signed_in()?;
+        caller.acting()?;
         if liking.liked {
             caller.may_act()?;
         }

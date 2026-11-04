@@ -1,4 +1,5 @@
-//! What the studio shows and changes: a channel's videos in every state, edits, deletion.
+//! What the studio shows and changes: a channel's videos in every state, edits, deletion. Who may
+//! is the channel's members' to say (see `members`).
 
 use rusqlite::{OptionalExtension, Row, params};
 use youcraft_api::records::{Failure, Processing, StudioVideo, Visibility};
@@ -158,6 +159,7 @@ mod tests {
         let upload = NewUpload {
             video,
             channel,
+            account: AccountId::from_bits(1),
             title: "Waves",
             description: "",
             visibility: Visibility::Public,
@@ -173,7 +175,7 @@ mod tests {
     fn an_upload_becomes_a_job_then_a_published_video() {
         let (store, owner, channel) = store();
         let video = upload(&store, channel, 7, 200);
-        assert_eq!(store.owner_of(video).unwrap(), Some(owner));
+        assert_eq!(store.receiving(video).unwrap().unwrap().owner, owner);
         assert!(
             !store.finish_upload(video, 210).unwrap(),
             "bytes are missing"

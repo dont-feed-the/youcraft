@@ -17,14 +17,13 @@ use axum::http::{HeaderMap, HeaderValue, StatusCode};
 use axum::response::{IntoResponse, Response};
 use serde::Deserialize;
 use tokio::io::AsyncReadExt;
-use youcraft_api::commands::channel::NAME_LIMIT;
 use youcraft_api::{AccountId, ChannelId, routes};
 use youcraft_store::accounts::GooglePerson;
 
 use crate::config::Google;
 use crate::cookies;
 use crate::google::{self, KEYS_LIMIT};
-use crate::handlers::input::cleaned;
+use crate::handlers::channel::{display_name, handles};
 use crate::rate::Spender;
 use crate::secrets::{new_secret, random_bits};
 use crate::site::{Site, now};
@@ -151,32 +150,6 @@ pub fn redirect_uri(origin: &str) -> String {
     format!("{origin}{}", routes::SIGNED_IN_WITH_GOOGLE)
 }
 
-/// A name as a channel shows it: one line of text, at most [`NAME_LIMIT`] characters.
-fn display_name(name: &str) -> String {
-    cleaned(name, NAME_LIMIT)
-}
-
-/// The handles to offer a new channel named `name`, best first: its letters and digits in
-/// lower case (3 to 30 of them, `user` when there are too few), then that with four random
-/// digits, then random ones.
-fn handles(name: &str) -> impl Iterator<Item = String> {
-    let letters: String = name
-        .chars()
-        .filter(|c| c.is_alphanumeric())
-        .flat_map(char::to_lowercase)
-        .take(26)
-        .collect();
-    let base = if letters.chars().count() < 3 {
-        "user".to_owned()
-    } else {
-        letters
-    };
-    let numbered = base.clone();
-    std::iter::once(base)
-        .chain((0..20).map(move |_| format!("{numbered}{:04}", random_bits() % 10_000)))
-        .chain((0..20).map(|_| format!("user{}", random_bits() % 1_000_000_000_000)))
-}
-
 /// A `303 See Other` to `address`, setting `cookies`.
 fn redirect(address: &str, cookies: impl Iterator<Item = HeaderValue>) -> Response {
     let mut response = StatusCode::SEE_OTHER.into_response();
@@ -196,27 +169,4 @@ fn failed(why: &str, next: Option<&str>) -> Response {
         address.push_str(&format!("&next={}", routes::encode_component(next)));
     }
     redirect(&address, cookies::remove(cookies::SIGN_IN).into_iter())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn handles_come_from_the_name_in_any_script() {
-        assert_eq!(handles("Ada Lovelace").next().unwrap(), "adalovelace");
-        assert_eq!(handles("Мария Кюри").next().unwrap(), "мариякюри");
-        assert_eq!(handles("A.").next().unwrap(), "user");
-        let mut offered = handles("Ada");
-        assert_eq!(offered.next().unwrap(), "ada");
-        assert!(offered.next().unwrap().starts_with("ada"));
-        assert_eq!(handles("x".repeat(99).as_str()).next().unwrap().len(), 26);
-    }
-
-    #[test]
-    fn names_lose_control_characters_and_length() {
-        assert_eq!(display_name(" Ada\u{0}\n "), "Ada");
-        assert_eq!(display_name("\u{202E}Ada"), "Ada");
-        assert_eq!(display_name(&"é".repeat(300)).chars().count(), NAME_LIMIT);
-    }
 }

@@ -1,4 +1,5 @@
-//! Commands about the signed-in person's watch history, which only they see.
+//! Commands about the watch history of the channel the caller acts as, which only those who speak
+//! as it see.
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};

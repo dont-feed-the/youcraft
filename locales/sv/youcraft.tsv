@@ -203,3 +203,27 @@
 	This isn't available.	Det här är inte tillgängligt.
 	This is larger than YouCraft accepts.	Det här är större än vad YouCraft tar emot.
 	This conflicts with what is already there.	Det här krockar med något som redan finns.
+	Accept	Acceptera
+	Channel name	Kanalnamn
+	Create a channel	Skapa en kanal
+	Create a channel first.	Skapa en kanal först.
+	Decline	Avböj
+	Delete channel	Radera kanalen
+	Delete this channel, with its videos, comments and playlists, for good?	Vill du radera den här kanalen, med dess videor, kommentarer och spellistor, för gott?
+	Editor	Redigerare
+	Invite someone	Bjud in någon
+	Its videos, comments and playlists go with it, for good.	Dess videor, kommentarer och spellistor försvinner med den, för gott.
+	Leave	Lämna
+	Leave this channel?	Vill du lämna den här kanalen?
+	Manager	Förvaltare
+	Members	Medlemmar
+	Owner	Ägare
+	Permissions	Behörigheter
+	Switch channel	Byt kanal
+	Switch to this channel	Byt till den här kanalen
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Den inbjudna loggar in med den här adressen för att tacka ja eller nej inom en vecka. Ägare väljer medlemmarna; förvaltare agerar också som kanalen; redigerare laddar upp och ändrar dess videor; tittare ser dess studio.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Det du gör på YouCraft gör du som en av dina kanaler: den kommenterar, gillar, prenumererar och sparar spellistor. Flera personer kan driva en kanal.
+	You act as this channel	Du agerar som den här kanalen
+	Your channels	Dina kanaler
+	{channel} invites you to join as {role}.	{channel} bjuder in dig att gå med. Roll: {role}.
+@plural	{n} invitation|{n} invitations	{n} inbjudan|{n} inbjudningar

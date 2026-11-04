@@ -33,16 +33,29 @@ pub const SIGN_IN_UNAVAILABLE: &str = "unavailable";
 pub const SIGN_IN_REFUSED: &str = "refused";
 /// Why a sign-in failed: this browser's address tried too often of late.
 pub const SIGN_IN_TOO_OFTEN: &str = "too_often";
-/// The signed-in person's settings: appearance, language, personal tokens.
+/// The signed-in person's settings: their channels and invitations, appearance, language,
+/// personal tokens.
 pub const ACCOUNT: &str = "/account";
-/// The studio's Content tab: the channel's videos, and uploading.
+/// Where the settings list the person's channels, and make new ones.
+pub const ACCOUNT_CHANNELS: &str = "/account#channels";
+/// The studio's Content tab: the channel's videos, and uploading. Each tab of the studio, and the
+/// upload page, is about the channel [`in_studio`] names, or else the one the person acts as.
 pub const STUDIO: &str = "/studio";
 /// The studio's Customization tab: the channel's name, description and photo.
 pub const STUDIO_CUSTOMIZE: &str = "/studio/customize";
+/// The studio's Permissions tab: who runs the channel, as what, and whom it invited.
+pub const STUDIO_PERMISSIONS: &str = "/studio/permissions";
+/// The query parameter that names the channel of a page of the studio.
+pub const STUDIO_CHANNEL: &str = "c";
 /// The administrators' page: invitations and accounts.
 pub const ADMIN: &str = "/admin";
 /// The page that uploads a video.
 pub const UPLOAD: &str = "/upload";
+
+/// The page `page` of the studio (or the upload page), about `channel`.
+pub fn in_studio(page: &str, channel: ChannelId) -> String {
+    format!("{page}?{STUDIO_CHANNEL}={channel}")
+}
 
 /// The address that signs the person in, then brings them back to `next` (a path of this site).
 pub fn sign_in(next: &str) -> String {
@@ -213,6 +226,10 @@ mod tests {
         assert_eq!(command("feed.home"), "/api/v1/feed.home");
         assert_eq!(playlist(List::WatchLater), "/playlist?list=WL");
         assert_eq!(channel_tab("ada", "videos"), "/@ada/videos");
+        assert_eq!(
+            in_studio(STUDIO_PERMISSIONS, ChannelId::from_bits(0)),
+            "/studio/permissions?c=AAAAAAAAAAA"
+        );
         assert_eq!(sign_in("/watch?v=x"), "/signin?next=%2Fwatch%3Fv%3Dx");
         assert_eq!(
             thumbnail(video, 336),

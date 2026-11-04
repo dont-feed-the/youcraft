@@ -19,6 +19,9 @@ pub enum ApiError {
     /// The caller's role does not allow it, or the caller is blocked.
     #[error("not allowed")]
     Forbidden,
+    /// The caller acts as no channel, since they manage none: they make one first.
+    #[error("act as a channel first")]
+    ChannelRequired,
     /// No such video, channel, comment or playlist, or the caller may not see it.
     #[error("not found")]
     NotFound,
@@ -113,7 +116,7 @@ impl ApiError {
     pub fn status(&self) -> u16 {
         match self {
             ApiError::SignInRequired => 401,
-            ApiError::Forbidden => 403,
+            ApiError::Forbidden | ApiError::ChannelRequired => 403,
             ApiError::NotFound | ApiError::UnknownCommand => 404,
             ApiError::Invalid { .. } => 422,
             ApiError::TooLarge { .. } => 413,

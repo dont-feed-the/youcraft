@@ -19,6 +19,7 @@ const MIGRATIONS: &[&str] = &[
     include_str!("migrations/0003-indexes-and-hidden-comments.sql"),
     include_str!("migrations/0004-storage.sql"),
     include_str!("migrations/0005-photos.sql"),
+    include_str!("migrations/0006-shared-channels.sql"),
 ];
 
 /// Bring the schema of `connection` up to date, with foreign keys off while it runs; the caller
@@ -128,10 +129,28 @@ mod tests {
             })
             .unwrap();
         assert_eq!(replies, 1);
-        let likes: i64 = connection
-            .query_row("SELECT count(*) FROM likes", [], |row| row.get(0))
+        let likes: (i64, i64) = connection
+            .query_row("SELECT count(*), max(channel_id) FROM likes", [], |row| {
+                Ok((row.get(0)?, row.get(1)?))
+            })
             .unwrap();
-        assert_eq!(likes, 1);
+        assert_eq!(likes, (1, 20), "Bob's like is his channel's");
+        let owners: Vec<(i64, i64)> = connection
+            .prepare("SELECT channel_id, account_id FROM members WHERE role = 'owner' ORDER BY 1")
+            .unwrap()
+            .query_map([], |row| Ok((row.get(0)?, row.get(1)?)))
+            .unwrap()
+            .map(Result::unwrap)
+            .collect();
+        assert_eq!(owners, [(10, 1), (20, 2), (30, 3)], "each owns its channel");
+        let author: (i64, i64) = connection
+            .query_row(
+                "SELECT channel_id, account_id FROM comments WHERE id = 2",
+                [],
+                |row| Ok((row.get(0)?, row.get(1)?)),
+            )
+            .unwrap();
+        assert_eq!(author, (10, 1), "Ada wrote her reply as her channel");
     }
 
     /// The queries that read by a reference, and the deletes that follow one, find their rows
@@ -154,8 +173,32 @@ mod tests {
                 "comment_likes_of_comment",
             ),
             (
-                "SELECT 1 FROM blocks WHERE account_id = 1",
-                "blocks_of_account",
+                "SELECT 1 FROM blocks WHERE blocked_id = 1",
+                "blocks_of_blocked",
+            ),
+            (
+                "SELECT 1 FROM comments WHERE channel_id = 1",
+                "comments_of_channel",
+            ),
+            (
+                "SELECT channel_id FROM members WHERE account_id = 1 ORDER BY created_at",
+                "channels_of_account",
+            ),
+            (
+                "SELECT 1 FROM sessions WHERE channel_id = 1",
+                "sessions_of_channel",
+            ),
+            (
+                "SELECT 1 FROM tokens WHERE channel_id = 1",
+                "tokens_of_channel",
+            ),
+            (
+                "SELECT 1 FROM uploads WHERE account_id = 1",
+                "uploads_of_account",
+            ),
+            (
+                "SELECT 1 FROM channel_invitations WHERE email = 'a' AND expires_at > 1",
+                "channel_invitations_of_email",
             ),
             (
                 "SELECT 1 FROM playlist_items WHERE video_id = 1",

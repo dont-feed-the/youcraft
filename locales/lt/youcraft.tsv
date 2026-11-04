@@ -203,3 +203,27 @@
 	This isn't available.	Tai nepasiekiama.
 	This is larger than YouCraft accepts.	Tai daugiau, nei priima YouCraft.
 	This conflicts with what is already there.	Tai prieštarauja tam, kas jau yra.
+	Accept	Priimti
+	Channel name	Kanalo pavadinimas
+	Create a channel	Sukurti kanalą
+	Create a channel first.	Pirmiausia sukurkite kanalą.
+	Decline	Atmesti
+	Delete channel	Ištrinti kanalą
+	Delete this channel, with its videos, comments and playlists, for good?	Ištrinti šį kanalą visam laikui kartu su jo vaizdo įrašais, komentarais ir grojaraščiais?
+	Editor	Redaktorius
+	Invite someone	Pakviesti ką nors
+	Its videos, comments and playlists go with it, for good.	Kartu su juo visam laikui ištrinami jo vaizdo įrašai, komentarai ir grojaraščiai.
+	Leave	Palikti
+	Leave this channel?	Palikti šį kanalą?
+	Manager	Vadybininkas
+	Members	Nariai
+	Owner	Savininkas
+	Permissions	Leidimai
+	Switch channel	Perjungti kanalą
+	Switch to this channel	Perjungti į šį kanalą
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Pakviestas asmuo prisijungia šiuo adresu ir per savaitę sutinka arba atsisako. Savininkai renkasi narius; vadybininkai taip pat veikia kanalo vardu; redaktoriai įkelia ir keičia jo vaizdo įrašus; žiūrovai mato jo studiją.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Ką darote „YouCraft“, darote kaip vienas iš savo kanalų: kanalas komentuoja, žymi „Patinka“, prenumeruoja ir tvarko grojaraščius. Vieną kanalą gali valdyti keli žmonės.
+	You act as this channel	Veikiate šio kanalo vardu
+	Your channels	Jūsų kanalai
+	{channel} invites you to join as {role}.	{channel} kviečia jus prisijungti kaip {role}.
+@plural	{n} invitation|{n} invitations	{n} kvietimas|{n} kvietimai|{n} kvietimų

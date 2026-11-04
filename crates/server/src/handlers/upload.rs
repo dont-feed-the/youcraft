@@ -4,7 +4,7 @@
 use youcraft_api::commands::upload::{Create, Finish, NewUpload, Status};
 use youcraft_api::commands::video::Which;
 use youcraft_api::records::{Processing, Upload};
-use youcraft_api::{ApiError, Rule, VideoId, routes};
+use youcraft_api::{ApiError, ChannelRole, Rule, VideoId, routes};
 use youcraft_store::uploads::{Claim, NewUpload as NewRow};
 
 use crate::dispatch::Handle;
@@ -23,10 +23,9 @@ impl Handle<Create> for Site {
         if input.size == 0 {
             return Err(ApiError::invalid("size", Rule::Required));
         }
-        let channel = self
-            .db(move |store| store.channel_of(account))
-            .await?
-            .ok_or(ApiError::Forbidden)?;
+        let channel = input.channel;
+        self.allow_in_channel(caller, channel, ChannelRole::Editor)
+            .await?;
         let allowance = storage::allowance(self).await?;
         let video = VideoId::from_bits(crate::secrets::random_bits());
         let visibility = input.visibility;
@@ -36,6 +35,7 @@ impl Handle<Create> for Site {
                 let row = NewRow {
                     video,
                     channel,
+                    account,
                     title: &title,
                     description: &description,
                     visibility,

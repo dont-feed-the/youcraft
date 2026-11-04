@@ -203,3 +203,27 @@
 	This isn't available.	Това не е налично.
 	This is larger than YouCraft accepts.	Това е повече, отколкото YouCraft приема.
 	This conflicts with what is already there.	Това противоречи на вече съществуващото.
+	Accept	Приемане
+	Channel name	Име на канала
+	Create a channel	Създаване на канал
+	Create a channel first.	Първо създайте канал.
+	Decline	Отказване
+	Delete channel	Изтриване на канала
+	Delete this channel, with its videos, comments and playlists, for good?	Да се изтрие ли завинаги този канал заедно с видеоклиповете, коментарите и плейлистите му?
+	Editor	Редактор
+	Invite someone	Поканване на човек
+	Its videos, comments and playlists go with it, for good.	Видеоклиповете, коментарите и плейлистите му се изтриват завинаги заедно с него.
+	Leave	Напускане
+	Leave this channel?	Да се напусне ли този канал?
+	Manager	Мениджър
+	Members	Членове
+	Owner	Собственик
+	Permissions	Разрешения
+	Switch channel	Смяна на канала
+	Switch to this channel	Превключване към този канал
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Поканеният влиза с този адрес, за да приеме или откаже в рамките на седмица. Собствениците избират членовете; мениджърите също действат от името на канала; редакторите качват и променят видеоклиповете му; зрителите виждат студиото му.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Каквото правите в YouCraft, го правите от името на един от каналите си: той коментира, харесва, абонира се и поддържа плейлисти. Няколко души могат да управляват един канал.
+	You act as this channel	Действате от името на този канал
+	Your channels	Вашите канали
+	{channel} invites you to join as {role}.	{channel} ви кани да се присъедините като {role}.
+@plural	{n} invitation|{n} invitations	{n} покана|{n} покани

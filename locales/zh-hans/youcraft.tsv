@@ -203,3 +203,27 @@
 	This isn't available.	此内容不可用。
 	This is larger than YouCraft accepts.	超出了 YouCraft 接受的大小。
 	This conflicts with what is already there.	与已有内容冲突。
+	Accept	接受
+	Channel name	频道名称
+	Create a channel	创建频道
+	Create a channel first.	请先创建一个频道。
+	Decline	拒绝
+	Delete channel	删除频道
+	Delete this channel, with its videos, comments and playlists, for good?	要永久删除此频道及其视频、评论和播放列表吗？
+	Editor	编辑者
+	Invite someone	邀请他人
+	Its videos, comments and playlists go with it, for good.	其视频、评论和播放列表将随之永久删除。
+	Leave	退出
+	Leave this channel?	要退出此频道吗？
+	Manager	管理者
+	Members	成员
+	Owner	所有者
+	Permissions	权限
+	Switch channel	切换频道
+	Switch to this channel	切换到此频道
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	对方需在一周内用此地址登录，接受或拒绝邀请。所有者选择成员；管理者还能以频道身份操作；编辑者上传和修改频道的视频；观众可查看频道的工作室。
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	你在 YouCraft 上的一切操作，都以你的某个频道的身份进行：由它发表评论、点赞、订阅和保存播放列表。一个频道可以由多人共同管理。
+	You act as this channel	你正以此频道身份操作
+	Your channels	你的频道
+	{channel} invites you to join as {role}.	{channel} 邀请你以{role}身份加入。
+@plural	{n} invitation|{n} invitations	{n} 条邀请

@@ -203,3 +203,27 @@
 	This isn't available.	Dit is niet beschikbaar.
 	This is larger than YouCraft accepts.	Dit is groter dan YouCraft accepteert.
 	This conflicts with what is already there.	Dit botst met iets wat al bestaat.
+	Accept	Accepteren
+	Channel name	Kanaalnaam
+	Create a channel	Kanaal maken
+	Create a channel first.	Maak eerst een kanaal.
+	Decline	Weigeren
+	Delete channel	Kanaal verwijderen
+	Delete this channel, with its videos, comments and playlists, for good?	Dit kanaal met zijn video's, reacties en afspeellijsten definitief verwijderen?
+	Editor	Redacteur
+	Invite someone	Iemand uitnodigen
+	Its videos, comments and playlists go with it, for good.	De video's, reacties en afspeellijsten ervan worden definitief mee verwijderd.
+	Leave	Verlaten
+	Leave this channel?	Dit kanaal verlaten?
+	Manager	Manager
+	Members	Leden
+	Owner	Eigenaar
+	Permissions	Rechten
+	Switch channel	Van kanaal wisselen
+	Switch to this channel	Overschakelen naar dit kanaal
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	De genodigde logt binnen een week in met dit adres om ja of nee te zeggen. Eigenaren kiezen de leden; managers treden ook op als het kanaal; redacteuren uploaden en wijzigen de video's; kijkers zien de studio.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Wat je op YouCraft doet, doe je als een van je kanalen: dat reageert, vindt video's leuk, abonneert zich en houdt afspeellijsten bij. Meerdere mensen kunnen één kanaal beheren.
+	You act as this channel	Je treedt op als dit kanaal
+	Your channels	Je kanalen
+	{channel} invites you to join as {role}.	{channel} nodigt je uit om lid te worden als {role}.
+@plural	{n} invitation|{n} invitations	{n} uitnodiging|{n} uitnodigingen

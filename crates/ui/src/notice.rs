@@ -18,6 +18,7 @@ pub fn describe(error: &ApiError) -> String {
     match error {
         ApiError::SignInRequired => tr("Sign in first.").to_owned(),
         ApiError::Forbidden => tr("This isn't open to your account.").to_owned(),
+        ApiError::ChannelRequired => tr("Create a channel first.").to_owned(),
         ApiError::NotFound | ApiError::UnknownCommand => tr("This isn't available.").to_owned(),
         // the one file a command carries, a channel's picture
         ApiError::Invalid {

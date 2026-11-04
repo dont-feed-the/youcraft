@@ -22,6 +22,8 @@ pub struct Config {
     pub google: Option<Google>,
     /// The least role of every account that is not blocked.
     pub signed_in_role: Grant,
+    /// The most channels one account belongs to, those it made and those it joined.
+    pub channels_per_account: usize,
     /// What uploads may take.
     pub uploads: UploadLimits,
     /// How often one caller may change the site.
@@ -96,6 +98,8 @@ impl Config {
     /// - `YOUCRAFT_LOG`: what to log, as `tracing`'s filters write it; `info` by default.
     /// - `YOUCRAFT_SIGNED_IN_ROLE`: the least role of every account that is not blocked,
     ///   `viewer` or `creator`; `viewer` by default, so that only those invited publish.
+    /// - `YOUCRAFT_CHANNELS_PER_ACCOUNT`: the most channels one account belongs to, those it
+    ///   made and those it joined; 10 by default.
     /// - `YOUCRAFT_UPLOAD_BYTES`: the largest file one may upload; 16 GiB by default.
     /// - `YOUCRAFT_STORAGE_BYTES`: the most bytes the site's videos may fill, originals,
     ///   renditions and uploads in progress together; no limit by default.
@@ -167,6 +171,8 @@ impl Config {
             origin,
             google,
             signed_in_role,
+            channels_per_account: usize::try_from(number("YOUCRAFT_CHANNELS_PER_ACCOUNT", 10)?)
+                .unwrap_or(usize::MAX),
             uploads: UploadLimits {
                 file_bytes,
                 storage_bytes: number("YOUCRAFT_STORAGE_BYTES", u64::MAX)?,
@@ -233,6 +239,7 @@ impl Config {
             origin: "https://youcraft.test".to_owned(),
             google: None,
             signed_in_role: Grant::Viewer,
+            channels_per_account: 3,
             uploads: UploadLimits {
                 file_bytes: 1 << 20,
                 storage_bytes: u64::MAX,

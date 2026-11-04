@@ -203,3 +203,27 @@
 	This isn't available.	এটি উপলভ্য নয়।
 	This is larger than YouCraft accepts.	এটি YouCraft যতটা গ্রহণ করে তার চেয়ে বড়।
 	This conflicts with what is already there.	এটি ইতিমধ্যে থাকা কিছুর সঙ্গে সাংঘর্ষিক।
+	Accept	গ্রহণ করুন
+	Channel name	চ্যানেলের নাম
+	Create a channel	একটি চ্যানেল তৈরি করুন
+	Create a channel first.	প্রথমে একটি চ্যানেল তৈরি করুন।
+	Decline	প্রত্যাখ্যান করুন
+	Delete channel	চ্যানেল মুছুন
+	Delete this channel, with its videos, comments and playlists, for good?	এই চ্যানেলটি এর ভিডিও, মন্তব্য ও প্লেলিস্ট সহ চিরতরে মুছে ফেলবেন?
+	Editor	সম্পাদক
+	Invite someone	কাউকে আমন্ত্রণ জানান
+	Its videos, comments and playlists go with it, for good.	এর ভিডিও, মন্তব্য ও প্লেলিস্টও এর সাথে চিরতরে মুছে যাবে।
+	Leave	ছেড়ে দিন
+	Leave this channel?	এই চ্যানেলটি ছেড়ে দেবেন?
+	Manager	ম্যানেজার
+	Members	সদস্য
+	Owner	মালিক
+	Permissions	অনুমতি
+	Switch channel	চ্যানেল বদলান
+	Switch to this channel	এই চ্যানেলে বদলে নিন
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	আমন্ত্রিত ব্যক্তি এক সপ্তাহের মধ্যে এই ঠিকানা দিয়ে সাইন ইন করে হ্যাঁ বা না জানাবেন। মালিকেরা সদস্য বেছে নেন; ম্যানেজাররা চ্যানেল হিসেবেও কাজ করেন; সম্পাদকেরা এর ভিডিও আপলোড ও পরিবর্তন করেন; দর্শকেরা এর স্টুডিও দেখতে পান।
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	YouCraft-এ আপনি যা করেন, তা আপনার কোনো একটি চ্যানেল হিসেবে করেন: চ্যানেলটিই মন্তব্য করে, পছন্দ করে, সাবস্ক্রাইব করে এবং প্লেলিস্ট রাখে। একাধিক ব্যক্তি একটি চ্যানেল চালাতে পারেন।
+	You act as this channel	আপনি এই চ্যানেল হিসেবে কাজ করছেন
+	Your channels	আপনার চ্যানেলগুলি
+	{channel} invites you to join as {role}.	{channel} আপনাকে {role} হিসেবে যোগ দিতে আমন্ত্রণ জানিয়েছে।
+@plural	{n} invitation|{n} invitations	{n}টি আমন্ত্রণ|{n}টি আমন্ত্রণ

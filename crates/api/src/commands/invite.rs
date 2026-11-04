@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::command::Command;
 use crate::commands::site::Nothing;
-use crate::records::ChannelCard;
+use crate::ids::AccountId;
 use crate::role::{Grant, Role};
 
 /// An invitation waiting for its person to sign in.
@@ -44,8 +44,10 @@ pub enum Invited {
     },
     /// The person already had an account, whose role is now at least the one invited.
     Applied {
-        /// Their channel.
-        channel: ChannelCard,
+        /// Their account.
+        account: AccountId,
+        /// Their name.
+        name: String,
     },
 }
 

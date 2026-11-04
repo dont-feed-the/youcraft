@@ -203,3 +203,27 @@
 	This isn't available.	See pole saadaval.
 	This is larger than YouCraft accepts.	See on suurem, kui YouCraft vastu võtab.
 	This conflicts with what is already there.	See on vastuolus juba olemasolevaga.
+	Accept	Nõustu
+	Channel name	Kanali nimi
+	Create a channel	Loo kanal
+	Create a channel first.	Loo kõigepealt kanal.
+	Decline	Keeldu
+	Delete channel	Kustuta kanal
+	Delete this channel, with its videos, comments and playlists, for good?	Kas kustutada see kanal koos selle videote, kommentaaride ja esitusloenditega jäädavalt?
+	Editor	Toimetaja
+	Invite someone	Kutsu kedagi
+	Its videos, comments and playlists go with it, for good.	Selle videod, kommentaarid ja esitusloendid kustutatakse koos sellega jäädavalt.
+	Leave	Lahku
+	Leave this channel?	Kas lahkuda sellest kanalist?
+	Manager	Haldur
+	Members	Liikmed
+	Owner	Omanik
+	Permissions	Õigused
+	Switch channel	Vaheta kanalit
+	Switch to this channel	Lülitu sellele kanalile
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	Kutsutu logib selle aadressiga sisse, et nädala jooksul nõustuda või keelduda. Omanikud valivad liikmed; haldurid tegutsevad ka kanali nimel; toimetajad laadivad üles ja muudavad selle videoid; vaatajad näevad selle stuudiot.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Mida sa YouCraftis teed, teed sa ühe oma kanalina: kanal kommenteerib, märgib meeldimisi, tellib ja peab esitusloendeid. Ühte kanalit võivad hallata mitu inimest.
+	You act as this channel	Tegutsed selle kanalina
+	Your channels	Sinu kanalid
+	{channel} invites you to join as {role}.	{channel} kutsub sind liituma rollis {role}.
+@plural	{n} invitation|{n} invitations	{n} kutse|{n} kutset

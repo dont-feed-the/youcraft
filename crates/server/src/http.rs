@@ -516,29 +516,31 @@ pub mod tests {
             .unwrap();
         let ada = sign_in(&routes, "ada").await;
         let bob = sign_in(&routes, "bob").await;
-        let block = |handle: &str, cookie: &str| {
+        let account_of = async |cookie: &str| {
+            let me = send(&routes, command_request("account.me", "{}", cookie))
+                .await
+                .2;
+            let me: serde_json::Value = serde_json::from_str(&me).unwrap();
+            me["account"].as_str().unwrap().to_owned()
+        };
+        let (ada_account, bob_account) = (account_of(&ada).await, account_of(&bob).await);
+        let block = |account: &str, cookie: &str| {
             command_request(
                 "admin.block",
-                &format!(r#"{{"handle": "{handle}", "blocked": true}}"#),
+                &format!(r#"{{"account": "{account}", "blocked": true}}"#),
                 cookie,
             )
         };
         assert_eq!(
-            send(&routes, block("@adalovelace", &bob)).await.0,
+            send(&routes, block(&ada_account, &bob)).await.0,
             StatusCode::FORBIDDEN
         );
         assert_eq!(
-            send(&routes, block("@adalovelace", &ada)).await.0,
+            send(&routes, block(&ada_account, &ada)).await.0,
             StatusCode::CONFLICT
         );
-        let me = send(&routes, command_request("account.me", "{}", &bob))
-            .await
-            .2;
-        let me: serde_json::Value = serde_json::from_str(&me).unwrap();
-        let bob_handle = me["channel"]["handle"].as_str().unwrap();
-        assert_ne!(bob_handle, "adalovelace", "Bob is called Ada Lovelace too");
         assert_eq!(
-            send(&routes, block(bob_handle, &ada)).await.0,
+            send(&routes, block(&bob_account, &ada)).await.0,
             StatusCode::OK
         );
         let (status, _, _) = send(
@@ -581,7 +583,7 @@ pub mod tests {
             );
         }
         let (_, bob_me) = answer(&routes, "account.me", json!({}), &bob).await;
-        let block = json!({ "handle": bob_me["channel"]["handle"], "blocked": true });
+        let block = json!({ "account": bob_me["account"], "blocked": true });
         assert_eq!(
             answer(&routes, "admin.block", block, &ada).await.0,
             StatusCode::OK
@@ -628,7 +630,7 @@ pub mod tests {
     }
 
     /// A public video of `channel`, ready to watch.
-    fn ready_video(site: &Site, channel: youcraft_api::ChannelId) -> youcraft_api::VideoId {
+    pub fn ready_video(site: &Site, channel: youcraft_api::ChannelId) -> youcraft_api::VideoId {
         use youcraft_api::records::Visibility;
         use youcraft_api::time::MediaDuration;
         use youcraft_store::videos::NewVideo;
@@ -680,11 +682,10 @@ pub mod tests {
                 .0,
             StatusCode::OK
         );
-        let upload = json!({ "title": "Mine", "size": 5 });
+        let upload = json!({ "channel": bob_me["channel"]["id"], "title": "Mine", "size": 5 });
         let (status, _) = answer(&routes, "upload.create", upload.clone(), &bob).await;
         assert_eq!(status, StatusCode::OK);
-        let handle = bob_me["channel"]["handle"].clone();
-        let block = json!({ "handle": handle, "blocked": true });
+        let block = json!({ "account": bob_me["account"], "blocked": true });
         assert_eq!(
             answer(&routes, "admin.block", block, &ada).await.0,
             StatusCode::OK
@@ -773,7 +774,9 @@ pub mod tests {
         let bob = sign_in(&routes, "bob").await;
         let (_, bob_me) = answer(&routes, "account.me", json!({}), &bob).await;
         let handle = bob_me["channel"]["handle"].as_str().unwrap().to_owned();
-        let change = json!({ "name": "  Bobby ", "description": "Waves, mostly." });
+        let channel = bob_me["channel"]["id"].clone();
+        let change =
+            json!({ "channel": channel, "name": "  Bobby ", "description": "Waves, mostly." });
         let (status, profile) = answer(&routes, "channel.update", change, &bob).await;
         assert_eq!(status, StatusCode::OK, "a viewer edits their own channel");
         assert_eq!(profile["card"]["name"], "Bobby");
@@ -783,22 +786,23 @@ pub mod tests {
             "the handle stays"
         );
         assert_eq!(profile["description"], "Waves, mostly.");
-        let too_long = json!({ "name": "x".repeat(51) });
+        let too_long = json!({ "channel": channel, "name": "x".repeat(51) });
         assert_eq!(
             answer(&routes, "channel.update", too_long, &bob).await.0,
             StatusCode::UNPROCESSABLE_ENTITY
         );
-        let garbage = json!({ "image": "not base64!" });
+        let garbage = json!({ "channel": channel, "image": "not base64!" });
         assert_eq!(
             answer(&routes, "channel.set_photo", garbage, &bob).await.0,
             StatusCode::UNPROCESSABLE_ENTITY
         );
-        let huge = json!({ "image": "A".repeat(PHOTO_BYTES / 3 * 4 + 8) });
+        let huge = json!({ "channel": channel, "image": "A".repeat(PHOTO_BYTES / 3 * 4 + 8) });
         assert_eq!(
             answer(&routes, "channel.set_photo", huge, &bob).await.0,
             StatusCode::PAYLOAD_TOO_LARGE
         );
-        let (status, removed) = answer(&routes, "channel.remove_photo", json!({}), &bob).await;
+        let which = json!({ "channel": channel });
+        let (status, removed) = answer(&routes, "channel.remove_photo", which, &bob).await;
         assert_eq!(status, StatusCode::OK);
         assert_eq!(removed["card"]["photo"], serde_json::Value::Null);
 
@@ -816,27 +820,29 @@ pub mod tests {
             "named after its handle"
         );
         let (_, found) = answer(&routes, "admin.accounts", json!({ "query": handle }), &ada).await;
-        assert_eq!(found["accounts"][0]["channel"]["handle"], handle.as_str());
+        assert_eq!(
+            found["accounts"][0]["channels"][0]["handle"],
+            handle.as_str()
+        );
         assert!(
             !found.to_string().contains("@example.com"),
             "no e-mail address in the list"
         );
-        let block = json!({ "handle": handle, "blocked": true });
+        let block = json!({ "account": bob_me["account"], "blocked": true });
         assert_eq!(
             answer(&routes, "admin.block", block, &ada).await.0,
             StatusCode::OK
         );
+        let back = json!({ "channel": channel, "name": "Back" });
         assert_eq!(
-            answer(&routes, "channel.update", json!({ "name": "Back" }), &bob)
-                .await
-                .0,
+            answer(&routes, "channel.update", back, &bob).await.0,
             StatusCode::FORBIDDEN,
             "a blocked account changes nothing"
         );
     }
 
     /// The JSON answer of `id` on `input`, sent with `cookie`, and its status.
-    async fn answer(
+    pub async fn answer(
         routes: &Router,
         id: &str,
         input: serde_json::Value,

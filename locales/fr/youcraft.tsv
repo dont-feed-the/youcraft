@@ -203,3 +203,27 @@
 	This isn't available.	Ce n'est pas disponible.
 	This is larger than YouCraft accepts.	C'est plus grand que ce que YouCraft accepte.
 	This conflicts with what is already there.	Cela entre en conflit avec ce qui existe déjà.
+	Accept	Accepter
+	Channel name	Nom de la chaîne
+	Create a channel	Créer une chaîne
+	Create a channel first.	Créez d'abord une chaîne.
+	Decline	Refuser
+	Delete channel	Supprimer la chaîne
+	Delete this channel, with its videos, comments and playlists, for good?	Supprimer définitivement cette chaîne, avec ses vidéos, ses commentaires et ses playlists ?
+	Editor	Éditeur
+	Invite someone	Inviter quelqu'un
+	Its videos, comments and playlists go with it, for good.	Ses vidéos, ses commentaires et ses playlists disparaissent avec elle, définitivement.
+	Leave	Quitter
+	Leave this channel?	Quitter cette chaîne ?
+	Manager	Gestionnaire
+	Members	Membres
+	Owner	Propriétaire
+	Permissions	Autorisations
+	Switch channel	Changer de chaîne
+	Switch to this channel	Passer à cette chaîne
+	They sign in with this address to say yes or no, within a week. Owners choose the members; managers also act as the channel; editors upload and change its videos; viewers see its studio.	La personne invitée se connecte avec cette adresse pour accepter ou refuser, sous une semaine. Les propriétaires choisissent les membres ; les gestionnaires agissent aussi en tant que chaîne ; les éditeurs mettent en ligne et modifient ses vidéos ; les spectateurs voient son studio.
+	What you do on YouCraft, you do as one of your channels: it comments, likes, subscribes and keeps playlists. Several people may run one channel.	Ce que vous faites sur YouCraft, vous le faites en tant que l'une de vos chaînes : c'est elle qui commente, aime, s'abonne et tient des playlists. Plusieurs personnes peuvent gérer une même chaîne.
+	You act as this channel	Vous agissez en tant que cette chaîne
+	Your channels	Vos chaînes
+	{channel} invites you to join as {role}.	{channel} vous invite à rejoindre la chaîne en tant que {role}.
+@plural	{n} invitation|{n} invitations	{n} invitation|{n} invitations
