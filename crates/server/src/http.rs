@@ -5,7 +5,7 @@
 //! chose one, else their browser's) and theme, the render time, a fresh nonce for the scripts,
 //! and the site bound to that caller for the commands the page runs while rendering.
 
-use std::sync::Arc;
+use std::sync::{Arc, LazyLock};
 
 use axum::Router;
 use axum::body::{Body, Bytes};
@@ -14,7 +14,7 @@ use axum::http::{HeaderMap, StatusCode, header};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, head, post};
 use leptos::prelude::*;
-use leptos_axum::LeptosRoutes;
+use leptos_axum::{AxumRouteListing, LeptosRoutes};
 use tower_http::services::{ServeDir, ServeFile};
 use youcraft_api::commands::account::Preferences;
 use youcraft_api::commands::profile::PHOTO_BYTES;
@@ -72,6 +72,16 @@ pub async fn serve(site: Arc<Site>, config: &Config) -> Result<(), String> {
     .map_err(|e| format!("serve: {e}"))
 }
 
+/// The pages of the app, listed once per process.
+///
+/// Leptos lists them by rendering the app with resource loading suspended, and that suspension is
+/// one flag for the whole process (leptos-rs/leptos#4773): a resource that first polls while any
+/// thread lists the pages waits forever, and its page with it. Listed here once, before any router
+/// exists and so before any page renders, the window never overlaps a rendering, however many
+/// sites a process opens, as the tests do in parallel.
+static PAGES: LazyLock<Vec<AxumRouteListing>> =
+    LazyLock::new(|| leptos_axum::generate_route_list(youcraft_ui::App));
+
 /// The routes of the site. Pages, commands and signing in run after the visitor is resolved
 /// ([`visitor::layer`]), and so do media, which only some may watch, and uploads; the bundle and
 /// icon are files that need no visitor.
@@ -86,7 +96,7 @@ fn router(site: Arc<Site>, config: &Config) -> Router {
         options: options.clone(),
         site: Arc::clone(&site),
     };
-    let pages = leptos_axum::generate_route_list(youcraft_ui::App);
+    let pages = PAGES.clone();
     let context = {
         let site = Arc::clone(&site);
         move || provide_request_context(&site)
