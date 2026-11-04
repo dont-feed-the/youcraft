@@ -35,7 +35,6 @@ pub fn App() -> impl IntoView {
     let guide = GuideOpen(RwSignal::new(true));
     provide_context(guide);
     provide_context(Shown(RwSignal::new(theme())));
-    SignedIn::provide();
     view! {
         <Title text="YouCraft"/>
         <Router>
@@ -62,9 +61,11 @@ pub fn App() -> impl IntoView {
     }
 }
 
-/// The site around a page: the masthead, and the guide, open as `guide` says.
+/// The site around a page: the masthead, the guide, open as `guide` says, and who is signed in,
+/// which only the site asks; the embedded player renders without waiting on it.
 #[component]
 fn Site(guide: GuideOpen, children: Children) -> impl IntoView {
+    SignedIn::provide();
     view! {
         <div class="app" class:guide-collapsed=move || !guide.0.get()>
             <Masthead/>

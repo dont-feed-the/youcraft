@@ -2,6 +2,12 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.1.16
+
+### Changed
+
+- The embedded player renders without asking who is signed in, which only the site shows.
+
 ## 0.1.15
 
 ### Changed
