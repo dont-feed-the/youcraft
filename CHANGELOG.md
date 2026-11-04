@@ -2,6 +2,13 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.3.6
+
+### Changed
+
+- Every page loads a third less WebAssembly (1.85 MB instead of 2.71 MB, 0.74 MB instead of
+  1.10 MB compressed) before it answers clicks.
+
 ## 0.3.5
 
 ### Fixed

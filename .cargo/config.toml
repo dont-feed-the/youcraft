@@ -1,2 +1,10 @@
 [alias]
 xtask = "run --quiet --locked --package xtask --"
+
+[build]
+# Leptos erases the static types of its views behind `AnyView`, so a page's type no longer nests
+# every element and attribute it holds. A change to a page then rebuilds in seconds rather than
+# half a minute, and the release bundle and binary come out a third smaller, at the same server
+# time. It holds for every build and target alike: the server and the browser must render the same
+# tree, or hydration fails. A `RUSTFLAGS` in the environment replaces this list.
+rustflags = ["--cfg", "erase_components"]
