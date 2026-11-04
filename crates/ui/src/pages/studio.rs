@@ -1,5 +1,7 @@
-//! The studio: a channel's videos in every state, each with its visibility, processing, date
-//! and views, and a form to change or delete it.
+//! The studio, open to every signed-in account, in two tabs: Content, a channel's videos in every
+//! state, each with its visibility, processing, date and views, and a form to change or delete
+//! it, with the way to upload for those who may publish (the others read that publishing is by
+//! invitation); and Customization, in `customize`.
 //!
 //! While a video is uploading or being processed, the list refreshes itself every few seconds,
 //! so its progress moves without a reload; each row keeps its own state, an open form included.
@@ -8,8 +10,9 @@ use leptos::prelude::*;
 use leptos_meta::Title;
 use youcraft_api::commands::{feed, studio, video};
 use youcraft_api::records::{Failure, Processing, StudioPage, StudioVideo, Visibility};
-use youcraft_api::routes;
+use youcraft_api::{Grant, routes};
 
+use crate::account::SignedIn;
 use crate::browser;
 use crate::call::call;
 use crate::icons::{Glyph, Icon};
@@ -65,6 +68,7 @@ fn failure_text(reason: Failure) -> &'static str {
 /// moves what each row shows without rebuilding it, and an open form stays open.
 #[component]
 pub fn Studio() -> impl IntoView {
+    let me = SignedIn::resource();
     let first = Resource::new(|| (), |()| call::<studio::Videos>(feed::Page::default()));
     let latest = RwSignal::new(None::<StudioPage>);
     let refresh = move || {
@@ -96,25 +100,67 @@ pub fn Studio() -> impl IntoView {
     view! {
         <Title text=tr("Channel content")/>
         <main class="studio">
-            <div class="studio-header">
-                <h1>{tr("Channel content")}</h1>
-                <a class="pill accent" href=routes::UPLOAD>
-                    <Glyph icon=Icon::Upload/>
-                    <span>{tr("Upload video")}</span>
-                </a>
-            </div>
+            <StudioTabs current=StudioTab::Content/>
             <Suspense fallback=|| ()>
                 {move || Suspend::new(async move {
+                    let me = match me {
+                        Some(me) => me.await,
+                        None => None,
+                    };
+                    // what the account may do, raised to what the site grants every account
+                    let publishes = me.as_ref().is_some_and(|me| !me.blocked && me.role >= Grant::Creator);
+                    let invited = me.as_ref().is_some_and(|me| !me.blocked);
                     match first.await {
                         Ok(page) => {
+                            let held = !page.videos.is_empty();
                             let page = Memo::new(move |_| latest.get().unwrap_or_else(|| page.clone()));
-                            view! { <Table page refresh/> }.into_any()
+                            view! {
+                                {publishes.then(|| view! {
+                                    <div class="studio-actions">
+                                        <a class="pill accent" href=routes::UPLOAD>
+                                            <Glyph icon=Icon::Upload/>
+                                            <span>{tr("Upload video")}</span>
+                                        </a>
+                                    </div>
+                                })}
+                                {(!publishes && invited).then(|| view! {
+                                    <p class="empty">{tr("Publishing on YouCraft is by invitation.")}</p>
+                                })}
+                                {(publishes || held).then(|| view! { <Table page refresh/> })}
+                            }.into_any()
                         }
                         Err(error) => view! { <Trouble error/> }.into_any(),
                     }
                 })}
             </Suspense>
         </main>
+    }
+}
+
+/// A tab of the studio.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum StudioTab {
+    /// The channel's videos.
+    Content,
+    /// The channel's name, description and photo.
+    Customization,
+}
+
+/// The studio's heading and its tabs, `current` open.
+#[component]
+pub fn StudioTabs(current: StudioTab) -> impl IntoView {
+    let tab = move |to: StudioTab, href: &'static str, label: &'static str| {
+        let here = current == to;
+        view! {
+            <a class="tab" class:current=here href=href aria-current=here.then_some("page")>{label}</a>
+        }
+    };
+    view! {
+        <h1 class="studio-title">{tr("YouCraft Studio")}</h1>
+        <nav class="tabs" aria-label=tr("YouCraft Studio")>
+            {tab(StudioTab::Content, routes::STUDIO, tr("Content"))}
+            {tab(StudioTab::Customization, routes::STUDIO_CUSTOMIZE, tr("Customization"))}
+        </nav>
     }
 }
 

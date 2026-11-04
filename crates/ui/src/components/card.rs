@@ -6,6 +6,7 @@ use youcraft_api::commands::playlist::PlaylistCard;
 use youcraft_api::records::VideoCard;
 use youcraft_api::routes;
 
+use crate::components::avatar::{Face, Size};
 use crate::components::save::{list_name, visibility_name};
 use crate::icons::{Glyph, Icon};
 use crate::lang::{Language, RenderTime, compact_count, tr};
@@ -35,13 +36,6 @@ fn byline(card: &VideoCard) -> String {
 pub fn GridCard(card: VideoCard) -> impl IntoView {
     let watch = routes::watch(card.id);
     let channel = routes::channel(&card.channel.handle);
-    let initial = card
-        .channel
-        .name
-        .chars()
-        .next()
-        .map(String::from)
-        .unwrap_or_default();
     view! {
         <article class="card">
             <a class="thumbnail" href=watch.clone() tabindex="-1" aria-hidden="true">
@@ -50,7 +44,7 @@ pub fn GridCard(card: VideoCard) -> impl IntoView {
                 <span class="duration">{youcraft_i18n::when::clock(card.duration.whole_seconds())}</span>
             </a>
             <div class="details">
-                <a class="avatar" href=channel.clone() aria-hidden="true" tabindex="-1">{initial}</a>
+                <a class="avatar" href=channel.clone() aria-hidden="true" tabindex="-1"><Face channel=card.channel.clone() size=Size::Regular/></a>
                 <div class="meta">
                     <h3 class="title" dir="auto"><a href=watch>{card.title.clone()}</a></h3>
                     <a class="channel-name" href=channel>{card.channel.name.clone()}</a>

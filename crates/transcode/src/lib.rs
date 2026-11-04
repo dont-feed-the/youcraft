@@ -5,12 +5,14 @@
 //! H.264, HEVC, VP8, VP9, AV1, ProRes…) and writes a video's media directory: the files named
 //! by `youcraft_api::routes::media_files` and the track files they refer to. The server runs it
 //! in a child process with resource limits, so a file that breaks a decoder breaks nothing else.
-//! [`synthetic`] makes videos with known frames and tones for the demo and the tests.
+//! [`photo`] makes a channel's photo the same way. [`synthetic`] makes videos with known frames
+//! and tones for the demo and the tests.
 
 pub mod audio;
 pub mod cmaf;
 pub mod hls;
 pub mod ladder;
+pub mod photo;
 pub mod picture;
 pub mod pipeline;
 pub mod stills;
@@ -56,7 +58,7 @@ pub enum Error {
 }
 
 impl Error {
-    fn io(path: &Path, error: &std::io::Error) -> Error {
+    pub(crate) fn io(path: &Path, error: &std::io::Error) -> Error {
         Error::Io(format!("{}: {error}", path.display()))
     }
 

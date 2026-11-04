@@ -1,6 +1,7 @@
 //! Components that several pages share.
 
 pub mod account_menu;
+pub mod avatar;
 pub mod card;
 pub mod comments;
 pub mod guide;

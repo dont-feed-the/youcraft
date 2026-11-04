@@ -10,7 +10,9 @@ use crate::account::{Shown, SignedIn};
 use crate::components::masthead::Masthead;
 use crate::lang::theme;
 use crate::pages::account::Account;
+use crate::pages::admin::Admin;
 use crate::pages::channel::{Channel, Tab};
+use crate::pages::customize::Customize;
 use crate::pages::embed::Embed;
 use crate::pages::history::History;
 use crate::pages::home::Home;
@@ -46,6 +48,8 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/account") view=Account/>
                     <Route path=path!("/signin/failed") view=SignInFailed/>
                     <Route path=path!("/studio") view=Studio/>
+                    <Route path=path!("/studio/customize") view=Customize/>
+                    <Route path=path!("/admin") view=Admin/>
                     <Route path=path!("/upload") view=UploadPage/>
                     <Route path=path!("/results") view=Results/>
                     <Route path=path!("/feed/subscriptions") view=Subscriptions/>

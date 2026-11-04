@@ -10,7 +10,7 @@ use youcraft_api::records::VideoCard;
 use youcraft_api::routes;
 
 use crate::call::call;
-use crate::components::account_menu::initial;
+use crate::components::avatar::{Face, Size};
 use crate::components::card::RowCard;
 use crate::components::guide::Guide;
 use crate::components::more::{Pages, ShowMore};
@@ -92,7 +92,7 @@ pub fn ChannelRow(channel: ChannelPage) -> impl IntoView {
     view! {
         <article class="channel-row">
             <a class="channel-row-avatar" href=address.clone() tabindex="-1" aria-hidden="true">
-                <span class="avatar avatar-huge">{initial(&channel.card.name)}</span>
+                <span class="avatar avatar-huge"><Face channel=channel.card.clone() size=Size::Huge/></span>
             </a>
             <div class="meta">
                 <h3 class="title"><a href=address>{channel.card.name.clone()}</a></h3>

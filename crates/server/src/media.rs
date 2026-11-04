@@ -1,9 +1,11 @@
-//! The media of videos, `GET /media/<video>/<file>`, served to whoever may watch the video.
+//! The media of videos, `GET /media/<video>/<file>`, served to whoever may watch the video, and
+//! channels' photos, `GET /photos/<channel>/<version>/<size>.jpg`, served to anyone.
 //!
 //! The files of a video everyone may see (ready, public or unlisted) are anyone's and never
 //! change, so caches keep them for a year; those of a video only its managers see (private, or
 //! not ready yet) go to its channel and administrators only, and no shared cache keeps them.
 //! Files are served with `Range` support, as players fetch segments by byte range.
+//! A photo's address names its version, so its bytes never change either.
 
 use axum::body::Body;
 use axum::extract::Request;
@@ -11,7 +13,8 @@ use axum::http::{HeaderValue, header};
 use axum::response::{IntoResponse, Response};
 use tower::ServiceExt;
 use tower_http::services::ServeDir;
-use youcraft_api::{ApiError, VideoId};
+use youcraft_api::routes::{PHOTO_SIZES, photo_file};
+use youcraft_api::{ApiError, ChannelId, VideoId};
 use youcraft_store::videos::Audience;
 
 use crate::http::error_response;
@@ -53,6 +56,39 @@ pub async fn serve(
                         HeaderValue::from_static("application/vnd.apple.mpegurl"),
                     );
                 }
+            }
+            response
+        }
+        Err(error) => match error {},
+    }
+}
+
+/// Serve the photo `file` of `channel` at `version`, as `request` asks.
+pub async fn serve_photo(
+    site: &Site,
+    (channel, version, file): (&str, &str, &str),
+    mut request: Request,
+) -> Response {
+    let known = PHOTO_SIZES.iter().any(|&size| photo_file(size) == file);
+    let Ok(channel) = channel.parse::<ChannelId>() else {
+        return error_response(&ApiError::NotFound);
+    };
+    if !known || !crate::photo::is_version(version) {
+        return error_response(&ApiError::NotFound);
+    }
+    let Ok(uri) = format!("/{file}").parse() else {
+        return error_response(&ApiError::NotFound);
+    };
+    *request.uri_mut() = uri;
+    let directory = ServeDir::new(crate::photo::directory(site, channel, version));
+    match directory.oneshot(request).await {
+        Ok(response) => {
+            let mut response = response.map(Body::new).into_response();
+            if response.status().is_success() {
+                response.headers_mut().insert(
+                    header::CACHE_CONTROL,
+                    HeaderValue::from_static("public, max-age=31536000, immutable"),
+                );
             }
             response
         }

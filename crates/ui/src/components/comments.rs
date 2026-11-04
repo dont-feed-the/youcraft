@@ -14,7 +14,7 @@ use youcraft_api::{ApiError, CommentId, VideoId, routes};
 use crate::act::act;
 use crate::browser;
 use crate::call::call;
-use crate::components::account_menu::initial;
+use crate::components::avatar::{Face, Size};
 use crate::components::more::ShowMore;
 use crate::icons::{Glyph, Icon};
 use crate::lang::{Language, RenderTime, compact, count, tr};
@@ -253,7 +253,7 @@ fn CommentView(
     view! {
         <article class="comment" class:reply=!top>
             <a class="avatar" class:avatar-small=!top href=channel.clone() aria-hidden="true" tabindex="-1">
-                {initial(&author.name)}
+                <Face channel=author.clone() size=if top { Size::Regular } else { Size::Small }/>
             </a>
             <div class="comment-main">
                 <p class="comment-byline">

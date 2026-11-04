@@ -3,9 +3,10 @@
 //!
 //! The room left in the site's storage is counted from rows, never from a walk over the disk:
 //! what each video's files fill (`stored_bytes`, which the server measures once after each
-//! change), what uploads have received, and what open ones have yet to receive.
+//! change), what each channel's photo fills (`photo_bytes`), what uploads have received, and what
+//! open ones have yet to receive.
 
-use rusqlite::{OptionalExtension, params};
+use rusqlite::{OptionalExtension, Transaction, params};
 use youcraft_api::records::Visibility;
 use youcraft_api::{AccountId, ChannelId, VideoId};
 
@@ -86,6 +87,33 @@ pub enum Claim {
     },
 }
 
+/// The storage limit of `allowance` less what videos fill (their measured `stored_bytes`), what
+/// channels' photos fill, the bytes uploads have received, what open uploads have yet to receive
+/// and what no row counts.
+fn room_in(transaction: &Transaction<'_>, allowance: &Allowance) -> Result<u64, StoreError> {
+    if allowance.storage == u64::MAX {
+        return Ok(u64::MAX);
+    }
+    let (stored, photos, received, owed): (i64, i64, i64, i64) = transaction.query_row(
+        "SELECT (SELECT COALESCE(SUM(stored_bytes), 0) FROM videos), \
+         (SELECT COALESCE(SUM(photo_bytes), 0) FROM channels), \
+         (SELECT COALESCE(SUM(received), 0) FROM uploads), \
+         (SELECT COALESCE(SUM(MAX(size - received, 0)), 0) FROM uploads WHERE created_at >= ?1)",
+        [allowance.since],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
+    )?;
+    let taken = [
+        count(stored),
+        count(photos),
+        count(received),
+        count(owed),
+        allowance.unrecorded,
+    ]
+    .into_iter()
+    .fold(0, u64::saturating_add);
+    Ok(allowance.storage.saturating_sub(taken))
+}
+
 impl Store {
     /// The channel of `account`.
     pub fn channel_of(&self, account: AccountId) -> Result<Option<ChannelId>, StoreError> {
@@ -115,10 +143,9 @@ impl Store {
 
     /// Create a video that is uploading, and its upload, if `allowance` leaves room for it.
     ///
-    /// The room is the storage limit less what videos fill (their measured `stored_bytes`), the
-    /// bytes uploads have received, what open uploads have yet to receive and what no row counts;
-    /// measuring it and claiming from it happen in one transaction, so that two uploads, from
-    /// this process or another, cannot both take the same room.
+    /// The room is what [`room_in`] leaves; measuring it and claiming from it happen in one
+    /// transaction, so that two uploads, from this process or another, cannot both take the same
+    /// room.
     pub fn create_upload(
         &self,
         upload: &NewUpload<'_>,
@@ -135,26 +162,7 @@ impl Store {
         if count(open) >= allowance.open {
             return Ok(Claim::Crowded);
         }
-        let room = if allowance.storage == u64::MAX {
-            u64::MAX
-        } else {
-            let (stored, received, owed): (i64, i64, i64) = transaction.query_row(
-                "SELECT (SELECT COALESCE(SUM(stored_bytes), 0) FROM videos), \
-                 (SELECT COALESCE(SUM(received), 0) FROM uploads), \
-                 (SELECT COALESCE(SUM(MAX(size - received, 0)), 0) FROM uploads WHERE created_at >= ?1)",
-                [allowance.since],
-                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
-            )?;
-            let taken = [
-                count(stored),
-                count(received),
-                count(owed),
-                allowance.unrecorded,
-            ]
-            .into_iter()
-            .fold(0, u64::saturating_add);
-            allowance.storage.saturating_sub(taken)
-        };
+        let room = room_in(&transaction, allowance)?;
         let limit = allowance
             .file
             .min(room)
@@ -176,6 +184,15 @@ impl Store {
         )?;
         transaction.commit()?;
         Ok(Claim::Started)
+    }
+
+    /// The bytes of the site's storage that `allowance` leaves free.
+    pub fn room(&self, allowance: &Allowance) -> Result<u64, StoreError> {
+        let mut connection = self.connection();
+        let transaction = connection.transaction()?;
+        let room = room_in(&transaction, allowance)?;
+        transaction.commit()?;
+        Ok(room)
     }
 
     /// The upload of `video`, if it is still uploading.

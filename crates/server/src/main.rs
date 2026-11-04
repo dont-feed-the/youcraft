@@ -20,6 +20,7 @@ mod jobs;
 mod listen;
 mod mcp;
 mod media;
+mod photo;
 mod rate;
 mod secrets;
 mod signin;
@@ -58,6 +59,10 @@ fn main() -> ExitCode {
                 "usage: youcraft transcode <input> <output directory> <memory bytes> <longest seconds>"
                     .to_owned(),
             ),
+        },
+        "photo" => match rest {
+            [input, output] => photo::run(input.as_ref(), output.as_ref()),
+            _ => Err("usage: youcraft photo <input> <output directory>".to_owned()),
         },
         "call" => client::call(rest),
         "commands" => client::commands(rest),

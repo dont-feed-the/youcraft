@@ -162,6 +162,7 @@ impl Site {
             config.originals(),
             config.work(),
             config.media(),
+            config.photos(),
         ] {
             std::fs::create_dir_all(&dir).map_err(|e| format!("{}: {e}", dir.display()))?;
         }

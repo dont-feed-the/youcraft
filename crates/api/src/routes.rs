@@ -35,8 +35,12 @@ pub const SIGN_IN_REFUSED: &str = "refused";
 pub const SIGN_IN_TOO_OFTEN: &str = "too_often";
 /// The signed-in person's settings: appearance, language, personal tokens.
 pub const ACCOUNT: &str = "/account";
-/// The creator's studio: their channel's videos.
+/// The studio's Content tab: the channel's videos, and uploading.
 pub const STUDIO: &str = "/studio";
+/// The studio's Customization tab: the channel's name, description and photo.
+pub const STUDIO_CUSTOMIZE: &str = "/studio/customize";
+/// The administrators' page: invitations and accounts.
+pub const ADMIN: &str = "/admin";
 /// The page that uploads a video.
 pub const UPLOAD: &str = "/upload";
 
@@ -154,10 +158,27 @@ pub fn upload(video: VideoId) -> String {
     format!("/upload/{video}")
 }
 
-/// The avatar of `channel`, `size` pixels square.
-pub fn avatar(channel: ChannelId, size: u32) -> String {
-    format!("/media/channel/{channel}/avatar/{size}.jpg")
+/// Where channels' photos are served from: `<PHOTOS>/<channel>/<version>/<size>.jpg`.
+pub const PHOTOS: &str = "/photos";
+
+/// The photo of `channel` at its version `version`, `size` pixels square (one of
+/// [`PHOTO_SIZES`]). A new photo is a new version, so each address keeps its bytes for ever.
+pub fn photo(channel: ChannelId, version: &str, size: u32) -> String {
+    format!(
+        "{PHOTOS}/{channel}/{}/{}",
+        encode_component(version),
+        photo_file(size)
+    )
 }
+
+/// The name of the file of a photo `size` pixels square, within its version's directory.
+pub fn photo_file(size: u32) -> String {
+    format!("{size}.jpg")
+}
+
+/// The sizes every photo is made at, smallest first: twice the avatars pages draw (24, 40, 88
+/// and 160 CSS pixels), for screens of two pixels to the CSS pixel.
+pub const PHOTO_SIZES: [u32; 4] = [48, 80, 176, 320];
 
 /// `text` with every byte outside RFC 3986's unreserved set percent-encoded, as a path segment
 /// or query value needs; letters of any script are encoded too, and browsers show them decoded.

@@ -10,7 +10,7 @@ use youcraft_api::records::VideoCard;
 use youcraft_api::{ApiError, ChannelId, routes};
 
 use crate::call::call;
-use crate::components::account_menu::initial;
+use crate::components::avatar::{Face, Size};
 use crate::components::card::{GridCard, PlaylistGridCard};
 use crate::components::guide::Guide;
 use crate::components::more::{Pages, ShowMore};
@@ -79,7 +79,7 @@ fn Heading(page: ChannelPage) -> impl IntoView {
     view! {
         <Title text=format!("{} - YouCraft", page.card.name)/>
         <header class="channel-heading">
-            <span class="avatar avatar-channel" aria-hidden="true">{initial(&page.card.name)}</span>
+            <span class="avatar avatar-channel" aria-hidden="true"><Face channel=page.card.clone() size=Size::Huge/></span>
             <div class="channel-names">
                 <h1>{page.card.name.clone()}</h1>
                 <p class="byline">
@@ -95,6 +95,7 @@ fn Heading(page: ChannelPage) -> impl IntoView {
                 <div class="channel-buttons">
                     <SubscribeButton channel=page.card.id subscribed=page.subscribed subscribers owned=page.owned/>
                     {page.owned.then(|| view! {
+                        <a class="pill" href=routes::STUDIO_CUSTOMIZE>{tr("Customize channel")}</a>
                         <a class="pill" href=routes::STUDIO>{tr("Manage videos")}</a>
                     })}
                 </div>

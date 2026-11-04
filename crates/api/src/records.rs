@@ -15,6 +15,10 @@ pub struct ChannelCard {
     pub handle: String,
     /// Its name.
     pub name: String,
+    /// The version of its photo, which [`crate::routes::photo`] addresses; `None` while it has
+    /// none, and pages show its initial instead.
+    #[serde(default)]
+    pub photo: Option<String>,
 }
 
 /// A video in a grid or a list: enough to draw its card.

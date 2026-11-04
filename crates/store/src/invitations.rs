@@ -16,7 +16,7 @@ impl Store {
         let transaction = connection.transaction()?;
         let holder = transaction
             .query_row(
-                "SELECT a.id, c.id, c.handle, c.name FROM accounts a \
+                "SELECT a.id, c.id, c.handle, c.name, c.photo FROM accounts a \
                  JOIN channels c ON c.account_id = a.id \
                  WHERE a.email = ?1 COLLATE NOCASE AND a.email != ''",
                 [email],

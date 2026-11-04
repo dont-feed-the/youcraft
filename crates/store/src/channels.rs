@@ -10,22 +10,32 @@ use crate::accounts::handle_key;
 use crate::videos::{CARD_COLUMNS, LISTED, card};
 use crate::{Paged, Store, StoreError, Window, count};
 
-/// The [`ChannelCard`] of the columns `id, handle, name` of a channel, from the `first`.
+/// The columns [`channel_card`] reads, from the `channels` named `table` in the query.
+pub(crate) fn card_columns(table: &str) -> String {
+    format!("{table}.id, {table}.handle, {table}.name, {table}.photo")
+}
+
+/// How many columns [`card_columns`] names.
+pub(crate) const CARD_WIDTH: usize = 4;
+
+/// The [`ChannelCard`] of the [`card_columns`] of a channel, from the `first`.
 pub(crate) fn channel_card(row: &Row<'_>, first: usize) -> rusqlite::Result<ChannelCard> {
     Ok(ChannelCard {
         id: ChannelId::from_i64(row.get(first)?),
         handle: row.get(first + 1)?,
         name: row.get(first + 2)?,
+        photo: row.get(first + 3)?,
     })
 }
 
 /// The columns [`channel_page`] reads, from `channels` as `c`, for the reader `:reader`.
 pub(crate) fn page_columns() -> String {
     format!(
-        "c.id, c.handle, c.name, c.description, c.subscriber_count, \
+        "{}, c.description, c.subscriber_count, \
          (SELECT count(*) FROM videos v WHERE v.channel_id = c.id AND {LISTED}), \
          EXISTS (SELECT 1 FROM subscriptions s WHERE s.channel_id = c.id AND s.account_id = :reader), \
-         c.account_id IS :reader"
+         c.account_id IS :reader",
+        card_columns("c")
     )
 }
 
@@ -33,11 +43,11 @@ pub(crate) fn page_columns() -> String {
 pub(crate) fn channel_page(row: &Row<'_>) -> rusqlite::Result<ChannelPage> {
     Ok(ChannelPage {
         card: channel_card(row, 0)?,
-        description: row.get(3)?,
-        subscribers: count(row.get(4)?),
-        videos: count(row.get(5)?),
-        subscribed: row.get(6)?,
-        owned: row.get(7)?,
+        description: row.get(CARD_WIDTH)?,
+        subscribers: count(row.get(CARD_WIDTH + 1)?),
+        videos: count(row.get(CARD_WIDTH + 2)?),
+        subscribed: row.get(CARD_WIDTH + 3)?,
+        owned: row.get(CARD_WIDTH + 4)?,
     })
 }
 
@@ -141,7 +151,7 @@ impl Store {
     pub fn subscriptions(&self, account: AccountId) -> Result<Vec<ChannelCard>, StoreError> {
         let connection = self.connection();
         let mut statement = connection.prepare_cached(
-            "SELECT c.id, c.handle, c.name FROM subscriptions s JOIN channels c ON c.id = s.channel_id \
+            "SELECT c.id, c.handle, c.name, c.photo FROM subscriptions s JOIN channels c ON c.id = s.channel_id \
              WHERE s.account_id = ?1 ORDER BY c.name COLLATE NOCASE, c.id",
         )?;
         let rows = statement.query_map([account.to_i64()], |row| channel_card(row, 0))?;

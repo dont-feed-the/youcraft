@@ -4,7 +4,7 @@ use rusqlite::{OptionalExtension, Row, params};
 use youcraft_api::records::{Failure, Processing, StudioVideo, Visibility};
 use youcraft_api::{ChannelId, VideoId};
 
-use crate::videos::{CARD_COLUMNS, State, card};
+use crate::videos::{CARD_COLUMNS, CARD_WIDTH, State, card};
 use crate::{Named, Store, StoreError, count};
 
 /// What to change about a video; what is `None` stays.
@@ -27,29 +27,30 @@ const STUDIO_FROM: &str =
     "FROM videos v JOIN channels c ON c.id = v.channel_id LEFT JOIN uploads u ON u.video_id = v.id";
 
 fn studio_video(row: &Row<'_>) -> rusqlite::Result<StudioVideo> {
-    let processing = match row.get::<_, Named<State>>(11)?.0 {
+    let processing = match row.get::<_, Named<State>>(CARD_WIDTH + 2)?.0 {
         State::Uploading => Processing::Uploading {
-            received: count(row.get::<_, Option<i64>>(16)?.unwrap_or(0)),
-            size: count(row.get::<_, Option<i64>>(17)?.unwrap_or(0)),
+            received: count(row.get::<_, Option<i64>>(CARD_WIDTH + 7)?.unwrap_or(0)),
+            size: count(row.get::<_, Option<i64>>(CARD_WIDTH + 8)?.unwrap_or(0)),
         },
         State::Processing => Processing::Processing {
-            permille: u32::try_from(row.get::<_, Option<i64>>(18)?.unwrap_or(0)).unwrap_or(0),
+            permille: u32::try_from(row.get::<_, Option<i64>>(CARD_WIDTH + 9)?.unwrap_or(0))
+                .unwrap_or(0),
         },
         State::Ready => Processing::Ready,
         State::Failed => Processing::Failed {
             reason: row
-                .get::<_, Option<Named<Failure>>>(12)?
+                .get::<_, Option<Named<Failure>>>(CARD_WIDTH + 3)?
                 .map_or(Failure::Internal, |Named(failure)| failure),
         },
     };
     Ok(StudioVideo {
         card: card(row)?,
-        description: row.get(9)?,
-        visibility: row.get::<_, Named<Visibility>>(10)?.0,
+        description: row.get(CARD_WIDTH)?,
+        visibility: row.get::<_, Named<Visibility>>(CARD_WIDTH + 1)?.0,
         processing,
-        comments_enabled: row.get::<_, i64>(13)? != 0,
-        likes: count(row.get(14)?),
-        comments: count(row.get(15)?),
+        comments_enabled: row.get::<_, i64>(CARD_WIDTH + 4)? != 0,
+        likes: count(row.get(CARD_WIDTH + 5)?),
+        comments: count(row.get(CARD_WIDTH + 6)?),
     })
 }
 

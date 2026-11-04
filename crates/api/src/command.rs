@@ -137,7 +137,7 @@ mod tests {
 
     #[test]
     fn limits_reach_the_schemas() {
-        use crate::commands::{comment, playlist, search, token, video};
+        use crate::commands::{channel, comment, playlist, profile, search, token, video};
         for (id, field, limit) in [
             ("upload.create", "title", video::TITLE_LIMIT),
             ("upload.create", "description", video::DESCRIPTION_LIMIT),
@@ -153,6 +153,9 @@ mod tests {
             ("comment.edit", "body", comment::BODY_LIMIT),
             ("search.videos", "query", search::QUERY_LIMIT),
             ("token.create", "name", token::NAME_LIMIT),
+            ("channel.update", "name", channel::NAME_LIMIT),
+            ("channel.update", "description", profile::DESCRIPTION_LIMIT),
+            ("admin.accounts", "query", search::QUERY_LIMIT),
         ] {
             let schema = input_of(id);
             let length = &schema["properties"][field]["maxLength"];

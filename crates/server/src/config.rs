@@ -212,6 +212,11 @@ impl Config {
         self.data.join("work")
     }
 
+    /// The photos of channels: a directory per channel, holding one per version.
+    pub fn photos(&self) -> PathBuf {
+        self.data.join("photos")
+    }
+
     /// The media directories of the videos that play, one per video.
     pub fn media(&self) -> PathBuf {
         self.data.join("media")

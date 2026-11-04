@@ -1,22 +1,25 @@
-//! The settings page, `/account`: the signed-in person's account, appearance, language and
-//! personal tokens, and for administrators the invitations waiting.
+//! The settings page, `/account`: the signed-in person themselves, their account, appearance,
+//! language, watch history and personal tokens. What concerns their channel is in the studio,
+//! and what concerns the site in the administration.
 //!
-//! A role is shown, and offered to invite with, only above what the site grants every account.
+//! A role is shown only above what the site grants every account.
 
 use leptos::prelude::*;
 use leptos_meta::Title;
 use youcraft_api::commands::account::{Me, Theme};
-use youcraft_api::commands::invite::{self, Invitation};
+use youcraft_api::commands::history::{self, Pausing};
 use youcraft_api::commands::site::{GetPolicy, Nothing};
 use youcraft_api::commands::token::{self, Token};
 use youcraft_api::{ApiError, Grant, routes};
 
 use crate::account::{Shown, SignedIn, choose_language, choose_theme};
+use crate::act::act;
 use crate::browser;
 use crate::call::call;
-use crate::components::account_menu::initial;
+use crate::components::avatar::{Face, Size};
 use crate::icons::{Glyph, Icon};
 use crate::lang::{Language, RenderTime, fill, offered, tr};
+use crate::pages::admin::role_name;
 use crate::pages::not_found::Trouble;
 
 /// The settings page.
@@ -46,19 +49,10 @@ pub fn Account() -> impl IntoView {
     }
 }
 
-/// The name of `role`.
-fn role_name(role: Grant) -> &'static str {
-    match role {
-        Grant::Viewer => tr("Viewer"),
-        Grant::Creator => tr("Creator"),
-        Grant::Admin => tr("Administrator"),
-    }
-}
-
 /// Every section, for `me`, on a site that grants every account `floor`, if it is known.
 #[component]
 fn Sections(me: Me, floor: Option<Grant>) -> impl IntoView {
-    let admin = me.role >= Grant::Admin;
+    let paused = me.history_paused;
     let channel = routes::channel(&me.channel.handle);
     let blocked = me.blocked.then(|| {
         view! { <p class="settings-notice">{tr("Your account is blocked: you can watch videos, but not like, comment or publish.")}</p> }
@@ -68,7 +62,7 @@ fn Sections(me: Me, floor: Option<Grant>) -> impl IntoView {
         <section class="settings-section">
             <h2>{tr("Account")}</h2>
             <div class="settings-account">
-                <span class="avatar avatar-large">{me.with_value(|me| initial(&me.channel.name))}</span>
+                <span class="avatar avatar-large">{me.with_value(|me| view! { <Face channel=me.channel.clone() size=Size::Large/> })}</span>
                 <div class="settings-account-names">
                     <span class="settings-account-name">{me.with_value(|me| me.channel.name.clone())}</span>
                     <span class="settings-hint">
@@ -82,8 +76,8 @@ fn Sections(me: Me, floor: Option<Grant>) -> impl IntoView {
         </section>
         <AppearanceSection me/>
         <LanguageSection me/>
+        <HistorySection paused/>
         <TokenSection/>
-        {admin.then(|| view! { <InvitationSection floor/> })}
     }
 }
 
@@ -130,6 +124,33 @@ fn LanguageSection(me: StoredValue<Me>) -> impl IntoView {
             <select class="field" aria-label=tr("Language") on:change=change>
                 {options.collect_view()}
             </select>
+        </section>
+    }
+}
+
+/// Whether the watch history keeps what the person watches, as its own page also sets.
+#[component]
+fn HistorySection(paused: bool) -> impl IntoView {
+    let paused = RwSignal::new(paused);
+    let toggle = move |_| {
+        let wanted = !paused.get_untracked();
+        act::<history::Pause>(Pausing { paused: wanted }, move |answer| {
+            if let Ok(now) = answer {
+                paused.set(now.paused);
+            }
+        });
+    };
+    view! {
+        <section class="settings-section">
+            <h2>{tr("Watch history")}</h2>
+            <Show when=move || paused.get()>
+                <p class="settings-hint">{tr("Your history is paused: what you watch now is not kept.")}</p>
+            </Show>
+            <div class="choices">
+                <button class="pill" type="button" aria-pressed=move || if paused.get() { "true" } else { "false" } on:click=toggle>
+                    {move || if paused.get() { tr("Turn on watch history") } else { tr("Pause watch history") }}
+                </button>
+            </div>
         </section>
     }
 }
@@ -217,103 +238,6 @@ fn TokenRow(token: Token, version: RwSignal<u32>) -> impl IntoView {
                 <span class="settings-hint">{created}{used.map(|used| format!(" · {used}"))}</span>
             </div>
             <button class="pill" type="button" on:click=revoke>{tr("Revoke")}</button>
-        </li>
-    }
-}
-
-/// The invitations waiting, for administrators: made and withdrawn here, to the roles above
-/// `floor` and above a viewer's, which needs no invitation.
-#[component]
-fn InvitationSection(floor: Option<Grant>) -> impl IntoView {
-    let offered: Vec<Grant> = Grant::ALL
-        .into_iter()
-        .filter(|role| Some(*role) > floor.max(Some(Grant::Viewer)))
-        .collect();
-    let first = offered.first().copied().unwrap_or(Grant::Admin);
-    let hint = if first == Grant::Admin {
-        tr("Invited people become administrators when they first sign in with Google.")
-    } else {
-        tr("Invited people become creators or administrators when they first sign in with Google.")
-    };
-    let version = RwSignal::new(0_u32);
-    let waiting = Resource::new(move || version.get(), |_| call::<invite::List>(Nothing {}));
-    let email = RwSignal::new(String::new());
-    let role = RwSignal::new(first);
-    let failed = RwSignal::new(false);
-    let send = move |event: leptos::ev::SubmitEvent| {
-        event.prevent_default();
-        let invitation = invite::NewInvitation {
-            email: email.get_untracked(),
-            role: role.get_untracked(),
-        };
-        leptos::task::spawn_local(async move {
-            let sent = call::<invite::Create>(invitation).await;
-            failed.set(sent.is_err());
-            if sent.is_ok() {
-                email.set(String::new());
-            }
-            version.update(|v| *v += 1);
-        });
-    };
-    let pick = move |event: leptos::ev::Event| {
-        if let Some(picked) = Grant::from_name(&event_target_value(&event)) {
-            role.set(picked);
-        }
-    };
-    // One role to give needs no choice.
-    let choice = (offered.len() > 1).then(|| {
-        view! {
-            <select class="field" aria-label=tr("Role") on:change=pick>
-                {offered.iter().map(|role| view! { <option value=role.as_str()>{role_name(*role)}</option> }).collect_view()}
-            </select>
-        }
-    });
-    view! {
-        <section class="settings-section">
-            <h2>{tr("Invitations")}</h2>
-            <p class="settings-hint">{hint}</p>
-            <form class="settings-form" on:submit=send>
-                <input class="field" type="email" required aria-label=tr("E-mail address")
-                    placeholder=tr("E-mail address") prop:value=email
-                    on:input=move |event| email.set(event_target_value(&event))/>
-                {choice}
-                <button class="pill" type="submit">{tr("Invite")}</button>
-            </form>
-            {move || failed.get().then(|| view! { <p class="settings-notice">{tr("Something went wrong. Try again later.")}</p> })}
-            <Suspense fallback=|| ()>
-                {move || Suspend::new(async move {
-                    let waiting = waiting.await.unwrap_or_default();
-                    view! {
-                        <ul class="settings-list">
-                            {waiting.into_iter().map(|invitation| view! { <InvitationRow invitation version/> }).collect_view()}
-                        </ul>
-                    }
-                })}
-            </Suspense>
-        </section>
-    }
-}
-
-#[component]
-fn InvitationRow(invitation: Invitation, version: RwSignal<u32>) -> impl IntoView {
-    let address = invite::Address {
-        email: invitation.email.clone(),
-    };
-    let withdraw = move |_| {
-        let address = address.clone();
-        leptos::task::spawn_local(async move {
-            let _ = call::<invite::Revoke>(address).await;
-            version.update(|v| *v += 1);
-        });
-    };
-    view! {
-        <li class="settings-row">
-            <Glyph icon=Icon::Mail/>
-            <div class="settings-row-text">
-                <span>{invitation.email}</span>
-                <span class="settings-hint">{role_name(invitation.role)}</span>
-            </div>
-            <button class="pill" type="button" on:click=withdraw>{tr("Withdraw")}</button>
         </li>
     }
 }

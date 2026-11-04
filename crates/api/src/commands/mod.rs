@@ -8,6 +8,7 @@ pub mod feed;
 pub mod history;
 pub mod invite;
 pub mod playlist;
+pub mod profile;
 pub mod search;
 pub mod site;
 pub mod studio;
@@ -35,6 +36,9 @@ macro_rules! for_each_command {
             $crate::commands::channel::Subscribe,
             $crate::commands::channel::Subscriptions,
             $crate::commands::channel::Block,
+            $crate::commands::profile::Update,
+            $crate::commands::profile::SetPhoto,
+            $crate::commands::profile::RemovePhoto,
             $crate::commands::comment::List,
             $crate::commands::comment::Replies,
             $crate::commands::comment::Create,
@@ -65,6 +69,9 @@ macro_rules! for_each_command {
             $crate::commands::invite::Revoke,
             $crate::commands::admin::SetRole,
             $crate::commands::admin::Block,
+            $crate::commands::admin::Accounts,
+            $crate::commands::admin::ResetName,
+            $crate::commands::admin::RemovePhoto,
             $crate::commands::video::Update,
             $crate::commands::video::Delete,
             $crate::commands::upload::Create,

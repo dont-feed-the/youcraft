@@ -1,10 +1,11 @@
-//! The files of the site's videos: how much of its storage they fill, what a new upload may
-//! claim of it, and their removal.
+//! The files of the site's videos and channels' photos: how much of its storage they fill, what a
+//! new upload or photo may claim of it, and the removal of a video's.
 //!
 //! The database counts what is stored (see `youcraft_store::uploads`): each video's files, as
 //! measured here once after each change, and the bytes uploads have received and have yet to
 //! receive. Measuring a video walks its own few files; the transcodes in progress, which no row
-//! counts, are walked too. Nothing walks every video's files.
+//! counts, are walked too. Nothing walks every video's files. A photo's files are measured once,
+//! as they are made, into their channel's row.
 
 use std::path::{Path, PathBuf};
 
@@ -59,8 +60,14 @@ async fn measure(site: &Site) -> Result<(), ApiError> {
     Ok(())
 }
 
+/// The bytes of the site's storage left free now.
+pub async fn room(site: &Site) -> Result<u64, ApiError> {
+    let allowance = allowance(site).await?;
+    site.db(move |store| store.room(&allowance)).await
+}
+
 /// Run `count` off the async threads.
-async fn walk(count: impl FnOnce() -> u64 + Send + 'static) -> Result<u64, ApiError> {
+pub async fn walk(count: impl FnOnce() -> u64 + Send + 'static) -> Result<u64, ApiError> {
     tokio::task::spawn_blocking(count).await.map_err(|e| {
         tracing::error!("storage: {e}");
         ApiError::Internal
@@ -76,7 +83,7 @@ fn stored(config: &Config, video: VideoId) -> u64 {
 }
 
 /// The bytes of the files under `root`, to [`DEPTH`] levels; what cannot be read counts nothing.
-fn bytes_under(root: &Path) -> u64 {
+pub fn bytes_under(root: &Path) -> u64 {
     let mut total = 0u64;
     let mut pending: Vec<(PathBuf, usize)> = vec![(root.to_path_buf(), 0)];
     while let Some((dir, depth)) = pending.pop() {

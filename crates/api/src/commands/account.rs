@@ -67,6 +67,9 @@ pub struct Me {
     pub blocked: bool,
     /// Their preferences.
     pub preferences: Preferences,
+    /// Whether they paused their watch history, which then keeps nothing they watch.
+    #[serde(default)]
+    pub history_paused: bool,
 }
 
 /// Who is signed in.

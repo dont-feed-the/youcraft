@@ -1,4 +1,5 @@
-//! The browser's side of an upload: the chosen file, sent piece by piece at its offset.
+//! The browser's side of an upload: the chosen file, sent piece by piece at its offset; or, for
+//! a small file such as a channel's photo, read whole into base64 for a command to carry.
 //!
 //! Each piece is a slice of the `File` (the browser reads it from disk as it sends, so a file of
 //! any size never sits in memory), sent with `PATCH` and the offset it starts at. When the server
@@ -14,6 +15,22 @@ use youcraft_api::records::Upload;
 pub fn chosen_file(event: &web_sys::Event) -> Option<web_sys::File> {
     let input: web_sys::HtmlInputElement = event.target()?.dyn_into().ok()?;
     input.files()?.get(0)
+}
+
+/// The bytes of `file`, at most `limit` of them, in base64.
+pub async fn base64_of(file: &web_sys::File, limit: usize) -> Result<String, ApiError> {
+    use base64::Engine;
+
+    if file.size() > limit as f64 {
+        return Err(ApiError::TooLarge {
+            limit: u64::try_from(limit).unwrap_or(u64::MAX),
+        });
+    }
+    let buffer = JsFuture::from(file.array_buffer())
+        .await
+        .map_err(|_| ApiError::Internal)?;
+    let bytes = js_sys::Uint8Array::new(&buffer).to_vec();
+    Ok(base64::engine::general_purpose::STANDARD.encode(bytes))
 }
 
 /// Ask the person to confirm `question`.

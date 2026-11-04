@@ -2,6 +2,33 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.3.3
+
+### Added
+
+- Every signed-in account customizes its own channel at `/studio/customize`: its name (up to 50
+  characters, in any script), its description (up to 1000) and its picture, a JPEG, PNG or WebP
+  file of at most 5 MB whose centre is cut square. The picture is decoded in a child process with
+  limits on memory, CPU time and output, stored at the sizes the pages show it, and counted in
+  the site's storage. The handle stays, so no link to a channel breaks; without a picture the
+  initial on a coloured circle remains.
+- The administration page, `/admin`, for administrators: the invitations waiting, and every
+  account, 50 at a time, searchable by name or handle, with its role, blocking, and removing its
+  picture or resetting its name to its handle. No e-mail address of an account is shown.
+- The settings page also pauses the watch history, as the history page does.
+- Commands `channel.update`, `channel.set_photo`, `channel.remove_photo`, `admin.accounts`,
+  `admin.reset_name`, `admin.remove_photo`.
+
+### Changed
+
+- One subject per page: the channel at `/@handle`, where its owner finds Customize channel and
+  Manage videos; the studio at `/studio`, open to every signed-in account, with Content (for
+  those who publish; otherwise it says publishing is by invitation) and Customization; the person
+  at `/account`; the site at `/admin`. Invitations moved from the settings page to `/admin`.
+- The account menu reads Your channel, YouCraft Studio, Settings, Administration (for
+  administrators) and Sign out, then Appearance and Language.
+- A channel's name holds at most 50 characters, the name Google gives a new account included.
+
 ## 0.3.2
 
 ### Fixed

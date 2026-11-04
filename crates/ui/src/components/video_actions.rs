@@ -8,7 +8,7 @@ use youcraft_api::{VideoId, routes};
 
 use crate::act::act;
 use crate::browser;
-use crate::components::account_menu::initial;
+use crate::components::avatar::{Face, Size};
 use crate::components::save::SaveDialog;
 use crate::components::subscribe::SubscribeButton;
 use crate::icons::{Glyph, Icon};
@@ -23,7 +23,7 @@ pub fn OwnerRow(page: VideoPage) -> AnyView {
     view! {
         <div class="owner-row">
             <div class="owner">
-                <a class="avatar" href=channel.clone() aria-hidden="true" tabindex="-1">{initial(&card.channel.name)}</a>
+                <a class="avatar" href=channel.clone() aria-hidden="true" tabindex="-1"><Face channel=card.channel.clone() size=Size::Regular/></a>
                 <div class="owner-names">
                     <a class="owner-name" href=channel>{card.channel.name.clone()}</a>
                     <span class="owner-subscribers">

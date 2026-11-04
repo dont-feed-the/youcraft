@@ -146,14 +146,14 @@ impl Store {
         let row = connection
             .query_row(
                 &format!(
-                    "SELECT {STANDING}, c.id, c.handle, c.name FROM accounts a \
+                    "SELECT {STANDING}, c.id, c.handle, c.name, c.photo, a.history_paused FROM accounts a \
                      JOIN channels c ON c.account_id = a.id WHERE a.id = ?1"
                 ),
                 [account.to_i64()],
-                |row| Ok((standing(row)?, channel_card(row, 5)?)),
+                |row| Ok((standing(row)?, channel_card(row, 5)?, row.get(9)?)),
             )
             .optional()?;
-        let Some((standing, channel)) = row else {
+        let Some((standing, channel, history_paused)) = row else {
             return Ok(None);
         };
         Ok(Some(Me {
@@ -162,6 +162,7 @@ impl Store {
             role: standing.role,
             blocked: standing.blocked,
             preferences: standing.preferences,
+            history_paused,
         }))
     }
 

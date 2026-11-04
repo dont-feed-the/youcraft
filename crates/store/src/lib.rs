@@ -15,6 +15,7 @@ pub mod invitations;
 pub mod jobs;
 mod migrations;
 pub mod playlists;
+pub mod profiles;
 pub mod search;
 pub mod studio;
 pub mod uploads;

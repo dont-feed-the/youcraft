@@ -101,7 +101,10 @@ pub struct Listed {
 
 /// The columns [`card`] reads, from `videos` as `v` joined with its `channels` as `c`.
 pub(crate) const CARD_COLUMNS: &str = "v.id, v.title, v.duration_ticks, v.timescale, v.view_count, \
-    COALESCE(v.published_at, v.created_at), c.id, c.handle, c.name";
+    COALESCE(v.published_at, v.created_at), c.id, c.handle, c.name, c.photo";
+
+/// How many columns [`CARD_COLUMNS`] names; a query's own come after them.
+pub(crate) const CARD_WIDTH: usize = 6 + crate::channels::CARD_WIDTH;
 
 /// The [`VideoCard`] of a row that starts with [`CARD_COLUMNS`].
 pub(crate) fn card(row: &Row<'_>) -> rusqlite::Result<VideoCard> {
@@ -145,9 +148,9 @@ impl Store {
         let rows = statement.query_map([limit], |row| {
             Ok(Listed {
                 card: card(row)?,
-                likes: count(row.get(9)?),
-                dislikes: count(row.get(10)?),
-                comments: count(row.get(11)?),
+                likes: count(row.get(CARD_WIDTH)?),
+                dislikes: count(row.get(CARD_WIDTH + 1)?),
+                comments: count(row.get(CARD_WIDTH + 2)?),
             })
         })?;
         Ok(rows.collect::<Result<_, _>>()?)
@@ -195,15 +198,15 @@ impl Store {
                 |row| {
                     Ok(VideoPage {
                         card: card(row)?,
-                        description: row.get(9)?,
-                        likes: count(row.get(10)?),
-                        comments: count(row.get(11)?),
-                        comments_enabled: row.get::<_, i64>(12)? != 0,
-                        playable: row.get::<_, Named<State>>(13)?.0 == State::Ready,
-                        owned: row.get(14)?,
-                        subscribers: count(row.get(15)?),
-                        rating: Rating::from_value(row.get(16)?),
-                        subscribed: row.get(17)?,
+                        description: row.get(CARD_WIDTH)?,
+                        likes: count(row.get(CARD_WIDTH + 1)?),
+                        comments: count(row.get(CARD_WIDTH + 2)?),
+                        comments_enabled: row.get::<_, i64>(CARD_WIDTH + 3)? != 0,
+                        playable: row.get::<_, Named<State>>(CARD_WIDTH + 4)?.0 == State::Ready,
+                        owned: row.get(CARD_WIDTH + 5)?,
+                        subscribers: count(row.get(CARD_WIDTH + 6)?),
+                        rating: Rating::from_value(row.get(CARD_WIDTH + 7)?),
+                        subscribed: row.get(CARD_WIDTH + 8)?,
                     })
                 },
             )

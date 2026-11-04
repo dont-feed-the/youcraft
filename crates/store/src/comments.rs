@@ -10,7 +10,7 @@ use rusqlite::{OptionalExtension, Row, Transaction, named_params};
 use youcraft_api::commands::comment::{Comment, Order};
 use youcraft_api::{CommentId, VideoId};
 
-use crate::channels::channel_card;
+use crate::channels::{CARD_WIDTH, card_columns, channel_card};
 use crate::videos::VISIBLE;
 use crate::{Paged, Reader, Store, StoreError, Window, count};
 
@@ -26,10 +26,11 @@ const DELETABLE: &str = "(m.account_id IS :reader OR c.account_id IS :reader OR 
 /// video `v` and the video's channel `c`), for the reader `:reader`.
 fn columns() -> String {
     format!(
-        "m.id, m.video_id, m.parent_id, a.id, a.handle, a.name, m.body, m.like_count, \
+        "m.id, m.video_id, m.parent_id, {}, m.body, m.like_count, \
          m.reply_count, m.created_at, m.edited_at IS NOT NULL, \
          EXISTS (SELECT 1 FROM comment_likes l WHERE l.comment_id = m.id AND l.account_id = :reader), \
-         m.account_id = c.account_id, m.account_id IS :reader, {DELETABLE}"
+         m.account_id = c.account_id, m.account_id IS :reader, {DELETABLE}",
+        card_columns("a")
     )
 }
 
@@ -42,20 +43,22 @@ fn seen() -> String {
 }
 
 fn comment(row: &Row<'_>) -> rusqlite::Result<Comment> {
+    // the columns after the author's card
+    let after = 3 + CARD_WIDTH;
     Ok(Comment {
         id: CommentId::from_i64(row.get(0)?),
         video: VideoId::from_i64(row.get(1)?),
         parent: row.get::<_, Option<i64>>(2)?.map(CommentId::from_i64),
         author: channel_card(row, 3)?,
-        body: row.get(6)?,
-        likes: count(row.get(7)?),
-        replies: count(row.get(8)?),
-        created_at: row.get(9)?,
-        edited: row.get(10)?,
-        liked: row.get(11)?,
-        by_creator: row.get(12)?,
-        editable: row.get(13)?,
-        deletable: row.get(14)?,
+        body: row.get(after)?,
+        likes: count(row.get(after + 1)?),
+        replies: count(row.get(after + 2)?),
+        created_at: row.get(after + 3)?,
+        edited: row.get(after + 4)?,
+        liked: row.get(after + 5)?,
+        by_creator: row.get(after + 6)?,
+        editable: row.get(after + 7)?,
+        deletable: row.get(after + 8)?,
     })
 }
 

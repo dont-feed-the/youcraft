@@ -10,6 +10,7 @@ mod history;
 pub mod input;
 mod invite;
 mod playlist;
+mod profile;
 mod search;
 mod site;
 pub mod studio;

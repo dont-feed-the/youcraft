@@ -53,6 +53,8 @@ pub enum Icon {
     Forward,
     /// A key: personal tokens.
     Key,
+    /// A shield with a tick: the site's administration.
+    Shield,
     /// An envelope: invitations.
     Mail,
     /// Lines and a plus: save to a list.
@@ -164,6 +166,10 @@ impl Icon {
             Icon::Check => &["M5 12.5l4.5 4.5L19 7"],
             Icon::Back => &["M20 12H4", "M10 6l-6 6 6 6"],
             Icon::Forward => &["M9 5l7 7-7 7"],
+            Icon::Shield => &[
+                "M12 3l7 3v5c0 4.5-3 8.5-7 10c-4-1.5-7-5.5-7-10V6z",
+                "M9 12l2 2l4-4",
+            ],
             Icon::Key => &[
                 "M8 9a4 4 0 1 0 0 6a4 4 0 1 0 0-6",
                 "M11.5 12H21",

@@ -1,7 +1,8 @@
 //! The account end of the masthead: the avatar and its menu when signed in; the settings menu
-//! and the sign-in button when not. The menu opens on panels as YouTube's does: the account
-//! and its places first, then appearance and language, each with the current choice ticked,
-//! then the project's places beyond the site.
+//! and the sign-in button when not. The menu opens on panels as YouTube's does: the account and
+//! its places first (its channel, the studio, the settings, the administration for
+//! administrators, signing out), then appearance and language, each with the current choice
+//! ticked, then the project's places beyond the site.
 
 use leptos::prelude::*;
 use leptos_router::hooks::use_location;
@@ -9,6 +10,7 @@ use youcraft_api::commands::account::{Me, Theme};
 use youcraft_api::{Grant, routes};
 
 use crate::account::{Shown, SignedIn, choose_language, choose_theme, sign_out};
+use crate::components::avatar::{Face, Size};
 use crate::components::project;
 use crate::icons::{Glyph, Icon};
 use crate::lang::{Language, fill, offered, tr};
@@ -19,11 +21,6 @@ enum Panel {
     Main,
     Appearance,
     Language,
-}
-
-/// The first letter of `name`, as its avatar shows it.
-pub fn initial(name: &str) -> String {
-    name.chars().next().map(String::from).unwrap_or_default()
 }
 
 /// The name of `theme` as the menu's entry shows its value.
@@ -63,7 +60,7 @@ pub fn AccountArea() -> impl IntoView {
                     Some(me) => view! {
                         <button class="icon-button" type="button" aria-label=tr("Account menu")
                             aria-haspopup="menu" aria-expanded=expanded on:click=toggle>
-                            <span class="avatar">{initial(&me.channel.name)}</span>
+                            <span class="avatar"><Face channel=me.channel.clone() size=Size::Regular/></span>
                         </button>
                         <Menu me=Some(me) open/>
                     }.into_any(),
@@ -123,17 +120,25 @@ fn MainPanel(me: StoredValue<Option<Me>>, open: RwSignal<Option<Panel>>) -> impl
         let channel = routes::channel(&me.channel.handle);
         view! {
             <div class="menu-account">
-                <span class="avatar">{initial(&me.channel.name)}</span>
+                <span class="avatar"><Face channel=me.channel.clone() size=Size::Regular/></span>
                 <div class="menu-account-names">
                     <span class="menu-account-name">{me.channel.name.clone()}</span>
                     <bdi class="menu-account-handle">{format!("@{}", me.channel.handle)}</bdi>
-                    <a class="menu-link" href=channel>{tr("View your channel")}</a>
                 </div>
             </div>
             <hr class="menu-rule"/>
-            {(me.role >= Grant::Creator).then(|| view! {
-                <a class="menu-entry" role="menuitem" href=routes::STUDIO>
-                    <Glyph icon=Icon::Studio/><span>{tr("YouCraft Studio")}</span>
+            <a class="menu-entry" role="menuitem" href=channel>
+                <Glyph icon=Icon::Account/><span>{tr("Your channel")}</span>
+            </a>
+            <a class="menu-entry" role="menuitem" href=routes::STUDIO>
+                <Glyph icon=Icon::Studio/><span>{tr("YouCraft Studio")}</span>
+            </a>
+            <a class="menu-entry" role="menuitem" href=routes::ACCOUNT>
+                <Glyph icon=Icon::Settings/><span>{tr("Settings")}</span>
+            </a>
+            {(me.role >= Grant::Admin).then(|| view! {
+                <a class="menu-entry" role="menuitem" href=routes::ADMIN>
+                    <Glyph icon=Icon::Shield/><span>{tr("Administration")}</span>
                 </a>
             })}
             <button class="menu-entry" role="menuitem" type="button" on:click=move |_| sign_out()>
@@ -142,7 +147,6 @@ fn MainPanel(me: StoredValue<Option<Me>>, open: RwSignal<Option<Panel>>) -> impl
             <hr class="menu-rule"/>
         }
     });
-    let signed_in = me.with_value(Option::is_some);
     view! {
         <div class="menu-heading menu-close">
             <button class="icon-button" type="button" aria-label=tr("Back") on:click=move |_| open.set(None)>
@@ -162,12 +166,6 @@ fn MainPanel(me: StoredValue<Option<Me>>, open: RwSignal<Option<Panel>>) -> impl
             <span>{fill(tr("Language: {language}"), &[("language", &language)])}</span>
             <span class="menu-more"><Glyph icon=Icon::Forward/></span>
         </button>
-        {signed_in.then(|| view! {
-            <hr class="menu-rule"/>
-            <a class="menu-entry" role="menuitem" href=routes::ACCOUNT>
-                <Glyph icon=Icon::Settings/><span>{tr("Settings")}</span>
-            </a>
-        })}
         <hr class="menu-rule"/>
         {project::places().map(|place| view! {
             <a class="menu-entry" role="menuitem" rel="external" href=place.href>

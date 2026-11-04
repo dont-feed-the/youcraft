@@ -6,7 +6,7 @@ use youcraft_api::commands::playlist::{PLAYLIST_LIMIT, PlaylistCard, VIDEO_LIMIT
 use youcraft_api::records::{VideoCard, Visibility};
 use youcraft_api::{AccountId, ChannelId, List, PlaylistId, VideoId};
 
-use crate::channels::channel_card;
+use crate::channels::{self, CARD_WIDTH, channel_card};
 use crate::videos::{CARD_COLUMNS, VISIBLE, card};
 use crate::{Name, Named, Paged, Reader, Store, StoreError, Window, count};
 
@@ -38,10 +38,11 @@ const ITEMS: &str =
 /// `o`, for the reader `:reader`, telling whether it holds the video `:containing`.
 fn card_columns() -> String {
     format!(
-        "p.id, p.kind, p.title, p.visibility, p.updated_at, o.id, o.handle, o.name, \
+        "p.id, p.kind, p.title, p.visibility, p.updated_at, {}, \
          (SELECT count(*) FROM {ITEMS} AND {VISIBLE}), \
          (SELECT i.video_id FROM {ITEMS} AND {VISIBLE} ORDER BY i.position, i.added_at LIMIT 1), \
-         EXISTS (SELECT 1 FROM playlist_items i WHERE i.playlist_id = p.id AND i.video_id = :containing)"
+         EXISTS (SELECT 1 FROM playlist_items i WHERE i.playlist_id = p.id AND i.video_id = :containing)",
+        channels::card_columns("o")
     )
 }
 
@@ -59,9 +60,11 @@ fn playlist_card(row: &Row<'_>) -> rusqlite::Result<PlaylistCard> {
         visibility: row.get::<_, Named<Visibility>>(3)?.0,
         updated_at: row.get(4)?,
         owner: channel_card(row, 5)?,
-        videos: count(row.get(8)?),
-        first: row.get::<_, Option<i64>>(9)?.map(VideoId::from_i64),
-        contains: row.get(10)?,
+        videos: count(row.get(5 + CARD_WIDTH)?),
+        first: row
+            .get::<_, Option<i64>>(6 + CARD_WIDTH)?
+            .map(VideoId::from_i64),
+        contains: row.get(7 + CARD_WIDTH)?,
     })
 }
 
@@ -147,11 +150,12 @@ fn liked_card(
     let found = transaction
         .query_row(
             &format!(
-                "SELECT o.id, o.handle, o.name, (SELECT count(*) FROM {liked}), \
+                "SELECT {}, (SELECT count(*) FROM {liked}), \
                  (SELECT l.video_id FROM {liked} ORDER BY l.created_at DESC, v.id LIMIT 1), \
                  (SELECT max(l.created_at) FROM {liked}), \
                  EXISTS (SELECT 1 FROM likes WHERE account_id = :reader AND value = 1 AND video_id = :containing) \
-                 FROM channels o WHERE o.account_id = :reader"
+                 FROM channels o WHERE o.account_id = :reader",
+                channels::card_columns("o")
             ),
             named_params! {
                 ":reader": reader.id(), ":admin": reader.admin,
@@ -163,10 +167,10 @@ fn liked_card(
                     title: String::new(),
                     visibility: Visibility::Private,
                     owner: channel_card(row, 0)?,
-                    videos: count(row.get(3)?),
-                    first: row.get::<_, Option<i64>>(4)?.map(VideoId::from_i64),
-                    updated_at: row.get::<_, Option<i64>>(5)?.unwrap_or(0),
-                    contains: row.get(6)?,
+                    videos: count(row.get(CARD_WIDTH)?),
+                    first: row.get::<_, Option<i64>>(CARD_WIDTH + 1)?.map(VideoId::from_i64),
+                    updated_at: row.get::<_, Option<i64>>(CARD_WIDTH + 2)?.unwrap_or(0),
+                    contains: row.get(CARD_WIDTH + 3)?,
                 })
             },
         )
@@ -233,7 +237,10 @@ fn empty_watch_later(
 ) -> Result<Option<PlaylistCard>, StoreError> {
     let found = transaction
         .query_row(
-            "SELECT o.id, o.handle, o.name FROM channels o WHERE o.account_id = ?1",
+            &format!(
+                "SELECT {} FROM channels o WHERE o.account_id = ?1",
+                channels::card_columns("o")
+            ),
             [account.to_i64()],
             |row| channel_card(row, 0),
         )

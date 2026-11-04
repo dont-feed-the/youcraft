@@ -1,7 +1,9 @@
 //! The pages, one module each.
 
 pub mod account;
+pub mod admin;
 pub mod channel;
+pub mod customize;
 pub mod embed;
 pub mod history;
 pub mod home;

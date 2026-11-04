@@ -9,7 +9,7 @@ use youcraft_api::{List, routes};
 
 use crate::account::SignedIn;
 use crate::call::call;
-use crate::components::account_menu::initial;
+use crate::components::avatar::{Face, Size};
 use crate::components::project;
 use crate::icons::{Glyph, Icon};
 use crate::lang::tr;
@@ -78,7 +78,7 @@ fn SubscribedChannels() -> impl IntoView {
                         <h2 class="guide-heading">{tr("Subscriptions")}</h2>
                         {channels.into_iter().map(|channel| view! {
                             <a class="guide-entry" href=routes::channel(&channel.handle)>
-                                <span class="avatar avatar-small" aria-hidden="true">{initial(&channel.name)}</span>
+                                <span class="avatar avatar-small" aria-hidden="true"><Face channel=channel.clone() size=Size::Small/></span>
                                 <span class="guide-label">{channel.name}</span>
                             </a>
                         }).collect_view()}

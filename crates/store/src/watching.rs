@@ -6,7 +6,7 @@ use youcraft_api::commands::history::Watched;
 use youcraft_api::records::Rating;
 use youcraft_api::{AccountId, ChannelId, VideoId};
 
-use crate::videos::{CARD_COLUMNS, VISIBLE, card};
+use crate::videos::{CARD_COLUMNS, CARD_WIDTH, VISIBLE, card};
 use crate::{Paged, Reader, Store, StoreError, Window, count};
 
 /// What a person has done that the recommendation algorithm may weigh, most recent first.
@@ -122,7 +122,7 @@ impl Store {
             |row| {
                 Ok(Watched {
                     card: card(row)?,
-                    watched_at: row.get(9)?,
+                    watched_at: row.get(CARD_WIDTH)?,
                 })
             },
         )?;

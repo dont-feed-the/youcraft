@@ -9,7 +9,7 @@ use std::sync::Arc;
 
 use axum::Router;
 use axum::body::{Body, Bytes};
-use axum::extract::{Extension, FromRef, Path, Request, State};
+use axum::extract::{DefaultBodyLimit, Extension, FromRef, Path, Request, State};
 use axum::http::{HeaderMap, StatusCode, header};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, head, post};
@@ -17,6 +17,7 @@ use leptos::prelude::*;
 use leptos_axum::LeptosRoutes;
 use tower_http::services::{ServeDir, ServeFile};
 use youcraft_api::commands::account::Preferences;
+use youcraft_api::commands::profile::PHOTO_BYTES;
 use youcraft_api::{ApiError, Dispatch, Rule, routes};
 use youcraft_ui::lang::{Language, RenderTime};
 
@@ -26,6 +27,10 @@ use crate::listen::{Listener, listen, stopped};
 use crate::signin;
 use crate::site::{Caller, Credential, Site, now};
 use crate::visitor::{self, Visitor};
+
+/// The most bytes a command's input has: a photo in base64, the largest input, and room for the
+/// JSON around it.
+const COMMAND_BYTES: usize = PHOTO_BYTES / 3 * 4 + (64 << 10);
 
 /// What every handler can reach.
 #[derive(Clone)]
@@ -95,9 +100,16 @@ fn router(site: Arc<Site>, config: &Config) -> Router {
         .route(routes::SIGNED_IN_WITH_GOOGLE, post(signin::back))
         .with_state(Arc::clone(&site));
     let visited = Router::new()
-        .route("/api/v1/{id}", post(command))
-        .route(routes::MCP, post(mcp))
+        .route(
+            "/api/v1/{id}",
+            post(command).layer(DefaultBodyLimit::max(COMMAND_BYTES)),
+        )
+        .route(
+            routes::MCP,
+            post(mcp).layer(DefaultBodyLimit::max(COMMAND_BYTES)),
+        )
         .route("/media/{video}/{*file}", get(media))
+        .route("/photos/{channel}/{version}/{file}", get(photo))
         .route("/upload/{video}", head(upload_offset).patch(upload_piece))
         .leptos_routes_with_context(&state, pages, context.clone(), shell.clone())
         .fallback(leptos_axum::render_app_to_stream_with_context(
@@ -203,6 +215,15 @@ async fn media(
     request: Request,
 ) -> Response {
     crate::media::serve(&state.site, visitor.caller, &video, &file, request).await
+}
+
+/// `GET /photos/<channel>/<version>/<file>`.
+async fn photo(
+    State(state): State<AppState>,
+    Path((channel, version, file)): Path<(String, String, String)>,
+    request: Request,
+) -> Response {
+    crate::media::serve_photo(&state.site, (&channel, &version, &file), request).await
 }
 
 /// `HEAD /upload/<video>`.
@@ -727,6 +748,80 @@ pub mod tests {
             headers[header::LOCATION],
             "/signin/failed?why=too_often&next=%2F",
             "an address signs in only so often too"
+        );
+    }
+
+    #[tokio::test]
+    async fn every_account_customizes_its_channel_and_admins_moderate_them() {
+        use serde_json::json;
+
+        let (site, routes) = site();
+        site.store()
+            .invite("ada@example.com", youcraft_api::Grant::Admin, 1)
+            .unwrap();
+        let ada = sign_in(&routes, "ada").await;
+        let bob = sign_in(&routes, "bob").await;
+        let (_, bob_me) = answer(&routes, "account.me", json!({}), &bob).await;
+        let handle = bob_me["channel"]["handle"].as_str().unwrap().to_owned();
+        let change = json!({ "name": "  Bobby ", "description": "Waves, mostly." });
+        let (status, profile) = answer(&routes, "channel.update", change, &bob).await;
+        assert_eq!(status, StatusCode::OK, "a viewer edits their own channel");
+        assert_eq!(profile["card"]["name"], "Bobby");
+        assert_eq!(
+            profile["card"]["handle"],
+            handle.as_str(),
+            "the handle stays"
+        );
+        assert_eq!(profile["description"], "Waves, mostly.");
+        let too_long = json!({ "name": "x".repeat(51) });
+        assert_eq!(
+            answer(&routes, "channel.update", too_long, &bob).await.0,
+            StatusCode::UNPROCESSABLE_ENTITY
+        );
+        let garbage = json!({ "image": "not base64!" });
+        assert_eq!(
+            answer(&routes, "channel.set_photo", garbage, &bob).await.0,
+            StatusCode::UNPROCESSABLE_ENTITY
+        );
+        let huge = json!({ "image": "A".repeat(PHOTO_BYTES / 3 * 4 + 8) });
+        assert_eq!(
+            answer(&routes, "channel.set_photo", huge, &bob).await.0,
+            StatusCode::PAYLOAD_TOO_LARGE
+        );
+        let (status, removed) = answer(&routes, "channel.remove_photo", json!({}), &bob).await;
+        assert_eq!(status, StatusCode::OK);
+        assert_eq!(removed["card"]["photo"], serde_json::Value::Null);
+
+        let target = json!({ "handle": handle });
+        assert_eq!(
+            answer(&routes, "admin.reset_name", target.clone(), &bob)
+                .await
+                .0,
+            StatusCode::FORBIDDEN
+        );
+        let (_, reset) = answer(&routes, "admin.reset_name", target.clone(), &ada).await;
+        assert_eq!(
+            reset["card"]["name"],
+            handle.as_str(),
+            "named after its handle"
+        );
+        let (_, found) = answer(&routes, "admin.accounts", json!({ "query": handle }), &ada).await;
+        assert_eq!(found["accounts"][0]["channel"]["handle"], handle.as_str());
+        assert!(
+            !found.to_string().contains("@example.com"),
+            "no e-mail address in the list"
+        );
+        let block = json!({ "handle": handle, "blocked": true });
+        assert_eq!(
+            answer(&routes, "admin.block", block, &ada).await.0,
+            StatusCode::OK
+        );
+        assert_eq!(
+            answer(&routes, "channel.update", json!({ "name": "Back" }), &bob)
+                .await
+                .0,
+            StatusCode::FORBIDDEN,
+            "a blocked account changes nothing"
         );
     }
 

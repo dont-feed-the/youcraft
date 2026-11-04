@@ -11,8 +11,9 @@ use crate::ids::ChannelId;
 use crate::records::{ChannelCard, Feed};
 use crate::role::Role;
 
-/// The longest name of a channel, in characters.
-pub const NAME_LIMIT: usize = 100;
+/// The longest name of a channel, in characters: what its owner may give it, and what is kept
+/// of the name Google gives a new account.
+pub const NAME_LIMIT: usize = 50;
 
 /// What the top of a channel's page shows about it.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
