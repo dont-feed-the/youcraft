@@ -39,6 +39,8 @@ pub fn AccountArea() -> impl IntoView {
     let location = use_location();
     let here = move || format!("{}{}", location.pathname.get(), location.search.get());
     let me = SignedIn::resource();
+    // The masthead outlives every page, so the menu would stay open on the next one.
+    Effect::watch(here, move |_, _, _| open.set(None), false);
     let toggle = move |_| {
         open.update(|panel| {
             *panel = if panel.is_some() {
@@ -127,19 +129,11 @@ fn MainPanel(me: StoredValue<Option<Me>>, open: RwSignal<Option<Panel>>) -> impl
                 </div>
             </div>
             <hr class="menu-rule"/>
-            <a class="menu-entry" role="menuitem" href=channel>
-                <Glyph icon=Icon::Account/><span>{tr("Your channel")}</span>
-            </a>
-            <a class="menu-entry" role="menuitem" href=routes::STUDIO>
-                <Glyph icon=Icon::Studio/><span>{tr("YouCraft Studio")}</span>
-            </a>
-            <a class="menu-entry" role="menuitem" href=routes::ACCOUNT>
-                <Glyph icon=Icon::Settings/><span>{tr("Settings")}</span>
-            </a>
+            <MenuLink href=channel icon=Icon::Account label=tr("Your channel") open/>
+            <MenuLink href=routes::STUDIO icon=Icon::Studio label=tr("YouCraft Studio") open/>
+            <MenuLink href=routes::ACCOUNT icon=Icon::Settings label=tr("Settings") open/>
             {(me.role >= Grant::Admin).then(|| view! {
-                <a class="menu-entry" role="menuitem" href=routes::ADMIN>
-                    <Glyph icon=Icon::Shield/><span>{tr("Administration")}</span>
-                </a>
+                <MenuLink href=routes::ADMIN icon=Icon::Shield label=tr("Administration") open/>
             })}
             <button class="menu-entry" role="menuitem" type="button" on:click=move |_| sign_out()>
                 <Glyph icon=Icon::SignOut/><span>{tr("Sign out")}</span>
@@ -168,10 +162,26 @@ fn MainPanel(me: StoredValue<Option<Me>>, open: RwSignal<Option<Panel>>) -> impl
         </button>
         <hr class="menu-rule"/>
         {project::places().map(|place| view! {
-            <a class="menu-entry" role="menuitem" rel="external" href=place.href>
-                <Glyph icon=place.icon/><span>{place.label}</span>
-            </a>
+            <MenuLink href=place.href icon=place.icon label=place.label external=true open/>
         }).into_iter().collect_view()}
+    }
+}
+
+/// A link of the menu. Following it closes the menu, though it leads to the page already shown,
+/// or off the site, where going back would find the menu open still.
+#[component]
+fn MenuLink(
+    #[prop(into)] href: String,
+    icon: Icon,
+    label: &'static str,
+    #[prop(optional)] external: bool,
+    open: RwSignal<Option<Panel>>,
+) -> impl IntoView {
+    view! {
+        <a class="menu-entry" role="menuitem" href=href rel=external.then_some("external")
+            on:click=move |_| open.set(None)>
+            <Glyph icon=icon/><span>{label}</span>
+        </a>
     }
 }
 

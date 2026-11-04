@@ -2,6 +2,14 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.3.5
+
+### Fixed
+
+- Following a link of the account menu closes the menu, even a link to the page already shown or
+  off the site, and so does going back or forward to another page; it no longer stays open on
+  top of the next page.
+
 ## 0.3.4
 
 ### Fixed
