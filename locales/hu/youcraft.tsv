@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	Ez a fájl nem olyan videó, amelyet a YouCraft be tud olvasni.
 	This file is damaged.	Ez a fájl sérült.
 	Processing failed. Upload the video again.	A feldolgozás nem sikerült. Töltsd fel újra a videót.
+	This video is longer than YouCraft accepts.	Ez a videó hosszabb annál, amit a YouCraft elfogad.
+	This video needs more than YouCraft allows. Try a smaller file.	Ehhez a videóhoz több kell, mint amennyit a YouCraft megenged. Próbálkozzon kisebb fájllal.
 	Upload failed. Try again.	A feltöltés nem sikerült. Próbáld újra.
 	The file is too large.	A fájl túl nagy.
 	This can't be empty.	Ez nem lehet üres.

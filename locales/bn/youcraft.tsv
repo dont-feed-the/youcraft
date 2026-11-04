@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	এই ফাইলটি এমন কোনো ভিডিও নয় যা YouCraft পড়তে পারে।
 	This file is damaged.	এই ফাইলটি ক্ষতিগ্রস্ত।
 	Processing failed. Upload the video again.	প্রক্রিয়াকরণ ব্যর্থ হয়েছে। ভিডিওটি আবার আপলোড করুন।
+	This video is longer than YouCraft accepts.	এই ভিডিওটি YouCraft যতটা গ্রহণ করে তার চেয়ে দীর্ঘ।
+	This video needs more than YouCraft allows. Try a smaller file.	এই ভিডিওটির জন্য YouCraft যতটা অনুমতি দেয় তার চেয়ে বেশি লাগে। আরও ছোট একটি ফাইল চেষ্টা করুন।
 	Upload failed. Try again.	আপলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।
 	The file is too large.	ফাইলটি খুব বড়।
 	This can't be empty.	এটি খালি রাখা যাবে না।

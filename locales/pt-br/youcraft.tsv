@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	Este arquivo não é um vídeo que o YouCraft consiga ler.
 	This file is damaged.	Este arquivo está danificado.
 	Processing failed. Upload the video again.	Falha no processamento. Envie o vídeo novamente.
+	This video is longer than YouCraft accepts.	Este vídeo é mais longo do que o YouCraft aceita.
+	This video needs more than YouCraft allows. Try a smaller file.	Este vídeo exige mais do que o YouCraft permite. Tente um arquivo menor.
 	Upload failed. Try again.	Falha no envio. Tente novamente.
 	The file is too large.	O arquivo é grande demais.
 	This can't be empty.	Isto não pode ficar vazio.

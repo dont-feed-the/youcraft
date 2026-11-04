@@ -2,11 +2,12 @@
 //!
 //! FilmCraft's fragmented MP4 writer does the boxes; this keeps count of where each part lands,
 //! so the HLS playlists can address the init segment and every media segment of the one file by
-//! byte range. Each segment records its first decode time and duration in the track's timescale.
+//! byte range. Each segment records its duration in the track's timescale.
 
 use std::fs::File;
 use std::io::{BufWriter, Write};
-use std::path::Path;
+use std::num::NonZeroU32;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -28,8 +29,6 @@ pub struct Range {
 pub struct Segment {
     /// Where its fragment lies.
     pub range: Range,
-    /// Its first decode time, in the track's timescale.
-    pub start: u64,
     /// How long it lasts, in the track's timescale.
     pub duration: u64,
 }
@@ -38,7 +37,7 @@ pub struct Segment {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Track {
     /// Its ticks per second.
-    pub timescale: u32,
+    pub timescale: NonZeroU32,
     /// The init segment.
     pub init: Range,
     /// Its media segments in order.
@@ -49,22 +48,6 @@ impl Track {
     /// Its length in ticks.
     pub fn duration(&self) -> u64 {
         self.segments.iter().map(|s| s.duration).sum()
-    }
-
-    /// Bits per second of its busiest segment, and of the whole track.
-    pub fn bandwidth(&self) -> (u64, u64) {
-        let rate = |bytes: u64, ticks: u64| {
-            (u128::from(bytes) * 8 * u128::from(self.timescale))
-                .checked_div(u128::from(ticks))
-                .map_or(0, |bits| u64::try_from(bits).unwrap_or(u64::MAX))
-        };
-        let peak = self
-            .segments
-            .iter()
-            .map(|s| rate(s.range.length, s.duration))
-            .max();
-        let bytes = self.segments.iter().map(|s| s.range.length).sum();
-        (peak.unwrap_or(0), rate(bytes, self.duration()))
     }
 }
 
@@ -88,25 +71,26 @@ impl Write for Counted {
 
 /// A track file being written.
 pub struct TrackWriter {
+    path: PathBuf,
     writer: FragmentedWriter<Counted>,
     written: Arc<AtomicU64>,
     track: Track,
-    /// Decode time of the next sample, and of the open segment's first one.
-    next: u64,
-    segment_start: u64,
+    /// How long the open segment lasts so far, and whether it holds a sample.
+    open: u64,
     pending: bool,
 }
 
 impl TrackWriter {
     /// Create `path` for one track described by `config`, and write its init segment.
     pub fn create(path: &Path, config: TrackConfig) -> Result<TrackWriter, Error> {
+        let timescale = NonZeroU32::new(config.timescale)
+            .ok_or_else(|| Error::Encode("a track with no timescale".into()))?;
         let file = File::create(path).map_err(|e| Error::io(path, &e))?;
         let written = Arc::new(AtomicU64::new(0));
         let counted = Counted {
             inner: BufWriter::new(file),
             written: Arc::clone(&written),
         };
-        let timescale = config.timescale;
         let mut writer = FragmentedWriter::new(counted, WriterOptions::new(Brand::Mp4));
         writer.add_track(config).map_err(Error::mux)?;
         // with nothing buffered, the first flush writes the init segment alone
@@ -116,6 +100,7 @@ impl TrackWriter {
             length: written.load(Ordering::Relaxed),
         };
         Ok(TrackWriter {
+            path: path.to_owned(),
             writer,
             written,
             track: Track {
@@ -123,8 +108,7 @@ impl TrackWriter {
                 init,
                 segments: Vec::new(),
             },
-            next: 0,
-            segment_start: 0,
+            open: 0,
             pending: false,
         })
     }
@@ -138,7 +122,7 @@ impl TrackWriter {
             is_sync: sync,
         };
         self.writer.write_sample(0, sample).map_err(Error::mux)?;
-        self.next = self.next.saturating_add(u64::from(duration));
+        self.open = self.open.saturating_add(u64::from(duration));
         self.pending = true;
         Ok(())
     }
@@ -153,10 +137,9 @@ impl TrackWriter {
         let length = self.written.load(Ordering::Relaxed).saturating_sub(offset);
         self.track.segments.push(Segment {
             range: Range { offset, length },
-            start: self.segment_start,
-            duration: self.next.saturating_sub(self.segment_start),
+            duration: self.open,
         });
-        self.segment_start = self.next;
+        self.open = 0;
         self.pending = false;
         Ok(())
     }
@@ -165,7 +148,7 @@ impl TrackWriter {
     pub fn finish(mut self) -> Result<Track, Error> {
         self.cut()?;
         let mut counted = self.writer.finish().map_err(Error::mux)?;
-        counted.flush().map_err(|e| Error::Io(e.to_string()))?;
+        counted.flush().map_err(|e| Error::io(&self.path, &e))?;
         Ok(self.track)
     }
 }

@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	Этот файл — не видео, которое может прочитать YouCraft.
 	This file is damaged.	Этот файл повреждён.
 	Processing failed. Upload the video again.	Не удалось обработать видео. Загрузите его ещё раз.
+	This video is longer than YouCraft accepts.	Это видео длиннее, чем принимает YouCraft.
+	This video needs more than YouCraft allows. Try a smaller file.	Этому видео нужно больше, чем позволяет YouCraft. Попробуйте файл поменьше.
 	Upload failed. Try again.	Не удалось загрузить. Повторите попытку.
 	The file is too large.	Файл слишком большой.
 	This can't be empty.	Это не может быть пустым.

@@ -325,11 +325,11 @@ pub fn tile(
     duration: f64,
 ) -> Option<(String, u32, u32, u32, u32)> {
     let per_sheet = board.columns.checked_mul(board.rows).filter(|n| *n > 0)?;
-    if board.interval.ticks == 0 || board.interval.timescale == 0 {
+    if board.interval.ticks == 0 {
         return None;
     }
     let tiles_of = |seconds: f64| {
-        seconds.max(0.0) * f64::from(board.interval.timescale) / board.interval.ticks as f64
+        seconds.max(0.0) * f64::from(board.interval.timescale.get()) / board.interval.ticks as f64
     };
     let in_sheets = u64::from(per_sheet).checked_mul(u64::from(board.sheets))?;
     let in_video = tiles_of(duration).ceil() as u64;
@@ -358,7 +358,7 @@ mod tests {
         let board = Storyboard {
             interval: MediaDuration {
                 ticks: 2,
-                timescale: 1,
+                timescale: std::num::NonZeroU32::MIN,
             },
             tile_width: 160,
             tile_height: 90,

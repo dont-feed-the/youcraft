@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	這個檔案不是 YouCraft 能讀取的影片。
 	This file is damaged.	這個檔案已損毀。
 	Processing failed. Upload the video again.	處理失敗，請重新上傳影片。
+	This video is longer than YouCraft accepts.	這部影片超過 YouCraft 接受的長度。
+	This video needs more than YouCraft allows. Try a smaller file.	這部影片所需的資源超出 YouCraft 允許的範圍。請試試更小的檔案。
 	Upload failed. Try again.	上傳失敗，請再試一次。
 	The file is too large.	檔案太大。
 	This can't be empty.	此欄不能空白。

@@ -1,7 +1,7 @@
 //! What the studio shows and changes: a channel's videos in every state, edits, deletion.
 
 use rusqlite::{OptionalExtension, Row, params};
-use youcraft_api::records::{Processing, StudioVideo, Visibility};
+use youcraft_api::records::{Failure, Processing, StudioVideo, Visibility};
 use youcraft_api::{ChannelId, VideoId};
 
 use crate::videos::{CARD_COLUMNS, State, card};
@@ -38,8 +38,8 @@ fn studio_video(row: &Row<'_>) -> rusqlite::Result<StudioVideo> {
         State::Ready => Processing::Ready,
         State::Failed => Processing::Failed {
             reason: row
-                .get::<_, Option<String>>(12)?
-                .unwrap_or_else(|| "internal".to_owned()),
+                .get::<_, Option<Named<Failure>>>(12)?
+                .map_or(Failure::Internal, |Named(failure)| failure),
         },
     };
     Ok(StudioVideo {
@@ -124,12 +124,14 @@ impl Store {
 
 #[cfg(test)]
 mod tests {
+    use std::num::NonZeroU32;
+
     use youcraft_api::time::MediaDuration;
     use youcraft_api::{AccountId, Grant};
 
     use super::*;
     use crate::accounts::NewAccount;
-    use crate::jobs::{Made, MadeRendition};
+    use crate::jobs::{JobDone, Made, MadeRendition};
     use crate::uploads::{Allowance, Claim, NewUpload};
 
     fn store() -> (Store, AccountId, ChannelId) {
@@ -210,16 +212,52 @@ mod tests {
         let made = Made {
             duration: MediaDuration {
                 ticks: 140 * 3003,
-                timescale: 90_000,
+                timescale: NonZeroU32::new(90_000).unwrap(),
             },
             width: 1280,
             height: 720,
             renditions: &[rendition],
         };
-        store.job_done(job, &made, 300).unwrap();
+        assert_eq!(store.job_done(job, &made, 300).unwrap(), JobDone::Ready);
         let listed = store.recent_watchable(10).unwrap();
         assert_eq!(listed[0].card.published_at, 300);
         assert_eq!(listed[0].card.duration, made.duration);
+    }
+
+    #[test]
+    fn a_job_whose_video_went_is_gone_and_failures_read_back() {
+        let (store, _, channel) = store();
+        let (gone, failing) = (
+            upload(&store, channel, 11, 200),
+            upload(&store, channel, 12, 200),
+        );
+        for video in [gone, failing] {
+            store.set_received(video, 1000).unwrap();
+            store.finish_upload(video, 200).unwrap();
+        }
+        let first = store.claim_job(210).unwrap().unwrap();
+        let second = store.claim_job(210).unwrap().unwrap();
+        let (job, other) = if first.video == gone {
+            (first, second)
+        } else {
+            (second, first)
+        };
+        store.delete_video(gone).unwrap();
+        let made = Made {
+            duration: MediaDuration::from_millis(1000),
+            width: 640,
+            height: 360,
+            renditions: &[],
+        };
+        assert_eq!(store.job_done(job, &made, 300).unwrap(), JobDone::Gone);
+        store.job_failed(other, Failure::TooLong, 300).unwrap();
+        let state = store.studio_video(failing).unwrap().unwrap().processing;
+        assert_eq!(
+            state,
+            Processing::Failed {
+                reason: Failure::TooLong
+            }
+        );
     }
 
     #[test]
@@ -238,7 +276,7 @@ mod tests {
         assert_eq!(
             state,
             Processing::Failed {
-                reason: "internal".to_owned()
+                reason: Failure::Internal
             }
         );
     }

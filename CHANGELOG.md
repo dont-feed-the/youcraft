@@ -2,6 +2,28 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.3.1
+
+### Fixed
+
+- The quality a player picks follows each rendition's real bitrate: `BANDWIDTH` is the peak over
+  runs of one target duration, as RFC 8216 defines it, no longer inflated by the short last segment.
+- Surround sound (5.1, 7.1 and the other usual layouts) is mixed down to stereo with its centre and
+  surrounds, so dialogue is no longer lost.
+- A wide video at 60 frames per second (32:9, say) no longer fails processing at the file-size
+  limit: each file's limit follows the bitrate its renditions may reach.
+- A very wide or tall picture gets renditions no longer than 4096 pixels on a side, and a file
+  that claims an absurd pixel aspect or shape is refused instead of exhausting memory.
+- A video whose file holds fewer frames than it says still gets its thumbnails.
+
+### Changed
+
+- The studio says why a video could not be processed: too long for the site
+  (`YOUCRAFT_LONGEST_VIDEO_HOURS`, 12 by default), or more than the site's limits allow, besides
+  unreadable, damaged or a failure of the site.
+- The same upload makes the same renditions on any machine, and they are deblocked across more of
+  each picture.
+
 ## 0.3.0
 
 ### Changed

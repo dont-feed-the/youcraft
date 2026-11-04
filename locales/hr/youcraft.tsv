@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	Ova datoteka nije videozapis koji YouCraft može pročitati.
 	This file is damaged.	Ova je datoteka oštećena.
 	Processing failed. Upload the video again.	Obrada nije uspjela. Ponovno prenesite videozapis.
+	This video is longer than YouCraft accepts.	Ovaj je videozapis dulji nego što YouCraft prihvaća.
+	This video needs more than YouCraft allows. Try a smaller file.	Ovaj videozapis traži više nego što YouCraft dopušta. Pokušajte s manjom datotekom.
 	Upload failed. Try again.	Prijenos nije uspio. Pokušajte ponovno.
 	The file is too large.	Datoteka je prevelika.
 	This can't be empty.	Ovo ne smije biti prazno.

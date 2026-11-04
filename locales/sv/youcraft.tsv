@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	Den här filen är inte en video som YouCraft kan läsa.
 	This file is damaged.	Den här filen är skadad.
 	Processing failed. Upload the video again.	Bearbetningen misslyckades. Ladda upp videon igen.
+	This video is longer than YouCraft accepts.	Den här videon är längre än YouCraft tar emot.
+	This video needs more than YouCraft allows. Try a smaller file.	Den här videon kräver mer än YouCraft tillåter. Prova en mindre fil.
 	Upload failed. Try again.	Uppladdningen misslyckades. Försök igen.
 	The file is too large.	Filen är för stor.
 	This can't be empty.	Det här får inte vara tomt.

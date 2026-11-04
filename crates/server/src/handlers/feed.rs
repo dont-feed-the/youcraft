@@ -96,7 +96,10 @@ fn candidate(listed: &Listed) -> Candidate {
         channel: card.channel.id.to_string(),
         title: card.title.clone(),
         published_at: card.published_at,
-        duration_ms: card.duration.in_timescale(1000).map_or(0, |d| d.ticks),
+        duration_ms: card
+            .duration
+            .in_timescale(youcraft_api::time::MILLISECONDS)
+            .map_or(0, |d| d.ticks),
         views: card.views,
         likes: listed.likes,
         dislikes: listed.dislikes,

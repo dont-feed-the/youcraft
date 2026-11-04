@@ -5,6 +5,7 @@
 
 use rusqlite::{OptionalExtension, params};
 use youcraft_api::VideoId;
+use youcraft_api::records::Failure;
 use youcraft_api::time::MediaDuration;
 
 use crate::{Store, StoreError};
@@ -33,6 +34,15 @@ pub struct MadeRendition<'a> {
     pub codecs: &'a str,
 }
 
+/// What became of a job that made its video playable.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum JobDone {
+    /// Its video is ready, and published if it is public.
+    Ready,
+    /// Its video was deleted while it was made, and its job with it.
+    Gone,
+}
+
 /// What a job made of its video.
 pub struct Made<'a> {
     /// How long the video lasts.
@@ -55,16 +65,17 @@ impl Store {
             .prepare("SELECT video_id FROM jobs WHERE state = 'running' AND attempts >= ?1")?
             .query_map([MAX_ATTEMPTS], |row| row.get(0))?
             .collect::<Result<_, _>>()?;
+        let internal = Failure::Internal.as_str();
         for &video in &failed {
             transaction.execute(
-                "UPDATE videos SET state = 'failed', failure = 'internal' WHERE id = ?1",
-                [video],
+                "UPDATE videos SET state = 'failed', failure = ?2 WHERE id = ?1",
+                params![video, internal],
             )?;
         }
         transaction.execute(
-            "UPDATE jobs SET state = 'failed', failure = 'internal', finished_at = ?2 \
+            "UPDATE jobs SET state = 'failed', failure = ?3, finished_at = ?2 \
              WHERE state = 'running' AND attempts >= ?1",
-            params![MAX_ATTEMPTS, now],
+            params![MAX_ATTEMPTS, now, internal],
         )?;
         transaction.execute(
             "UPDATE jobs SET state = 'queued' WHERE state = 'running'",
@@ -98,15 +109,28 @@ impl Store {
         Ok(())
     }
 
-    /// `job` made its video playable as `made`; a public video is published now.
-    pub fn job_done(&self, job: Job, made: &Made<'_>, now: i64) -> Result<(), StoreError> {
+    /// `job` made its video playable as `made`; a public video is published now. Nothing changes
+    /// when the video is gone.
+    pub fn job_done(&self, job: Job, made: &Made<'_>, now: i64) -> Result<JobDone, StoreError> {
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
+        let video = job.video.to_i64();
+        let ready = transaction.execute(
+            "UPDATE videos SET state = 'ready', failure = NULL, duration_ticks = ?2, timescale = ?3, width = ?4, height = ?5, \
+             published_at = CASE WHEN visibility = 'public' THEN COALESCE(published_at, ?6) ELSE published_at END \
+             WHERE id = ?1",
+            params![
+                video, i64::try_from(made.duration.ticks).unwrap_or(i64::MAX), made.duration.timescale,
+                made.width, made.height, now
+            ],
+        )?;
+        if ready == 0 {
+            return Ok(JobDone::Gone);
+        }
         transaction.execute(
             "UPDATE jobs SET state = 'done', progress_permille = 1000, finished_at = ?2 WHERE id = ?1",
             params![job.id, now],
         )?;
-        let video = job.video.to_i64();
         transaction.execute("DELETE FROM renditions WHERE video_id = ?1", [video])?;
         for rendition in made.renditions {
             transaction.execute(
@@ -117,21 +141,13 @@ impl Store {
                 ],
             )?;
         }
-        transaction.execute(
-            "UPDATE videos SET state = 'ready', failure = NULL, duration_ticks = ?2, timescale = ?3, width = ?4, height = ?5, \
-             published_at = CASE WHEN visibility = 'public' THEN COALESCE(published_at, ?6) ELSE published_at END \
-             WHERE id = ?1",
-            params![
-                video, i64::try_from(made.duration.ticks).unwrap_or(i64::MAX), made.duration.timescale.max(1),
-                made.width, made.height, now
-            ],
-        )?;
         transaction.commit()?;
-        Ok(())
+        Ok(JobDone::Ready)
     }
 
     /// `job` could not make its video playable, for `reason`.
-    pub fn job_failed(&self, job: Job, reason: &str, now: i64) -> Result<(), StoreError> {
+    pub fn job_failed(&self, job: Job, reason: Failure, now: i64) -> Result<(), StoreError> {
+        let reason = reason.as_str();
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         transaction.execute(

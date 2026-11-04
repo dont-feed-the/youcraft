@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	Tämä tiedosto ei ole video, jota YouCraft osaa lukea.
 	This file is damaged.	Tämä tiedosto on vioittunut.
 	Processing failed. Upload the video again.	Käsittely epäonnistui. Lataa video uudelleen.
+	This video is longer than YouCraft accepts.	Tämä video on pidempi kuin YouCraft hyväksyy.
+	This video needs more than YouCraft allows. Try a smaller file.	Tämä video vaatii enemmän kuin YouCraft sallii. Kokeile pienempää tiedostoa.
 	Upload failed. Try again.	Lataus epäonnistui. Yritä uudelleen.
 	The file is too large.	Tiedosto on liian suuri.
 	This can't be empty.	Tämä ei voi olla tyhjä.

@@ -7,7 +7,7 @@
 use leptos::prelude::*;
 use leptos_meta::Title;
 use youcraft_api::commands::{feed, studio, video};
-use youcraft_api::records::{Processing, StudioPage, StudioVideo, Visibility};
+use youcraft_api::records::{Failure, Processing, StudioPage, StudioVideo, Visibility};
 use youcraft_api::routes;
 
 use crate::browser;
@@ -43,14 +43,18 @@ pub fn processing_text(processing: &Processing) -> Option<String> {
             Some(tr("Processing {n}%").replace("{n}", &percent(u64::from(*permille), 1000)))
         }
         Processing::Ready => None,
-        Processing::Failed { reason } => Some(
-            match reason.as_str() {
-                "unsupported" => tr("This file isn't a video YouCraft can read."),
-                "decode" => tr("This file is damaged."),
-                _ => tr("Processing failed. Upload the video again."),
-            }
-            .to_owned(),
-        ),
+        Processing::Failed { reason } => Some(failure_text(*reason).to_owned()),
+    }
+}
+
+/// Why a video could not be made playable, in words its creator can act on.
+fn failure_text(reason: Failure) -> &'static str {
+    match reason {
+        Failure::Unsupported => tr("This file isn't a video YouCraft can read."),
+        Failure::Decode => tr("This file is damaged."),
+        Failure::TooLong => tr("This video is longer than YouCraft accepts."),
+        Failure::Limits => tr("This video needs more than YouCraft allows. Try a smaller file."),
+        Failure::Internal => tr("Processing failed. Upload the video again."),
     }
 }
 

@@ -51,8 +51,13 @@ fn main() -> ExitCode {
         "serve" => serve(),
         "demo" => demo(),
         "transcode" => match rest {
-            [input, output] => transcode::run(input.as_ref(), output.as_ref()),
-            _ => Err("usage: youcraft transcode <input> <output directory>".to_owned()),
+            [input, output, memory, longest] => {
+                transcode::run(input.as_ref(), output.as_ref(), memory, longest)
+            }
+            _ => Err(
+                "usage: youcraft transcode <input> <output directory> <memory bytes> <longest seconds>"
+                    .to_owned(),
+            ),
         },
         "call" => client::call(rest),
         "commands" => client::commands(rest),

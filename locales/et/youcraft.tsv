@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	See fail ei ole video, mida YouCraft lugeda oskab.
 	This file is damaged.	See fail on rikutud.
 	Processing failed. Upload the video again.	Töötlemine ebaõnnestus. Laadi video uuesti üles.
+	This video is longer than YouCraft accepts.	See video on pikem, kui YouCraft vastu võtab.
+	This video needs more than YouCraft allows. Try a smaller file.	See video nõuab rohkem, kui YouCraft lubab. Proovi väiksemat faili.
 	Upload failed. Try again.	Üleslaadimine ebaõnnestus. Proovi uuesti.
 	The file is too large.	Fail on liiga suur.
 	This can't be empty.	See ei tohi olla tühi.

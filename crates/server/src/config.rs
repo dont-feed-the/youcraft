@@ -73,6 +73,8 @@ pub struct TranscodeLimits {
     pub memory_bytes: u64,
     /// Wall-clock time; the worker kills it after.
     pub wall: Duration,
+    /// The longest video it makes playable.
+    pub longest_video: Duration,
 }
 
 impl Config {
@@ -111,6 +113,7 @@ impl Config {
     /// - `YOUCRAFT_TRANSCODE_MEMORY_BYTES`: the address space a transcode may use; 8 GiB by
     ///   default.
     /// - `YOUCRAFT_TRANSCODE_HOURS`: the longest a transcode may run; 12 by default.
+    /// - `YOUCRAFT_LONGEST_VIDEO_HOURS`: the longest video the site makes playable; 12 by default.
     pub fn from_env() -> Result<Config, String> {
         let path = |name: &str, default: &str| {
             std::env::var_os(name).map_or_else(|| PathBuf::from(default), PathBuf::from)
@@ -187,6 +190,9 @@ impl Config {
                 wall: Duration::from_secs(
                     number("YOUCRAFT_TRANSCODE_HOURS", 12)?.saturating_mul(3600),
                 ),
+                longest_video: Duration::from_secs(
+                    number("YOUCRAFT_LONGEST_VIDEO_HOURS", 12)?.saturating_mul(3600),
+                ),
             },
         })
     }
@@ -237,6 +243,7 @@ impl Config {
             transcode: TranscodeLimits {
                 memory_bytes: 1 << 30,
                 wall: Duration::from_secs(60),
+                longest_video: Duration::from_secs(3600),
             },
         }
     }

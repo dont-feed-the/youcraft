@@ -13,7 +13,7 @@ use youcraft_store::comments::{NewComment, Outcome};
 use youcraft_store::playlists::NewPlaylist;
 use youcraft_store::uploads::{Allowance, NewUpload};
 use youcraft_store::{Reader, Store, StoreError};
-use youcraft_transcode::synthetic::{self, Synthetic};
+use youcraft_transcode::synthetic::{self, Synthetic, Tone};
 
 use crate::site::{Site, now};
 
@@ -68,7 +68,8 @@ pub async fn fill(site: &Site) -> Result<(), String> {
             height: 720,
             fps,
             frames: (10 + 2 * n) * fps.0 / fps.1,
-            tone_hz: Some(220 + 55 * n),
+            par: (1, 1),
+            sound: Some(Tone::stereo(220 + 55 * n)),
             hue: u8::try_from(n * 21 % 256).unwrap_or(0),
         };
         let path = site.config().originals().join(video.to_string());

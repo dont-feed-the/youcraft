@@ -2,24 +2,23 @@
 //!
 //! Frame `k` is a smooth gradient tinted by the video's hue, a light square that moves with `k`,
 //! and a strip of 16 blocks along the top that spells `k` in binary, so a decoded frame tells
-//! which frame it is. The sound is a sine tone. [`write_mp4`] encodes them as H.264 and AAC in
-//! an MP4 file, as a camera or an editor would hand them over.
+//! which frame it is. The sound is a sine tone on each channel, every channel at its own
+//! frequency, so a decoded mix tells where each went. [`write_mp4`] encodes them as H.264 and AAC
+//! in an MP4 file, as a camera or an editor would hand them over.
 
 use std::fs::File;
 use std::io::BufWriter;
 use std::path::Path;
 
-use filmcraft_aac::{Encoder as AacEncoder, EncoderConfig as AacConfig};
-use filmcraft_h264enc::{Encoder, EncoderConfig, PacketFormat, Preset, RateControl, YuvFrame};
-use filmcraft_isobmff::{
-    AvcConfig, Brand, Mp4Writer, SampleEntry, TrackConfig, WriteSample, WriterOptions,
-};
+use filmcraft_h264enc::{EncoderConfig, Preset, RateControl};
+use filmcraft_isobmff::{Brand, Mp4Writer, TrackConfig, WriteSample, WriterOptions};
 
 use crate::Error;
 use crate::picture::Rgba;
+use crate::pipeline::{H264, h264, planes};
 
 /// The audio sample rate of generated videos.
-pub const SAMPLE_RATE: u32 = 48_000;
+pub const SAMPLE_RATE: u32 = crate::audio::SAMPLE_RATE;
 /// Blocks in the strip that spells the frame number.
 pub const CODE_BITS: u32 = 16;
 
@@ -30,14 +29,56 @@ pub struct Synthetic {
     pub width: u32,
     /// The picture's size in pixels, even.
     pub height: u32,
+    /// The pixel aspect its stream declares, `horizontal:vertical`; `(1, 1)` is square.
+    pub par: (u16, u16),
     /// Frames per second, `num/den`.
     pub fps: (u32, u32),
     /// How many frames.
     pub frames: u32,
-    /// The tone's frequency in hertz; no sound when `None`.
-    pub tone_hz: Option<u32>,
+    /// Its sound; none when `None`.
+    pub sound: Option<Tone>,
     /// The tint of the picture, an angle on the colour wheel in 256ths of a turn.
     pub hue: u8,
+}
+
+/// A sine tone on every channel: channel `c`, in WAV order, at `(c + 1) × hz` hertz.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Tone {
+    /// The first channel's frequency, in hertz.
+    pub hz: u32,
+    /// How many channels: 1 (mono), 2 (stereo) or 6 (5.1: L R C LFE Ls Rs).
+    pub channels: u16,
+}
+
+impl Tone {
+    /// The stereo tone at `hz`.
+    pub const fn stereo(hz: u32) -> Tone {
+        Tone { hz, channels: 2 }
+    }
+
+    /// The frequency of `channel`, in hertz.
+    pub fn hz_of(&self, channel: u16) -> u32 {
+        self.hz.saturating_mul(u32::from(channel) + 1)
+    }
+
+    /// Sample `n` of `channel`, between -1 and 1.
+    pub fn sample(&self, channel: u16, n: u64) -> f32 {
+        let phase = (n as f64 * f64::from(self.hz_of(channel)) / f64::from(SAMPLE_RATE)).fract();
+        (0.25 * (phase * std::f64::consts::TAU).sin()) as f32
+    }
+
+    /// The WAV-order channel the AAC encoder's channel `element` carries: AAC lists a centre
+    /// first, then the pairs, then the LFE.
+    fn wav_channel(self, element: u16) -> Result<u16, Error> {
+        match (self.channels, element) {
+            (1 | 2, element) => Ok(element),
+            (6, element) => [2, 0, 1, 4, 5, 3]
+                .get(usize::from(element))
+                .copied()
+                .ok_or_else(|| Error::Unsupported("channel".into())),
+            _ => Err(Error::Unsupported(format!("{} channels", self.channels))),
+        }
+    }
 }
 
 /// R'G'B' of `hue` (256ths of a turn) at full saturation, between `low` and `high`.
@@ -102,13 +143,6 @@ pub fn read_code(luma: &[u8], width: u32, height: u32) -> u32 {
     })
 }
 
-/// Sample `n` of the tone, between -1 and 1.
-pub fn tone(spec: &Synthetic, n: u64) -> f32 {
-    let hz = f64::from(spec.tone_hz.unwrap_or(0));
-    let phase = (n as f64 * hz / f64::from(SAMPLE_RATE)).fract();
-    (0.25 * (phase * std::f64::consts::TAU).sin()) as f32
-}
-
 /// Write `spec` to `path` as an MP4 file.
 pub fn write_mp4(spec: &Synthetic, path: &Path) -> Result<(), Error> {
     let file = File::create(path).map_err(|e| Error::io(path, &e))?;
@@ -119,11 +153,16 @@ pub fn write_mp4(spec: &Synthetic, path: &Path) -> Result<(), Error> {
     config.rate = RateControl::Crf(16.0);
     config.preset = Preset::Speed;
     config.bframes = 0;
-    config.format = PacketFormat::LengthPrefixed;
-    let mut encoder = Encoder::new(config).map_err(|e| Error::Encode(e.to_string()))?;
-    let avc = AvcConfig::parse(&encoder.avcc()).map_err(Error::mux)?;
-    let size = |side: u32| u16::try_from(side).map_err(|_| Error::Unsupported("too large".into()));
-    let entry = SampleEntry::avc(avc, size(spec.width)?, size(spec.height)?);
+    config.sar = spec.par;
+    let H264 {
+        mut encoder,
+        mut entry,
+        ..
+    } = h264(config)?;
+    // the container says it, as cameras write it: FilmCraft reads the pixel aspect from `pasp`
+    if let Some(video) = entry.video.as_mut().filter(|_| spec.par != (1, 1)) {
+        video.pixel_aspect = Some((u32::from(spec.par.0), u32::from(spec.par.1)));
+    }
     let video = mp4
         .add_track(TrackConfig::new(entry, num))
         .map_err(Error::mux)?;
@@ -142,37 +181,35 @@ pub fn write_mp4(spec: &Synthetic, path: &Path) -> Result<(), Error> {
         };
     for k in 0..spec.frames {
         let yuv = frame(spec, k).to_yuv420();
-        let (w, cw) = (spec.width as usize, spec.width as usize / 2);
-        let input = YuvFrame {
-            y: &yuv.y,
-            u: &yuv.u,
-            v: &yuv.v,
-            y_stride: w,
-            uv_stride: cw,
-        };
         let packets = encoder
-            .encode(&input, i64::from(k))
+            .encode(&planes(&yuv), i64::from(k))
             .map_err(|e| Error::Encode(e.to_string()))?;
         write(&mut mp4, packets)?;
     }
     write(&mut mp4, encoder.flush())?;
-    if spec.tone_hz.is_some() {
-        let mut aac = AacEncoder::new(AacConfig::cbr(SAMPLE_RATE, 2, 128_000))
-            .map_err(|e| Error::Encode(e.to_string()))?;
-        let mut track = TrackConfig::new(
-            SampleEntry::aac(aac.audio_specific_config(), 2, SAMPLE_RATE),
-            SAMPLE_RATE,
-        );
-        track.media_start = Some(i64::from(aac.priming_samples()));
+    if let Some(tone) = spec.sound {
+        let bitrate = 64_000 * u32::from(tone.channels);
+        let (mut aac, track) = crate::audio::aac(tone.channels, bitrate)?;
         let audio = mp4.add_track(track).map_err(Error::mux)?;
         let samples = u64::from(spec.frames) * u64::from(den) * u64::from(SAMPLE_RATE)
             / u64::from(num.max(1));
+        let order = (0..tone.channels)
+            .map(|element| tone.wav_channel(element))
+            .collect::<Result<Vec<_>, _>>()?;
         let mut units = Vec::new();
         let mut start = 0;
         while start < samples {
             let n = (samples - start).min(u64::from(SAMPLE_RATE));
-            let mono: Vec<f32> = (start..start + n).map(|i| tone(spec, i)).collect();
-            units.extend(aac.encode(&[&mono, &mono]));
+            let channels: Vec<Vec<f32>> = order
+                .iter()
+                .map(|&channel| {
+                    (start..start + n)
+                        .map(|i| tone.sample(channel, i))
+                        .collect()
+                })
+                .collect();
+            let channels: Vec<&[f32]> = channels.iter().map(Vec::as_slice).collect();
+            units.extend(aac.encode(&channels));
             start += n;
         }
         units.extend(aac.flush());

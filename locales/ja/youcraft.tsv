@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	このファイルは YouCraft が読み込める動画ではありません。
 	This file is damaged.	このファイルは破損しています。
 	Processing failed. Upload the video again.	処理に失敗しました。動画をもう一度アップロードしてください。
+	This video is longer than YouCraft accepts.	この動画は YouCraft が受け付ける長さを超えています。
+	This video needs more than YouCraft allows. Try a smaller file.	この動画には YouCraft が許可する以上のリソースが必要です。もっと小さいファイルをお試しください。
 	Upload failed. Try again.	アップロードに失敗しました。もう一度お試しください。
 	The file is too large.	ファイルが大きすぎます。
 	This can't be empty.	空にはできません。

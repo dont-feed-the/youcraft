@@ -29,7 +29,7 @@ use rusqlite::{Connection, TransactionBehavior};
 use youcraft_api::AccountId;
 use youcraft_api::Grant;
 use youcraft_api::commands::account::Theme;
-use youcraft_api::records::Visibility;
+use youcraft_api::records::{Failure, Visibility};
 
 /// Why a query failed.
 #[derive(Debug, thiserror::Error)]
@@ -148,6 +148,13 @@ impl Name for Visibility {
     const WHAT: &'static str = "visibility";
     fn from_name(name: &str) -> Option<Visibility> {
         Visibility::from_name(name)
+    }
+}
+
+impl Name for Failure {
+    const WHAT: &'static str = "failure";
+    fn from_name(name: &str) -> Option<Failure> {
+        Failure::from_name(name)
     }
 }
 

@@ -173,12 +173,55 @@ pub enum Processing {
     },
     /// It plays.
     Ready,
-    /// It could not be made playable: `unsupported` (not a video the site reads), `decode` (the
-    /// file is damaged) or `internal`.
+    /// It could not be made playable.
     Failed {
         /// Why.
-        reason: String,
+        reason: Failure,
     },
+}
+
+/// Why a video could not be made playable, as its creator is told.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum Failure {
+    /// The file is not a video the site reads.
+    Unsupported,
+    /// A decoder failed on the file: it is damaged, or holds what the decoder does not read.
+    Decode,
+    /// The video lasts longer than the site makes playable.
+    TooLong,
+    /// Making it needed more memory, processor time, disk or wall-clock time than the site
+    /// gives one video.
+    Limits,
+    /// The site failed; its log says why.
+    Internal,
+}
+
+impl Failure {
+    /// Every failure.
+    pub const ALL: [Failure; 5] = [
+        Failure::Unsupported,
+        Failure::Decode,
+        Failure::TooLong,
+        Failure::Limits,
+        Failure::Internal,
+    ];
+
+    /// Its name in the database, in the API and between the transcoder and the server.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Failure::Unsupported => "unsupported",
+            Failure::Decode => "decode",
+            Failure::TooLong => "too_long",
+            Failure::Limits => "limits",
+            Failure::Internal => "internal",
+        }
+    }
+
+    /// The failure named `name`, as [`Failure::as_str`] writes it.
+    pub fn from_name(name: &str) -> Option<Failure> {
+        Failure::ALL.into_iter().find(|f| f.as_str() == name)
+    }
 }
 
 /// A video as its channel sees it in the studio.

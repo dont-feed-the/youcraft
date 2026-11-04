@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	Bu dosya YouCraft'ın okuyabildiği bir video değil.
 	This file is damaged.	Bu dosya bozuk.
 	Processing failed. Upload the video again.	İşleme başarısız oldu. Videoyu yeniden yükleyin.
+	This video is longer than YouCraft accepts.	Bu video, YouCraft'ın kabul ettiğinden daha uzun.
+	This video needs more than YouCraft allows. Try a smaller file.	Bu video, YouCraft'ın izin verdiğinden fazlasını gerektiriyor. Daha küçük bir dosya deneyin.
 	Upload failed. Try again.	Yükleme başarısız oldu. Tekrar deneyin.
 	The file is too large.	Dosya çok büyük.
 	This can't be empty.	Bu boş bırakılamaz.

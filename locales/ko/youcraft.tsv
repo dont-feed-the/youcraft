@@ -99,6 +99,8 @@
 	This file isn't a video YouCraft can read.	이 파일은 YouCraft에서 읽을 수 있는 동영상이 아닙니다.
 	This file is damaged.	이 파일은 손상되었습니다.
 	Processing failed. Upload the video again.	처리하지 못했습니다. 동영상을 다시 업로드하세요.
+	This video is longer than YouCraft accepts.	이 동영상은 YouCraft에서 받을 수 있는 길이보다 깁니다.
+	This video needs more than YouCraft allows. Try a smaller file.	이 동영상에는 YouCraft에서 허용하는 것보다 더 많은 자원이 필요합니다. 더 작은 파일로 시도해 보세요.
 	Upload failed. Try again.	업로드하지 못했습니다. 다시 시도하세요.
 	The file is too large.	파일이 너무 큽니다.
 	This can't be empty.	비워 둘 수 없습니다.

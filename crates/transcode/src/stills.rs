@@ -1,6 +1,6 @@
 //! Still pictures of a video: its thumbnails, and the storyboard the seek bar previews.
 //!
-//! Thumbnails are one frame, letterboxed into 16:9 at every width of
+//! Thumbnails are one frame at its display aspect, letterboxed into 16:9 at every width of
 //! `routes::THUMBNAIL_WIDTHS`. The storyboard is one small tile every `interval`, laid out in
 //! sheets of [`COLUMNS`]×[`ROWS`] tiles, row by row; tile `i` shows time `i × interval`. All are
 //! JPEG, through the same encoder FilmCraft writes its stills with.
@@ -9,7 +9,7 @@ use image::ImageEncoder;
 use image::codecs::jpeg::JpegEncoder;
 
 use crate::Error;
-use crate::picture::Rgba;
+use crate::picture::{Rgba, fit};
 
 /// Storyboard tiles per sheet row.
 pub const COLUMNS: u32 = 10;
@@ -43,9 +43,10 @@ pub fn jpeg(picture: &Rgba) -> Result<Vec<u8>, Error> {
     Ok(out)
 }
 
-/// The thumbnail of `frame` at `width`, 16:9.
-pub fn thumbnail(frame: &Rgba, width: u32) -> Rgba {
-    frame.fitted(width, width * 9 / 16)
+/// The thumbnail at `width`, 16:9, of `frame`, which shows at the `display` size.
+pub fn thumbnail(frame: &Rgba, display: (u32, u32), width: u32) -> Rgba {
+    let height = width * 9 / 16;
+    frame.letterboxed(fit(display, width, height), width, height)
 }
 
 /// How many frames apart storyboard tiles are, for `frames` frames at `rate_num/rate_den` frames

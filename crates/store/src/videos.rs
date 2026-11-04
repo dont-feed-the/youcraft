@@ -110,7 +110,7 @@ pub(crate) fn card(row: &Row<'_>) -> rusqlite::Result<VideoCard> {
         title: row.get(1)?,
         duration: MediaDuration {
             ticks: count(row.get(2)?),
-            timescale: u32::try_from(row.get::<_, i64>(3)?).unwrap_or(1000),
+            timescale: row.get(3)?,
         },
         views: count(row.get(4)?),
         published_at: row.get(5)?,

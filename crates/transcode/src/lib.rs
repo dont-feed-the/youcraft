@@ -22,7 +22,7 @@ use std::sync::Arc;
 use filmcraft_media::SharedSource;
 use filmcraft_media::reader::{FileReader, SharedReader, open_reader_within};
 use serde::{Deserialize, Serialize};
-use youcraft_api::records::Storyboard;
+use youcraft_api::records::{Failure, Storyboard};
 use youcraft_api::routes::{THUMBNAIL_WIDTHS, media_files};
 use youcraft_api::time::MediaDuration;
 
@@ -31,11 +31,17 @@ use crate::pipeline::Timing;
 
 /// The largest file read whole into memory, for formats that are not read piece by piece.
 const MAX_WHOLE_FILE: u64 = 256 << 20;
+/// The most pixels a source picture may hold: 8K (8192×4096, which 7680×4320 fits within).
+pub const MAX_SOURCE_PIXELS: u64 = 1 << 25;
+/// The widest pixel aspect a source may have, either way: 4:1 (anamorphic lenses squeeze 2:1).
+pub const MAX_PIXEL_ASPECT: u64 = 4;
+/// The widest picture a source may show, either way: 16:1.
+pub const MAX_ASPECT: u64 = 16;
 
 /// Why an upload could not be made into renditions.
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    /// The file is not a video FilmCraft reads.
+    /// The file is not a video FilmCraft reads, or not one the site makes.
     #[error("unsupported: {0}")]
     Unsupported(String),
     /// A decoder failed on the file.
@@ -58,13 +64,12 @@ impl Error {
         Error::Encode(format!("mp4: {error}"))
     }
 
-    /// What kind of failure it is, as the studio tells the creator: `unsupported`, `decode` or
-    /// `internal`.
-    pub fn kind(&self) -> &'static str {
+    /// What the creator is told of it.
+    pub fn failure(&self) -> Failure {
         match self {
-            Error::Unsupported(_) => "unsupported",
-            Error::Decode(_) => "decode",
-            Error::Encode(_) | Error::Io(_) => "internal",
+            Error::Unsupported(_) => Failure::Unsupported,
+            Error::Decode(_) => Failure::Decode,
+            Error::Encode(_) | Error::Io(_) => Failure::Internal,
         }
     }
 }
@@ -78,8 +83,10 @@ pub struct Rendition {
     pub width: u32,
     /// Its size in pixels.
     pub height: u32,
-    /// Bits per second of its busiest segment, audio included.
+    /// Its variant stream's peak segment bit rate, audio included: `BANDWIDTH`.
     pub bandwidth: u64,
+    /// Its variant stream's average segment bit rate, audio included: `AVERAGE-BANDWIDTH`.
+    pub average_bandwidth: u64,
     /// Its RFC 6381 codecs, as `avc1.64001f,mp4a.40.2`.
     pub codecs: String,
 }
@@ -116,6 +123,11 @@ pub fn video_file(label: u32) -> String {
     format!("{label}p.mp4")
 }
 
+/// The media playlist of the rendition named `label`.
+pub fn video_playlist(label: u32) -> String {
+    format!("{label}p.m3u8")
+}
+
 const AUDIO_FILE: &str = "audio.mp4";
 const AUDIO_PLAYLIST: &str = "audio.m3u8";
 
@@ -137,6 +149,44 @@ pub fn open(path: &Path) -> Result<SharedSource, Error> {
     .map_err(|e| Error::Unsupported(e.to_string()))
 }
 
+/// The size a `width`×`height` picture of `par` pixel aspect shows at, in square pixels: its
+/// width stretched by the pixel aspect. Refused when the picture is larger than
+/// [`MAX_SOURCE_PIXELS`], or its pixel aspect or its shape is wider than [`MAX_PIXEL_ASPECT`] or
+/// [`MAX_ASPECT`] either way, which no camera makes and which would only make giant frames.
+pub fn display_size(width: u32, height: u32, par: (u32, u32)) -> Result<(u32, u32), Error> {
+    let (w, h) = (u64::from(width), u64::from(height));
+    if w == 0 || h == 0 {
+        return Err(Error::Unsupported("the video has no picture".into()));
+    }
+    if w * h > MAX_SOURCE_PIXELS {
+        return Err(Error::Unsupported(format!(
+            "a picture of {width}×{height} is larger than 8K"
+        )));
+    }
+    let (par_h, par_v) = (u64::from(par.0), u64::from(par.1));
+    let (par_h, par_v) = if par_h == 0 || par_v == 0 {
+        (1, 1)
+    } else {
+        (par_h, par_v)
+    };
+    if par_h > MAX_PIXEL_ASPECT * par_v || par_v > MAX_PIXEL_ASPECT * par_h {
+        return Err(Error::Unsupported(format!(
+            "a pixel aspect of {par_h}:{par_v}"
+        )));
+    }
+    let shown = (w * par_h + par_v / 2) / par_v;
+    if shown > MAX_ASPECT * h || h > MAX_ASPECT * shown {
+        return Err(Error::Unsupported(format!(
+            "a picture shown at {shown}×{h}"
+        )));
+    }
+    // both sides are within the source's, four times over at most: they fit
+    Ok((
+        u32::try_from(shown.max(2)).unwrap_or(u32::MAX),
+        height.max(2),
+    ))
+}
+
 /// What to make of `source`.
 pub fn plan(source: &SharedSource) -> Result<Plan, Error> {
     let info = source.info();
@@ -145,45 +195,37 @@ pub fn plan(source: &SharedSource) -> Result<Plan, Error> {
         .as_ref()
         .ok_or_else(|| Error::Unsupported("the file has no video".into()))?;
     let timing = Timing::new(video.frame_rate.num, video.frame_rate.den, info.duration)?;
-    let (par_h, par_v) = (u64::from(video.par.0.max(1)), u64::from(video.par.1.max(1)));
-    let shown = u64::from(video.width) * par_h / par_v;
-    let display = (
-        u32::try_from(shown).unwrap_or(video.width).max(2),
-        video.height.max(2),
-    );
-    let fps = (u64::from(timing.timescale), u64::from(timing.frame));
-    let rate = |v: u64| u32::try_from(v).unwrap_or(u32::MAX);
+    let display = display_size(video.width, video.height, video.par)?;
+    let fps = (timing.timescale.get(), timing.frame.get());
     Ok(Plan {
         timing,
         display,
-        rungs: ladder::ladder(display.0, display.1, rate(fps.0), rate(fps.1)),
-        tile_every: stills::tile_every(timing.frames, fps.0, fps.1),
+        rungs: ladder::ladder(display.0, display.1, fps.0, fps.1),
+        tile_every: stills::tile_every(timing.frames, u64::from(fps.0), u64::from(fps.1)),
         audio: info.has_audio(),
     })
 }
 
-/// Make the media file at `input` into the media directory `output`, which must exist and be
+/// Make `source`, as `plan` says, into the media directory `output`, which must exist and be
 /// empty; `progress` hears the work done, in thousandths.
 pub fn transcode(
-    input: &Path,
+    source: &SharedSource,
+    plan: &Plan,
     output: &Path,
     progress: &(dyn Fn(u32) + Sync),
 ) -> Result<Outcome, Error> {
-    let source = open(input)?;
-    let plan = plan(&source)?;
-    let (encoded, still) =
-        pipeline::video(&source, &plan, output, &|done| progress(done * 9 / 10))?;
+    let (encoded, still) = pipeline::video(source, plan, output, &|done| progress(done * 9 / 10))?;
     let timing = plan.timing;
-    let ticks = still.frames * u64::from(timing.frame);
+    let ticks = still.frames.saturating_mul(u64::from(timing.frame.get()));
     let duration = MediaDuration {
         ticks,
         timescale: timing.timescale,
     };
     let sound = if plan.audio {
         let samples =
-            u128::from(ticks) * u128::from(audio::SAMPLE_RATE) / u128::from(timing.timescale);
+            u128::from(ticks) * u128::from(audio::SAMPLE_RATE) / u128::from(timing.timescale.get());
         let samples = u64::try_from(samples).unwrap_or(0);
-        Some(audio::audio(&source, samples, &output.join(AUDIO_FILE))?)
+        Some(audio::audio(source, samples, &output.join(AUDIO_FILE))?)
     } else {
         None
     };
@@ -195,43 +237,43 @@ pub fn transcode(
         }
         std::fs::write(&path, bytes).map_err(|e| Error::io(&path, &e))
     };
-    let playlists: Vec<String> = plan
-        .rungs
-        .iter()
-        .map(|r| format!("{}p.m3u8", r.label))
-        .collect();
-    let mut variants = Vec::new();
-    for ((rung, made), playlist) in plan.rungs.iter().zip(&encoded).zip(&playlists) {
-        write(
-            playlist,
-            hls::media(&made.track, &video_file(rung.label)).as_bytes(),
-        )?;
-        variants.push(hls::Variant {
-            playlist,
-            width: rung.width,
-            height: rung.height,
-            frame_rate: (timing.timescale, timing.frame),
-            codec: &made.codec,
-            track: &made.track,
-        });
-    }
-    let audio_variant = sound.as_ref().map(|track| hls::Audio {
-        playlist: AUDIO_PLAYLIST,
-        codec: audio::CODEC,
-        track,
-    });
     if let Some(sound) = &sound {
         write(AUDIO_PLAYLIST, hls::media(sound, AUDIO_FILE).as_bytes())?;
     }
+    let mut renditions = Vec::new();
+    for (rung, made) in plan.rungs.iter().zip(&encoded) {
+        write(
+            &video_playlist(rung.label),
+            hls::media(&made.track, &video_file(rung.label)).as_bytes(),
+        )?;
+        let stream = hls::stream(
+            &made.track,
+            &made.codec,
+            sound.as_ref().map(|track| (track, audio::CODEC)),
+        );
+        renditions.push(Rendition {
+            label: rung.label,
+            width: rung.width,
+            height: rung.height,
+            bandwidth: stream.bandwidth,
+            average_bandwidth: stream.average_bandwidth,
+            codecs: stream.codecs,
+        });
+    }
     write(
         media_files::RENDITIONS,
-        hls::master(&variants, audio_variant.as_ref()).as_bytes(),
+        hls::master(
+            &renditions,
+            (timing.timescale, timing.frame),
+            sound.is_some().then_some(AUDIO_PLAYLIST),
+        )
+        .as_bytes(),
     )?;
     if let Some(poster) = &still.poster {
         for width in THUMBNAIL_WIDTHS {
             write(
                 &media_files::thumbnail(width),
-                &stills::jpeg(&stills::thumbnail(poster, width))?,
+                &stills::jpeg(&stills::thumbnail(poster, plan.display, width))?,
             )?;
         }
     }
@@ -241,7 +283,9 @@ pub fn transcode(
     }
     let storyboard = Storyboard {
         interval: MediaDuration {
-            ticks: plan.tile_every * u64::from(timing.frame),
+            ticks: plan
+                .tile_every
+                .saturating_mul(u64::from(timing.frame.get())),
             timescale: timing.timescale,
         },
         tile_width: stills::TILE.0,
@@ -252,22 +296,6 @@ pub fn transcode(
     };
     let json = serde_json::to_vec(&storyboard).map_err(|e| Error::Encode(e.to_string()))?;
     write(media_files::STORYBOARD, &json)?;
-    let audio_peak = audio_variant.as_ref().map_or(0, |a| a.track.bandwidth().0);
-    let renditions = plan
-        .rungs
-        .iter()
-        .zip(&variants)
-        .map(|(rung, variant)| Rendition {
-            label: rung.label,
-            width: rung.width,
-            height: rung.height,
-            bandwidth: variant.track.bandwidth().0.saturating_add(audio_peak),
-            codecs: match &audio_variant {
-                Some(a) => format!("{},{}", variant.codec, a.codec),
-                None => variant.codec.to_owned(),
-            },
-        })
-        .collect();
     progress(1000);
     Ok(Outcome {
         duration,
@@ -275,4 +303,33 @@ pub fn transcode(
         height: plan.display.1,
         renditions,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn display_sizes_apply_the_pixel_aspect_within_bounds() {
+        assert_eq!(display_size(1920, 1080, (1, 1)).unwrap(), (1920, 1080));
+        // anamorphic 2:1 and PAL 16:9's 64:45
+        assert_eq!(display_size(960, 1080, (2, 1)).unwrap(), (1920, 1080));
+        assert_eq!(display_size(720, 576, (64, 45)).unwrap(), (1024, 576));
+        // a missing pixel aspect is square
+        assert_eq!(display_size(640, 360, (0, 0)).unwrap(), (640, 360));
+        // a crafted pixel aspect would make a picture 115 million pixels wide
+        assert_eq!(
+            display_size(1920, 1080, (60_000, 1)).unwrap_err().failure(),
+            Failure::Unsupported
+        );
+        assert!(display_size(1920, 1080, (1, 5)).is_err());
+        // 32:9 passes, 20:1 does not, either way
+        assert!(display_size(3840, 1080, (1, 1)).is_ok());
+        assert!(display_size(21_600, 1080, (1, 1)).is_err());
+        assert!(display_size(1080, 21_600, (1, 1)).is_err());
+        // 8K passes, more does not
+        assert!(display_size(7680, 4320, (1, 1)).is_ok());
+        assert!(display_size(8192, 8192, (1, 1)).is_err());
+        assert!(display_size(0, 1080, (1, 1)).is_err());
+    }
 }

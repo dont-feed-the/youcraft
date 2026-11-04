@@ -38,6 +38,20 @@ pub struct Yuv420 {
     pub v: Vec<u8>,
 }
 
+/// The largest size of `shape`'s aspect that fits in `width`×`height`, rounded to whole pixels
+/// and at least one, unless the box is empty; a zero side of the shape counts as one pixel.
+pub fn fit(shape: (u32, u32), width: u32, height: u32) -> (u32, u32) {
+    let (w, h) = (u64::from(shape.0.max(1)), u64::from(shape.1.max(1)));
+    let (bw, bh) = (u64::from(width), u64::from(height));
+    let (fit_w, fit_h) = if w * bh >= h * bw {
+        (bw, (h * bw + w / 2) / w)
+    } else {
+        ((w * bh + h / 2) / h, bh)
+    };
+    let side = |fitted: u64, room: u64| u32::try_from(fitted.max(1).min(room)).unwrap_or(0);
+    (side(fit_w, bw), side(fit_h, bh))
+}
+
 /// The input pixels one output pixel reads: from `first`, one weight each.
 struct Taps {
     first: usize,
@@ -148,20 +162,21 @@ impl Rgba {
     /// The picture scaled to fit inside `width`×`height`, centred on black, as a thumbnail shows
     /// a picture of another shape.
     pub fn fitted(&self, width: u32, height: u32) -> Rgba {
-        let (w, h) = (u64::from(self.width.max(1)), u64::from(self.height.max(1)));
-        let (bw, bh) = (u64::from(width), u64::from(height));
-        let (fit_w, fit_h) = if w * bh >= h * bw {
-            (bw, (h * bw + w / 2) / w)
-        } else {
-            ((w * bh + h / 2) / h, bh)
-        };
-        let (fit_w, fit_h) = (fit_w.clamp(1, bw) as u32, fit_h.clamp(1, bh) as u32);
-        let inner = self.resized(fit_w, fit_h);
-        if (fit_w, fit_h) == (width, height) {
-            return inner;
+        self.letterboxed(fit((self.width, self.height), width, height), width, height)
+    }
+
+    /// The picture resized to `inner` and centred on black in `width`×`height`: [`fitted`], for a
+    /// picture whose pixels are not square, with `inner` from [`fit`] of its display size.
+    ///
+    /// [`fitted`]: Rgba::fitted
+    pub fn letterboxed(&self, inner: (u32, u32), width: u32, height: u32) -> Rgba {
+        let (inner_w, inner_h) = (inner.0.min(width), inner.1.min(height));
+        let picture = self.resized(inner_w, inner_h);
+        if (inner_w, inner_h) == (width, height) {
+            return picture;
         }
         let mut canvas = Rgba::filled(width, height, [0, 0, 0, 255]);
-        canvas.paste(&inner, (width - fit_w) / 2, (height - fit_h) / 2);
+        canvas.paste(&picture, (width - inner_w) / 2, (height - inner_h) / 2);
         canvas
     }
 
@@ -328,6 +343,20 @@ mod tests {
         let blue = Rgba::filled(4, 2, [0, 0, 255, 255]).to_yuv420();
         assert_eq!((blue.y.len(), blue.u.len()), (8, 2));
         assert_eq!((blue.y[0], blue.u[0], blue.v[0]), (32, 240, 118));
+    }
+
+    #[test]
+    fn fitting_keeps_the_shape_within_the_box() {
+        assert_eq!(fit((1920, 1080), 160, 90), (160, 90));
+        assert_eq!(fit((1080, 1920), 160, 90), (51, 90));
+        assert_eq!(fit((4096, 682), 160, 90), (160, 27));
+        assert_eq!(fit((100_000, 1), 160, 90), (160, 1));
+        assert_eq!(fit((0, 0), 160, 90), (90, 90), "no shape is square");
+        assert_eq!(fit((16, 9), 0, 0), (0, 0));
+        // a picture of non-square pixels letterboxes as its display size does
+        let anamorphic = Rgba::filled(960, 1080, [255, 255, 255, 255]);
+        let tile = anamorphic.letterboxed(fit((1920, 1080), 160, 90), 160, 90);
+        assert_eq!(tile, Rgba::filled(160, 90, [255, 255, 255, 255]));
     }
 
     #[test]

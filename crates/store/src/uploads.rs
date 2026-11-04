@@ -278,6 +278,7 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use youcraft_api::Grant;
+    use youcraft_api::records::Failure;
 
     use super::*;
     use crate::accounts::NewAccount;
@@ -442,7 +443,7 @@ mod tests {
             Vec::<VideoId>::new(),
             "processing is no change of files"
         );
-        store.job_failed(job, "decode", 103).unwrap();
+        store.job_failed(job, Failure::Decode, 103).unwrap();
         assert_eq!(store.unmeasured(10).unwrap(), vec![video]);
     }
 }

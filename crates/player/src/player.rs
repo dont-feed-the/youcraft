@@ -33,11 +33,7 @@ pub fn VideoPlayer(
     #[prop(optional)] started: Option<Callback<()>>,
 ) -> impl IntoView {
     let lang = Language::current();
-    let seconds = if duration.timescale == 0 {
-        0.0
-    } else {
-        duration.ticks as f64 / f64::from(duration.timescale)
-    };
+    let seconds = duration.ticks as f64 / f64::from(duration.timescale.get());
     let player = Player::new(seconds, theatre);
     let storyboard = RwSignal::new(None::<Storyboard>);
     let page_dir = if youcraft_i18n::rtl(lang) {
