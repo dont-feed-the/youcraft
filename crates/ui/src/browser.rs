@@ -1,6 +1,6 @@
 //! What a page asks of the browser it runs in: the document's theme, its cookies, a reload,
-//! another address, the clipboard. On the server there is no browser, and each does nothing:
-//! these only run from events, which happen in the browser.
+//! another address, the clipboard, the text of a field. On the server there is no browser, and
+//! each does nothing: these only run from events, which happen in the browser.
 
 #[cfg(all(feature = "hydrate", not(feature = "ssr")))]
 mod inside {
@@ -67,6 +67,12 @@ mod inside {
             let _ = window.navigator().clipboard().write_text(text);
         }
     }
+
+    pub fn show(event: &leptos::ev::Event, text: &str) {
+        if let Some(field) = event.target() {
+            let _ = js_sys::Reflect::set(&field, &"value".into(), &text.into());
+        }
+    }
 }
 
 #[cfg(feature = "ssr")]
@@ -90,6 +96,23 @@ mod inside {
     }
 
     pub fn copy(_: &str) {}
+
+    pub fn show(_: &leptos::ev::Event, _: &str) {}
+}
+
+/// The text of the field `event` came from, cut to `limit` characters, which the field then
+/// shows. Characters are counted as the server counts every limit, as Unicode scalar values;
+/// the browser's own `maxlength` counts UTF-16 units, and would stop a title of emoji halfway.
+pub fn clipped(event: &leptos::ev::Event, limit: usize) -> String {
+    let text = leptos::prelude::event_target_value(event);
+    match text.char_indices().nth(limit) {
+        Some((end, _)) => {
+            let cut = text.get(..end).unwrap_or_default().to_owned();
+            inside::show(event, &cut);
+            cut
+        }
+        None => text,
+    }
 }
 
 /// Put `text` on the clipboard.

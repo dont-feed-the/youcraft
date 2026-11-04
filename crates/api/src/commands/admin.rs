@@ -8,19 +8,21 @@ use serde::{Deserialize, Serialize};
 
 use crate::command::Command;
 use crate::commands::site::Nothing;
-use crate::role::Role;
+use crate::role::{Grant, Role};
 
 /// A new role for an account.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct NewRole {
     /// The handle of the account's channel, with or without `@`.
     pub handle: String,
-    /// [`Role::Viewer`], [`Role::Creator`] or [`Role::Admin`].
-    pub role: Role,
+    /// The role it holds from now on.
+    pub role: Grant,
 }
 
 /// Whether an account is blocked.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Blocking {
     /// The handle of the account's channel, with or without `@`.
     pub handle: String,

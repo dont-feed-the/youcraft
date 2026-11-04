@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	İşleme başarısız oldu. Videoyu yeniden yükleyin.
 	Upload failed. Try again.	Yükleme başarısız oldu. Tekrar deneyin.
 	The file is too large.	Dosya çok büyük.
+	This can't be empty.	Bu boş bırakılamaz.
+	This must fit on one line.	Bu tek satıra sığmalı.
+	This holds characters that aren't allowed.	Bu, izin verilmeyen karakterler içeriyor.
+	This isn't in the expected form.	Bu beklenen biçimde değil.
+	This choice isn't offered here.	Bu seçenek burada sunulmuyor.
 	(edited)	(düzenlendi)
 	Action menu	İşlem menüsü
 	Add a comment…	Yorum ekleyin…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Geçmişiniz duraklatıldı: şu anda izledikleriniz saklanmıyor.
 @plural	{n} view|{n} views	{n} görüntüleme|{n} görüntüleme
 @plural	{n} comment|{n} comments	{n} yorum|{n} yorum
+@plural	{n} character at most.|{n} characters at most.	En fazla {n} karakter.|En fazla {n} karakter.
 @plural	{n} second ago|{n} seconds ago	{n} saniye önce|{n} saniye önce
 @plural	{n} minute ago|{n} minutes ago	{n} dakika önce|{n} dakika önce
 @plural	{n} hour ago|{n} hours ago	{n} saat önce|{n} saat önce

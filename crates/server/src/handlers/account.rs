@@ -1,8 +1,8 @@
 //! Commands about the signed-in person's own account.
 
-use youcraft_api::ApiError;
 use youcraft_api::commands::account::{Get, Me, Preferences, SetPreferences, SignOut};
 use youcraft_api::commands::site::Nothing;
+use youcraft_api::{ApiError, Rule};
 
 use crate::dispatch::Handle;
 use crate::site::{Caller, Credential, Site};
@@ -12,10 +12,14 @@ impl Handle<Get> for Site {
         match caller.account {
             Some(account) => {
                 let me = self.db(move |store| store.me(account)).await?;
-                // The role the caller acts with, which the site's floor may raise above the
-                // account's own.
+                // The site's floor raises the role of every account that is not blocked.
+                let floor = self.config().signed_in_role;
                 Ok(me.map(|me| Me {
-                    role: if me.blocked { me.role } else { caller.role },
+                    role: if me.blocked {
+                        me.role
+                    } else {
+                        me.role.max(floor)
+                    },
                     ..me
                 }))
             }
@@ -32,7 +36,7 @@ impl Handle<SetPreferences> for Site {
             Some(code) => {
                 let lang = youcraft_i18n::i18n()
                     .from_code(code)
-                    .ok_or_else(|| ApiError::invalid("language", "a language the site offers"))?;
+                    .ok_or_else(|| ApiError::invalid("language", Rule::NotOffered))?;
                 Some(youcraft_i18n::code(lang).to_owned())
             }
         };

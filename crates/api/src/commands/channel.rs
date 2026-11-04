@@ -11,6 +11,9 @@ use crate::ids::ChannelId;
 use crate::records::{ChannelCard, Feed};
 use crate::role::Role;
 
+/// The longest name of a channel, in characters.
+pub const NAME_LIMIT: usize = 100;
+
 /// What the top of a channel's page shows about it.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct ChannelPage {
@@ -30,6 +33,7 @@ pub struct ChannelPage {
 
 /// A channel, by its handle.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Handle {
     /// Its handle, with or without `@`.
     pub handle: String,
@@ -37,6 +41,7 @@ pub struct Handle {
 
 /// A page of what a channel shows.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Shelf {
     /// The channel.
     pub channel: ChannelId,
@@ -47,6 +52,7 @@ pub struct Shelf {
 
 /// Whether the caller subscribes to a channel from now on.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Subscribing {
     /// The channel.
     pub channel: ChannelId,
@@ -65,6 +71,7 @@ pub struct Subscription {
 
 /// Whether an account may comment on the caller's videos.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Barring {
     /// The handle of the account's channel, with or without `@`.
     pub handle: String,
@@ -107,12 +114,12 @@ impl Command for Playlists {
     type Output = PlaylistShelf;
 }
 
-/// Subscribe to a channel, or unsubscribe.
+/// Subscribe to a channel, or unsubscribe; a blocked account may only unsubscribe.
 pub struct Subscribe;
 
 impl Command for Subscribe {
     const ID: &'static str = "channel.subscribe";
-    const REQUIRES: Role = Role::Viewer;
+    const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str =
         "Subscribe to a channel or unsubscribe from it; answers its subscribers.";
     type Input = Subscribing;
@@ -124,7 +131,7 @@ pub struct Subscriptions;
 
 impl Command for Subscriptions {
     const ID: &'static str = "channel.subscriptions";
-    const REQUIRES: Role = Role::Viewer;
+    const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str = "List the channels you subscribe to, by name.";
     type Input = Nothing;
     type Output = Vec<ChannelCard>;

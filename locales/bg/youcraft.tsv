@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Обработката не бе успешна. Качете видеоклипа отново.
 	Upload failed. Try again.	Качването не бе успешно. Опитайте отново.
 	The file is too large.	Файлът е твърде голям.
+	This can't be empty.	Това не може да е празно.
+	This must fit on one line.	Това трябва да е на един ред.
+	This holds characters that aren't allowed.	Това съдържа непозволени знаци.
+	This isn't in the expected form.	Това не е в очаквания вид.
+	This choice isn't offered here.	Този избор не се предлага тук.
 	(edited)	(редактиран)
 	Action menu	Меню с действия
 	Add a comment…	Добавете коментар…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Историята ви е на пауза: това, което гледате сега, не се запазва.
 @plural	{n} view|{n} views	{n} гледане|{n} гледания
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментара
+@plural	{n} character at most.|{n} characters at most.	Най-много {n} знак.|Най-много {n} знака.
 @plural	{n} second ago|{n} seconds ago	преди {n} секунда|преди {n} секунди
 @plural	{n} minute ago|{n} minutes ago	преди {n} минута|преди {n} минути
 @plural	{n} hour ago|{n} hours ago	преди {n} час|преди {n} часа

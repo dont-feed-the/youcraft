@@ -5,7 +5,7 @@ use youcraft_api::commands::search::{Found, QUERY_LIMIT, Query, Search};
 
 use crate::dispatch::Handle;
 use crate::handlers::feed::PAGE;
-use crate::handlers::input::{next, text, window};
+use crate::handlers::input::{line, next, window};
 use crate::site::{Caller, Site};
 
 /// How many channels the first page shows.
@@ -13,7 +13,7 @@ const CHANNELS: u32 = 3;
 
 impl Handle<Search> for Site {
     async fn handle(&self, caller: Caller, query: Query) -> Result<Found, ApiError> {
-        let words = text("query", &query.query, QUERY_LIMIT, false)?;
+        let words = line("query", &query.query, QUERY_LIMIT)?;
         let first = query.after.is_none();
         let window = window(query.after.as_deref(), PAGE)?;
         let viewer = caller.account;

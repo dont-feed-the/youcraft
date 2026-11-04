@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Käsittely epäonnistui. Lataa video uudelleen.
 	Upload failed. Try again.	Lataus epäonnistui. Yritä uudelleen.
 	The file is too large.	Tiedosto on liian suuri.
+	This can't be empty.	Tämä ei voi olla tyhjä.
+	This must fit on one line.	Tämän on mahduttava yhdelle riville.
+	This holds characters that aren't allowed.	Tässä on merkkejä, jotka eivät ole sallittuja.
+	This isn't in the expected form.	Tämä ei ole odotetussa muodossa.
+	This choice isn't offered here.	Tätä vaihtoehtoa ei tarjota täällä.
 	(edited)	(muokattu)
 	Action menu	Toimintovalikko
 	Add a comment…	Lisää kommentti…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Historiasi on keskeytetty: nyt katsomiasi videoita ei tallenneta.
 @plural	{n} view|{n} views	{n} katselukerta|{n} katselukertaa
 @plural	{n} comment|{n} comments	{n} kommentti|{n} kommenttia
+@plural	{n} character at most.|{n} characters at most.	Enintään {n} merkki.|Enintään {n} merkkiä.
 @plural	{n} second ago|{n} seconds ago	{n} sekunti sitten|{n} sekuntia sitten
 @plural	{n} minute ago|{n} minutes ago	{n} minuutti sitten|{n} minuuttia sitten
 @plural	{n} hour ago|{n} hours ago	{n} tunti sitten|{n} tuntia sitten

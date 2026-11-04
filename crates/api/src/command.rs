@@ -100,6 +100,59 @@ mod tests {
         }
     }
 
+    /// The input schema of the command `id`.
+    fn input_of(id: &str) -> serde_json::Value {
+        descriptors()
+            .into_iter()
+            .find(|d| d.id == id)
+            .unwrap_or_else(|| panic!("{id}"))
+            .input
+    }
+
+    #[test]
+    fn every_input_refuses_fields_it_does_not_know() {
+        for descriptor in descriptors() {
+            let schema = &descriptor.input;
+            let defs = schema.get("$defs").and_then(serde_json::Value::as_object);
+            let objects = std::iter::once(schema)
+                .chain(defs.into_iter().flat_map(|defs| defs.values()))
+                .filter(|s| s.get("type") == Some(&serde_json::json!("object")));
+            for object in objects {
+                assert_eq!(
+                    object.get("additionalProperties"),
+                    Some(&serde_json::json!(false)),
+                    "{}: {object}",
+                    descriptor.id
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn limits_reach_the_schemas() {
+        use crate::commands::{comment, playlist, search, token, video};
+        for (id, field, limit) in [
+            ("upload.create", "title", video::TITLE_LIMIT),
+            ("upload.create", "description", video::DESCRIPTION_LIMIT),
+            ("video.update", "title", video::TITLE_LIMIT),
+            ("video.update", "description", video::DESCRIPTION_LIMIT),
+            ("playlist.create", "title", playlist::TITLE_LIMIT),
+            (
+                "playlist.update",
+                "description",
+                playlist::DESCRIPTION_LIMIT,
+            ),
+            ("comment.create", "body", comment::BODY_LIMIT),
+            ("comment.edit", "body", comment::BODY_LIMIT),
+            ("search.videos", "query", search::QUERY_LIMIT),
+            ("token.create", "name", token::NAME_LIMIT),
+        ] {
+            let schema = input_of(id);
+            let length = &schema["properties"][field]["maxLength"];
+            assert_eq!(length, &serde_json::json!(limit), "{id}.{field}: {schema}");
+        }
+    }
+
     #[test]
     fn every_summary_is_one_sentence() {
         for descriptor in descriptors() {

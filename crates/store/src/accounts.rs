@@ -3,7 +3,7 @@
 
 use rusqlite::{OptionalExtension, Row, Transaction, params};
 use youcraft_api::commands::account::{Me, Preferences, Theme};
-use youcraft_api::{AccountId, ChannelId, Role};
+use youcraft_api::{AccountId, ChannelId, Grant};
 
 use crate::channels::channel_card;
 use crate::{Named, Store, StoreError};
@@ -23,7 +23,7 @@ pub struct NewAccount<'a> {
     /// The channel's handle, without `@`.
     pub handle: &'a str,
     /// What the person is to the site.
-    pub role: Role,
+    pub role: Grant,
     /// Now, in seconds since 1970.
     pub now: i64,
 }
@@ -44,7 +44,7 @@ pub struct Standing {
     /// The account.
     pub account: AccountId,
     /// Its role.
-    pub role: Role,
+    pub role: Grant,
     /// Whether it is blocked.
     pub blocked: bool,
     /// Its preferences.
@@ -58,7 +58,7 @@ pub(crate) const STANDING: &str = "a.id, a.role, a.blocked, a.language, a.theme"
 pub(crate) fn standing(row: &Row<'_>) -> rusqlite::Result<Standing> {
     Ok(Standing {
         account: AccountId::from_i64(row.get(0)?),
-        role: row.get::<_, Named<Role>>(1)?.0,
+        role: row.get::<_, Named<Grant>>(1)?.0,
         blocked: row.get::<_, i64>(2)? != 0,
         preferences: Preferences {
             language: row.get(3)?,
@@ -116,7 +116,7 @@ impl Store {
                         email,
                         name: person.name,
                         handle: &handle,
-                        role: Role::Viewer,
+                        role: Grant::Viewer,
                         now,
                     },
                 )?;
@@ -131,7 +131,7 @@ impl Store {
                     |row| row.get(0),
                 )
                 .optional()?;
-            if let Some(role) = invited.as_deref().and_then(Role::from_name) {
+            if let Some(role) = invited.as_deref().and_then(Grant::from_name) {
                 raise_role(&transaction, account, role)?;
             }
         }
@@ -209,7 +209,7 @@ impl Store {
     }
 
     /// Give `account` the role `role`; whether it exists.
-    pub fn set_role(&self, account: AccountId, role: Role) -> Result<bool, StoreError> {
+    pub fn set_role(&self, account: AccountId, role: Grant) -> Result<bool, StoreError> {
         let changed = self.connection().execute(
             "UPDATE accounts SET role = ?2 WHERE id = ?1",
             params![account.to_i64(), role.as_str()],
@@ -266,9 +266,9 @@ fn free_handle(
 pub(crate) fn raise_role(
     transaction: &Transaction<'_>,
     account: AccountId,
-    role: Role,
+    role: Grant,
 ) -> Result<(), StoreError> {
-    let Named(current): Named<Role> = transaction.query_row(
+    let Named(current): Named<Grant> = transaction.query_row(
         "SELECT role FROM accounts WHERE id = ?1",
         [account.to_i64()],
         |row| row.get(0),
@@ -326,7 +326,7 @@ mod tests {
         let store = Store::in_memory().unwrap();
         let first = sign_in(&store, &person("g1", Some("ada@example.com")), 1);
         assert_eq!(first.account, AccountId::from_bits(1));
-        assert_eq!(first.role, Role::Viewer);
+        assert_eq!(first.role, Grant::Viewer);
         assert_eq!(first.preferences, Preferences::default());
         let again = sign_in(&store, &person("g1", Some("ada@example.com")), 9);
         assert_eq!(again.account, first.account);
@@ -340,29 +340,29 @@ mod tests {
     #[test]
     fn an_invitation_waits_for_its_verified_address_then_is_spent() {
         let store = Store::in_memory().unwrap();
-        let waiting = store.invite("Ada@Example.com", Role::Creator, 50).unwrap();
+        let waiting = store.invite("Ada@Example.com", Grant::Creator, 50).unwrap();
         assert!(matches!(
             waiting,
             youcraft_api::commands::invite::Invited::Waiting { .. }
         ));
         let unverified = sign_in(&store, &person("g0", None), 3);
-        assert_eq!(unverified.role, Role::Viewer);
+        assert_eq!(unverified.role, Grant::Viewer);
         let ada = sign_in(&store, &person("g1", Some("ada@example.com")), 1);
-        assert_eq!(ada.role, Role::Creator);
+        assert_eq!(ada.role, Grant::Creator);
         assert!(store.invitations().unwrap().is_empty());
-        let applied = store.invite("ada@example.com", Role::Admin, 60).unwrap();
+        let applied = store.invite("ada@example.com", Grant::Admin, 60).unwrap();
         assert!(matches!(
             applied,
             youcraft_api::commands::invite::Invited::Applied { .. }
         ));
-        assert_eq!(store.me(ada.account).unwrap().unwrap().role, Role::Admin);
-        store.invite("ada@example.com", Role::Creator, 70).unwrap();
+        assert_eq!(store.me(ada.account).unwrap().unwrap().role, Grant::Admin);
+        store.invite("ada@example.com", Grant::Creator, 70).unwrap();
         assert_eq!(
             store.me(ada.account).unwrap().unwrap().role,
-            Role::Admin,
+            Grant::Admin,
             "an invitation never lowers a role"
         );
-        store.invite("bob@example.com", Role::Creator, 80).unwrap();
+        store.invite("bob@example.com", Grant::Creator, 80).unwrap();
         assert!(store.revoke_invitation("BOB@example.com").unwrap());
         assert!(!store.revoke_invitation("bob@example.com").unwrap());
     }
@@ -381,7 +381,7 @@ mod tests {
             email: "c@example.com",
             name: "Cy",
             handle: "aDa",
-            role: Role::Viewer,
+            role: Grant::Viewer,
             now: 100,
         });
         assert!(taken.is_err());
@@ -421,11 +421,11 @@ mod tests {
                 .unwrap(),
             Some(ada)
         );
-        assert!(store.set_role(ada, Role::Creator).unwrap());
+        assert!(store.set_role(ada, Grant::Creator).unwrap());
         assert!(store.set_blocked(ada, true).unwrap());
         let me = store.me(ada).unwrap().unwrap();
         assert_eq!(me.preferences, preferences);
-        assert_eq!(me.role, Role::Creator);
+        assert_eq!(me.role, Grant::Creator);
         assert!(me.blocked);
         assert!(!store.set_blocked(AccountId::from_bits(5), true).unwrap());
     }

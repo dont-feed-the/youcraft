@@ -38,6 +38,7 @@ youcraft-transcode.workspace = true
 youcraft-ui = { workspace = true, features = ["ssr"] }
 
 [dev-dependencies]
+rusqlite.workspace = true
 rsa = { workspace = true, features = ["getrandom"] }
 http-body-util = "0.1.3"
 

@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Obdelava ni uspela. Znova naložite videoposnetek.
 	Upload failed. Try again.	Nalaganje ni uspelo. Poskusite znova.
 	The file is too large.	Datoteka je prevelika.
+	This can't be empty.	To ne sme biti prazno.
+	This must fit on one line.	To mora biti v eni vrstici.
+	This holds characters that aren't allowed.	Vsebuje nedovoljene znake.
+	This isn't in the expected form.	To ni v pričakovani obliki.
+	This choice isn't offered here.	Ta izbira tukaj ni na voljo.
 	(edited)	(urejeno)
 	Action menu	Meni dejanj
 	Add a comment…	Dodajte komentar…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Vaša zgodovina je začasno ustavljena: kar si ogledate zdaj, se ne shrani.
 @plural	{n} view|{n} views	{n} ogled|{n} ogleda|{n} ogledi|{n} ogledov
 @plural	{n} comment|{n} comments	{n} komentar|{n} komentarja|{n} komentarji|{n} komentarjev
+@plural	{n} character at most.|{n} characters at most.	Največ {n} znak.|Največ {n} znaka.|Največ {n} znaki.|Največ {n} znakov.
 @plural	{n} second ago|{n} seconds ago	pred {n} sekundo|pred {n} sekundama|pred {n} sekundami|pred {n} sekundami
 @plural	{n} minute ago|{n} minutes ago	pred {n} minuto|pred {n} minutama|pred {n} minutami|pred {n} minutami
 @plural	{n} hour ago|{n} hours ago	pred {n} uro|pred {n} urama|pred {n} urami|pred {n} urami

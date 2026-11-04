@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Procesarea a eșuat. Încarcă din nou videoclipul.
 	Upload failed. Try again.	Încărcarea a eșuat. Încearcă din nou.
 	The file is too large.	Fișierul este prea mare.
+	This can't be empty.	Nu poate fi gol.
+	This must fit on one line.	Trebuie să încapă pe un singur rând.
+	This holds characters that aren't allowed.	Conține caractere nepermise.
+	This isn't in the expected form.	Nu are forma așteptată.
+	This choice isn't offered here.	Această opțiune nu este oferită aici.
 	(edited)	(editat)
 	Action menu	Meniu de acțiuni
 	Add a comment…	Adaugă un comentariu…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Istoricul tău este întrerupt: ce vizionezi acum nu se păstrează.
 @plural	{n} view|{n} views	{n} vizionare|{n} vizionări|{n} de vizionări
 @plural	{n} comment|{n} comments	{n} comentariu|{n} comentarii|{n} de comentarii
+@plural	{n} character at most.|{n} characters at most.	Cel mult {n} caracter.|Cel mult {n} caractere.|Cel mult {n} de caractere.
 @plural	{n} second ago|{n} seconds ago	acum {n} secundă|acum {n} secunde|acum {n} de secunde
 @plural	{n} minute ago|{n} minutes ago	acum {n} minut|acum {n} minute|acum {n} de minute
 @plural	{n} hour ago|{n} hours ago	acum {n} oră|acum {n} ore|acum {n} de ore

@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	처리하지 못했습니다. 동영상을 다시 업로드하세요.
 	Upload failed. Try again.	업로드하지 못했습니다. 다시 시도하세요.
 	The file is too large.	파일이 너무 큽니다.
+	This can't be empty.	비워 둘 수 없습니다.
+	This must fit on one line.	한 줄로 입력해야 합니다.
+	This holds characters that aren't allowed.	허용되지 않는 문자가 포함되어 있습니다.
+	This isn't in the expected form.	올바른 형식이 아닙니다.
+	This choice isn't offered here.	여기서는 이 선택을 사용할 수 없습니다.
 	(edited)	(수정됨)
 	Action menu	작업 메뉴
 	Add a comment…	댓글 추가…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	기록이 일시중지되었습니다. 지금 시청하는 동영상은 저장되지 않습니다.
 @plural	{n} view|{n} views	조회수 {n}회
 @plural	{n} comment|{n} comments	댓글 {n}개
+@plural	{n} character at most.|{n} characters at most.	최대 {n}자까지 입력할 수 있습니다.
 @plural	{n} second ago|{n} seconds ago	{n}초 전
 @plural	{n} minute ago|{n} minutes ago	{n}분 전
 @plural	{n} hour ago|{n} hours ago	{n}시간 전

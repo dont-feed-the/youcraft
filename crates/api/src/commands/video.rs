@@ -9,8 +9,14 @@ use crate::ids::VideoId;
 use crate::records::{Feed, Rating, StudioVideo, VideoPage, Visibility};
 use crate::role::Role;
 
+/// The longest title of a video, in characters, as on YouTube.
+pub const TITLE_LIMIT: usize = 100;
+/// The longest description of a video, in characters, as on YouTube.
+pub const DESCRIPTION_LIMIT: usize = 5_000;
+
 /// Which video.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Which {
     /// The video.
     pub video: VideoId,
@@ -41,14 +47,17 @@ impl Command for Next {
 
 /// What to change about a video; what is `None` stays.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Edit {
     /// The video.
     pub video: VideoId,
-    /// Its new title.
+    /// Its new title: 1 to [`TITLE_LIMIT`] characters, on one line.
     #[serde(default)]
+    #[schemars(length(min = 1, max = TITLE_LIMIT))]
     pub title: Option<String>,
-    /// Its new description.
+    /// Its new description: at most [`DESCRIPTION_LIMIT`] characters.
     #[serde(default)]
+    #[schemars(length(max = DESCRIPTION_LIMIT))]
     pub description: Option<String>,
     /// Who may now see it.
     #[serde(default)]
@@ -70,12 +79,13 @@ impl Command for Update {
     type Output = StudioVideo;
 }
 
-/// Delete a video of the caller's channel, with its media.
+/// Delete a video of the caller's channel, with its media; blocked or not, what one published
+/// is one's own to take back.
 pub struct Delete;
 
 impl Command for Delete {
     const ID: &'static str = "video.delete";
-    const REQUIRES: Role = Role::Creator;
+    const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str =
         "Delete one of your videos, with its comments and its media, for good.";
     type Input = Which;
@@ -84,6 +94,7 @@ impl Command for Delete {
 
 /// A rating to give a video.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Rate {
     /// The video.
     pub video: VideoId,
@@ -100,12 +111,12 @@ pub struct Rated {
     pub rating: Rating,
 }
 
-/// Like a video, dislike it, or take the rating back.
+/// Like a video, dislike it, or take the rating back; a blocked account may only take it back.
 pub struct SetRating;
 
 impl Command for SetRating {
     const ID: &'static str = "video.rate";
-    const REQUIRES: Role = Role::Viewer;
+    const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str =
         "Like or dislike a video, or take your rating back; answers its likes.";
     type Input = Rate;

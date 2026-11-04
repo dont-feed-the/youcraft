@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Η επεξεργασία απέτυχε. Μεταφορτώστε ξανά το βίντεο.
 	Upload failed. Try again.	Η μεταφόρτωση απέτυχε. Δοκιμάστε ξανά.
 	The file is too large.	Το αρχείο είναι πολύ μεγάλο.
+	This can't be empty.	Αυτό δεν μπορεί να είναι κενό.
+	This must fit on one line.	Αυτό πρέπει να χωράει σε μία γραμμή.
+	This holds characters that aren't allowed.	Αυτό περιέχει χαρακτήρες που δεν επιτρέπονται.
+	This isn't in the expected form.	Αυτό δεν έχει την αναμενόμενη μορφή.
+	This choice isn't offered here.	Αυτή η επιλογή δεν προσφέρεται εδώ.
 	(edited)	(επεξεργάστηκε)
 	Action menu	Μενού ενεργειών
 	Add a comment…	Προσθέστε ένα σχόλιο…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Το ιστορικό σας είναι σε παύση: ό,τι παρακολουθείτε τώρα δεν διατηρείται.
 @plural	{n} view|{n} views	{n} προβολή|{n} προβολές
 @plural	{n} comment|{n} comments	{n} σχόλιο|{n} σχόλια
+@plural	{n} character at most.|{n} characters at most.	Έως {n} χαρακτήρας.|Έως {n} χαρακτήρες.
 @plural	{n} second ago|{n} seconds ago	πριν από {n} δευτερόλεπτο|πριν από {n} δευτερόλεπτα
 @plural	{n} minute ago|{n} minutes ago	πριν από {n} λεπτό|πριν από {n} λεπτά
 @plural	{n} hour ago|{n} hours ago	πριν από {n} ώρα|πριν από {n} ώρες

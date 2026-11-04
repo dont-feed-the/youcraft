@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Не вдалося обробити. Завантажте відео ще раз.
 	Upload failed. Try again.	Не вдалося завантажити. Спробуйте ще раз.
 	The file is too large.	Файл завеликий.
+	This can't be empty.	Це не може бути порожнім.
+	This must fit on one line.	Це має вміститися в один рядок.
+	This holds characters that aren't allowed.	Тут є недозволені символи.
+	This isn't in the expected form.	Це не в очікуваному вигляді.
+	This choice isn't offered here.	Цей варіант тут недоступний.
 	(edited)	(змінено)
 	Action menu	Меню дій
 	Add a comment…	Додайте коментар…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Вашу історію призупинено: те, що ви дивитеся зараз, не зберігається.
 @plural	{n} view|{n} views	{n} перегляд|{n} перегляди|{n} переглядів
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментарі|{n} коментарів
+@plural	{n} character at most.|{n} characters at most.	Максимум {n} символ.|Максимум {n} символи.|Максимум {n} символів.
 @plural	{n} second ago|{n} seconds ago	{n} секунду тому|{n} секунди тому|{n} секунд тому
 @plural	{n} minute ago|{n} minutes ago	{n} хвилину тому|{n} хвилини тому|{n} хвилин тому
 @plural	{n} hour ago|{n} hours ago	{n} годину тому|{n} години тому|{n} годин тому

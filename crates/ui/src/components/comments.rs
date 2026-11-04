@@ -12,6 +12,7 @@ use youcraft_api::commands::comment::{
 use youcraft_api::{ApiError, CommentId, VideoId, routes};
 
 use crate::act::act;
+use crate::browser;
 use crate::call::call;
 use crate::components::account_menu::initial;
 use crate::components::more::ShowMore;
@@ -174,10 +175,10 @@ fn Composer(
         <form class="composer" class:reply=parent.is_some() on:submit=send>
             <span class="avatar composer-avatar"><Glyph icon=Icon::Account/></span>
             <div class="composer-main">
-                <textarea class="composer-input" rows="1" maxlength=BODY_LIMIT.to_string()
+                <textarea class="composer-input" rows="1"
                     placeholder=placeholder aria-label=placeholder prop:value=move || body.get()
                     on:focus=move |_| active.set(true)
-                    on:input=move |event| body.set(event_target_value(&event))></textarea>
+                    on:input=move |event| body.set(browser::clipped(&event, BODY_LIMIT))></textarea>
                 <Show when=move || active.get()>
                     <div class="composer-buttons">
                         <button class="pill quiet" type="button" on:click=stop>{tr("Cancel")}</button>
@@ -329,8 +330,8 @@ fn EditForm(
     };
     view! {
         <form class="composer-main" on:submit=save>
-            <textarea class="composer-input" rows="2" maxlength=BODY_LIMIT.to_string() aria-label=tr("Edit")
-                prop:value=move || draft.get() on:input=move |event| draft.set(event_target_value(&event))></textarea>
+            <textarea class="composer-input" rows="2" aria-label=tr("Edit")
+                prop:value=move || draft.get() on:input=move |event| draft.set(browser::clipped(&event, BODY_LIMIT))></textarea>
             <div class="composer-buttons">
                 <button class="pill quiet" type="button" on:click=move |_| editing.set(false)>{tr("Cancel")}</button>
                 <button class="pill primary" type="submit" disabled=move || draft.get().trim().is_empty()>{tr("Save")}</button>

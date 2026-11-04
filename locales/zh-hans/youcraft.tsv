@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	处理失败，请重新上传视频。
 	Upload failed. Try again.	上传失败，请重试。
 	The file is too large.	文件太大。
+	This can't be empty.	此项不能为空。
+	This must fit on one line.	此项必须在一行内。
+	This holds characters that aren't allowed.	包含不允许使用的字符。
+	This isn't in the expected form.	格式不符合要求。
+	This choice isn't offered here.	此处不提供该选项。
 	(edited)	（已编辑）
 	Action menu	操作菜单
 	Add a comment…	添加评论…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	你的观看记录已暂停：现在观看的内容不会被保留。
 @plural	{n} view|{n} views	{n} 次观看
 @plural	{n} comment|{n} comments	{n} 条评论
+@plural	{n} character at most.|{n} characters at most.	最多 {n} 个字符。
 @plural	{n} second ago|{n} seconds ago	{n} 秒前
 @plural	{n} minute ago|{n} minutes ago	{n} 分钟前
 @plural	{n} hour ago|{n} hours ago	{n} 小时前

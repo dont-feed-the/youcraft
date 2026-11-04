@@ -10,26 +10,27 @@ use serde::{Deserialize, Serialize};
 use crate::command::Command;
 use crate::commands::site::Nothing;
 use crate::records::ChannelCard;
-use crate::role::Role;
+use crate::role::{Grant, Role};
 
 /// An invitation waiting for its person to sign in.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct Invitation {
     /// The address invited, as Google reports it.
     pub email: String,
-    /// The role it gives: [`Role::Creator`] or [`Role::Admin`].
-    pub role: Role,
+    /// The role it gives: above what the site grants every account.
+    pub role: Grant,
     /// When it was made, in seconds since 1970.
     pub created_at: i64,
 }
 
 /// Whom to invite, as what.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct NewInvitation {
     /// Their e-mail address.
     pub email: String,
-    /// [`Role::Creator`] or [`Role::Admin`].
-    pub role: Role,
+    /// The role it gives: above what the site grants every account.
+    pub role: Grant,
 }
 
 /// What an invitation did.
@@ -50,6 +51,7 @@ pub enum Invited {
 
 /// One invitation, by its address.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Address {
     /// The address invited.
     pub email: String,

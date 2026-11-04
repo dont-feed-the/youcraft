@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	A feldolgozás nem sikerült. Töltsd fel újra a videót.
 	Upload failed. Try again.	A feltöltés nem sikerült. Próbáld újra.
 	The file is too large.	A fájl túl nagy.
+	This can't be empty.	Ez nem lehet üres.
+	This must fit on one line.	Ennek egy sorba kell férnie.
+	This holds characters that aren't allowed.	Ez nem engedélyezett karaktereket tartalmaz.
+	This isn't in the expected form.	Ez nem a várt formában van.
+	This choice isn't offered here.	Ez a lehetőség itt nem érhető el.
 	(edited)	(szerkesztve)
 	Action menu	Műveletek menü
 	Add a comment…	Írj megjegyzést…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Az előzményeid szüneteltetve vannak: amit most nézel, az nem kerül mentésre.
 @plural	{n} view|{n} views	{n} megtekintés|{n} megtekintés
 @plural	{n} comment|{n} comments	{n} hozzászólás|{n} hozzászólás
+@plural	{n} character at most.|{n} characters at most.	Legfeljebb {n} karakter.|Legfeljebb {n} karakter.
 @plural	{n} second ago|{n} seconds ago	{n} másodperce|{n} másodperce
 @plural	{n} minute ago|{n} minutes ago	{n} perce|{n} perce
 @plural	{n} hour ago|{n} hours ago	{n} órája|{n} órája

@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Pemrosesan gagal. Upload ulang videonya.
 	Upload failed. Try again.	Upload gagal. Coba lagi.
 	The file is too large.	File terlalu besar.
+	This can't be empty.	Ini tidak boleh kosong.
+	This must fit on one line.	Ini harus muat dalam satu baris.
+	This holds characters that aren't allowed.	Ini berisi karakter yang tidak diizinkan.
+	This isn't in the expected form.	Ini tidak dalam bentuk yang diharapkan.
+	This choice isn't offered here.	Pilihan ini tidak tersedia di sini.
 	(edited)	(diedit)
 	Action menu	Menu tindakan
 	Add a comment…	Tambahkan komentar…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Histori Anda dijeda: yang Anda tonton sekarang tidak disimpan.
 @plural	{n} view|{n} views	{n} kali ditonton
 @plural	{n} comment|{n} comments	{n} komentar
+@plural	{n} character at most.|{n} characters at most.	Maksimal {n} karakter.
 @plural	{n} second ago|{n} seconds ago	{n} detik yang lalu
 @plural	{n} minute ago|{n} minutes ago	{n} menit yang lalu
 @plural	{n} hour ago|{n} hours ago	{n} jam yang lalu

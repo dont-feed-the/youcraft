@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Обрада није успела. Поново отпремите видео.
 	Upload failed. Try again.	Отпремање није успело. Покушајте поново.
 	The file is too large.	Датотека је превелика.
+	This can't be empty.	Ово не може бити празно.
+	This must fit on one line.	Ово мора стати у један ред.
+	This holds characters that aren't allowed.	Ово садржи знакове који нису дозвољени.
+	This isn't in the expected form.	Ово није у очекиваном облику.
+	This choice isn't offered here.	Овај избор овде није понуђен.
 	(edited)	(измењено)
 	Action menu	Мени радњи
 	Add a comment…	Додајте коментар…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Ваша историја је паузирана: оно што сада гледате се не чува.
 @plural	{n} view|{n} views	{n} преглед|{n} прегледа|{n} прегледа
 @plural	{n} comment|{n} comments	{n} коментар|{n} коментара|{n} коментара
+@plural	{n} character at most.|{n} characters at most.	Највише {n} знак.|Највише {n} знака.|Највише {n} знакова.
 @plural	{n} second ago|{n} seconds ago	пре {n} секунде|пре {n} секунде|пре {n} секунди
 @plural	{n} minute ago|{n} minutes ago	пре {n} минута|пре {n} минута|пре {n} минута
 @plural	{n} hour ago|{n} hours ago	пре {n} сата|пре {n} сата|пре {n} сати

@@ -23,7 +23,7 @@ use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::time::Duration;
 
-use youcraft_api::Role;
+use youcraft_api::Grant;
 
 /// The configuration of one run.
 #[derive(Clone, Debug)]
@@ -39,7 +39,7 @@ pub struct Config {
     /// Signing in with Google, if it is set up.
     pub google: Option<Google>,
     /// The least role of every account that is not blocked.
-    pub signed_in_role: Role,
+    pub signed_in_role: Grant,
     /// The largest file one may upload, in bytes.
     pub upload_bytes: u64,
     /// The most bytes the site's videos may fill.
@@ -103,8 +103,8 @@ impl Config {
             _ => None,
         };
         let signed_in_role = match std::env::var("YOUCRAFT_SIGNED_IN_ROLE").as_deref() {
-            Err(_) | Ok("viewer") => Role::Viewer,
-            Ok("creator") => Role::Creator,
+            Err(_) | Ok("viewer") => Grant::Viewer,
+            Ok("creator") => Grant::Creator,
             Ok(other) => {
                 return Err(format!(
                     "YOUCRAFT_SIGNED_IN_ROLE={other}: viewer or creator expected"

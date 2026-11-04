@@ -180,11 +180,11 @@ fn EditForm(
     });
     view! {
         <form class="dialog-form" on:submit=save>
-            <input class="field" type="text" required maxlength=TITLE_LIMIT.to_string() aria-label=tr("Title")
-                prop:value=move || draft_title.get() on:input=move |event| draft_title.set(event_target_value(&event))/>
-            <textarea class="field" rows="4" maxlength=DESCRIPTION_LIMIT.to_string() aria-label=tr("Description")
+            <input class="field" type="text" required aria-label=tr("Title")
+                prop:value=move || draft_title.get() on:input=move |event| draft_title.set(browser::clipped(&event, TITLE_LIMIT))/>
+            <textarea class="field" rows="4" aria-label=tr("Description")
                 placeholder=tr("Description") prop:value=move || draft_description.get()
-                on:input=move |event| draft_description.set(event_target_value(&event))></textarea>
+                on:input=move |event| draft_description.set(browser::clipped(&event, DESCRIPTION_LIMIT))></textarea>
             <select class="field" aria-label=tr("Visibility")
                 on:change=move |event| draft_visibility.set(Visibility::from_name(&event_target_value(&event)).unwrap_or_default())>
                 {options.into_iter().collect_view()}

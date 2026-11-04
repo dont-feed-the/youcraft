@@ -206,15 +206,15 @@ mod tests {
     use axum::Router;
     use axum::body::Body;
     use axum::http::Request;
-    use youcraft_api::Role;
+    use youcraft_api::{Grant, Role};
 
     use super::*;
     use crate::http::tests::{ORIGIN, command_request, send, sign_in, site};
 
     /// A personal token of a new account signed in as `sub`, with `role`: a viewer's unless an
     /// invitation made it more.
-    async fn token(site: &Site, routes: &Router, sub: &str, role: Role) -> String {
-        if role != Role::Viewer {
+    async fn token(site: &Site, routes: &Router, sub: &str, role: Grant) -> String {
+        if role != Grant::Viewer {
             site.store()
                 .invite(&format!("{sub}@example.com"), role, 1)
                 .unwrap();
@@ -266,7 +266,7 @@ mod tests {
     #[tokio::test]
     async fn an_agent_initializes_and_pings() {
         let (site, routes) = site();
-        let token = token(&site, &routes, "ada", Role::Viewer).await;
+        let token = token(&site, &routes, "ada", Grant::Viewer).await;
         let asked = request("initialize", json!({ "protocolVersion": "2025-03-26" }));
         let (status, _, answer) = post(&routes, &asked, &token).await;
         assert_eq!(status, StatusCode::OK);
@@ -293,13 +293,13 @@ mod tests {
     #[tokio::test]
     async fn the_tools_are_the_commands_the_owner_may_run() {
         let (site, routes) = site();
-        for (sub, role) in [("ada", Role::Viewer), ("bob", Role::Admin)] {
+        for (sub, role) in [("ada", Grant::Viewer), ("bob", Grant::Admin)] {
             let token = token(&site, &routes, sub, role).await;
             let (_, _, answer) = post(&routes, &request("tools/list", json!({})), &token).await;
             let tools = answer["result"]["tools"].as_array().unwrap();
             let expected: Vec<String> = descriptors()
                 .iter()
-                .filter(|command| role.allows(command.requires))
+                .filter(|command| Role::from(role).allows(command.requires))
                 .map(|command| tool_name(&command.id))
                 .collect();
             let names: Vec<&str> = tools.iter().map(|t| t["name"].as_str().unwrap()).collect();
@@ -321,7 +321,7 @@ mod tests {
     #[tokio::test]
     async fn a_tool_runs_its_command_as_the_owner() {
         let (site, routes) = site();
-        let token = token(&site, &routes, "ada", Role::Viewer).await;
+        let token = token(&site, &routes, "ada", Grant::Viewer).await;
         let me = request("tools/call", json!({ "name": "account-me" }));
         let (_, _, answer) = post(&routes, &me, &token).await;
         let result = &answer["result"];

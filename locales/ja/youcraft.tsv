@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	処理に失敗しました。動画をもう一度アップロードしてください。
 	Upload failed. Try again.	アップロードに失敗しました。もう一度お試しください。
 	The file is too large.	ファイルが大きすぎます。
+	This can't be empty.	空にはできません。
+	This must fit on one line.	1 行に収めてください。
+	This holds characters that aren't allowed.	使用できない文字が含まれています。
+	This isn't in the expected form.	想定された形式ではありません。
+	This choice isn't offered here.	この選択肢はここでは利用できません。
 	(edited)	（編集済み）
 	Action menu	操作メニュー
 	Add a comment…	コメントを追加…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	履歴は一時停止中です。今視聴している動画は記録されません。
 @plural	{n} view|{n} views	{n} 回視聴
 @plural	{n} comment|{n} comments	{n} 件のコメント
+@plural	{n} character at most.|{n} characters at most.	{n} 文字以内にしてください。
 @plural	{n} second ago|{n} seconds ago	{n} 秒前
 @plural	{n} minute ago|{n} minutes ago	{n} 分前
 @plural	{n} hour ago|{n} hours ago	{n} 時間前

@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Xử lý không thành công. Hãy tải video lên lại.
 	Upload failed. Try again.	Tải lên không thành công. Hãy thử lại.
 	The file is too large.	Tệp quá lớn.
+	This can't be empty.	Không được để trống mục này.
+	This must fit on one line.	Nội dung này phải nằm trên một dòng.
+	This holds characters that aren't allowed.	Có ký tự không được phép.
+	This isn't in the expected form.	Không đúng định dạng mong đợi.
+	This choice isn't offered here.	Lựa chọn này không có ở đây.
 	(edited)	(đã chỉnh sửa)
 	Action menu	Trình đơn thao tác
 	Add a comment…	Thêm bình luận…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Nhật ký của bạn đang tạm dừng: những gì bạn xem bây giờ không được lưu lại.
 @plural	{n} view|{n} views	{n} lượt xem
 @plural	{n} comment|{n} comments	{n} bình luận
+@plural	{n} character at most.|{n} characters at most.	Tối đa {n} ký tự.
 @plural	{n} second ago|{n} seconds ago	{n} giây trước
 @plural	{n} minute ago|{n} minutes ago	{n} phút trước
 @plural	{n} hour ago|{n} hours ago	{n} giờ trước

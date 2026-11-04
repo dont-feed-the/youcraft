@@ -5,7 +5,7 @@ use youcraft_api::commands::site::Nothing;
 use youcraft_api::commands::video::{
     Delete, Edit, Get, Next, Rate, Rated, SetRating, Update, View, Which,
 };
-use youcraft_api::records::{Feed, StudioVideo, VideoPage};
+use youcraft_api::records::{Feed, Rating, StudioVideo, VideoPage};
 use youcraft_api::{ApiError, VideoId};
 use youcraft_recommend::v1::Surface;
 use youcraft_store::studio::VideoEdit;
@@ -50,6 +50,9 @@ impl Handle<Next> for Site {
 impl Handle<SetRating> for Site {
     async fn handle(&self, caller: Caller, rate: Rate) -> Result<Rated, ApiError> {
         caller.signed_in()?;
+        if rate.rating != Rating::None {
+            caller.may_act()?;
+        }
         let (reader, now) = (caller.reader(), now());
         let likes = self
             .db(move |store| store.rate(reader, rate.video, rate.rating, now))

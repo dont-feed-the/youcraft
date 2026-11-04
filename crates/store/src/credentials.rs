@@ -139,7 +139,7 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use youcraft_api::ChannelId;
-    use youcraft_api::Role;
+    use youcraft_api::Grant;
 
     use super::*;
     use crate::accounts::GooglePerson;
@@ -178,7 +178,7 @@ mod tests {
         store.open_session(&[4; 32], ada, 300, 400).unwrap();
         let standing = store.session(&[4; 32], 350).unwrap().unwrap();
         assert!(standing.blocked);
-        assert_eq!(standing.role, Role::Viewer);
+        assert_eq!(standing.role, Grant::Viewer);
     }
 
     #[test]

@@ -2,7 +2,7 @@
 
 use youcraft_api::commands::admin::{Block, Blocking, NewRole, SetRole};
 use youcraft_api::commands::site::Nothing;
-use youcraft_api::{AccountId, ApiError, Role};
+use youcraft_api::{AccountId, ApiError};
 
 use crate::dispatch::Handle;
 use crate::site::{Caller, Site};
@@ -24,9 +24,6 @@ impl Site {
 
 impl Handle<SetRole> for Site {
     async fn handle(&self, caller: Caller, change: NewRole) -> Result<Nothing, ApiError> {
-        if change.role == Role::Anyone {
-            return Err(ApiError::invalid("role", "viewer, creator or admin"));
-        }
         let account = self.other_account(caller, &change.handle).await?;
         let changed = self
             .db(move |store| store.set_role(account, change.role))

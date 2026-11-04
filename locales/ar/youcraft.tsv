@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	تعذّرت المعالجة. حمّل الفيديو مرة أخرى.
 	Upload failed. Try again.	تعذّر التحميل. حاول مرة أخرى.
 	The file is too large.	الملف كبير جدًا.
+	This can't be empty.	لا يمكن أن يكون هذا فارغًا.
+	This must fit on one line.	يجب أن يكون هذا في سطر واحد.
+	This holds characters that aren't allowed.	يحتوي هذا على أحرف غير مسموح بها.
+	This isn't in the expected form.	هذا ليس بالصيغة المتوقعة.
+	This choice isn't offered here.	هذا الخيار غير متاح هنا.
 	(edited)	(مُعدَّل)
 	Action menu	قائمة الإجراءات
 	Add a comment…	أضِف تعليقًا…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	سجلك متوقف مؤقتًا: ما تشاهده الآن لا يُحفَظ.
 @plural	{n} view|{n} views	{n} مشاهدة|{n} مشاهدة|{n} مشاهدة|{n} مشاهدات|{n} مشاهدة|{n} مشاهدة
 @plural	{n} comment|{n} comments	{n} تعليق|{n} تعليق|{n} تعليق|{n} تعليقات|{n} تعليقًا|{n} تعليق
+@plural	{n} character at most.|{n} characters at most.	{n} حرف كحد أقصى.|{n} حرف كحد أقصى.|{n} حرف كحد أقصى.|{n} أحرف كحد أقصى.|{n} حرفًا كحد أقصى.|{n} حرف كحد أقصى.
 @plural	{n} second ago|{n} seconds ago	قبل {n} ثانية|قبل {n} ثانية|قبل {n} ثانية|قبل {n} ثوانٍ|قبل {n} ثانية|قبل {n} ثانية
 @plural	{n} minute ago|{n} minutes ago	قبل {n} دقيقة|قبل {n} دقيقة|قبل {n} دقيقة|قبل {n} دقائق|قبل {n} دقيقة|قبل {n} دقيقة
 @plural	{n} hour ago|{n} hours ago	قبل {n} ساعة|قبل {n} ساعة|قبل {n} ساعة|قبل {n} ساعات|قبل {n} ساعة|قبل {n} ساعة

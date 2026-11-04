@@ -2,7 +2,8 @@
 //!
 //! A comment answers a video; a reply answers a comment, one level deep as on YouTube. Anyone
 //! signed in and not blocked may comment where the video's creator lets them; the author edits
-//! and deletes their own, and the video's creator and the site's administrators delete any.
+//! their own and deletes it, blocked or not, and the video's creator and the site's
+//! administrators delete any.
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -69,6 +70,7 @@ pub enum Order {
 
 /// Which comments of a video.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct OfVideo {
     /// The video.
     pub video: VideoId,
@@ -82,6 +84,7 @@ pub struct OfVideo {
 
 /// Which replies of a comment.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct OfComment {
     /// The comment.
     pub comment: CommentId,
@@ -92,6 +95,7 @@ pub struct OfComment {
 
 /// A new comment, or a reply.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct NewComment {
     /// The video it is about.
     pub video: VideoId,
@@ -99,20 +103,24 @@ pub struct NewComment {
     #[serde(default)]
     pub parent: Option<CommentId>,
     /// What it says: 1 to [`BODY_LIMIT`] characters.
+    #[schemars(length(min = 1, max = BODY_LIMIT))]
     pub body: String,
 }
 
 /// A comment's new text.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Edit {
     /// The comment.
     pub comment: CommentId,
     /// What it says now: 1 to [`BODY_LIMIT`] characters.
+    #[schemars(length(min = 1, max = BODY_LIMIT))]
     pub body: String,
 }
 
 /// Which comment.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Which {
     /// The comment.
     pub comment: CommentId,
@@ -120,6 +128,7 @@ pub struct Which {
 
 /// Whether the caller likes a comment from now on.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Liking {
     /// The comment.
     pub comment: CommentId,
@@ -181,23 +190,23 @@ impl Command for Update {
     type Output = Comment;
 }
 
-/// Delete a comment, with its replies.
+/// Delete a comment, with its replies; blocked or not, what one wrote is one's own to take back.
 pub struct Delete;
 
 impl Command for Delete {
     const ID: &'static str = "comment.delete";
-    const REQUIRES: Role = Role::Viewer;
+    const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str = "Delete a comment with its replies: your own, any on your videos, or any at all for administrators.";
     type Input = Which;
     type Output = Nothing;
 }
 
-/// Like a comment, or take the like back.
+/// Like a comment, or take the like back; a blocked account may only take it back.
 pub struct Like;
 
 impl Command for Like {
     const ID: &'static str = "comment.like";
-    const REQUIRES: Role = Role::Viewer;
+    const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str = "Like a comment or take your like back; answers its likes.";
     type Input = Liking;
     type Output = Liked;

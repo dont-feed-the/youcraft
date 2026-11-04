@@ -122,7 +122,7 @@ pub fn commands(arguments: &[String]) -> Result<(), String> {
 /// `command` on one line: id, role, summary.
 fn line(command: &Descriptor) -> String {
     format!(
-        "{:<24} {:<8} {}",
+        "{:<24} {:<9} {}",
         command.id,
         command.requires.as_str(),
         command.summary

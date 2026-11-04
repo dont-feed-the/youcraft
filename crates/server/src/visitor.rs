@@ -4,8 +4,10 @@
 //! cookie. Either is looked up by its hash, so a stale one simply proves nothing. A signed-in
 //! person's preferences are their account's; a visitor's are the cookies their browser wrote.
 //! [`layer`] resolves the visitor once per request, before any page or command runs, and has
-//! the browser forget a session cookie that proves nothing any more. It also gives the caller
-//! the [`ViewerKey`] by which the view counter tells one viewer from another.
+//! the browser forget a session cookie that the database found to prove nothing any more; one it
+//! could not look up (the database failed) proves nothing for this request only, and the
+//! browser keeps it. It also gives the caller the [`ViewerKey`] by which the view counter tells
+//! one viewer from another.
 
 use std::sync::Arc;
 
@@ -16,7 +18,7 @@ use axum::middleware::Next;
 use axum::response::Response;
 use sha2::{Digest, Sha256};
 use youcraft_api::commands::account::{Preferences, Theme};
-use youcraft_api::{AccountId, Role};
+use youcraft_api::{AccountId, ApiError, Grant};
 use youcraft_store::accounts::Standing;
 
 use crate::cookies;
@@ -30,7 +32,7 @@ pub struct Visitor {
     pub caller: Caller,
     /// How to render its pages.
     pub preferences: Preferences,
-    /// Whether it carried a session cookie that proves nothing.
+    /// Whether it carried a session cookie that the database found to prove nothing.
     pub stale_session: bool,
 }
 
@@ -42,28 +44,28 @@ pub async fn of(site: &Site, headers: &HeaderMap) -> Visitor {
         .and_then(|value| value.strip_prefix("Bearer "))
         .map(str::trim);
     let session = cookies::read(headers, cookies::SESSION);
-    let found = match (bearer, session) {
+    let found: Result<Option<(Standing, Credential)>, ApiError> = match (bearer, session) {
         (Some(token), _) => {
             let hash = hash(token);
             let standing = site.db(move |store| store.token(&hash, now())).await;
-            standing.ok().flatten().map(|s| (s, Credential::Token))
+            standing.map(|found| found.map(|s| (s, Credential::Token)))
         }
         (None, Some(secret)) => {
             let hash = hash(secret);
             let standing = site.db(move |store| store.session(&hash, now())).await;
-            standing
-                .ok()
-                .flatten()
-                .map(|s| (s, Credential::Session(hash)))
+            standing.map(|found| found.map(|s| (s, Credential::Session(hash))))
         }
-        (None, None) => None,
+        (None, None) => Ok(None),
     };
+    // A credential the database could not look up proves nothing now, and nothing against
+    // itself: the next request may find it.
+    let stale_session = bearer.is_none() && session.is_some() && matches!(found, Ok(None));
     match found {
-        Some((standing, credential)) => {
+        Ok(Some((standing, credential))) => {
             let viewer = viewer_key(site, Some(standing.account), headers);
             signed_in(&standing, site.config().signed_in_role, credential, viewer)
         }
-        None => Visitor {
+        Ok(None) | Err(_) => Visitor {
             caller: Caller {
                 viewer: viewer_key(site, None, headers),
                 ..Caller::ANONYMOUS
@@ -75,14 +77,14 @@ pub async fn of(site: &Site, headers: &HeaderMap) -> Visitor {
                     .and_then(Theme::from_name)
                     .unwrap_or_default(),
             },
-            stale_session: bearer.is_none() && session.is_some(),
+            stale_session,
         },
     }
 }
 
 fn signed_in(
     standing: &Standing,
-    floor: Role,
+    floor: Grant,
     credential: Credential,
     viewer: ViewerKey,
 ) -> Visitor {
@@ -131,4 +133,64 @@ pub async fn layer(State(site): State<Arc<Site>>, mut request: Request, next: Ne
         response.headers_mut().append(SET_COOKIE, removal);
     }
     response
+}
+
+#[cfg(test)]
+mod tests {
+    use axum::http::HeaderValue;
+    use axum::http::header::COOKIE;
+    use youcraft_api::ChannelId;
+    use youcraft_store::accounts::NewAccount;
+
+    use super::*;
+    use crate::secrets::new_secret;
+
+    /// The headers of a request that carries the session cookie `secret`.
+    fn carrying(secret: &str) -> HeaderMap {
+        let mut headers = HeaderMap::new();
+        let cookie = format!("{}={secret}", cookies::SESSION);
+        headers.insert(COOKIE, HeaderValue::from_str(&cookie).unwrap());
+        headers
+    }
+
+    #[tokio::test]
+    async fn only_a_session_the_database_lacks_is_forgotten() {
+        let (site, dir) = crate::uploads::tests::site("visitor-sessions");
+        let account = AccountId::from_bits(7);
+        site.store()
+            .create_account(&NewAccount {
+                id: account,
+                channel: ChannelId::from_bits(8),
+                google_subject: "g7",
+                email: "ada@example.com",
+                name: "Ada",
+                handle: "ada",
+                role: Grant::Viewer,
+                now: now(),
+            })
+            .unwrap();
+        let (secret, hash) = new_secret();
+        site.store()
+            .open_session(&hash, account, now(), now() + 3600)
+            .unwrap();
+        let signed_in = of(&site, &carrying(&secret)).await;
+        assert_eq!(signed_in.caller.account, Some(account));
+        let gone = of(&site, &carrying("not-a-session")).await;
+        assert!(gone.caller.account.is_none() && gone.stale_session);
+
+        // The database fails to look the session up: it proves nothing now, and stays.
+        let other = rusqlite::Connection::open(dir.join("youcraft.sqlite")).unwrap();
+        other
+            .execute_batch("ALTER TABLE sessions RENAME TO sessions_away")
+            .unwrap();
+        let failed = of(&site, &carrying(&secret)).await;
+        assert!(failed.caller.account.is_none());
+        assert!(!failed.stale_session, "a failed lookup signs nobody out");
+        other
+            .execute_batch("ALTER TABLE sessions_away RENAME TO sessions")
+            .unwrap();
+        let back = of(&site, &carrying(&secret)).await;
+        assert_eq!(back.caller.account, Some(account));
+        std::fs::remove_dir_all(dir).unwrap();
+    }
 }

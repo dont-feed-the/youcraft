@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Не удалось обработать видео. Загрузите его ещё раз.
 	Upload failed. Try again.	Не удалось загрузить. Повторите попытку.
 	The file is too large.	Файл слишком большой.
+	This can't be empty.	Это не может быть пустым.
+	This must fit on one line.	Это должно уместиться в одну строку.
+	This holds characters that aren't allowed.	Здесь есть недопустимые символы.
+	This isn't in the expected form.	Это не в ожидаемом виде.
+	This choice isn't offered here.	Этот вариант здесь недоступен.
 	(edited)	(изменено)
 	Action menu	Меню действий
 	Add a comment…	Добавьте комментарий…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Ваша история приостановлена: то, что вы смотрите сейчас, не сохраняется.
 @plural	{n} view|{n} views	{n} просмотр|{n} просмотра|{n} просмотров
 @plural	{n} comment|{n} comments	{n} комментарий|{n} комментария|{n} комментариев
+@plural	{n} character at most.|{n} characters at most.	Максимум {n} символ.|Максимум {n} символа.|Максимум {n} символов.
 @plural	{n} second ago|{n} seconds ago	{n} секунду назад|{n} секунды назад|{n} секунд назад
 @plural	{n} minute ago|{n} minutes ago	{n} минуту назад|{n} минуты назад|{n} минут назад
 @plural	{n} hour ago|{n} hours ago	{n} час назад|{n} часа назад|{n} часов назад

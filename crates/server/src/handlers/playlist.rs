@@ -6,12 +6,12 @@ use youcraft_api::commands::playlist::{
     Which,
 };
 use youcraft_api::commands::site::Nothing;
-use youcraft_api::{ApiError, List, PlaylistId};
+use youcraft_api::{ApiError, List, PlaylistId, Rule};
 use youcraft_store::playlists::{self, Changed, PlaylistEdit};
 
 use crate::dispatch::Handle;
 use crate::handlers::feed::PAGE;
-use crate::handlers::input::{next, optional_text, text, window};
+use crate::handlers::input::{line, next, optional_text, window};
 use crate::secrets::random_bits;
 use crate::site::{Caller, Site, now};
 
@@ -21,14 +21,14 @@ fn changed(change: Changed) -> Result<PlaylistCard, ApiError> {
         Changed::Done(card) => Ok(card),
         Changed::Missing => Err(ApiError::NotFound),
         Changed::Full => Err(ApiError::TooLarge { limit: VIDEO_LIMIT }),
-        Changed::Fixed => Err(ApiError::invalid("list", "WL or one of your playlists")),
+        Changed::Fixed => Err(ApiError::invalid("list", Rule::NotOffered)),
     }
 }
 
 impl Handle<Create> for Site {
     async fn handle(&self, caller: Caller, new: NewPlaylist) -> Result<PlaylistCard, ApiError> {
         caller.signed_in()?;
-        let title = text("title", &new.title, TITLE_LIMIT, false)?;
+        let title = line("title", &new.title, TITLE_LIMIT)?;
         let (owner, id, now) = (caller.reader(), PlaylistId::from_bits(random_bits()), now());
         let made = self
             .db(move |store| {
@@ -57,7 +57,7 @@ impl Handle<Update> for Site {
         let owner = caller.reader();
         let title = edit
             .title
-            .map(|title| text("title", &title, TITLE_LIMIT, false))
+            .map(|title| line("title", &title, TITLE_LIMIT))
             .transpose()?;
         let description = edit
             .description

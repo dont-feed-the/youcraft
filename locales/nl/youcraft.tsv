@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Verwerken mislukt. Upload de video opnieuw.
 	Upload failed. Try again.	Uploaden mislukt. Probeer het opnieuw.
 	The file is too large.	Het bestand is te groot.
+	This can't be empty.	Dit mag niet leeg zijn.
+	This must fit on one line.	Dit moet op één regel passen.
+	This holds characters that aren't allowed.	Dit bevat tekens die niet zijn toegestaan.
+	This isn't in the expected form.	Dit heeft niet de verwachte vorm.
+	This choice isn't offered here.	Deze keuze wordt hier niet aangeboden.
 	(edited)	(bewerkt)
 	Action menu	Actiemenu
 	Add a comment…	Voeg een reactie toe…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Je geschiedenis is onderbroken: wat je nu bekijkt, wordt niet bewaard.
 @plural	{n} view|{n} views	{n} weergave|{n} weergaven
 @plural	{n} comment|{n} comments	{n} reactie|{n} reacties
+@plural	{n} character at most.|{n} characters at most.	Maximaal {n} teken.|Maximaal {n} tekens.
 @plural	{n} second ago|{n} seconds ago	{n} seconde geleden|{n} seconden geleden
 @plural	{n} minute ago|{n} minutes ago	{n} minuut geleden|{n} minuten geleden
 @plural	{n} hour ago|{n} hours ago	{n} uur geleden|{n} uur geleden

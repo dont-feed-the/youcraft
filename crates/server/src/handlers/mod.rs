@@ -7,7 +7,7 @@ mod channel;
 mod comment;
 mod feed;
 mod history;
-mod input;
+pub mod input;
 mod invite;
 mod playlist;
 mod search;

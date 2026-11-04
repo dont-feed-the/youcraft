@@ -2,6 +2,33 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.2.0
+
+### Changed
+
+- A blocked account still manages what is its own: it reads, pauses and clears its history, makes
+  and revokes its personal tokens, changes its settings, takes back its ratings, likes and
+  subscriptions, and deletes its own playlists, comments and videos. It still cannot act toward
+  others. The commands that allow this require the new role `signed_in`.
+- The roles an account holds (`viewer`, `creator`, `admin`) are their own type in commands
+  (`admin.set_role`, invitations, `account.me`, `site.policy`), which can never name `anyone` or
+  `signed_in`.
+- A field that breaks a rule says which one, typed instead of in English prose:
+  `{"error": "invalid", "field": "title", "rule": "too_long", "limit": 100}`, or `required`,
+  `one_line`, `characters`, `malformed`, `not_offered`, and `schema` with the JSON decoder's
+  `mismatch`. Pages say it in the reader's language.
+- Commands refuse input fields they do not know instead of ignoring them, and their input schemas
+  say so and give each text's `minLength` and `maxLength`.
+- Text fields count characters as the server does (Unicode scalar values), so a title full of emoji
+  is no longer cut at half its length.
+
+### Fixed
+
+- Titles, descriptions, names and comments can no longer hold characters that reorder the text
+  around them (bidirectional overrides and isolates), nor video titles and token names control
+  characters; video descriptions are trimmed like every other text.
+- A database failure while looking up a session no longer signs the person out.
+
 ## 0.1.16
 
 ### Changed

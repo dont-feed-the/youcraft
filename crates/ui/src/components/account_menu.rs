@@ -6,7 +6,7 @@
 use leptos::prelude::*;
 use leptos_router::hooks::use_location;
 use youcraft_api::commands::account::{Me, Theme};
-use youcraft_api::{Role, routes};
+use youcraft_api::{Grant, routes};
 
 use crate::account::{Shown, SignedIn, choose_language, choose_theme, sign_out};
 use crate::components::project;
@@ -131,7 +131,7 @@ fn MainPanel(me: StoredValue<Option<Me>>, open: RwSignal<Option<Panel>>) -> impl
                 </div>
             </div>
             <hr class="menu-rule"/>
-            {(me.role >= Role::Creator).then(|| view! {
+            {(me.role >= Grant::Creator).then(|| view! {
                 <a class="menu-entry" role="menuitem" href=routes::STUDIO>
                     <Glyph icon=Icon::Studio/><span>{tr("YouCraft Studio")}</span>
                 </a>

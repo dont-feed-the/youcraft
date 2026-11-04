@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Өңдеу сәтсіз аяқталды. Бейнені қайта жүктеңіз.
 	Upload failed. Try again.	Жүктеу сәтсіз аяқталды. Қайталап көріңіз.
 	The file is too large.	Файл тым үлкен.
+	This can't be empty.	Бұл бос болмауы керек.
+	This must fit on one line.	Бұл бір жолға сыюы керек.
+	This holds characters that aren't allowed.	Мұнда рұқсат етілмеген таңбалар бар.
+	This isn't in the expected form.	Бұл күтілген пішімде емес.
+	This choice isn't offered here.	Бұл таңдау мұнда ұсынылмайды.
 	(edited)	(өңделді)
 	Action menu	Әрекеттер мәзірі
 	Add a comment…	Пікір қосыңыз…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Тарихыңыз тоқтатылған: қазір көргендеріңіз сақталмайды.
 @plural	{n} view|{n} views	{n} қаралым|{n} қаралым
 @plural	{n} comment|{n} comments	{n} пікір|{n} пікір
+@plural	{n} character at most.|{n} characters at most.	Ең көбі {n} таңба.|Ең көбі {n} таңба.
 @plural	{n} second ago|{n} seconds ago	{n} секунд бұрын|{n} секунд бұрын
 @plural	{n} minute ago|{n} minutes ago	{n} минут бұрын|{n} минут бұрын
 @plural	{n} hour ago|{n} hours ago	{n} сағат бұрын|{n} сағат бұрын

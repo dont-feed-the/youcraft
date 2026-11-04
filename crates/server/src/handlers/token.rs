@@ -7,6 +7,7 @@ use youcraft_api::commands::token::{
 use youcraft_api::{ApiError, TokenId};
 
 use crate::dispatch::Handle;
+use crate::handlers::input::line;
 use crate::secrets::{new_secret, random_bits};
 use crate::site::{Caller, Site, now};
 
@@ -16,14 +17,7 @@ const PREFIX: &str = "yct_";
 impl Handle<Create> for Site {
     async fn handle(&self, caller: Caller, naming: Naming) -> Result<Created, ApiError> {
         let account = caller.signed_in()?;
-        let name = naming.name.trim().to_owned();
-        let length = name.chars().count();
-        if length == 0 || length > NAME_LIMIT || name.chars().any(char::is_control) {
-            return Err(ApiError::invalid(
-                "name",
-                "1 to 100 characters, no control ones",
-            ));
-        }
+        let name = line("name", &naming.name, NAME_LIMIT)?;
         let (secret, _) = new_secret();
         let secret = format!("{PREFIX}{secret}");
         let hash = crate::secrets::hash(&secret);

@@ -32,8 +32,7 @@ where
             ApiError::Forbidden
         });
     }
-    let input: C::Input =
-        serde_json::from_value(input).map_err(|e| ApiError::invalid("input", &e.to_string()))?;
+    let input: C::Input = serde_json::from_value(input).map_err(|e| ApiError::schema(&e))?;
     let output = <Site as Handle<C>>::handle(site, caller, input).await?;
     serde_json::to_value(output).map_err(|_| ApiError::Internal)
 }

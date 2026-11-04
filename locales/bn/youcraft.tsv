@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	প্রক্রিয়াকরণ ব্যর্থ হয়েছে। ভিডিওটি আবার আপলোড করুন।
 	Upload failed. Try again.	আপলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।
 	The file is too large.	ফাইলটি খুব বড়।
+	This can't be empty.	এটি খালি রাখা যাবে না।
+	This must fit on one line.	এটি এক লাইনে হতে হবে।
+	This holds characters that aren't allowed.	এতে অননুমোদিত অক্ষর আছে।
+	This isn't in the expected form.	এটি প্রত্যাশিত আকারে নেই।
+	This choice isn't offered here.	এই বিকল্পটি এখানে দেওয়া হয় না।
 	(edited)	(সম্পাদিত)
 	Action menu	কাজের মেনু
 	Add a comment…	একটি মন্তব্য যোগ করুন…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	আপনার ইতিহাস বিরতিতে আছে: এখন যা দেখছেন তা রাখা হচ্ছে না।
 @plural	{n} view|{n} views	{n} বার দেখা হয়েছে|{n} বার দেখা হয়েছে
 @plural	{n} comment|{n} comments	{n}টি মন্তব্য|{n}টি মন্তব্য
+@plural	{n} character at most.|{n} characters at most.	সর্বোচ্চ {n}টি অক্ষর।|সর্বোচ্চ {n}টি অক্ষর।
 @plural	{n} second ago|{n} seconds ago	{n} সেকেন্ড আগে|{n} সেকেন্ড আগে
 @plural	{n} minute ago|{n} minutes ago	{n} মিনিট আগে|{n} মিনিট আগে
 @plural	{n} hour ago|{n} hours ago	{n} ঘণ্টা আগে|{n} ঘণ্টা আগে

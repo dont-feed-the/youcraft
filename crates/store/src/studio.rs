@@ -125,7 +125,7 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use youcraft_api::time::MediaDuration;
-    use youcraft_api::{AccountId, Role};
+    use youcraft_api::{AccountId, Grant};
 
     use super::*;
     use crate::accounts::NewAccount;
@@ -143,7 +143,7 @@ mod tests {
                 email: "a@example.com",
                 name: "Ada",
                 handle: "ada",
-                role: Role::Creator,
+                role: Grant::Creator,
                 now: 100,
             })
             .unwrap();

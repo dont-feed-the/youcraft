@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Apdoroti nepavyko. Įkelkite vaizdo įrašą dar kartą.
 	Upload failed. Try again.	Įkelti nepavyko. Bandykite dar kartą.
 	The file is too large.	Failas per didelis.
+	This can't be empty.	Tai negali būti tuščia.
+	This must fit on one line.	Tai turi tilpti vienoje eilutėje.
+	This holds characters that aren't allowed.	Čia yra neleistinų simbolių.
+	This isn't in the expected form.	Tai nėra laukiamos formos.
+	This choice isn't offered here.	Šis pasirinkimas čia nesiūlomas.
 	(edited)	(redaguota)
 	Action menu	Veiksmų meniu
 	Add a comment…	Pridėkite komentarą…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Jūsų istorija pristabdyta: tai, ką žiūrite dabar, neišsaugoma.
 @plural	{n} view|{n} views	{n} peržiūra|{n} peržiūros|{n} peržiūrų
 @plural	{n} comment|{n} comments	{n} komentaras|{n} komentarai|{n} komentarų
+@plural	{n} character at most.|{n} characters at most.	Ne daugiau kaip {n} simbolis.|Ne daugiau kaip {n} simboliai.|Ne daugiau kaip {n} simbolių.
 @plural	{n} second ago|{n} seconds ago	prieš {n} sekundę|prieš {n} sekundes|prieš {n} sekundžių
 @plural	{n} minute ago|{n} minutes ago	prieš {n} minutę|prieš {n} minutes|prieš {n} minučių
 @plural	{n} hour ago|{n} hours ago	prieš {n} valandą|prieš {n} valandas|prieš {n} valandų

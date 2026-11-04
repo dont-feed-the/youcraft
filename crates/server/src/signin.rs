@@ -17,12 +17,14 @@ use axum::http::{HeaderMap, HeaderValue, StatusCode};
 use axum::response::{IntoResponse, Response};
 use serde::Deserialize;
 use tokio::io::AsyncReadExt;
+use youcraft_api::commands::channel::NAME_LIMIT;
 use youcraft_api::{AccountId, ChannelId, routes};
 use youcraft_store::accounts::GooglePerson;
 
 use crate::config::Google;
 use crate::cookies;
 use crate::google::{self, KEYS_LIMIT};
+use crate::handlers::input::cleaned;
 use crate::secrets::{new_secret, random_bits};
 use crate::site::{Site, now};
 
@@ -139,14 +141,9 @@ pub fn redirect_uri(origin: &str) -> String {
     format!("{origin}{}", routes::SIGNED_IN_WITH_GOOGLE)
 }
 
-/// A name as a channel shows it: no control characters, at most 100 characters.
+/// A name as a channel shows it: one line of text, at most [`NAME_LIMIT`] characters.
 fn display_name(name: &str) -> String {
-    name.chars()
-        .filter(|c| !c.is_control())
-        .take(100)
-        .collect::<String>()
-        .trim()
-        .to_owned()
+    cleaned(name, NAME_LIMIT)
 }
 
 /// The handles to offer a new channel named `name`, best first: its letters and digits in
@@ -209,6 +206,7 @@ mod tests {
     #[test]
     fn names_lose_control_characters_and_length() {
         assert_eq!(display_name(" Ada\u{0}\n "), "Ada");
-        assert_eq!(display_name(&"é".repeat(300)).chars().count(), 100);
+        assert_eq!(display_name("\u{202E}Ada"), "Ada");
+        assert_eq!(display_name(&"é".repeat(300)).chars().count(), NAME_LIMIT);
     }
 }

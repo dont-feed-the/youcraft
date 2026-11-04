@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	處理失敗，請重新上傳影片。
 	Upload failed. Try again.	上傳失敗，請再試一次。
 	The file is too large.	檔案太大。
+	This can't be empty.	此欄不能空白。
+	This must fit on one line.	此欄必須在一行內。
+	This holds characters that aren't allowed.	包含不允許使用的字元。
+	This isn't in the expected form.	格式不符合要求。
+	This choice isn't offered here.	此處不提供這個選項。
 	(edited)	（已編輯）
 	Action menu	操作選單
 	Add a comment…	新增留言…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	你的觀看紀錄已暫停：現在觀看的內容不會保留。
 @plural	{n} view|{n} views	觀看次數：{n} 次
 @plural	{n} comment|{n} comments	{n} 則留言
+@plural	{n} character at most.|{n} characters at most.	最多 {n} 個字元。
 @plural	{n} second ago|{n} seconds ago	{n} 秒前
 @plural	{n} minute ago|{n} minutes ago	{n} 分鐘前
 @plural	{n} hour ago|{n} hours ago	{n} 小時前

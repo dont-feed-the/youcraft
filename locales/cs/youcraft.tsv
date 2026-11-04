@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Zpracování se nezdařilo. Nahrajte video znovu.
 	Upload failed. Try again.	Nahrání se nezdařilo. Zkuste to znovu.
 	The file is too large.	Soubor je příliš velký.
+	This can't be empty.	Toto nesmí být prázdné.
+	This must fit on one line.	Toto se musí vejít na jeden řádek.
+	This holds characters that aren't allowed.	Obsahuje nepovolené znaky.
+	This isn't in the expected form.	Toto nemá očekávaný tvar.
+	This choice isn't offered here.	Tato volba tu není k dispozici.
 	(edited)	(upraveno)
 	Action menu	Nabídka akcí
 	Add a comment…	Přidejte komentář…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Vaše historie je pozastavena: co teď sledujete, se neukládá.
 @plural	{n} view|{n} views	{n} zhlédnutí|{n} zhlédnutí|{n} zhlédnutí
 @plural	{n} comment|{n} comments	{n} komentář|{n} komentáře|{n} komentářů
+@plural	{n} character at most.|{n} characters at most.	Nejvýše {n} znak.|Nejvýše {n} znaky.|Nejvýše {n} znaků.
 @plural	{n} second ago|{n} seconds ago	před {n} sekundou|před {n} sekundami|před {n} sekundami
 @plural	{n} minute ago|{n} minutes ago	před {n} minutou|před {n} minutami|před {n} minutami
 @plural	{n} hour ago|{n} hours ago	před {n} hodinou|před {n} hodinami|před {n} hodinami

@@ -66,7 +66,7 @@ impl Handle<Replies> for Site {
 impl Handle<Create> for Site {
     async fn handle(&self, caller: Caller, new: NewComment) -> Result<Comment, ApiError> {
         caller.signed_in()?;
-        let body = text("body", &new.body, BODY_LIMIT, true)?;
+        let body = text("body", &new.body, BODY_LIMIT)?;
         let (author, id, now) = (caller.reader(), CommentId::from_bits(random_bits()), now());
         let posted = self
             .db(move |store| {
@@ -87,7 +87,7 @@ impl Handle<Create> for Site {
 impl Handle<Update> for Site {
     async fn handle(&self, caller: Caller, edit: Edit) -> Result<Comment, ApiError> {
         caller.signed_in()?;
-        let body = text("body", &edit.body, BODY_LIMIT, true)?;
+        let body = text("body", &edit.body, BODY_LIMIT)?;
         let (author, now) = (caller.reader(), now());
         let edited = self
             .db(move |store| store.edit_comment(edit.comment, author, &body, now))
@@ -110,6 +110,9 @@ impl Handle<Delete> for Site {
 impl Handle<Like> for Site {
     async fn handle(&self, caller: Caller, liking: Liking) -> Result<Liked, ApiError> {
         caller.signed_in()?;
+        if liking.liked {
+            caller.may_act()?;
+        }
         let reader = caller.reader();
         let likes = self
             .db(move |store| store.like_comment(liking.comment, reader, liking.liked))

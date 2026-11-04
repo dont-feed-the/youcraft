@@ -10,6 +10,7 @@ use youcraft_api::commands::{feed, studio, video};
 use youcraft_api::records::{Processing, StudioPage, StudioVideo, Visibility};
 use youcraft_api::routes;
 
+use crate::browser;
 use crate::call::call;
 use crate::icons::{Glyph, Icon};
 use crate::lang::{Language, RenderTime, count, tr};
@@ -248,11 +249,13 @@ pub fn Editor(
         <form class="editor" on:submit=move |event| { event.prevent_default(); save.dispatch(()); }>
             <label class="labelled">
                 <span>{tr("Title")}</span>
-                <input class="field" type="text" maxlength="100" required bind:value=title/>
+                <input class="field" type="text" required prop:value=move || title.get()
+                    on:input=move |event| title.set(browser::clipped(&event, video::TITLE_LIMIT))/>
             </label>
             <label class="labelled">
                 <span>{tr("Description")}</span>
-                <textarea class="field" rows="4" maxlength="5000" bind:value=description></textarea>
+                <textarea class="field" rows="4" prop:value=move || description.get()
+                    on:input=move |event| description.set(browser::clipped(&event, video::DESCRIPTION_LIMIT))></textarea>
             </label>
             <label class="labelled">
                 <span>{tr("Visibility")}</span>

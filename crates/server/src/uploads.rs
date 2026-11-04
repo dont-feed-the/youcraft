@@ -10,7 +10,7 @@ use axum::body::Bytes;
 use axum::http::{HeaderMap, HeaderValue, StatusCode};
 use axum::response::{IntoResponse, Response};
 use tokio::io::{AsyncSeekExt, AsyncWriteExt};
-use youcraft_api::{ApiError, VideoId};
+use youcraft_api::{ApiError, Rule, VideoId};
 
 use crate::handlers::studio::may_manage;
 use crate::handlers::upload::PIECE;
@@ -69,7 +69,7 @@ pub async fn receive(
         .and_then(|v| v.to_str().ok())
         .and_then(|v| v.parse::<u64>().ok())
     else {
-        return error_response(&ApiError::invalid(OFFSET, "a byte offset"));
+        return error_response(&ApiError::invalid(OFFSET, Rule::Malformed));
     };
     let _writing = site.writing.lock().await;
     let (video, receiving) = match upload(site, caller, video).await {
@@ -124,7 +124,7 @@ pub mod tests {
     use std::path::PathBuf;
 
     use axum::http::HeaderMap;
-    use youcraft_api::{AccountId, ChannelId, Role};
+    use youcraft_api::{AccountId, ChannelId, Grant, Role};
     use youcraft_store::accounts::NewAccount;
 
     use super::*;
@@ -141,7 +141,7 @@ pub mod tests {
             address: "127.0.0.1:0".parse().unwrap(),
             origin: "https://youcraft.test".to_owned(),
             google: None,
-            signed_in_role: Role::Viewer,
+            signed_in_role: Grant::Viewer,
             upload_bytes: 1 << 20,
             storage_bytes: 1 << 21,
             transcode: TranscodeLimits {
@@ -163,7 +163,7 @@ pub mod tests {
                 email: "ada@example.com",
                 name: "Ada",
                 handle: "ada",
-                role: Role::Creator,
+                role: Grant::Creator,
                 now: 0,
             })
             .unwrap();

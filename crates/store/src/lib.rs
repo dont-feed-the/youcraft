@@ -27,7 +27,7 @@ use std::sync::{Mutex, MutexGuard, PoisonError};
 use rusqlite::types::{FromSql, FromSqlError, FromSqlResult, ValueRef};
 use rusqlite::{Connection, TransactionBehavior};
 use youcraft_api::AccountId;
-use youcraft_api::Role;
+use youcraft_api::Grant;
 use youcraft_api::commands::account::Theme;
 use youcraft_api::records::Visibility;
 
@@ -130,10 +130,10 @@ struct Unnamed {
     name: String,
 }
 
-impl Name for Role {
+impl Name for Grant {
     const WHAT: &'static str = "role";
-    fn from_name(name: &str) -> Option<Role> {
-        Role::from_name(name)
+    fn from_name(name: &str) -> Option<Grant> {
+        Grant::from_name(name)
     }
 }
 
@@ -267,7 +267,7 @@ pub(crate) mod testing {
     //! A database with two people and Ada's videos, for the tests of every module.
 
     use youcraft_api::time::MediaDuration;
-    use youcraft_api::{AccountId, ChannelId, Role, VideoId};
+    use youcraft_api::{AccountId, ChannelId, Grant, VideoId};
 
     use crate::Store;
     use crate::accounts::NewAccount;
@@ -291,8 +291,15 @@ pub(crate) mod testing {
     pub fn with_videos() -> Store {
         let store = Store::in_memory().unwrap();
         for (id, channel, subject, name, handle, role) in [
-            (ADA, ADA_CHANNEL, "g1", "Ada Lovelace", "Ada", Role::Creator),
-            (BOB, BOB_CHANNEL, "g2", "Bob", "bob", Role::Viewer),
+            (
+                ADA,
+                ADA_CHANNEL,
+                "g1",
+                "Ada Lovelace",
+                "Ada",
+                Grant::Creator,
+            ),
+            (BOB, BOB_CHANNEL, "g2", "Bob", "bob", Grant::Viewer),
         ] {
             store
                 .create_account(&NewAccount {

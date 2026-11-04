@@ -4,10 +4,11 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::command::{Command, Descriptor};
-use crate::role::Role;
+use crate::role::{Grant, Role};
 
 /// Nothing: the input of a command that takes none.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Nothing {}
 
 /// List every command, with its schemas.
@@ -27,7 +28,7 @@ impl Command for ListCommands {
 pub struct Policy {
     /// The least role of every signed-in account that is not blocked: `viewer` where only those
     /// invited publish, `creator` where everyone does.
-    pub signed_in_role: Role,
+    pub signed_in_role: Grant,
 }
 
 /// Tell what the site grants every account.

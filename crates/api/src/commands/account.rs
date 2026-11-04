@@ -8,7 +8,7 @@ use crate::command::Command;
 use crate::commands::site::Nothing;
 use crate::ids::AccountId;
 use crate::records::ChannelCard;
-use crate::role::Role;
+use crate::role::{Grant, Role};
 
 /// How pages are drawn: as the device prefers, or always dark or light.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, Serialize, Deserialize, JsonSchema)]
@@ -44,6 +44,7 @@ impl Theme {
 
 /// What a person chose about how the site looks to them.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Preferences {
     /// The language's code (`fr`, `pt-BR`), or `None` for their browser's.
     pub language: Option<String>,
@@ -58,9 +59,11 @@ pub struct Me {
     pub account: AccountId,
     /// Their channel.
     pub channel: ChannelCard,
-    /// What they are to the site.
-    pub role: Role,
-    /// Whether the site's administrators blocked them: they may look, not act.
+    /// The role their account holds, raised to what the site grants every account that is not
+    /// blocked.
+    pub role: Grant,
+    /// Whether the site's administrators blocked them: they may look, and manage and take back
+    /// what is theirs, but not act toward others.
     pub blocked: bool,
     /// Their preferences.
     pub preferences: Preferences,
@@ -83,7 +86,7 @@ pub struct SetPreferences;
 
 impl Command for SetPreferences {
     const ID: &'static str = "account.settings";
-    const REQUIRES: Role = Role::Viewer;
+    const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str =
         "Set the language and theme the site uses for the signed-in person.";
     type Input = Preferences;

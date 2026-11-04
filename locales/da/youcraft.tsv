@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Behandlingen mislykkedes. Upload videoen igen.
 	Upload failed. Try again.	Upload mislykkedes. Prøv igen.
 	The file is too large.	Filen er for stor.
+	This can't be empty.	Dette må ikke være tomt.
+	This must fit on one line.	Dette skal stå på én linje.
+	This holds characters that aren't allowed.	Dette indeholder tegn, der ikke er tilladt.
+	This isn't in the expected form.	Dette har ikke den forventede form.
+	This choice isn't offered here.	Dette valg tilbydes ikke her.
 	(edited)	(redigeret)
 	Action menu	Handlingsmenu
 	Add a comment…	Tilføj en kommentar…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Din historik er sat på pause: det, du ser nu, gemmes ikke.
 @plural	{n} view|{n} views	{n} visning|{n} visninger
 @plural	{n} comment|{n} comments	{n} kommentar|{n} kommentarer
+@plural	{n} character at most.|{n} characters at most.	Højst {n} tegn.|Højst {n} tegn.
 @plural	{n} second ago|{n} seconds ago	for {n} sekund siden|for {n} sekunder siden
 @plural	{n} minute ago|{n} minutes ago	for {n} minut siden|for {n} minutter siden
 @plural	{n} hour ago|{n} hours ago	for {n} time siden|for {n} timer siden

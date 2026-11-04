@@ -59,6 +59,9 @@ impl Handle<Playlists> for Site {
 impl Handle<Subscribe> for Site {
     async fn handle(&self, caller: Caller, wish: Subscribing) -> Result<Subscription, ApiError> {
         let account = caller.signed_in()?;
+        if wish.subscribed {
+            caller.may_act()?;
+        }
         let now = now();
         let done = self
             .db(move |store| store.subscribe(account, wish.channel, wish.subscribed, now))

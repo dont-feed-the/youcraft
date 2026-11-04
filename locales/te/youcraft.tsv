@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	ప్రాసెసింగ్ విఫలమైంది. వీడియోను మళ్లీ అప్‌లోడ్ చేయండి.
 	Upload failed. Try again.	అప్‌లోడ్ విఫలమైంది. మళ్లీ ప్రయత్నించండి.
 	The file is too large.	ఫైల్ చాలా పెద్దదిగా ఉంది.
+	This can't be empty.	ఇది ఖాళీగా ఉండకూడదు.
+	This must fit on one line.	ఇది ఒకే లైన్‌లో ఉండాలి.
+	This holds characters that aren't allowed.	ఇందులో అనుమతి లేని అక్షరాలు ఉన్నాయి.
+	This isn't in the expected form.	ఇది ఆశించిన రూపంలో లేదు.
+	This choice isn't offered here.	ఈ ఎంపిక ఇక్కడ అందుబాటులో లేదు.
 	(edited)	(సవరించబడింది)
 	Action menu	చర్యల మెనూ
 	Add a comment…	ఒక వ్యాఖ్యను జోడించండి…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	మీ చరిత్ర పాజ్ చేయబడింది: మీరు ఇప్పుడు చూసేది ఉంచబడదు.
 @plural	{n} view|{n} views	{n} వీక్షణ|{n} వీక్షణలు
 @plural	{n} comment|{n} comments	{n} కామెంట్|{n} కామెంట్‌లు
+@plural	{n} character at most.|{n} characters at most.	గరిష్ఠంగా {n} అక్షరం.|గరిష్ఠంగా {n} అక్షరాలు.
 @plural	{n} second ago|{n} seconds ago	{n} సెకను క్రితం|{n} సెకన్ల క్రితం
 @plural	{n} minute ago|{n} minutes ago	{n} నిమిషం క్రితం|{n} నిమిషాల క్రితం
 @plural	{n} hour ago|{n} hours ago	{n} గంట క్రితం|{n} గంటల క్రితం

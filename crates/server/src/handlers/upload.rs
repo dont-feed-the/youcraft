@@ -4,7 +4,7 @@
 use youcraft_api::commands::upload::{Create, Finish, NewUpload, Status};
 use youcraft_api::commands::video::Which;
 use youcraft_api::records::{Processing, Upload};
-use youcraft_api::{ApiError, VideoId, routes};
+use youcraft_api::{ApiError, Rule, VideoId, routes};
 use youcraft_store::uploads::NewUpload as NewRow;
 
 use crate::dispatch::Handle;
@@ -20,7 +20,7 @@ impl Handle<Create> for Site {
         let account = caller.account.ok_or(ApiError::SignInRequired)?;
         let (title, description) = (title(&input.title)?, description(&input.description)?);
         if input.size == 0 {
-            return Err(ApiError::invalid("size", "a file with bytes"));
+            return Err(ApiError::invalid("size", Rule::Required));
         }
         let channel = self
             .db(move |store| store.channel_of(account))

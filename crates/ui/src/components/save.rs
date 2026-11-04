@@ -3,7 +3,7 @@
 
 use leptos::prelude::*;
 use youcraft_api::commands::playlist::{
-    Add, Create, Item, Lists, Mine, NewPlaylist, PlaylistCard, Remove,
+    Add, Create, Item, Lists, Mine, NewPlaylist, PlaylistCard, Remove, TITLE_LIMIT,
 };
 use youcraft_api::records::Visibility;
 use youcraft_api::{ApiError, List, VideoId, routes};
@@ -144,9 +144,9 @@ fn NewPlaylistForm(video: VideoId, version: RwSignal<u32>) -> impl IntoView {
             </button>
         }>
             <form class="dialog-form" on:submit=create>
-                <input class="field" type="text" required maxlength="150" placeholder=tr("Choose a title")
+                <input class="field" type="text" required placeholder=tr("Choose a title")
                     aria-label=tr("Title") prop:value=move || title.get()
-                    on:input=move |event| title.set(event_target_value(&event))/>
+                    on:input=move |event| title.set(browser::clipped(&event, TITLE_LIMIT))/>
                 <select class="field" aria-label=tr("Visibility") on:change=choose>
                     {options.clone().into_iter().collect_view()}
                 </select>

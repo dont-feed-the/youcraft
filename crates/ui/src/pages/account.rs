@@ -9,9 +9,10 @@ use youcraft_api::commands::account::{Me, Theme};
 use youcraft_api::commands::invite::{self, Invitation};
 use youcraft_api::commands::site::{GetPolicy, Nothing};
 use youcraft_api::commands::token::{self, Token};
-use youcraft_api::{ApiError, Role, routes};
+use youcraft_api::{ApiError, Grant, routes};
 
 use crate::account::{Shown, SignedIn, choose_language, choose_theme};
+use crate::browser;
 use crate::call::call;
 use crate::components::account_menu::initial;
 use crate::icons::{Glyph, Icon};
@@ -33,8 +34,8 @@ pub fn Account() -> impl IntoView {
                         Some(me) => me.await,
                         None => None,
                     };
-                    // Without the policy, every role counts as above the least one.
-                    let floor = policy.await.map_or(Role::Anyone, |policy| policy.signed_in_role);
+                    // Without the policy, nothing counts as granted to every account.
+                    let floor = policy.await.ok().map(|policy| policy.signed_in_role);
                     match me {
                         Some(me) => view! { <Sections me floor/> }.into_any(),
                         None => view! { <Trouble error=ApiError::SignInRequired/> }.into_any(),
@@ -46,18 +47,18 @@ pub fn Account() -> impl IntoView {
 }
 
 /// The name of `role`.
-fn role_name(role: Role) -> &'static str {
+fn role_name(role: Grant) -> &'static str {
     match role {
-        Role::Anyone | Role::Viewer => tr("Viewer"),
-        Role::Creator => tr("Creator"),
-        Role::Admin => tr("Administrator"),
+        Grant::Viewer => tr("Viewer"),
+        Grant::Creator => tr("Creator"),
+        Grant::Admin => tr("Administrator"),
     }
 }
 
-/// Every section, for `me`, on a site where every account has at least the role `floor`.
+/// Every section, for `me`, on a site that grants every account `floor`, if it is known.
 #[component]
-fn Sections(me: Me, floor: Role) -> impl IntoView {
-    let admin = me.role >= Role::Admin;
+fn Sections(me: Me, floor: Option<Grant>) -> impl IntoView {
+    let admin = me.role >= Grant::Admin;
     let channel = routes::channel(&me.channel.handle);
     let blocked = me.blocked.then(|| {
         view! { <p class="settings-notice">{tr("Your account is blocked: you can watch videos, but not like, comment or publish.")}</p> }
@@ -72,7 +73,7 @@ fn Sections(me: Me, floor: Role) -> impl IntoView {
                     <span class="settings-account-name">{me.with_value(|me| me.channel.name.clone())}</span>
                     <span class="settings-hint">
                         <bdi>{me.with_value(|me| format!("@{}", me.channel.handle))}</bdi>
-                        {me.with_value(|me| (me.role > floor).then(|| format!(" · {}", role_name(me.role))))}
+                        {me.with_value(|me| (Some(me.role) > floor).then(|| format!(" · {}", role_name(me.role))))}
                     </span>
                     <a class="menu-link" href=channel>{tr("View your channel")}</a>
                 </div>
@@ -158,9 +159,9 @@ fn TokenSection() -> impl IntoView {
             <h2>{tr("Personal tokens")}</h2>
             <p class="settings-hint">{tr("A personal token lets a program act as you, with all your rights. Keep it secret.")}</p>
             <form class="settings-form" on:submit=create>
-                <input class="field" type="text" maxlength="100" required aria-label=tr("Token name")
+                <input class="field" type="text" required aria-label=tr("Token name")
                     placeholder=tr("Token name") prop:value=name
-                    on:input=move |event| name.set(event_target_value(&event))/>
+                    on:input=move |event| name.set(browser::clipped(&event, token::NAME_LIMIT))/>
                 <button class="pill" type="submit">{tr("Create token")}</button>
             </form>
             {move || secret.get().map(|secret| view! {
@@ -221,15 +222,15 @@ fn TokenRow(token: Token, version: RwSignal<u32>) -> impl IntoView {
 }
 
 /// The invitations waiting, for administrators: made and withdrawn here, to the roles above
-/// `floor`.
+/// `floor` and above a viewer's, which needs no invitation.
 #[component]
-fn InvitationSection(floor: Role) -> impl IntoView {
-    let offered: Vec<Role> = [Role::Creator, Role::Admin]
+fn InvitationSection(floor: Option<Grant>) -> impl IntoView {
+    let offered: Vec<Grant> = Grant::ALL
         .into_iter()
-        .filter(|role| *role > floor)
+        .filter(|role| Some(*role) > floor.max(Some(Grant::Viewer)))
         .collect();
-    let first = offered.first().copied().unwrap_or(Role::Admin);
-    let hint = if first == Role::Admin {
+    let first = offered.first().copied().unwrap_or(Grant::Admin);
+    let hint = if first == Grant::Admin {
         tr("Invited people become administrators when they first sign in with Google.")
     } else {
         tr("Invited people become creators or administrators when they first sign in with Google.")
@@ -255,7 +256,7 @@ fn InvitationSection(floor: Role) -> impl IntoView {
         });
     };
     let pick = move |event: leptos::ev::Event| {
-        if let Some(picked) = Role::from_name(&event_target_value(&event)) {
+        if let Some(picked) = Grant::from_name(&event_target_value(&event)) {
             role.set(picked);
         }
     };

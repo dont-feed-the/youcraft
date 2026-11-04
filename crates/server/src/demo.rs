@@ -7,7 +7,7 @@
 //! a playlist.
 
 use youcraft_api::records::{Rating, Visibility};
-use youcraft_api::{AccountId, ChannelId, CommentId, List, PlaylistId, Role, VideoId};
+use youcraft_api::{AccountId, ChannelId, CommentId, Grant, List, PlaylistId, VideoId};
 use youcraft_store::accounts::NewAccount;
 use youcraft_store::comments::{NewComment, Outcome};
 use youcraft_store::playlists::NewPlaylist;
@@ -55,7 +55,7 @@ pub async fn fill(site: &Site) -> Result<(), String> {
                 email: &format!("demo{n}@example.invalid"),
                 name,
                 handle,
-                role: Role::Creator,
+                role: Grant::Creator,
                 now,
             })
             .map_err(|e| format!("demo: {e}"))?;

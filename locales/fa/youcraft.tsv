@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	پردازش ناموفق بود. ویدیو را دوباره بارگذاری کنید.
 	Upload failed. Try again.	بارگذاری ناموفق بود. دوباره امتحان کنید.
 	The file is too large.	فایل خیلی بزرگ است.
+	This can't be empty.	این نمی‌تواند خالی باشد.
+	This must fit on one line.	این باید در یک خط باشد.
+	This holds characters that aren't allowed.	این نویسه‌هایی دارد که مجاز نیستند.
+	This isn't in the expected form.	این به شکل مورد انتظار نیست.
+	This choice isn't offered here.	این گزینه اینجا ارائه نمی‌شود.
 	(edited)	(ویرایش‌شده)
 	Action menu	منوی کنش‌ها
 	Add a comment…	افزودن نظر…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	سابقهٔ شما متوقف است: آنچه اکنون تماشا می‌کنید نگه داشته نمی‌شود.
 @plural	{n} view|{n} views	{n} بازدید|{n} بازدید
 @plural	{n} comment|{n} comments	{n} نظر|{n} نظر
+@plural	{n} character at most.|{n} characters at most.	حداکثر {n} نویسه.|حداکثر {n} نویسه.
 @plural	{n} second ago|{n} seconds ago	{n} ثانیه پیش|{n} ثانیه پیش
 @plural	{n} minute ago|{n} minutes ago	{n} دقیقه پیش|{n} دقیقه پیش
 @plural	{n} hour ago|{n} hours ago	{n} ساعت پیش|{n} ساعت پیش

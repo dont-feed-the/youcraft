@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	დამუშავება ვერ მოხერხდა. ატვირთეთ ვიდეო ხელახლა.
 	Upload failed. Try again.	ატვირთვა ვერ მოხერხდა. სცადეთ ხელახლა.
 	The file is too large.	ფაილი ძალიან დიდია.
+	This can't be empty.	ეს არ შეიძლება იყოს ცარიელი.
+	This must fit on one line.	ეს ერთ ხაზზე უნდა ეტეოდეს.
+	This holds characters that aren't allowed.	აქ დაუშვებელი სიმბოლოებია.
+	This isn't in the expected form.	ეს მოსალოდნელი ფორმით არ არის.
+	This choice isn't offered here.	ეს არჩევანი აქ არ არის შეთავაზებული.
 	(edited)	(რედაქტირებულია)
 	Action menu	მოქმედებების მენიუ
 	Add a comment…	დაამატეთ კომენტარი…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	თქვენი ისტორია შეჩერებულია: ის, რასაც ახლა უყურებთ, არ ინახება.
 @plural	{n} view|{n} views	{n} ნახვა|{n} ნახვა
 @plural	{n} comment|{n} comments	{n} კომენტარი|{n} კომენტარი
+@plural	{n} character at most.|{n} characters at most.	მაქსიმუმ {n} სიმბოლო.|მაქსიმუმ {n} სიმბოლო.
 @plural	{n} second ago|{n} seconds ago	{n} წამის წინ|{n} წამის წინ
 @plural	{n} minute ago|{n} minutes ago	{n} წუთის წინ|{n} წუთის წინ
 @plural	{n} hour ago|{n} hours ago	{n} საათის წინ|{n} საათის წინ

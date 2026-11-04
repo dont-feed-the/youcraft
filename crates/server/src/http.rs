@@ -17,7 +17,7 @@ use leptos::prelude::*;
 use leptos_axum::LeptosRoutes;
 use tower_http::services::{ServeDir, ServeFile};
 use youcraft_api::commands::account::Preferences;
-use youcraft_api::{ApiError, Dispatch, routes};
+use youcraft_api::{ApiError, Dispatch, Rule, routes};
 use youcraft_ui::lang::{Language, RenderTime};
 
 use crate::config::Config;
@@ -257,13 +257,13 @@ fn checked(
         .and_then(|value| value.split(';').next())
         .is_some_and(|kind| kind.trim().eq_ignore_ascii_case("application/json"));
     if !json {
-        return Err(ApiError::invalid("content-type", "application/json"));
+        return Err(ApiError::invalid("content-type", Rule::NotOffered));
     }
     from_own_pages(site, visitor, headers)?;
     if body.is_empty() {
         Ok(serde_json::json!({}))
     } else {
-        serde_json::from_slice(body).map_err(|e| ApiError::invalid("input", &e.to_string()))
+        serde_json::from_slice(body).map_err(|e| ApiError::schema(&e))
     }
 }
 
@@ -289,11 +289,11 @@ pub mod tests {
 
     /// A test site and its routes, where only those invited publish.
     pub fn site() -> (Arc<Site>, Router) {
-        site_where(youcraft_api::Role::Viewer)
+        site_where(youcraft_api::Grant::Viewer)
     }
 
     /// A test site and its routes, where every account has at least `signed_in_role`.
-    pub fn site_where(signed_in_role: youcraft_api::Role) -> (Arc<Site>, Router) {
+    pub fn site_where(signed_in_role: youcraft_api::Grant) -> (Arc<Site>, Router) {
         let keys = std::env::temp_dir().join(format!(
             "youcraft-test-keys-{}.json",
             crate::secrets::random_bits()
@@ -388,7 +388,7 @@ pub mod tests {
     async fn signing_in_opens_a_session_that_signing_out_closes() {
         let (site, routes) = site();
         site.store()
-            .invite("ada@example.com", youcraft_api::Role::Creator, 1)
+            .invite("ada@example.com", youcraft_api::Grant::Creator, 1)
             .unwrap();
         let cookie = sign_in(&routes, "ada").await;
         let (status, _, body) = send(&routes, command_request("account.me", "{}", &cookie)).await;
@@ -487,7 +487,7 @@ pub mod tests {
     async fn administrators_cannot_demote_or_block_themselves() {
         let (site, routes) = site();
         site.store()
-            .invite("ada@example.com", youcraft_api::Role::Admin, 1)
+            .invite("ada@example.com", youcraft_api::Grant::Admin, 1)
             .unwrap();
         let ada = sign_in(&routes, "ada").await;
         let bob = sign_in(&routes, "bob").await;
@@ -518,23 +518,120 @@ pub mod tests {
         );
         let (status, _, _) = send(
             &routes,
-            command_request("token.create", r#"{"name": "x"}"#, &bob),
+            command_request("playlist.create", r#"{"title": "x"}"#, &bob),
         )
         .await;
         assert_eq!(
             status,
             StatusCode::FORBIDDEN,
-            "blocked people may look, not act"
+            "blocked people may look, not act toward others"
         );
+    }
+
+    #[tokio::test]
+    async fn a_blocked_account_takes_back_what_is_its_own() {
+        use serde_json::json;
+
+        let (site, routes) = site();
+        site.store()
+            .invite("ada@example.com", youcraft_api::Grant::Admin, 1)
+            .unwrap();
+        let ada = sign_in(&routes, "ada").await;
+        let bob = sign_in(&routes, "bob").await;
+        let (_, ada_me) = answer(&routes, "account.me", json!({}), &ada).await;
+        let channel = ada_me["channel"]["id"].clone();
+        let video = ready_video(&site, serde_json::from_value(channel.clone()).unwrap());
+        let rate = |rating: &str| json!({ "video": video, "rating": rating });
+        let subscribe = |subscribed: bool| json!({ "channel": channel, "subscribed": subscribed });
+        for (id, input) in [
+            ("video.rate", rate("like")),
+            ("channel.subscribe", subscribe(true)),
+            ("video.view", json!({ "video": video })),
+            ("playlist.create", json!({ "title": "Mine" })),
+        ] {
+            assert_eq!(
+                answer(&routes, id, input, &bob).await.0,
+                StatusCode::OK,
+                "{id}"
+            );
+        }
+        let (_, bob_me) = answer(&routes, "account.me", json!({}), &bob).await;
+        let block = json!({ "handle": bob_me["channel"]["handle"], "blocked": true });
+        assert_eq!(
+            answer(&routes, "admin.block", block, &ada).await.0,
+            StatusCode::OK
+        );
+
+        for (id, input) in [
+            ("video.rate", rate("dislike")),
+            ("channel.subscribe", subscribe(true)),
+            ("playlist.create", json!({ "title": "More" })),
+            ("comment.create", json!({ "video": video, "body": "Hi" })),
+        ] {
+            let (status, _) = answer(&routes, id, input, &bob).await;
+            assert_eq!(status, StatusCode::FORBIDDEN, "{id} acts toward others");
+        }
+        let (_, lists) = answer(&routes, "playlist.list", json!({}), &bob).await;
+        let mine = lists.as_array().unwrap().last().unwrap()["list"].clone();
+        let (_, made) = answer(&routes, "token.create", json!({ "name": "export" }), &bob).await;
+        for (id, input) in [
+            ("history.list", json!({})),
+            ("history.pause", json!({ "paused": true })),
+            ("history.clear", json!({})),
+            ("token.list", json!({})),
+            ("token.revoke", json!({ "token": made["token"]["id"] })),
+            (
+                "account.settings",
+                json!({ "language": "fr", "theme": "dark" }),
+            ),
+            ("video.rate", rate("none")),
+            ("channel.subscribe", subscribe(false)),
+            (
+                "playlist.delete",
+                json!({ "playlist": mine.as_str().unwrap().trim_start_matches("PL") }),
+            ),
+        ] {
+            let (status, answered) = answer(&routes, id, input, &bob).await;
+            assert_eq!(
+                status,
+                StatusCode::OK,
+                "{id} is Bob's to manage: {answered}"
+            );
+        }
+        let (_, page) = answer(&routes, "video.get", json!({ "video": video }), &ada).await;
+        assert_eq!(page["likes"], 0, "{page}");
+    }
+
+    /// A public video of `channel`, ready to watch.
+    fn ready_video(site: &Site, channel: youcraft_api::ChannelId) -> youcraft_api::VideoId {
+        use youcraft_api::records::Visibility;
+        use youcraft_api::time::MediaDuration;
+        use youcraft_store::videos::NewVideo;
+
+        let video = youcraft_api::VideoId::from_bits(42);
+        site.store()
+            .insert_ready_video(&NewVideo {
+                id: video,
+                channel,
+                title: "Standing waves",
+                description: "On a string.",
+                visibility: Visibility::Public,
+                duration: MediaDuration::from_millis(1000),
+                width: 640,
+                height: 360,
+                published_at: now(),
+            })
+            .unwrap();
+        video
     }
 
     #[tokio::test]
     async fn an_open_site_lets_every_account_publish_but_the_blocked() {
         use serde_json::json;
 
-        let (site, routes) = site_where(youcraft_api::Role::Creator);
+        let (site, routes) = site_where(youcraft_api::Grant::Creator);
         site.store()
-            .invite("ada@example.com", youcraft_api::Role::Admin, 1)
+            .invite("ada@example.com", youcraft_api::Grant::Admin, 1)
             .unwrap();
         let ada = sign_in(&routes, "ada").await;
         let bob = sign_in(&routes, "bob").await;
@@ -590,13 +687,10 @@ pub mod tests {
     #[tokio::test]
     async fn viewers_rate_comment_subscribe_and_keep_lists() {
         use serde_json::json;
-        use youcraft_api::records::Visibility;
-        use youcraft_api::time::MediaDuration;
-        use youcraft_store::videos::NewVideo;
 
         let (site, routes) = site();
         site.store()
-            .invite("ada@example.com", youcraft_api::Role::Creator, 1)
+            .invite("ada@example.com", youcraft_api::Grant::Creator, 1)
             .unwrap();
         let ada = sign_in(&routes, "ada").await;
         let bob = sign_in(&routes, "bob").await;
@@ -604,20 +698,7 @@ pub mod tests {
         let (_, bob_me) = answer(&routes, "account.me", json!({}), &bob).await;
         let channel: youcraft_api::ChannelId =
             serde_json::from_value(ada_me["channel"]["id"].clone()).unwrap();
-        let video = youcraft_api::VideoId::from_bits(42);
-        site.store()
-            .insert_ready_video(&NewVideo {
-                id: video,
-                channel,
-                title: "Standing waves",
-                description: "On a string.",
-                visibility: Visibility::Public,
-                duration: MediaDuration::from_millis(1000),
-                width: 640,
-                height: 360,
-                published_at: now(),
-            })
-            .unwrap();
+        let video = ready_video(&site, channel);
         let which = json!({ "video": video });
 
         let (_, rated) = answer(

@@ -8,17 +8,20 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::command::Command;
-use crate::commands::video::Which;
+use crate::commands::video::{DESCRIPTION_LIMIT, TITLE_LIMIT, Which};
 use crate::records::{Processing, Upload, Visibility};
 use crate::role::Role;
 
 /// A video to upload.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct NewUpload {
-    /// Its title.
+    /// Its title: 1 to [`TITLE_LIMIT`] characters, on one line.
+    #[schemars(length(min = 1, max = TITLE_LIMIT))]
     pub title: String,
-    /// Its description.
+    /// Its description: at most [`DESCRIPTION_LIMIT`] characters.
     #[serde(default)]
+    #[schemars(length(max = DESCRIPTION_LIMIT))]
     pub description: String,
     /// Who may see it once it plays.
     #[serde(default)]

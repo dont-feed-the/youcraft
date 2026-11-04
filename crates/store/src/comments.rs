@@ -320,7 +320,7 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use youcraft_api::records::Visibility;
-    use youcraft_api::{AccountId, ChannelId, Role};
+    use youcraft_api::{AccountId, ChannelId, Grant};
 
     use super::*;
     use crate::accounts::NewAccount;
@@ -348,7 +348,7 @@ mod tests {
                 email: "eve@example.com",
                 name: "Eve",
                 handle: "eve",
-                role: Role::Viewer,
+                role: Grant::Viewer,
                 now: 100,
             })
             .unwrap();

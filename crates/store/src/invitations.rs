@@ -1,7 +1,7 @@
 //! Invitations: e-mail addresses that become creators or administrators when they sign in.
 
 use rusqlite::{OptionalExtension, params};
-use youcraft_api::Role;
+use youcraft_api::Grant;
 use youcraft_api::commands::invite::{Invitation, Invited};
 
 use crate::accounts::raise_role;
@@ -11,7 +11,7 @@ use crate::{Named, Store, StoreError};
 impl Store {
     /// Invite `email` as `role` (creator or admin): at once if an account has that verified
     /// address, else when its person first signs in.
-    pub fn invite(&self, email: &str, role: Role, now: i64) -> Result<Invited, StoreError> {
+    pub fn invite(&self, email: &str, role: Grant, now: i64) -> Result<Invited, StoreError> {
         let mut connection = self.connection();
         let transaction = connection.transaction()?;
         let holder = transaction
@@ -59,7 +59,7 @@ impl Store {
         let rows = statement.query_map([], |row| {
             Ok(Invitation {
                 email: row.get(0)?,
-                role: row.get::<_, Named<Role>>(1)?.0,
+                role: row.get::<_, Named<Grant>>(1)?.0,
                 created_at: row.get(2)?,
             })
         })?;

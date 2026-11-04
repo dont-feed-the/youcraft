@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Bearbetningen misslyckades. Ladda upp videon igen.
 	Upload failed. Try again.	Uppladdningen misslyckades. Försök igen.
 	The file is too large.	Filen är för stor.
+	This can't be empty.	Det här får inte vara tomt.
+	This must fit on one line.	Det här måste rymmas på en rad.
+	This holds characters that aren't allowed.	Det här innehåller tecken som inte är tillåtna.
+	This isn't in the expected form.	Det här har inte den förväntade formen.
+	This choice isn't offered here.	Det här valet erbjuds inte här.
 	(edited)	(redigerad)
 	Action menu	Åtgärdsmeny
 	Add a comment…	Lägg till en kommentar…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Din historik är pausad: det du tittar på nu sparas inte.
 @plural	{n} view|{n} views	{n} visning|{n} visningar
 @plural	{n} comment|{n} comments	{n} kommentar|{n} kommentarer
+@plural	{n} character at most.|{n} characters at most.	Högst {n} tecken.|Högst {n} tecken.
 @plural	{n} second ago|{n} seconds ago	för {n} sekund sedan|för {n} sekunder sedan
 @plural	{n} minute ago|{n} minutes ago	för {n} minut sedan|för {n} minuter sedan
 @plural	{n} hour ago|{n} hours ago	för {n} timme sedan|för {n} timmar sedan

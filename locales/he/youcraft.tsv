@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	העיבוד נכשל. יש להעלות את הסרטון שוב.
 	Upload failed. Try again.	ההעלאה נכשלה. כדאי לנסות שוב.
 	The file is too large.	הקובץ גדול מדי.
+	This can't be empty.	זה לא יכול להיות ריק.
+	This must fit on one line.	זה חייב להיכנס בשורה אחת.
+	This holds characters that aren't allowed.	יש כאן תווים שאינם מותרים.
+	This isn't in the expected form.	זה לא בצורה המצופה.
+	This choice isn't offered here.	האפשרות הזו לא מוצעת כאן.
 	(edited)	(נערך)
 	Action menu	תפריט פעולות
 	Add a comment…	הוספת תגובה…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	ההיסטוריה שלך מושהית: מה שצופים בו עכשיו לא נשמר.
 @plural	{n} view|{n} views	{n} צפייה|{n} צפיות|{n} צפיות
 @plural	{n} comment|{n} comments	{n} תגובה|{n} תגובות|{n} תגובות
+@plural	{n} character at most.|{n} characters at most.	{n} תו לכל היותר.|{n} תווים לכל היותר.|{n} תווים לכל היותר.
 @plural	{n} second ago|{n} seconds ago	לפני {n} שנייה|לפני {n} שניות|לפני {n} שניות
 @plural	{n} minute ago|{n} minutes ago	לפני {n} דקה|לפני {n} דקות|לפני {n} דקות
 @plural	{n} hour ago|{n} hours ago	לפני {n} שעה|לפני {n} שעות|לפני {n} שעות

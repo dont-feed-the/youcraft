@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	Töötlemine ebaõnnestus. Laadi video uuesti üles.
 	Upload failed. Try again.	Üleslaadimine ebaõnnestus. Proovi uuesti.
 	The file is too large.	Fail on liiga suur.
+	This can't be empty.	See ei tohi olla tühi.
+	This must fit on one line.	See peab mahtuma ühele reale.
+	This holds characters that aren't allowed.	Selles on lubamatuid märke.
+	This isn't in the expected form.	See ei ole oodatud kujul.
+	This choice isn't offered here.	Seda valikut siin ei pakuta.
 	(edited)	(muudetud)
 	Action menu	Toimingute menüü
 	Add a comment…	Lisa kommentaar…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Sinu ajalugu on peatatud: seda, mida praegu vaatad, ei salvestata.
 @plural	{n} view|{n} views	{n} vaatamine|{n} vaatamist
 @plural	{n} comment|{n} comments	{n} kommentaar|{n} kommentaari
+@plural	{n} character at most.|{n} characters at most.	Kuni {n} märk.|Kuni {n} märki.
 @plural	{n} second ago|{n} seconds ago	{n} sekund tagasi|{n} sekundit tagasi
 @plural	{n} minute ago|{n} minutes ago	{n} minut tagasi|{n} minutit tagasi
 @plural	{n} hour ago|{n} hours ago	{n} tund tagasi|{n} tundi tagasi

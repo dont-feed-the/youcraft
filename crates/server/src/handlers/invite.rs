@@ -4,7 +4,7 @@ use youcraft_api::commands::invite::{
     Address, Create, EMAIL_LIMIT, Invitation, Invited, List, NewInvitation, Revoke,
 };
 use youcraft_api::commands::site::Nothing;
-use youcraft_api::{ApiError, Role};
+use youcraft_api::{ApiError, Rule};
 
 use crate::dispatch::Handle;
 use crate::site::{Caller, Site, now};
@@ -21,7 +21,7 @@ fn address(email: &str) -> Result<String, ApiError> {
     if well_formed {
         Ok(email.to_owned())
     } else {
-        Err(ApiError::invalid("email", "an e-mail address"))
+        Err(ApiError::invalid("email", Rule::Malformed))
     }
 }
 
@@ -29,12 +29,8 @@ impl Handle<Create> for Site {
     async fn handle(&self, _: Caller, invitation: NewInvitation) -> Result<Invited, ApiError> {
         // An invitation raises an account above what every account has; below or at it, it
         // would mean nothing.
-        let floor = self.config().signed_in_role;
-        if invitation.role <= floor || !matches!(invitation.role, Role::Creator | Role::Admin) {
-            return Err(ApiError::invalid(
-                "role",
-                "creator or admin, above what every account has",
-            ));
+        if invitation.role <= self.config().signed_in_role {
+            return Err(ApiError::invalid("role", Rule::NotOffered));
         }
         let email = address(&invitation.email)?;
         let now = now();

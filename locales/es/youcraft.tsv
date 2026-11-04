@@ -101,6 +101,11 @@
 	Processing failed. Upload the video again.	No se pudo procesar. Vuelve a subir el vídeo.
 	Upload failed. Try again.	No se pudo subir. Inténtalo de nuevo.
 	The file is too large.	El archivo es demasiado grande.
+	This can't be empty.	Esto no puede estar vacío.
+	This must fit on one line.	Esto debe caber en una línea.
+	This holds characters that aren't allowed.	Esto contiene caracteres que no están permitidos.
+	This isn't in the expected form.	Esto no tiene la forma esperada.
+	This choice isn't offered here.	Esta opción no se ofrece aquí.
 	(edited)	(editado)
 	Action menu	Menú de acciones
 	Add a comment…	Añade un comentario…
@@ -145,6 +150,7 @@
 	Your history is paused: what you watch now is not kept.	Tu historial está en pausa: lo que veas ahora no se guarda.
 @plural	{n} view|{n} views	{n} visualización|{n} visualizaciones
 @plural	{n} comment|{n} comments	{n} comentario|{n} comentarios
+@plural	{n} character at most.|{n} characters at most.	{n} carácter como máximo.|{n} caracteres como máximo.
 @plural	{n} second ago|{n} seconds ago	hace {n} segundo|hace {n} segundos
 @plural	{n} minute ago|{n} minutes ago	hace {n} minuto|hace {n} minutos
 @plural	{n} hour ago|{n} hours ago	hace {n} hora|hace {n} horas

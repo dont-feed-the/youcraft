@@ -69,8 +69,10 @@ pub struct PlaylistPage {
 
 /// A new playlist.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct NewPlaylist {
-    /// Its title: 1 to [`TITLE_LIMIT`] characters.
+    /// Its title: 1 to [`TITLE_LIMIT`] characters, on one line.
+    #[schemars(length(min = 1, max = TITLE_LIMIT))]
     pub title: String,
     /// Who may see it.
     #[serde(default)]
@@ -82,14 +84,17 @@ pub struct NewPlaylist {
 
 /// What to change about a playlist; what is `None` stays.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Edit {
     /// The playlist.
     pub playlist: PlaylistId,
-    /// Its new title.
+    /// Its new title: 1 to [`TITLE_LIMIT`] characters, on one line.
     #[serde(default)]
+    #[schemars(length(min = 1, max = TITLE_LIMIT))]
     pub title: Option<String>,
-    /// Its new description.
+    /// Its new description: at most [`DESCRIPTION_LIMIT`] characters.
     #[serde(default)]
+    #[schemars(length(max = DESCRIPTION_LIMIT))]
     pub description: Option<String>,
     /// Who may now see it.
     #[serde(default)]
@@ -98,6 +103,7 @@ pub struct Edit {
 
 /// Which playlist.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Which {
     /// The playlist.
     pub playlist: PlaylistId,
@@ -105,6 +111,7 @@ pub struct Which {
 
 /// A video and a list.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Item {
     /// The list: Watch later or a playlist of the caller's.
     pub list: List,
@@ -114,6 +121,7 @@ pub struct Item {
 
 /// Where a video of a list goes.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Placing {
     /// The list: Watch later or a playlist of the caller's.
     pub list: List,
@@ -125,6 +133,7 @@ pub struct Placing {
 
 /// The caller's lists, and which of them hold a video.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Mine {
     /// The video to tell about, as the Save menu asks.
     #[serde(default)]
@@ -133,6 +142,7 @@ pub struct Mine {
 
 /// A page of a list.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Open {
     /// The list.
     pub list: List,
@@ -169,7 +179,7 @@ pub struct Delete;
 
 impl Command for Delete {
     const ID: &'static str = "playlist.delete";
-    const REQUIRES: Role = Role::Viewer;
+    const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str = "Delete one of your playlists; the videos in it stay.";
     type Input = Which;
     type Output = Nothing;
@@ -192,7 +202,7 @@ pub struct Remove;
 
 impl Command for Remove {
     const ID: &'static str = "playlist.remove";
-    const REQUIRES: Role = Role::Viewer;
+    const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str =
         "Take a video out of your Watch later list or of one of your playlists.";
     type Input = Item;
@@ -216,7 +226,7 @@ pub struct Lists;
 
 impl Command for Lists {
     const ID: &'static str = "playlist.list";
-    const REQUIRES: Role = Role::Viewer;
+    const REQUIRES: Role = Role::SignedIn;
     const SUMMARY: &'static str = "List your Watch later list, your liked videos and your playlists, telling which hold a given video.";
     type Input = Mine;
     type Output = Vec<PlaylistCard>;

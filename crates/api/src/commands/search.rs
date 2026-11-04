@@ -13,8 +13,11 @@ pub const QUERY_LIMIT: usize = 200;
 
 /// What to search for.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
 pub struct Query {
-    /// The words, in any script; diacritics and case do not matter.
+    /// The words, in any script; diacritics and case do not matter: 1 to [`QUERY_LIMIT`]
+    /// characters, on one line.
+    #[schemars(length(min = 1, max = QUERY_LIMIT))]
     pub query: String,
     /// The `next` of the previous page; `None` for the first.
     #[serde(default)]

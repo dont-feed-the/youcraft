@@ -7,37 +7,25 @@
 
 use youcraft_api::commands::feed::Page;
 use youcraft_api::commands::studio::{Video, Videos};
-use youcraft_api::commands::video::Which;
+use youcraft_api::commands::video::{DESCRIPTION_LIMIT, TITLE_LIMIT, Which};
 use youcraft_api::records::{StudioPage, StudioVideo};
-use youcraft_api::{ApiError, Role, VideoId};
+use youcraft_api::{ApiError, Role, Rule, VideoId};
 
 use crate::dispatch::Handle;
+use crate::handlers::input::{line, optional_text};
 use crate::site::{Caller, Site};
 
 /// Videos per page of the studio.
 const STUDIO_PAGE: u32 = 30;
-/// The longest title, in characters, as on YouTube.
-const TITLE_CHARACTERS: usize = 100;
-/// The longest description, in characters, as on YouTube.
-const DESCRIPTION_CHARACTERS: usize = 5000;
-/// `title`, trimmed, if it is one a video may have.
+
+/// `title` as a video's title is kept, if it is one a video may have.
 pub fn title(title: &str) -> Result<String, ApiError> {
-    let title = title.trim();
-    if title.is_empty() {
-        return Err(ApiError::invalid("title", "required"));
-    }
-    if title.chars().count() > TITLE_CHARACTERS {
-        return Err(ApiError::invalid("title", "at most 100 characters"));
-    }
-    Ok(title.to_owned())
+    line("title", title, TITLE_LIMIT)
 }
 
-/// `description`, if it is one a video may have.
+/// `description` as a video's description is kept, if it is one a video may have.
 pub fn description(description: &str) -> Result<String, ApiError> {
-    if description.chars().count() > DESCRIPTION_CHARACTERS {
-        return Err(ApiError::invalid("description", "at most 5000 characters"));
-    }
-    Ok(description.to_owned())
+    optional_text("description", description, DESCRIPTION_LIMIT)
 }
 
 /// Allow `caller` to manage `video`, which must be theirs unless they run the site.
@@ -69,7 +57,7 @@ impl Handle<Videos> for Site {
             Some(after) => Some(
                 after
                     .parse::<VideoId>()
-                    .map_err(|_| ApiError::invalid("after", "a video"))?,
+                    .map_err(|_| ApiError::invalid("after", Rule::Malformed))?,
             ),
             None => None,
         };

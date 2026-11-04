@@ -5,9 +5,11 @@
 
 use leptos::html::Input;
 use leptos::prelude::*;
+use youcraft_api::commands::search::QUERY_LIMIT;
 use youcraft_api::routes;
 
 use crate::app::GuideOpen;
+use crate::browser;
 use crate::components::account_menu::AccountArea;
 use crate::icons::{Glyph, Icon, Mark};
 use crate::lang::tr;
@@ -50,8 +52,8 @@ pub fn Masthead() -> impl IntoView {
                     <Glyph icon=Icon::Back/>
                 </button>
                 <input class="search-input" type="search" name="search_query" placeholder=tr("Search")
-                    aria-label=tr("Search") autocomplete="off" maxlength="200" node_ref=input value=move || query.get()
-                    prop:value=move || query.get()/>
+                    aria-label=tr("Search") autocomplete="off" node_ref=input value=move || query.get()
+                    prop:value=move || query.get() on:input=move |event| { browser::clipped(&event, QUERY_LIMIT); }/>
                 <button class="search-button" type="submit" aria-label=tr("Search")>
                     <Glyph icon=Icon::Search/>
                 </button>
