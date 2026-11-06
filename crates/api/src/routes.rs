@@ -130,6 +130,8 @@ pub mod media_files {
     pub const RENDITIONS: &str = "master.m3u8";
     /// What the storyboard is: a [`crate::records::Storyboard`] as JSON.
     pub const STORYBOARD: &str = "storyboard.json";
+    /// The frames a thumbnail shows as a mouse skims it, laid out as [`crate::skim`] says.
+    pub const SKIM: &str = "skim.jpg";
 
     /// The thumbnail `width` pixels wide, made of a frame of the video.
     pub fn thumbnail(width: u32) -> String {
@@ -183,6 +185,11 @@ pub fn storyboard(video: VideoId) -> String {
 /// Sheet `index` of the storyboard of `video`.
 pub fn storyboard_sheet(video: VideoId, index: u32) -> String {
     format!("{}/{}", media(video), media_files::storyboard_sheet(index))
+}
+
+/// The skim sheet of `video`: the frames its thumbnail shows as a mouse moves across it.
+pub fn skim(video: VideoId) -> String {
+    format!("{}/{}", media(video), media_files::SKIM)
 }
 
 /// Where the bytes of an upload in progress are sent, `PATCH` at an offset, and its offset
@@ -267,6 +274,7 @@ mod tests {
             storyboard_sheet(video, 2),
             "/media/AAAAAAAAAAA/storyboard/2.jpg"
         );
+        assert_eq!(skim(video), "/media/AAAAAAAAAAA/skim.jpg");
     }
 
     #[test]

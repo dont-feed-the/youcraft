@@ -1,5 +1,5 @@
 //! Uploads made into what the site serves: H.264 renditions and an AAC track as CMAF files,
-//! their HLS playlists, thumbnails and a storyboard, through FilmCraft's codecs.
+//! their HLS playlists, thumbnails, a storyboard and a skim sheet, through FilmCraft's codecs.
 //!
 //! [`transcode`] reads any file FilmCraft opens (MP4, MOV, Matroska, WebM, MXF, AVI, MPEG-TS…;
 //! H.264, HEVC, VP8, VP9, AV1, ProRes…) and writes a video's media directory: the files named
@@ -26,6 +26,7 @@ use filmcraft_media::reader::{FileReader, SharedReader, open_reader_within};
 use serde::{Deserialize, Serialize};
 use youcraft_api::records::{Failure, Storyboard};
 use youcraft_api::routes::{THUMBNAIL_WIDTHS, media_files};
+use youcraft_api::skim;
 use youcraft_api::time::MediaDuration;
 
 use crate::ladder::Rung;
@@ -279,9 +280,12 @@ pub fn transcode(
             )?;
         }
     }
-    let sheets = stills::sheets(&still.tiles);
+    let sheets = stills::sheets(&still.tiles, stills::TILE, stills::COLUMNS, stills::ROWS);
     for (index, sheet) in (0u32..).zip(&sheets) {
         write(&media_files::storyboard_sheet(index), &stills::jpeg(sheet)?)?;
+    }
+    if let [sheet] = stills::sheets(&still.skim, skim::TILE, skim::COLUMNS, skim::ROWS).as_slice() {
+        write(media_files::SKIM, &stills::jpeg(sheet)?)?;
     }
     let storyboard = Storyboard {
         interval: MediaDuration {

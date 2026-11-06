@@ -8,18 +8,10 @@ use youcraft_api::routes;
 
 use crate::components::avatar::{Face, Size};
 use crate::components::save::list_name;
+use crate::components::thumbnail::VideoThumbnail;
 use crate::components::visibility::visibility_name;
 use crate::icons::{Glyph, Icon};
 use crate::lang::{Language, RenderTime, compact_count, tr};
-
-/// The `srcset` of a video's thumbnail: every width it is made at.
-fn thumbnail_set(card: &VideoCard) -> String {
-    routes::THUMBNAIL_WIDTHS
-        .iter()
-        .map(|width| format!("{} {width}w", card.thumbnail_at(*width)))
-        .collect::<Vec<_>>()
-        .join(", ")
-}
 
 /// "1,234 views • 3 days ago", in the page's language, counted from the render time.
 fn byline(card: &VideoCard) -> String {
@@ -39,11 +31,7 @@ pub fn GridCard(card: VideoCard) -> impl IntoView {
     let channel = routes::channel(&card.channel.handle);
     view! {
         <article class="card">
-            <a class="thumbnail" href=watch.clone() tabindex="-1" aria-hidden="true">
-                <img src=card.thumbnail_at(336) srcset=thumbnail_set(&card)
-                    sizes="(max-width: 600px) 100vw, 360px" alt="" loading="lazy" decoding="async"/>
-                <span class="duration">{youcraft_i18n::when::clock(card.duration.whole_seconds())}</span>
-            </a>
+            <VideoThumbnail card=card.clone() width=336 sizes="(max-width: 600px) 100vw, 360px"/>
             <div class="details">
                 <a class="avatar" href=channel.clone() aria-hidden="true" tabindex="-1"><Face channel=card.channel.clone() size=Size::Regular/></a>
                 <div class="meta">
@@ -62,11 +50,7 @@ pub fn CompactCard(card: VideoCard) -> impl IntoView {
     let watch = routes::watch(card.id);
     view! {
         <article class="compact-card">
-            <a class="thumbnail" href=watch.clone() tabindex="-1" aria-hidden="true">
-                <img src=card.thumbnail_at(168) srcset=thumbnail_set(&card) sizes="168px"
-                    alt="" loading="lazy" decoding="async"/>
-                <span class="duration">{youcraft_i18n::when::clock(card.duration.whole_seconds())}</span>
-            </a>
+            <VideoThumbnail card=card.clone() width=168 sizes="168px"/>
             <div class="meta">
                 <h3 class="title" dir="auto"><a href=watch>{card.title.clone()}</a></h3>
                 <a class="channel-name" href=routes::channel(&card.channel.handle)>{card.channel.name.clone()}</a>
@@ -84,11 +68,7 @@ pub fn RowCard(card: VideoCard, #[prop(optional)] children: Option<Children>) ->
     let channel = routes::channel(&card.channel.handle);
     view! {
         <article class="row-card">
-            <a class="thumbnail" href=watch.clone() tabindex="-1" aria-hidden="true">
-                <img src=card.thumbnail_at(336) srcset=thumbnail_set(&card)
-                    sizes="(max-width: 656px) 160px, 360px" alt="" loading="lazy" decoding="async"/>
-                <span class="duration">{youcraft_i18n::when::clock(card.duration.whole_seconds())}</span>
-            </a>
+            <VideoThumbnail card=card.clone() width=336 sizes="(max-width: 656px) 160px, 360px"/>
             <div class="meta">
                 <h3 class="title" dir="auto"><a href=watch>{card.title.clone()}</a></h3>
                 <p class="byline">{byline(&card)}</p>

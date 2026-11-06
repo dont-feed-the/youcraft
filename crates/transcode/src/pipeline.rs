@@ -20,6 +20,7 @@ use filmcraft_h264enc::{Encoder, EncoderConfig, PacketFormat, Preset, RateContro
 use filmcraft_isobmff::{AvcConfig, SampleEntry, TrackConfig};
 use filmcraft_media::{FrameRequest, SharedSource};
 use filmcraft_time::{TICKS_PER_SECOND, Tick};
+use youcraft_api::skim;
 
 use crate::cmaf::{Track, TrackWriter};
 use crate::ladder::Rung;
@@ -261,6 +262,9 @@ pub struct Stills {
     pub poster: Option<Arc<Rgba>>,
     /// The storyboard's tiles.
     pub tiles: Vec<Rgba>,
+    /// The skim sheet's tiles, one for each part of the video, in order; when the last frames
+    /// are missing, the last decoded shows in the parts they were to show.
+    pub skim: Vec<Rgba>,
     /// Frames decoded, which may be fewer than planned when the last ones are missing.
     pub frames: u64,
 }
@@ -309,6 +313,11 @@ fn decode(
     let mut stills = Stills::default();
     let poster_at = timing.frames / 3;
     let tile = crate::picture::fit(plan.display, crate::stills::TILE.0, crate::stills::TILE.1);
+    let (skim_w, skim_h) = skim::TILE;
+    let skim_tile = crate::picture::fit(plan.display, skim_w, skim_h);
+    let skim_frames: Vec<u64> = (0..skim::TILES)
+        .map(|part| skim::frame_of(part, timing.frames))
+        .collect();
     let mut last = None;
     for k in 0..timing.frames {
         let frame = match source.video_frame(FrameRequest::full(timing.time_of(k))) {
@@ -333,6 +342,11 @@ fn decode(
                 crate::stills::TILE.1,
             ));
         }
+        let parts = skim_frames.iter().filter(|&&frame| frame == k).count();
+        if parts > 0 {
+            let shown = picture.letterboxed(skim_tile, skim_w, skim_h);
+            stills.skim.extend(std::iter::repeat_n(shown, parts));
+        }
         if senders
             .iter()
             .any(|sender| sender.send(Arc::clone(&picture)).is_err())
@@ -342,6 +356,13 @@ fn decode(
         last = Some(picture);
         stills.frames = k + 1;
         progress(u32::try_from((k + 1) * 1000 / timing.frames).unwrap_or(1000));
+    }
+    let missing = skim_frames.len().saturating_sub(stills.skim.len());
+    if let Some(last) = &last
+        && missing > 0
+    {
+        let shown = last.letterboxed(skim_tile, skim_w, skim_h);
+        stills.skim.extend(std::iter::repeat_n(shown, missing));
     }
     if stills.poster.is_none() {
         stills.poster = last;

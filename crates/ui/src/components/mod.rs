@@ -10,5 +10,6 @@ pub mod more;
 pub mod project;
 pub mod save;
 pub mod subscribe;
+pub mod thumbnail;
 pub mod video_actions;
 pub mod visibility;

@@ -1,9 +1,11 @@
-//! Still pictures of a video: its thumbnails, and the storyboard the seek bar previews.
+//! Still pictures of a video: its thumbnails, the storyboard the seek bar previews, and the skim
+//! sheet its thumbnail shows under a mouse.
 //!
 //! Thumbnails are one frame at its display aspect, letterboxed into 16:9 at every width of
 //! `routes::THUMBNAIL_WIDTHS`. The storyboard is one small tile every `interval`, laid out in
-//! sheets of [`COLUMNS`]×[`ROWS`] tiles, row by row; tile `i` shows time `i × interval`. All are
-//! JPEG, through the same encoder FilmCraft writes its stills with.
+//! sheets of [`COLUMNS`]×[`ROWS`] tiles, row by row; tile `i` shows time `i × interval`. The skim
+//! sheet is one sheet of larger tiles, one per equal part of the video, as `youcraft_api::skim`
+//! lays it out. All are JPEG, through the same encoder FilmCraft writes its stills with.
 
 use image::ImageEncoder;
 use image::codecs::jpeg::JpegEncoder;
@@ -56,17 +58,19 @@ pub fn tile_every(frames: u64, rate_num: u64, rate_den: u64) -> u64 {
     second.max(frames.div_ceil(MAX_TILES)).max(1)
 }
 
-/// The sheets that `tiles` make, in order.
-pub fn sheets(tiles: &[Rgba]) -> Vec<Rgba> {
-    let (tile_w, tile_h) = TILE;
-    let per_sheet = (COLUMNS * ROWS) as usize;
+/// The sheets that `tiles` of `tile` pixels make, in order, `columns` to a row and at most
+/// `rows` rows to a sheet; the last sheet has only the rows it fills.
+pub fn sheets(tiles: &[Rgba], tile: (u32, u32), columns: u32, rows: u32) -> Vec<Rgba> {
+    let (tile_w, tile_h) = tile;
+    let columns = columns.max(1);
+    let per_sheet = (columns * rows.max(1)) as usize;
     tiles
         .chunks(per_sheet)
         .map(|chunk| {
-            let rows = u32::try_from(chunk.len().div_ceil(COLUMNS as usize)).unwrap_or(ROWS);
-            let mut sheet = Rgba::filled(tile_w * COLUMNS, tile_h * rows, [0, 0, 0, 255]);
+            let rows = u32::try_from(chunk.len().div_ceil(columns as usize)).unwrap_or(rows);
+            let mut sheet = Rgba::filled(tile_w * columns, tile_h * rows, [0, 0, 0, 255]);
             for (index, tile) in (0u32..).zip(chunk) {
-                sheet.paste(tile, index % COLUMNS * tile_w, index / COLUMNS * tile_h);
+                sheet.paste(tile, index % columns * tile_w, index / columns * tile_h);
             }
             sheet
         })
@@ -89,7 +93,7 @@ mod tests {
         let tiles: Vec<Rgba> = (0..103u32)
             .map(|i| Rgba::filled(TILE.0, TILE.1, [i as u8, 0, 0, 255]))
             .collect();
-        let sheets = sheets(&tiles);
+        let sheets = sheets(&tiles, TILE, COLUMNS, ROWS);
         assert_eq!(sheets.len(), 2);
         assert_eq!((sheets[0].width, sheets[0].height), (1600, 900));
         assert_eq!((sheets[1].width, sheets[1].height), (1600, 90));

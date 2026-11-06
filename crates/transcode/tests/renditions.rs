@@ -1,11 +1,12 @@
 //! Generated videos made into renditions: exact timestamps, aligned keyframes, a PSNR floor,
-//! playlists, thumbnails and a storyboard that describe what was written, and sound mixed down
-//! to stereo with every speaker where it belongs.
+//! playlists, thumbnails, a storyboard and a skim sheet that describe what was written, and
+//! sound mixed down to stereo with every speaker where it belongs.
 
 use std::path::{Path, PathBuf};
 
 use filmcraft_media::FrameRequest;
 use youcraft_api::records::{Failure, Storyboard};
+use youcraft_api::skim;
 use youcraft_transcode::picture::{Rgba, psnr};
 use youcraft_transcode::synthetic::{self, Synthetic, Tone};
 use youcraft_transcode::{Outcome, open, plan, transcode};
@@ -74,6 +75,34 @@ fn frame_times(file: &Path) -> Vec<(i64, bool)> {
     assert!(file.fragmented);
     let track = &file.tracks[0];
     track.samples.iter().map(|s| (s.dts, s.is_sync)).collect()
+}
+
+/// The frame number each tile of the skim sheet in `media` spells, in order.
+#[cfg(test)]
+fn skim_codes(media: &Path) -> Vec<u32> {
+    let sheet = image::open(media.join("skim.jpg")).unwrap().to_rgba8();
+    let (tile_w, tile_h) = skim::TILE;
+    assert_eq!(
+        sheet.dimensions(),
+        (tile_w * skim::COLUMNS, tile_h * skim::ROWS)
+    );
+    (0..skim::TILES)
+        .map(|tile| {
+            let (column, row) = skim::place(tile);
+            let pixels =
+                image::imageops::crop_imm(&sheet, column * tile_w, row * tile_h, tile_w, tile_h)
+                    .to_image()
+                    .into_raw();
+            let luma = Rgba {
+                width: tile_w,
+                height: tile_h,
+                pixels,
+            }
+            .to_yuv420()
+            .y;
+            synthetic::read_code(&luma, tile_w, tile_h)
+        })
+        .collect()
 }
 
 /// The amplitude of the sine at `hz` in `signal`, sampled at 48 kHz, over a whole number of its
@@ -189,6 +218,11 @@ fn every_frame_survives_with_its_own_number_and_its_sound() {
     assert_eq!(storyboard.interval.ticks, 30 * 3003);
     assert_eq!(storyboard.sheets, 1);
     assert!(media.join("storyboard/0.jpg").exists());
+    // each of the 50 parts of 2.8 frames shows the frame at its middle: 1, 4, 7, 9… 138
+    let middles: Vec<u32> = (0..skim::TILES)
+        .map(|part| (2 * part + 1) * 140 / (2 * skim::TILES))
+        .collect();
+    assert_eq!(skim_codes(&media), middles);
     let _ = std::fs::remove_dir_all(&dir);
 }
 
@@ -295,6 +329,14 @@ fn a_video_shorter_than_a_segment_still_has_its_stills() {
     assert!(playlist.contains("#EXT-X-TARGETDURATION:1\n"));
     assert!(media.join("thumbnail/168.jpg").exists());
     assert!(media.join("storyboard/0.jpg").exists());
+    // fewer frames than parts: every frame shows, in order, seven or eight times over
+    let codes = skim_codes(&media);
+    assert_eq!((codes.first(), codes.last()), (Some(&0), Some(&6)));
+    assert!(
+        codes
+            .windows(2)
+            .all(|pair| pair[1] == pair[0] || pair[1] == pair[0] + 1)
+    );
     // a silent video has no sound to list
     let master = std::fs::read_to_string(media.join("master.m3u8")).unwrap();
     assert!(!master.contains("EXT-X-MEDIA") && !master.contains("mp4a"));

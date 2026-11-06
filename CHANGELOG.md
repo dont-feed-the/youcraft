@@ -2,6 +2,17 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.4.2
+
+### Added
+
+- Moving the mouse across a video's thumbnail skims through the video: the thumbnail shows the
+  frame under the pointer, the left edge being the start in every language, and a bar along its
+  bottom shows how far in that is. It works on the cards of the home page, channels,
+  subscriptions, search results, the history, playlists and beside the video being watched; a
+  click still opens the video from the start. Each video gets a sheet of 50 frames of 320×180
+  pixels for it, one image whatever its length, fetched the first time a mouse enters.
+
 ## 0.4.1
 
 ### Added
