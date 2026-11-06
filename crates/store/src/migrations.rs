@@ -20,6 +20,7 @@ const MIGRATIONS: &[&str] = &[
     include_str!("migrations/0004-storage.sql"),
     include_str!("migrations/0005-photos.sql"),
     include_str!("migrations/0006-shared-channels.sql"),
+    include_str!("migrations/0007-chosen-thumbnails.sql"),
 ];
 
 /// Bring the schema of `connection` up to date, with foreign keys off while it runs; the caller

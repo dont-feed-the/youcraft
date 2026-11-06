@@ -75,7 +75,7 @@ fn ListView(page: PlaylistPage) -> AnyView {
     let description = RwSignal::new(page.description);
     let visibility = RwSignal::new(page.card.visibility);
     let held = RwSignal::new(page.card.videos);
-    let poster = page.card.first.map(|first| routes::thumbnail(first, 720));
+    let poster = page.card.poster_at(720);
     let owner = page.card.owner;
     let editing = RwSignal::new(false);
     view! {

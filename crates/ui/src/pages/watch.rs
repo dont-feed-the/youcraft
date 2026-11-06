@@ -7,7 +7,7 @@ use leptos_meta::Title;
 use leptos_router::hooks::use_query_map;
 use youcraft_api::commands::video;
 use youcraft_api::records::VideoPage;
-use youcraft_api::{ApiError, VideoId, routes};
+use youcraft_api::{ApiError, VideoId};
 use youcraft_player::VideoPlayer;
 
 use crate::act::ask;
@@ -84,7 +84,7 @@ fn Stage(page: VideoPage, theatre: RwSignal<bool>) -> impl IntoView {
                     <VideoPlayer
                         video=card.id
                         duration=card.duration
-                        poster=routes::thumbnail(card.id, 720)
+                        poster=card.thumbnail_at(720)
                         theatre
                         started
                     />

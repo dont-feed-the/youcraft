@@ -13,6 +13,8 @@ use crate::role::Role;
 pub const TITLE_LIMIT: usize = 100;
 /// The longest description of a video, in characters, as on YouTube.
 pub const DESCRIPTION_LIMIT: usize = 5_000;
+/// The most bytes the file of a video's thumbnail has, as on YouTube.
+pub const THUMBNAIL_BYTES: usize = 2 << 20;
 
 /// Which video.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
@@ -77,6 +79,44 @@ impl Command for Update {
     const REQUIRES: Role = Role::Creator;
     const SUMMARY: &'static str = "Change the title, description, visibility or comment setting of a video of a channel you edit.";
     type Input = Edit;
+    type Output = StudioVideo;
+    const WRITES: bool = true;
+}
+
+/// A thumbnail to choose for a video.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
+pub struct NewThumbnail {
+    /// The video, which is ready to play.
+    pub video: VideoId,
+    /// The file, JPEG, PNG or WebP of at most [`THUMBNAIL_BYTES`] bytes, in base64 (RFC 4648, with
+    /// or without padding). A picture that is not 16:9 gets black bars.
+    #[schemars(length(min = 1, max = THUMBNAIL_BYTES.div_ceil(3) * 4))]
+    pub image: String,
+}
+
+/// Choose the thumbnail of a video of a channel the caller edits, in place of the one it shows.
+pub struct SetThumbnail;
+
+impl Command for SetThumbnail {
+    const ID: &'static str = "video.set_thumbnail";
+    const REQUIRES: Role = Role::Creator;
+    const SUMMARY: &'static str = "Choose the thumbnail of a ready video of a channel you edit: a JPEG, PNG or WebP file of at most 2 MB, in base64; a picture that is not 16:9 gets black bars.";
+    type Input = NewThumbnail;
+    type Output = StudioVideo;
+    const WRITES: bool = true;
+}
+
+/// Take back the thumbnail chosen for a video of a channel the caller edits; blocked or not, what
+/// one published is one's own to take back.
+pub struct RemoveThumbnail;
+
+impl Command for RemoveThumbnail {
+    const ID: &'static str = "video.remove_thumbnail";
+    const REQUIRES: Role = Role::SignedIn;
+    const SUMMARY: &'static str =
+        "Remove the thumbnail chosen for a video of a channel you edit; a frame of it shows again.";
+    type Input = Which;
     type Output = StudioVideo;
     const WRITES: bool = true;
 }

@@ -28,7 +28,7 @@ mod mcp;
 mod media;
 #[cfg(test)]
 mod page_tests;
-mod photo;
+mod picture;
 mod rate;
 mod secrets;
 mod signin;
@@ -42,6 +42,7 @@ use std::process::ExitCode;
 use std::sync::Arc;
 
 use crate::config::Config;
+use crate::picture::Making;
 use crate::site::Site;
 
 fn main() -> ExitCode {
@@ -69,8 +70,12 @@ fn main() -> ExitCode {
             ),
         },
         "photo" => match rest {
-            [input, output] => photo::run(input.as_ref(), output.as_ref()),
+            [input, output] => picture::run(Making::Photo, input.as_ref(), output.as_ref()),
             _ => Err("usage: youcraft photo <input> <output directory>".to_owned()),
+        },
+        "thumbnail" => match rest {
+            [input, output] => picture::run(Making::Thumbnail, input.as_ref(), output.as_ref()),
+            _ => Err("usage: youcraft thumbnail <input> <output directory>".to_owned()),
         },
         "call" => client::call(rest),
         "commands" => client::commands(rest),

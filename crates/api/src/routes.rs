@@ -131,9 +131,19 @@ pub mod media_files {
     /// What the storyboard is: a [`crate::records::Storyboard`] as JSON.
     pub const STORYBOARD: &str = "storyboard.json";
 
-    /// The thumbnail `width` pixels wide.
+    /// The thumbnail `width` pixels wide, made of a frame of the video.
     pub fn thumbnail(width: u32) -> String {
         format!("thumbnail/{width}.jpg")
+    }
+
+    /// The directory of the thumbnail its channel chose, at `version`.
+    pub fn chosen_thumbnail(version: &str) -> String {
+        format!("thumbnail/{version}")
+    }
+
+    /// The name, within [`chosen_thumbnail`], of its file `width` pixels wide.
+    pub fn chosen_thumbnail_file(width: u32) -> String {
+        format!("{width}.jpg")
     }
 
     /// Sheet `index` of the storyboard, counted from 0.
@@ -142,9 +152,19 @@ pub mod media_files {
     }
 }
 
-/// The thumbnail of `video`, `width` pixels wide (one of [`THUMBNAIL_WIDTHS`]).
-pub fn thumbnail(video: VideoId, width: u32) -> String {
-    format!("{}/{}", media(video), media_files::thumbnail(width))
+/// The thumbnail of `video`, `width` pixels wide (one of [`THUMBNAIL_WIDTHS`]): the one its channel
+/// chose, at the version `chosen`, or else a frame of it. A new choice is a new version, so each
+/// address keeps its bytes for ever.
+pub fn thumbnail(video: VideoId, chosen: Option<&str>, width: u32) -> String {
+    match chosen {
+        Some(version) => format!(
+            "{}/{}/{}",
+            media(video),
+            media_files::chosen_thumbnail(version),
+            media_files::chosen_thumbnail_file(width)
+        ),
+        None => format!("{}/{}", media(video), media_files::thumbnail(width)),
+    }
 }
 
 /// The widths every thumbnail is made at, smallest first.
@@ -232,8 +252,12 @@ mod tests {
         );
         assert_eq!(sign_in("/watch?v=x"), "/signin?next=%2Fwatch%3Fv%3Dx");
         assert_eq!(
-            thumbnail(video, 336),
+            thumbnail(video, None, 336),
             "/media/AAAAAAAAAAA/thumbnail/336.jpg"
+        );
+        assert_eq!(
+            thumbnail(video, Some("0123456789abcdef"), 336),
+            "/media/AAAAAAAAAAA/thumbnail/0123456789abcdef/336.jpg"
         );
         assert_eq!(
             playlist_of_renditions(video),

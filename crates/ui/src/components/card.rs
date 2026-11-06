@@ -16,7 +16,7 @@ use crate::lang::{Language, RenderTime, compact_count, tr};
 fn thumbnail_set(card: &VideoCard) -> String {
     routes::THUMBNAIL_WIDTHS
         .iter()
-        .map(|width| format!("{} {width}w", routes::thumbnail(card.id, *width)))
+        .map(|width| format!("{} {width}w", card.thumbnail_at(*width)))
         .collect::<Vec<_>>()
         .join(", ")
 }
@@ -40,7 +40,7 @@ pub fn GridCard(card: VideoCard) -> impl IntoView {
     view! {
         <article class="card">
             <a class="thumbnail" href=watch.clone() tabindex="-1" aria-hidden="true">
-                <img src=routes::thumbnail(card.id, 336) srcset=thumbnail_set(&card)
+                <img src=card.thumbnail_at(336) srcset=thumbnail_set(&card)
                     sizes="(max-width: 600px) 100vw, 360px" alt="" loading="lazy" decoding="async"/>
                 <span class="duration">{youcraft_i18n::when::clock(card.duration.whole_seconds())}</span>
             </a>
@@ -63,7 +63,7 @@ pub fn CompactCard(card: VideoCard) -> impl IntoView {
     view! {
         <article class="compact-card">
             <a class="thumbnail" href=watch.clone() tabindex="-1" aria-hidden="true">
-                <img src=routes::thumbnail(card.id, 168) srcset=thumbnail_set(&card) sizes="168px"
+                <img src=card.thumbnail_at(168) srcset=thumbnail_set(&card) sizes="168px"
                     alt="" loading="lazy" decoding="async"/>
                 <span class="duration">{youcraft_i18n::when::clock(card.duration.whole_seconds())}</span>
             </a>
@@ -85,7 +85,7 @@ pub fn RowCard(card: VideoCard, #[prop(optional)] children: Option<Children>) ->
     view! {
         <article class="row-card">
             <a class="thumbnail" href=watch.clone() tabindex="-1" aria-hidden="true">
-                <img src=routes::thumbnail(card.id, 336) srcset=thumbnail_set(&card)
+                <img src=card.thumbnail_at(336) srcset=thumbnail_set(&card)
                     sizes="(max-width: 656px) 160px, 360px" alt="" loading="lazy" decoding="async"/>
                 <span class="duration">{youcraft_i18n::when::clock(card.duration.whole_seconds())}</span>
             </a>
@@ -109,8 +109,8 @@ pub fn PlaylistGridCard(card: PlaylistCard) -> impl IntoView {
     view! {
         <article class="card playlist-card">
             <a class="thumbnail stacked" href=page.clone() tabindex="-1" aria-hidden="true">
-                {card.first.map(|first| view! {
-                    <img src=routes::thumbnail(first, 336) alt="" loading="lazy" decoding="async"/>
+                {card.poster_at(336).map(|poster| view! {
+                    <img src=poster alt="" loading="lazy" decoding="async"/>
                 })}
                 <span class="duration"><Glyph icon=Icon::Playlists/>{videos}</span>
             </a>

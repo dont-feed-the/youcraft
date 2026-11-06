@@ -20,10 +20,13 @@ const TRIES: u32 = 6;
 /// The wait before the first try again; each next one waits twice as long.
 const FIRST_WAIT_MILLISECONDS: i32 = 500;
 
-/// The file chosen in the `<input type=file>` that `event` comes from.
+/// The file chosen in the `<input type=file>` that `event` comes from. The input forgets it, so
+/// that choosing the same file again, after a failure or a removal, is a change again.
 pub fn chosen_file(event: &web_sys::Event) -> Option<web_sys::File> {
     let input: web_sys::HtmlInputElement = event.target()?.dyn_into().ok()?;
-    input.files()?.get(0)
+    let file = input.files()?.get(0);
+    input.set_value("");
+    file
 }
 
 /// The bytes of `file`, at most `limit` of them, in base64.

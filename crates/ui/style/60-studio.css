@@ -5,7 +5,9 @@
 .studio h1, .upload h1 { font-size: var(--text-lg); }
 
 .studio-actions { display: flex; justify-content: flex-end; }
-.customize-photo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.picture-choice { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.editor .picture-choice .pill { background: var(--bg); }
+.editor .picture-choice .pill:hover { background: var(--bg-hover); }
 .customize-form { max-inline-size: 720px; }
 .studio .settings-section { border-block-start: 0; padding-block-start: 0; }
 .picker { position: relative; overflow: hidden; }

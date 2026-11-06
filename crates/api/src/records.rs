@@ -36,6 +36,17 @@ pub struct VideoCard {
     pub views: u64,
     /// When it was published, in seconds since 1970 (UTC).
     pub published_at: i64,
+    /// The version of the thumbnail its channel chose, which [`crate::routes::thumbnail`]
+    /// addresses; `None` while it shows a frame of itself.
+    #[serde(default)]
+    pub thumbnail: Option<String>,
+}
+
+impl VideoCard {
+    /// Where its thumbnail is, `width` pixels wide (one of [`crate::routes::THUMBNAIL_WIDTHS`]).
+    pub fn thumbnail_at(&self, width: u32) -> String {
+        crate::routes::thumbnail(self.id, self.thumbnail.as_deref(), width)
+    }
 }
 
 /// A page of a feed, and where the next page starts.

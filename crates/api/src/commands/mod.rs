@@ -85,6 +85,8 @@ macro_rules! for_each_command {
             $crate::commands::admin::ResetName,
             $crate::commands::admin::RemovePhoto,
             $crate::commands::video::Update,
+            $crate::commands::video::SetThumbnail,
+            $crate::commands::video::RemoveThumbnail,
             $crate::commands::video::Delete,
             $crate::commands::upload::Create,
             $crate::commands::upload::Status,

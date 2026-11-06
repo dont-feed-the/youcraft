@@ -2,6 +2,15 @@
 
 All notable user-visible changes to YouCraft are documented here.
 
+## 0.4.1
+
+### Added
+
+- A video's editors can choose its thumbnail, in the studio or with the commands
+  `video.set_thumbnail` and `video.remove_thumbnail`: a JPEG, PNG or WebP file of at most 2 MB,
+  which shows wherever the video is listed and before it plays. A picture that isn't 16:9 gets
+  black bars, and removing it brings back a frame of the video.
+
 ## 0.4.0
 
 ### Added

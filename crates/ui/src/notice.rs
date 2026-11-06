@@ -20,7 +20,7 @@ pub fn describe(error: &ApiError) -> String {
         ApiError::Forbidden => tr("This isn't open to your account.").to_owned(),
         ApiError::ChannelRequired => tr("Create a channel first.").to_owned(),
         ApiError::NotFound | ApiError::UnknownCommand => tr("This isn't available.").to_owned(),
-        // the one file a command carries, a channel's picture
+        // the one kind of file commands carry, a picture
         ApiError::Invalid {
             field,
             rule: Rule::Malformed,

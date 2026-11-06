@@ -1,7 +1,10 @@
-//! A channel's photo: any JPEG, PNG or WebP turned upright, cut square at its centre, and
-//! written as JPEG at every size of `routes::PHOTO_SIZES`.
+//! Pictures people upload, each any JPEG, PNG or WebP turned upright. A channel's photo is cut
+//! square at its centre and written as JPEG at every size of `routes::PHOTO_SIZES`; the thumbnail
+//! chosen for a video is fitted into 16:9 on black and written as JPEG at every width of
+//! `routes::THUMBNAIL_WIDTHS`.
 //!
-//! The server runs [`photo`] in a child process with resource limits, as it does transcodes;
+//! The server runs [`photo`] and [`thumbnail`] in a child process with resource limits, as it does
+//! transcodes;
 //! the decoder's own limits also refuse, before any pixel is decoded, a picture larger than
 //! [`MAX_SIDE`] or one that would take more than [`MAX_DECODED`] bytes. Transparent pixels are
 //! laid on white, since JPEG has no transparency.
@@ -10,15 +13,15 @@ use std::io::Cursor;
 use std::path::Path;
 
 use image::{DynamicImage, ImageDecoder, ImageFormat, ImageReader, Limits};
-use youcraft_api::routes::{PHOTO_SIZES, photo_file};
+use youcraft_api::routes::{PHOTO_SIZES, THUMBNAIL_WIDTHS, media_files, photo_file};
 
 use crate::Error;
 use crate::picture::Rgba;
-use crate::stills::jpeg;
+use crate::stills::{self, jpeg};
 
-/// The longest side of a photo the decoder accepts, in pixels.
+/// The longest side of a picture the decoder accepts, in pixels.
 pub const MAX_SIDE: u32 = 12_000;
-/// The most bytes the decoder may allocate for one photo.
+/// The most bytes the decoder may allocate for one picture.
 pub const MAX_DECODED: u64 = 512 << 20;
 
 /// Make the photo in `bytes` into its JPEG files in the directory `output`.
@@ -28,6 +31,22 @@ pub fn photo(bytes: &[u8], output: &Path) -> Result<(), Error> {
     for size in PHOTO_SIZES {
         let file = output.join(photo_file(size));
         let made = jpeg(&square.resized(size, size))?;
+        std::fs::write(&file, made).map_err(|e| Error::io(&file, &e))?;
+    }
+    Ok(())
+}
+
+/// Make the thumbnail in `bytes` into its JPEG files in the directory `output`.
+pub fn thumbnail(bytes: &[u8], output: &Path) -> Result<(), Error> {
+    let picture = decoded(bytes)?;
+    std::fs::create_dir_all(output).map_err(|e| Error::io(output, &e))?;
+    for width in THUMBNAIL_WIDTHS {
+        let file = output.join(media_files::chosen_thumbnail_file(width));
+        let made = jpeg(&stills::thumbnail(
+            &picture,
+            (picture.width, picture.height),
+            width,
+        ))?;
         std::fs::write(&file, made).map_err(|e| Error::io(&file, &e))?;
     }
     Ok(())
@@ -147,6 +166,33 @@ mod tests {
             let file = std::fs::read(dir.join(photo_file(size))).unwrap();
             let made = image::load_from_memory(&file).unwrap();
             assert_eq!((made.width(), made.height()), (size, size));
+        }
+        let _ = std::fs::remove_dir_all(dir);
+    }
+
+    #[test]
+    fn a_thumbnail_fits_in_16_9_on_black_at_every_width() {
+        let dir = std::env::temp_dir().join(format!("youcraft-thumbnail-{}", std::process::id()));
+        thumbnail(&png(100, 100), &dir).unwrap();
+        for width in THUMBNAIL_WIDTHS {
+            let file = std::fs::read(dir.join(media_files::chosen_thumbnail_file(width))).unwrap();
+            let made = image::load_from_memory(&file).unwrap().to_rgb8();
+            let height = width * 9 / 16;
+            assert_eq!((made.width(), made.height()), (width, height));
+            let row = height / 2;
+            let [red, green, blue] = made.get_pixel(1, row).0;
+            assert!(
+                red < 16 && green < 16 && blue < 16,
+                "black beside it at {width}"
+            );
+            assert!(
+                made.get_pixel(width / 2 - height / 4, row).0[0] > 200,
+                "its left is red"
+            );
+            assert!(
+                made.get_pixel(width / 2 + height / 4, row).0[2] > 200,
+                "its right is blue"
+            );
         }
         let _ = std::fs::remove_dir_all(dir);
     }

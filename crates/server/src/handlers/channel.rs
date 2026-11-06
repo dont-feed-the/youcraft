@@ -17,7 +17,7 @@ use youcraft_store::members::NewChannel as NewRow;
 use crate::dispatch::Handle;
 use crate::handlers::feed::PAGE;
 use crate::handlers::input::{cleaned, line, next, window};
-use crate::photo;
+use crate::picture;
 use crate::secrets::random_bits;
 use crate::site::{Caller, Site, now};
 
@@ -111,7 +111,7 @@ impl Handle<Delete> for Site {
             let _held = self.lock_upload(video).await?;
             crate::storage::remove_files_of(self.config(), video).await;
         }
-        photo::remove(self, channel, photo).await;
+        picture::remove_photo(self, channel, photo).await;
         Ok(Nothing {})
     }
 }

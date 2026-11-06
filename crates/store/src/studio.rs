@@ -107,6 +107,31 @@ impl Store {
         Ok(())
     }
 
+    /// Give `video` the chosen thumbnail `version`, or none; the version it had, whose files are
+    /// no longer named by anything. What its files fill is measured again.
+    pub fn set_thumbnail(
+        &self,
+        video: VideoId,
+        version: Option<&str>,
+    ) -> Result<Option<String>, StoreError> {
+        let mut connection = self.connection();
+        let transaction = connection.transaction()?;
+        let old: Option<String> = transaction
+            .query_row(
+                "SELECT thumbnail FROM videos WHERE id = ?1",
+                [video.to_i64()],
+                |row| row.get(0),
+            )
+            .optional()?
+            .flatten();
+        transaction.execute(
+            "UPDATE videos SET thumbnail = ?2, stored_bytes = NULL WHERE id = ?1",
+            params![video.to_i64(), version],
+        )?;
+        transaction.commit()?;
+        Ok(old)
+    }
+
     /// Date the publication of `video`, as a demo or an import from elsewhere does.
     pub fn set_published_at(&self, video: VideoId, at: i64) -> Result<(), StoreError> {
         self.connection().execute(
@@ -152,6 +177,26 @@ mod tests {
             })
             .unwrap();
         (store, account, channel)
+    }
+
+    #[test]
+    fn a_chosen_thumbnail_reaches_the_card_and_its_files_are_measured_again() {
+        let (store, _, channel) = store();
+        let video = upload(&store, channel, 7, 100);
+        store.set_stored_bytes(video, 5).unwrap();
+        assert_eq!(store.set_thumbnail(video, Some("v1")).unwrap(), None);
+        let card = |store: &Store| store.studio_video(video).unwrap().unwrap().card;
+        assert_eq!(card(&store).thumbnail.as_deref(), Some("v1"));
+        assert_eq!(store.unmeasured(8).unwrap(), [video]);
+        assert_eq!(
+            store.set_thumbnail(video, Some("v2")).unwrap().as_deref(),
+            Some("v1")
+        );
+        assert_eq!(
+            store.set_thumbnail(video, None).unwrap().as_deref(),
+            Some("v2")
+        );
+        assert_eq!(card(&store).thumbnail, None);
     }
 
     fn upload(store: &Store, channel: ChannelId, id: u64, now: i64) -> VideoId {

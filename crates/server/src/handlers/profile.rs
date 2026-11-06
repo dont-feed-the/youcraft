@@ -10,7 +10,7 @@ use youcraft_store::profiles::{PhotoFiles, ProfileEdit};
 
 use crate::dispatch::Handle;
 use crate::handlers::input::{line, optional_text};
-use crate::photo;
+use crate::picture;
 use crate::site::{Caller, Site};
 
 impl Site {
@@ -32,7 +32,7 @@ impl Site {
             .db(move |store| store.set_photo(channel, photo.as_ref()))
             .await?;
         if old != version {
-            photo::remove(self, channel, old).await;
+            picture::remove_photo(self, channel, old).await;
         }
         self.profile(channel).await
     }
@@ -69,7 +69,7 @@ impl Handle<SetPhoto> for Site {
     async fn handle(&self, caller: Caller, new: NewPhoto) -> Result<Profile, ApiError> {
         self.allow_in_channel(caller, new.channel, ChannelRole::Owner)
             .await?;
-        let made = photo::make(self, new.channel, &new.image).await?;
+        let made = picture::make_photo(self, new.channel, &new.image).await?;
         self.replace_photo(new.channel, Some(made)).await
     }
 }

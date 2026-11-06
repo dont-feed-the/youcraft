@@ -1,6 +1,7 @@
 //! The studio of a channel, open to its members, with the way to the studio of their other
 //! channels, in three tabs: Content, the channel's videos in every state, page after page, each
-//! with its visibility, processing, date and views, and a form to change or delete it, with the
+//! with its visibility, processing, date and views, and a form to change it, choose its thumbnail
+//! or delete it, with the
 //! way to upload for those who may publish there (those the site does not let publish read that
 //! publishing is by invitation); and, for its owners, Customization, in `customize`, and
 //! Permissions, in `permissions`. The page's address names the channel; without one, it is the
@@ -16,11 +17,11 @@ use leptos_router::hooks::use_query_map;
 use youcraft_api::commands::account::{Me, Membership};
 use youcraft_api::commands::channel::Shelf;
 use youcraft_api::commands::{studio, video};
-use youcraft_api::records::{Failure, Processing, StudioPage, StudioVideo, Visibility};
+use youcraft_api::records::{Failure, Processing, StudioPage, StudioVideo, VideoCard, Visibility};
 use youcraft_api::{ApiError, ChannelId, ChannelRole, Grant, VideoId, routes};
 
 use crate::account::SignedIn;
-use crate::act::act;
+use crate::act::{Scope, act};
 use crate::app::titled;
 use crate::browser::{self, Timer};
 use crate::call::call;
@@ -358,7 +359,7 @@ fn Row(video: Memo<Option<StudioVideo>>, pages: Pages<StudioVideo>) -> impl Into
         video.with(|v| {
             v.as_ref()
                 .filter(|v| v.processing == Processing::Ready)
-                .map(|v| routes::thumbnail(v.card.id, 168))
+                .map(|v| v.card.thumbnail_at(168))
         })
     };
     let state = move || video.with(|v| v.as_ref().and_then(|v| processing_text(&v.processing)));
@@ -420,6 +421,70 @@ pub fn DetailFields(
     }
 }
 
+/// What a ready video shows before it plays: its thumbnail, the way to choose another, and, once
+/// one was chosen, the way back to a frame of it. The studio's list shows the outcome too.
+#[component]
+fn ThumbnailChoice(card: VideoCard, pages: Pages<StudioVideo>) -> impl IntoView {
+    let id = card.id;
+    let shown = RwSignal::new(card);
+    let busy = RwSignal::new(false);
+    let answered = move |answer: Result<StudioVideo, ApiError>| {
+        busy.set(false);
+        if let Ok(found) = answer {
+            shown.set(found.card);
+            pages.read_again::<studio::Video>(video::Which { video: id }, |found| found);
+        }
+    };
+    let scope = Scope::current();
+    let choose = move |event: leptos::ev::Event| {
+        #[cfg(feature = "hydrate")]
+        if let Some(file) = crate::transfer::chosen_file(&event) {
+            busy.set(true);
+            let scope = scope.clone();
+            leptos::task::spawn_local(async move {
+                let image = crate::transfer::base64_of(&file, video::THUMBNAIL_BYTES).await;
+                scope.within(move || match image {
+                    Ok(image) => act::<video::SetThumbnail>(
+                        video::NewThumbnail { video: id, image },
+                        answered,
+                    ),
+                    Err(error) => {
+                        busy.set(false);
+                        crate::notice::Notices::say_here(crate::notice::describe(&error));
+                    }
+                });
+            });
+        }
+        #[cfg(not(feature = "hydrate"))]
+        let _ = (event, &scope);
+    };
+    let remove = move |_| {
+        busy.set(true);
+        act::<video::RemoveThumbnail>(video::Which { video: id }, answered);
+    };
+    view! {
+        <div class="labelled">
+            <span>{tr("Thumbnail")}</span>
+            <p class="settings-hint">{tr("Your thumbnail shows wherever your video is listed and before it plays. Choose a JPEG, PNG or WebP file of at most 2 MB; a picture that isn't 16:9 gets black bars.")}</p>
+            <div class="picture-choice">
+                <span class="thumbnail studio-thumb">
+                    <img src=move || shown.with(|card| card.thumbnail_at(168)) alt="" decoding="async"/>
+                </span>
+                <label class="pill picker">
+                    <span>{tr("Select file")}</span>
+                    <input class="file" type="file" accept="image/jpeg,image/png,image/webp"
+                        disabled=move || busy.get() on:change=choose/>
+                </label>
+                <Show when=move || shown.with(|card| card.thumbnail.is_some())>
+                    <button class="pill" type="button" disabled=move || busy.get() on:click=remove>
+                        {tr("Remove")}
+                    </button>
+                </Show>
+            </div>
+        </div>
+    }
+}
+
 /// The form that changes a video's details, or deletes it; the studio's list shows the outcome.
 #[component]
 fn Editor(video: StudioVideo, pages: Pages<StudioVideo>) -> impl IntoView {
@@ -429,6 +494,7 @@ fn Editor(video: StudioVideo, pages: Pages<StudioVideo>) -> impl IntoView {
     let visibility = RwSignal::new(video.visibility);
     let comments = RwSignal::new(video.comments_enabled);
     let saving = RwSignal::new(false);
+    let thumbnail = (video.processing == Processing::Ready).then(|| video.card.clone());
     let save = move |event: leptos::ev::SubmitEvent| {
         event.prevent_default();
         if saving.get_untracked() {
@@ -461,6 +527,7 @@ fn Editor(video: StudioVideo, pages: Pages<StudioVideo>) -> impl IntoView {
     };
     view! {
         <form class="editor" on:submit=save>
+            {thumbnail.map(|card| view! { <ThumbnailChoice card pages/> })}
             <DetailFields title description visibility/>
             <label class="check">
                 <input type="checkbox" bind:checked=comments/>

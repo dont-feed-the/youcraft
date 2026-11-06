@@ -139,7 +139,7 @@ fn Forms(page: ChannelPage) -> impl IntoView {
         <section class="settings-section">
             <h2>{tr("Picture")}</h2>
             <p class="settings-hint">{tr("Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.")}</p>
-            <div class="customize-photo">
+            <div class="picture-choice">
                 <span class="avatar avatar-large" aria-hidden="true">{face}</span>
                 <label class="pill picker">
                     <span>{tr("Select file")}</span>

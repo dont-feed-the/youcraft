@@ -198,6 +198,8 @@
 	Unblock	取消屏蔽
 	Your channel	你的频道
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	你的图片显示在你的频道和评论旁。请选择不超过 5 MB 的 JPEG、PNG 或 WebP 文件；其中央会被裁成正方形。
+	Thumbnail	缩略图
+	Your thumbnail shows wherever your video is listed and before it plays. Choose a JPEG, PNG or WebP file of at most 2 MB; a picture that isn't 16:9 gets black bars.	你的缩略图会显示在列出你的视频的所有位置，以及视频播放前。请选择不超过 2 MB 的 JPEG、PNG 或 WebP 文件；不是 16:9 的图片会带黑边。
 	Sign in first.	请先登录。
 	This isn't open to your account.	你的账号无法使用此功能。
 	This isn't available.	此内容不可用。

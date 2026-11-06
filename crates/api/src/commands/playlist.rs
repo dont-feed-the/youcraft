@@ -40,8 +40,19 @@ pub struct PlaylistCard {
     pub updated_at: i64,
     /// The video whose thumbnail stands for it: the first its reader may see.
     pub first: Option<VideoId>,
+    /// The version of the thumbnail chosen for [`Self::first`], if one was.
+    #[serde(default)]
+    pub first_thumbnail: Option<String>,
     /// Whether it holds the video `playlist.list` was asked about; `false` otherwise.
     pub contains: bool,
+}
+
+impl PlaylistCard {
+    /// Where the thumbnail that stands for it is, `width` pixels wide, if it shows any video.
+    pub fn poster_at(&self, width: u32) -> Option<String> {
+        self.first
+            .map(|first| crate::routes::thumbnail(first, self.first_thumbnail.as_deref(), width))
+    }
 }
 
 /// A page of playlists, and where the next one starts.

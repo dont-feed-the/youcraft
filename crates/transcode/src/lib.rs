@@ -12,11 +12,11 @@ pub mod audio;
 pub mod cmaf;
 pub mod hls;
 pub mod ladder;
-pub mod photo;
 pub mod picture;
 pub mod pipeline;
 pub mod stills;
 pub mod synthetic;
+pub mod uploaded;
 
 use std::path::Path;
 use std::sync::Arc;

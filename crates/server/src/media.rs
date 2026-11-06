@@ -73,14 +73,14 @@ pub async fn serve_photo(
     let Ok(channel) = channel.parse::<ChannelId>() else {
         return error_response(&ApiError::NotFound);
     };
-    if !known || !crate::photo::is_version(version) {
+    if !known || !crate::picture::is_version(version) {
         return error_response(&ApiError::NotFound);
     }
     let Ok(uri) = format!("/{file}").parse() else {
         return error_response(&ApiError::NotFound);
     };
     *request.uri_mut() = uri;
-    let directory = ServeDir::new(crate::photo::directory(site, channel, version));
+    let directory = ServeDir::new(crate::picture::photo_directory(site, channel, version));
     match directory.oneshot(request).await {
         Ok(response) => {
             let mut response = response.map(Body::new).into_response();

@@ -101,10 +101,10 @@ pub struct Listed {
 
 /// The columns [`card`] reads, from `videos` as `v` joined with its `channels` as `c`.
 pub(crate) const CARD_COLUMNS: &str = "v.id, v.title, v.duration_ticks, v.timescale, v.view_count, \
-    COALESCE(v.published_at, v.created_at), c.id, c.handle, c.name, c.photo";
+    COALESCE(v.published_at, v.created_at), v.thumbnail, c.id, c.handle, c.name, c.photo";
 
 /// How many columns [`CARD_COLUMNS`] names; a query's own come after them.
-pub(crate) const CARD_WIDTH: usize = 6 + crate::channels::CARD_WIDTH;
+pub(crate) const CARD_WIDTH: usize = 7 + crate::channels::CARD_WIDTH;
 
 /// The [`VideoCard`] of a row that starts with [`CARD_COLUMNS`].
 pub(crate) fn card(row: &Row<'_>) -> rusqlite::Result<VideoCard> {
@@ -117,7 +117,8 @@ pub(crate) fn card(row: &Row<'_>) -> rusqlite::Result<VideoCard> {
         },
         views: count(row.get(4)?),
         published_at: row.get(5)?,
-        channel: channel_card(row, 6)?,
+        thumbnail: row.get(6)?,
+        channel: channel_card(row, 7)?,
     })
 }
 

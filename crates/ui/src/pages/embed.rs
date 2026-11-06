@@ -73,7 +73,7 @@ fn Embedded(page: VideoPage) -> impl IntoView {
                 <VideoPlayer
                     video
                     duration=card.duration
-                    poster=routes::thumbnail(video, 720)
+                    poster=card.thumbnail_at(720)
                     started
                 />
             }

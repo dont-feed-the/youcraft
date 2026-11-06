@@ -198,6 +198,8 @@
 	Unblock	ブロックを解除
 	Your channel	あなたのチャンネル
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	画像はチャンネルとコメントの横に表示されます。5 MB 以下の JPEG、PNG、WebP ファイルを選んでください。中央が正方形に切り抜かれます。
+	Thumbnail	サムネイル
+	Your thumbnail shows wherever your video is listed and before it plays. Choose a JPEG, PNG or WebP file of at most 2 MB; a picture that isn't 16:9 gets black bars.	サムネイルは動画が一覧に表示される場所と再生前に表示されます。2 MB 以下の JPEG、PNG、WebP ファイルを選んでください。16:9 でない画像には黒い帯が付きます。
 	Sign in first.	先にログインしてください。
 	This isn't open to your account.	このアカウントでは利用できません。
 	This isn't available.	これは利用できません。

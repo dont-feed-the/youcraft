@@ -198,6 +198,8 @@
 	Unblock	Poista esto
 	Your channel	Oma kanava
 	Your picture shows beside your channel and your comments. Choose a JPEG, PNG or WebP file of at most 5 MB; its centre is cut square.	Kuvasi näkyy kanavasi ja kommenttiesi vieressä. Valitse enintään 5 Mt:n JPEG-, PNG- tai WebP-tiedosto; sen keskikohta rajataan neliöksi.
+	Thumbnail	Pikkukuva
+	Your thumbnail shows wherever your video is listed and before it plays. Choose a JPEG, PNG or WebP file of at most 2 MB; a picture that isn't 16:9 gets black bars.	Pikkukuvasi näkyy kaikkialla, missä videosi on listattu, ja ennen sen toistoa. Valitse enintään 2 Mt:n JPEG-, PNG- tai WebP-tiedosto; kuva, joka ei ole 16:9, saa mustat palkit.
 	Sign in first.	Kirjaudu ensin sisään.
 	This isn't open to your account.	Tämä ei ole avoinna tilillesi.
 	This isn't available.	Tämä ei ole saatavilla.

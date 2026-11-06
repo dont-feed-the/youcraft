@@ -45,6 +45,7 @@ fn card_columns() -> String {
         "p.id, p.kind, p.title, p.visibility, p.updated_at, {}, \
          (SELECT count(*) FROM {ITEMS} AND {VISIBLE}), \
          (SELECT i.video_id FROM {ITEMS} AND {VISIBLE} ORDER BY i.position, i.added_at LIMIT 1), \
+         (SELECT v.thumbnail FROM {ITEMS} AND {VISIBLE} ORDER BY i.position, i.added_at LIMIT 1), \
          EXISTS (SELECT 1 FROM playlist_items i WHERE i.playlist_id = p.id AND i.video_id = :containing)",
         channels::card_columns("o")
     )
@@ -68,7 +69,8 @@ fn playlist_card(row: &Row<'_>) -> rusqlite::Result<PlaylistCard> {
         first: row
             .get::<_, Option<i64>>(6 + CARD_WIDTH)?
             .map(VideoId::from_i64),
-        contains: row.get(7 + CARD_WIDTH)?,
+        first_thumbnail: row.get(7 + CARD_WIDTH)?,
+        contains: row.get(8 + CARD_WIDTH)?,
     })
 }
 
@@ -157,6 +159,7 @@ fn liked_card(
             &format!(
                 "SELECT {}, (SELECT count(*) FROM {liked}), \
                  (SELECT l.video_id FROM {liked} ORDER BY l.created_at DESC, v.id LIMIT 1), \
+                 (SELECT v.thumbnail FROM {liked} ORDER BY l.created_at DESC, v.id LIMIT 1), \
                  (SELECT max(l.created_at) FROM {liked}), \
                  EXISTS (SELECT 1 FROM likes WHERE channel_id = :actor AND value = 1 AND video_id = :containing) \
                  FROM channels o WHERE o.id = :actor",
@@ -174,8 +177,9 @@ fn liked_card(
                     owner: channel_card(row, 0)?,
                     videos: count(row.get(CARD_WIDTH)?),
                     first: row.get::<_, Option<i64>>(CARD_WIDTH + 1)?.map(VideoId::from_i64),
-                    updated_at: row.get::<_, Option<i64>>(CARD_WIDTH + 2)?.unwrap_or(0),
-                    contains: row.get(CARD_WIDTH + 3)?,
+                    first_thumbnail: row.get(CARD_WIDTH + 2)?,
+                    updated_at: row.get::<_, Option<i64>>(CARD_WIDTH + 3)?.unwrap_or(0),
+                    contains: row.get(CARD_WIDTH + 4)?,
                 })
             },
         )
@@ -261,6 +265,7 @@ fn empty_watch_later(
         owner,
         updated_at: 0,
         first: None,
+        first_thumbnail: None,
         contains: false,
     }))
 }
@@ -793,6 +798,32 @@ mod tests {
         assert_eq!(shelf.items.len(), 1);
         assert!(!store.delete_playlist(id, ADA).unwrap());
         assert!(store.delete_playlist(id, BOB).unwrap());
+    }
+
+    #[test]
+    fn a_list_shows_the_thumbnail_chosen_for_its_first_video() {
+        let store = with_videos();
+        let bob = bob();
+        let new = NewPlaylist {
+            id: PlaylistId::from_bits(5),
+            title: "Waves",
+            visibility: Visibility::Public,
+            video: Some(PUBLIC),
+            now: 10,
+        };
+        store.create_playlist(bob, &new).unwrap();
+        store
+            .rate(bob, PUBLIC, youcraft_api::records::Rating::Like, 11)
+            .unwrap();
+        store.set_thumbnail(PUBLIC, Some("v1")).unwrap();
+        let cards = store.lists_of(bob, None).unwrap();
+        for card in [&cards[1], &cards[2]] {
+            assert_eq!(card.first_thumbnail.as_deref(), Some("v1"));
+            assert_eq!(
+                card.poster_at(336),
+                Some(youcraft_api::routes::thumbnail(PUBLIC, Some("v1"), 336))
+            );
+        }
     }
 
     /// A list counts, and shows first, only the videos its reader may see: a video made private
